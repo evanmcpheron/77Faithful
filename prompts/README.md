@@ -1,60 +1,39 @@
 # 77Faithful engineering prompts
 
-Reusable task prompts for implementing, testing, and reviewing code that the repository's owner can read and maintain. They complement [AGENTS.md](../AGENTS.md); they do not replace its engineering, product, privacy, or verification guidance.
+Choose one prompt for a bounded task, replace its placeholders, and supply the relevant paths, expected behavior, reproduction steps, or acceptance criteria. Paste it into Codex or ask Codex to read the named file. Paths inside prompts are relative to the repository root. No template tooling is required.
 
-## Use
-
-Choose one prompt, copy its contents into Codex, and replace the obvious placeholders such as `<TASK>`, `<FEATURE>`, or `<REQUIREMENTS>`. Include the relevant paths, expected behavior, reproduction steps, design reference, or acceptance criteria. Remove an optional placeholder when it is not useful. No template engine or tooling setup is required.
-
-Each prompt reads root and applicable directory instructions and targeted repository context. Paths in prompt instructions are relative to the repository root. Current source/configuration establishes what exists; engineering decision records establish selected behavior and architecture. Recheck both as the app evolves instead of treating this library as a frozen stack inventory.
-
-Implementation prompts authorize the specified work and its necessary tests. Planning, research, and review prompts are analysis-only unless you explicitly request changes. API.Bible defaults to review if the task does not name a mode. Review checks may create ignored temporary/generated outputs; if a command would rewrite source or configuration, use a non-mutating alternative or report it unrun. A review verdict does not authorize merging, deployment, or publication.
-
-Keep tasks bounded by a user outcome. Use small, verifiable implementation increments, then review the completed scope. Make reasonable low-risk assumptions explicit; account credentials, deployed settings, and licensing entitlements require evidence.
+[AGENTS.md](../AGENTS.md) owns shared engineering, product, scope, review, and verification rules. Prompts add task-specific guidance; they are not a sequence to run on every change. Implementation includes necessary verification. Planning/review stays analysis-only unless your request also includes changes.
 
 ## Choose a prompt
 
-“No” means no code changes unless explicitly authorized. “Yes” is limited to the stated task.
+| Prompt                                                           | Use for                                                     | Mode          |
+| ---------------------------------------------------------------- | ----------------------------------------------------------- | ------------- |
+| [01 Feature planning](01-feature-planning.md)                    | Scope, reuse, acceptance criteria, and implementation steps | Plan          |
+| [02 Technical research](02-technical-research.md)                | A concrete uncertain technical decision                     | Research      |
+| [03 Frontend feature or screen](03-frontend-feature.md)          | A screen, interaction, or bounded mobile flow               | Implement     |
+| [05 Component/design system](05-component-design-system.md)      | One shared primitive and scoped caller updates              | Implement     |
+| [06 UI/UX audit](06-ui-ux-audit.md)                              | Obstacles to understanding or completing a flow             | Review        |
+| [07 UI consistency](07-ui-consistency-review.md)                 | Accidental visual drift and duplicated primitives           | Review        |
+| [08 Firebase feature](08-backend-firebase-feature.md)            | Data access with authorization, rules, and tests            | Implement     |
+| [09 Firestore data model](09-firestore-data-model.md)            | Paths, access patterns, queries, and data lifecycle         | Design/review |
+| [10 Firebase security](10-firebase-security-review.md)           | Rules, handlers, and allow/deny boundaries                  | Review        |
+| [11 API.Bible](11-api-bible-integration.md)                      | Licensed Scripture access through the selected gateway      | Implement     |
+| [12 Unit tests](12-unit-tests.md)                                | Meaningful service/domain/hook behavior                     | Tests only    |
+| [13 Component tests](13-component-tests.md)                      | Rendered states and user interactions                       | Tests only    |
+| [14 Bug investigation and fix](14-bug-investigation.md)          | Evidence-based diagnosis and focused repair                 | Diagnose/fix  |
+| [15 Code quality and maintainability](15-code-quality-review.md) | Correctness and concrete human editing/debugging cost       | Review        |
+| [16 Refactor](16-refactor.md)                                    | A demonstrated maintenance burden; preserve behavior        | Refactor      |
+| [17 Performance](17-performance-review.md)                       | Measurements and diagnosis of a suspected bottleneck        | Investigate   |
+| [18 Accessibility](18-accessibility-review.md)                   | Barriers to operating a mobile flow                         | Review        |
+| [19 Security/privacy](19-security-privacy-review.md)             | Sensitive-data lifecycle and provider boundaries            | Review        |
+| [20 Pull request](20-pull-request-review.md)                     | A specified diff and merge recommendation                   | Review        |
+| [21 Release readiness](21-release-readiness.md)                  | Evidence and blockers for a defined milestone               | Review        |
+| [22 Architecture](22-architecture-review.md)                     | Boundaries and ownership against current needs              | Review        |
+| [23 Feature completion](23-feature-completion-review.md)         | Acceptance criteria versus implementation/evidence          | Review        |
+| [25 Product experience](25-product-experience-review.md)         | Formation principles, participant agency, and trust         | Review        |
 
-| Prompt                                                                   | Purpose                                                 | Changes code?                   | Typical lifecycle point                  |
-| ------------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------- | ---------------------------------------- |
-| [01-feature-planning.md](01-feature-planning.md)                         | Map behavior, reuse, risks, and implementation steps    | No                              | Before implementation                    |
-| [02-technical-research.md](02-technical-research.md)                     | Compare technical options using current evidence        | No                              | Before an uncertain decision             |
-| [03-frontend-feature.md](03-frontend-feature.md)                         | Implement an interaction or frontend flow               | Yes                             | Feature implementation                   |
-| [04-screen-implementation.md](04-screen-implementation.md)               | Build a screen from requirements/design                 | Yes                             | Screen implementation                    |
-| [05-component-design-system.md](05-component-design-system.md)           | Create or improve a focused shared primitive            | Yes; migration only if scoped   | When UI reuse is needed                  |
-| [06-ui-ux-audit.md](06-ui-ux-audit.md)                                   | Review usability and complete mobile flows              | No                              | After UI is usable                       |
-| [07-ui-consistency-review.md](07-ui-consistency-review.md)               | Find accidental visual/component drift                  | No                              | After related screens grow               |
-| [08-backend-firebase-feature.md](08-backend-firebase-feature.md)         | Implement data access and authorization together        | Yes                             | Backend integration                      |
-| [09-firestore-data-model.md](09-firestore-data-model.md)                 | Design/review paths, queries, ownership, and growth     | No                              | Before schema work or migration          |
-| [10-firebase-security-review.md](10-firebase-security-review.md)         | Review rules and privileged access boundaries           | No                              | After Firebase access changes            |
-| [11-api-bible-integration.md](11-api-bible-integration.md)               | Implement/review licensed Scripture access              | Only in explicit implement mode | Scripture integration                    |
-| [12-unit-tests.md](12-unit-tests.md)                                     | Test meaningful rules and unit behavior                 | Yes; tests                      | During implementation or regression work |
-| [13-component-tests.md](13-component-tests.md)                           | Test user-visible states and interactions               | Yes; tests                      | During UI implementation                 |
-| [14-bug-investigation.md](14-bug-investigation.md)                       | Establish a cause, fix it, and prevent recurrence       | Yes; evidence-based fix         | When a defect appears                    |
-| [15-code-quality-review.md](15-code-quality-review.md)                   | Review correctness and maintainability                  | No                              | After a focused implementation           |
-| [16-refactor.md](16-refactor.md)                                         | Resolve a maintenance problem while preserving behavior | Yes                             | When a specific design burden emerges    |
-| [17-performance-review.md](17-performance-review.md)                     | Measure and investigate a suspected bottleneck          | No                              | When performance is a concern            |
-| [18-accessibility-review.md](18-accessibility-review.md)                 | Find barriers to operating the mobile UI                | No                              | After UI changes                         |
-| [19-security-privacy-review.md](19-security-privacy-review.md)           | Trace sensitive data and application security           | No                              | After sensitive-data/integration changes |
-| [20-pull-request-review.md](20-pull-request-review.md)                   | Review the actual diff and give a merge verdict         | No                              | Before merging                           |
-| [21-release-readiness.md](21-release-readiness.md)                       | Identify release blockers and missing evidence          | No                              | Before a milestone/release               |
-| [22-architecture-review.md](22-architecture-review.md)                   | Assess boundaries against actual application size       | No                              | After meaningful growth                  |
-| [23-feature-completion-review.md](23-feature-completion-review.md)       | Check every acceptance criterion for completeness       | No                              | After feature implementation             |
-| [24-human-maintainability-review.md](24-human-maintainability-review.md) | Examine the cost of future manual edits/debugging       | No                              | After complex AI-assisted work           |
-| [25-product-experience-review.md](25-product-experience-review.md)       | Check formation goals, agency, and participant trust    | No                              | After a participant-facing feature       |
+A small bug may need only 14. For a feature, use planning/research when uncertainty warrants it, choose the relevant implementation prompt, and review the completed scope. Add specialized reviews when their risks are involved; no review quota is expected.
 
-## Suggested workflow
+Screen prompt 04 was merged into 03; human maintainability prompt 24 was merged into 15. Remaining numbers are unchanged. Prompt 11 now focuses on implementation; for an API.Bible review, use 19 and include the provider contract checks from 11. Specify “investigate only” with 14 when you want diagnosis without a fix.
 
-Feature idea → technical research if necessary → feature planning → implementation prompt → testing → feature completion review → code quality / UI/UX review where appropriate → pull request review.
-
-You do not need every prompt for every change. A small bug may need only investigation, its regression test, and a diff review. Choose frontend, screen, component, Firebase, or API.Bible implementation according to the actual work. Add accessibility, privacy, product, performance, or architecture reviews when the change warrants them; use release readiness at the milestone boundary.
-
-## Repository fit
-
-- [Project context](../docs/engineering/project-context.md) records the Expo/React Native/TypeScript setup, `src/app/` routes, platform variants, and local state. Prompts defer exact versions to current configuration and follow the versioned Expo documentation instruction in `AGENTS.md`.
-- [Design system](../docs/engineering/design-system.md) inventories the existing themed primitives and partial token system. Frontend prompts reuse those foundations and add missing primitives only for current needs.
-- [Testing](../docs/engineering/testing.md) defines Jest/React Native Testing Library conventions, async interactions, tests outside routes, and project checks. Code changes currently require `npm run check`; relevant shared UI/routing/build changes also require `npm run export:web`. Static export and mocked tests do not prove native runtime behavior.
-- [Architecture decisions](../docs/engineering/architecture-decisions.md) selects native Firebase, private personal records, an authenticated API.Bible gateway, session-memory Scripture caching, and calendar-day journey semantics. These integrations were planned when the library was authored; prompts require checking their implementation status. Community/sharing checks apply only when present or explicitly in scope.
-
-The goal/context/boundaries/verification structure also follows the [official OpenAI prompting guidance](https://learn.chatgpt.com/docs/prompting#prompting-codex). General code-quality and comment rules remain in `AGENTS.md` instead of being repeated throughout the library.
+Consult the relevant [project context](../docs/engineering/project-context.md), [decisions](../docs/engineering/architecture-decisions.md), [design inventory](../docs/engineering/design-system.md), and [testing guide](../docs/engineering/testing.md) as needed. When maintaining this library, keep shared rules in `AGENTS.md`, retain task-specific verification and stopping conditions, and check prompts against actual repository changes rather than duplicating a version inventory.

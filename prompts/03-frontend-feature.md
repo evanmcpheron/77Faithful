@@ -1,41 +1,20 @@
-# Frontend feature
+# Frontend feature or screen
 
-## Role
+Implement the specified screen, interaction, or bounded flow. Read `AGENTS.md`, `docs/engineering/design-system.md`, and relevant product decisions. Inspect similar screens, actual shared primitives/tokens, affected routes, data contracts, and tests before designing or coding.
 
-Act as a React Native engineer implementing a focused 77Faithful interaction or frontend flow.
+Feature/screen and optional design reference: `<FEATURE>`
 
-## Task
+Content, behavior, and acceptance criteria: `<REQUIREMENTS>`
 
-Feature: `<FEATURE>`
+## Implement
 
-Acceptance criteria: `<REQUIREMENTS>`
+- Reuse the existing design system and apply the component-extraction criteria in `AGENTS.md`. Add a missing primitive only for a current need. Explain material deviations from a supplied design when accessibility or platform behavior requires them.
+- Establish clear reading order, hierarchy, and primary/secondary actions. Connect entry, back, and completion paths through the existing navigation, preserving affected native/web variants.
+- Implement the states the flow can actually reach: loading, empty, error/recovery, and relevant pressed, disabled, submitting, and success feedback. Keep user input when recovery permits it.
+- For forms, provide labels, validation feedback, suitable keyboard/input settings, focus progression, and protection against duplicate submission where needed.
+- Account for scrolling, safe areas, actual navigation insets, keyboard overlap, both themes, text scaling, and accessible controls. Keep Scripture readable and central when the screen displays it.
+- Use service contracts that keep SDK and provider details out of UI components. If an integration prerequisite is missing, identify the incomplete contract and complete independent scoped UI work without fabricating successful saves or live data. Keep synthetic fixtures in tests and designated development previews/prototypes, including the selected web preview; they do not satisfy a required native integration.
 
-## Context gathering
+## Verify and finish
 
-Read root and applicable directory `AGENTS.md` instructions and relevant engineering context, design, and testing guidance. Inspect related screens, components, hooks, tests, and data contracts first. Check affected `src/app/` routes and native/web tab variants.
-
-## Success criteria
-
-Complete the requested behavior with cohesive visuals, predictable navigation, and meaningful user-behavior tests. Relevant loading, empty, error, and success states work without hiding failures.
-
-## Constraints
-
-Reuse established primitives and tokens, starting with `ThemedText`, `ThemedView`, `useTheme`, and the current theme module. Keep screen components focused and UI state near its owner. Extract components/hooks only for real reuse, meaningful behavior, or clearer responsibilities.
-
-Use existing data boundaries and selected architecture. Do not invent a backend or present mock data as saved user data. If an integration prerequisite is missing, make independent frontend progress and identify the incomplete contract; use synthetic preview fixtures only when a prototype is in scope.
-
-## Implementation expectations
-
-- Work in small, verifiable increments until the requested scope is complete.
-- Reuse shared buttons, fields, containers, headers, and state UI where they exist; introduce a missing primitive only for a clear current responsibility.
-- Handle accessible names/roles/states, touch targets, text scaling, keyboard behavior, safe areas, and common phone sizes on affected platforms.
-- Preserve platform variants and web preview boundaries. Keep private reflections out of logs and use synthetic test data.
-- Avoid effects for derived state and new state-management packages without a demonstrated need.
-
-## Verification
-
-Add meaningful interaction/regression tests using the existing test setup. Run targeted tests during development and the checks required by `AGENTS.md`: currently `npm run check` and `npm run export:web` for shared UI/routing changes. Exercise affected states on available platforms; distinguish mocked tests and static export from device/browser verification.
-
-## Final response
-
-Briefly report what changed, files changed, tests/checks run and outcomes, and remaining concerns or unavailable platform checks.
+Test meaningful rendered states and user interactions, then run the implementation checks required by `AGENTS.md`. Exercise the affected flow on available iOS/Android runtimes, at small phone sizes, larger text, and both themes; include web preview checks where affected. Report unavailable platform checks and incomplete criteria. Finish when the specified flow is implemented and verification is accounted for; leave other screens outside scope.

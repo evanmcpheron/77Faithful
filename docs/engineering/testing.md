@@ -33,6 +33,14 @@ The committed TypeScript configuration explicitly loads `expo/types`, so CSS imp
 
 GitHub Actions runs `npm ci`, `npm run check`, and `npm run export:web` for pull requests and pushes to `main`, using `.nvmrc`, read-only repository permissions, and no application secrets. It does not build signed native binaries or deploy anything.
 
+## Check scope
+
+For Markdown-only work, run `npm run format:check`, resolve relative links and any heading fragments in changed documents, and check new or changed external references with available tools. Use `git diff --check` for whitespace; it does not validate links or include untracked files. Format only affected files with the installed Prettier CLI rather than applying unrelated repository-wide fixes. No additional link-checking package is required. Report external references that could not be verified.
+
+For reviews, follow the non-editing rules in [AGENTS.md](../../AGENTS.md). Use check commands rather than `format` or `lint:fix`. The type generation behind `typecheck` and `check` invokes Expo customization, which can update `tsconfig.json` if setup is incomplete; inspect configuration before using it in a review. Ignored type/build outputs are acceptable, but rewriting source/configuration is not part of a review.
+
+Root Jest currently discovers only `src/**/*.test.[jt]s?(x)`. A passing root check will not establish coverage of the planned separate `functions/` package or Firestore rules. When adding those integrations, supply appropriate backend/emulator test commands, include applicable checks in CI, and document their setup and runtime requirements here. These tools are not yet configured; do not scaffold them for unrelated work.
+
 ## Regression coverage
 
 | Location                                 | Behavior covered                                                                                 |
@@ -42,7 +50,7 @@ GitHub Actions runs `npm ci`, `npm run check`, and `npm run export:web` for pull
 | `src/components/ui/collapsible.test.tsx` | Accessible name/role, expanded/collapsed state, and content toggling through user presses        |
 | `src/hooks/use-color-scheme.test.tsx`    | Web appearance subscription, updates, and cleanup                                                |
 
-Local validation on 2026-09-07: a clean `npm ci`, `npm run check` (including all ten tests without snapshots), and `npm run export:web` passed. The source no longer has the original missing-CSS type errors or ignored themed-view overrides. Browser startup failed in the available automation connection, so live browser interaction/hydration and native-device checks have not been verified. A successful static export does not replace those checks. CI configuration is present for execution on GitHub; a remote CI run has not been observed from this local task.
+Historical validation during engineering setup on 2026-09-07: a clean `npm ci`, `npm run check` (including all ten tests without snapshots), and `npm run export:web` passed. The source no longer has the original missing-CSS type errors or ignored themed-view overrides. Browser startup failed in that automation connection, and no native-device checks or remote CI run were observed. These results describe that checkout and environment; they are not evidence for later changes or a reason to skip newly available runtime checks.
 
 ## Remaining coverage
 
@@ -50,7 +58,7 @@ Add regression cases when fixing bugs and practical behavior tests with each dom
 
 - Router navigation, native splash lifecycle, external links, safe areas, larger text, contrast, reduced motion, and future keyboard/forms need platform verification.
 - The chosen calendar/time-zone rules need date-boundary, daylight-saving, travel, missed-day, and historical-edit tests when implemented. Use deterministic clocks and synthetic records.
-- Future Firebase tests must exercise unauthenticated/cross-user denial, validated writes, offline/pending data, account switching/deletion, and journal edit conflicts using emulators where relevant.
+- Firebase integration tests need allowed operations and unauthenticated/unverified/cross-user denial, invalid or protected-field writes, and privileged-handler authorization. Add membership/revocation cases only with scoped community access. Use emulators for enforcement; verify offline/pending data, account switching/deletion, and journal conflicts at the appropriate service/native boundary.
 - Future API.Bible tests must cover input validation, explicit translation selection, response parsing, attribution, timeouts, quotas, and unavailable Scripture states without calling the live provider in routine tests.
 
 Follow [AGENTS.md](../../AGENTS.md) for scope and test quality. Report the exact checks run and their limits; never imply that mocked tests establish native runtime behavior or production security.

@@ -1,40 +1,19 @@
 # UI/UX audit
 
-## Role
+Review only under `AGENTS.md`. Read the design guide and relevant product decisions; inspect comparable UI and observe the selected flow in available runtimes or supplied captures.
 
-Act as a senior mobile product designer and UX engineer reviewing implemented 77Faithful screens.
+Screens or flow: `<TASK>`
 
-## Task
+Intended user outcome and requirements: `<REQUIREMENTS>`
 
-Screens or flow to review: `<TASK>`
+## Evaluate
 
-Intended user outcome and relevant requirements: `<REQUIREMENTS>`
+- Assess visual hierarchy, reading order, terminology, readability, spacing/density, primary actions, discoverability, and design consistency.
+- Follow entry, navigation/back, task completion, and recovery for unnecessary steps, confusing transitions, or friction. Respect iOS/Android conventions and mobile ergonomics.
+- Examine forms, validation, submission feedback, keyboard behavior, touch targets, accessibility, scrolling, safe areas, and relevant loading, empty, and error states.
+- Check destructive actions for clear consequences and proportionate protection. Apply product/privacy principles when copy, progress, Scripture, or sharing is affected.
+- Separate observable usability problems from visual preference. Support findings with a blocked/confusing task, measured contrast/target/layout issue, inconsistent control behavior, or other concrete evidence. Do not recommend a redesign simply to produce findings.
 
-## Context gathering
+## Verify and report
 
-Read root and applicable directory `AGENTS.md` instructions, the design-system guide, and relevant product decisions. Inspect the selected screens, navigation, shared controls, and comparable flows. Observe the implementation in available runtimes or supplied captures; state where only source inspection is possible.
-
-## Success criteria
-
-Identify actionable obstacles to comprehension, task completion, accessibility, or trust, with evidence and proportionate corrections.
-
-## Constraints
-
-Review only; do not edit source, tests, configuration, or documentation unless explicitly asked. Avoid subjective redesign for novelty. Use synthetic accounts/content; do not inspect real private journals to evaluate a flow.
-
-## Review expectations
-
-- Assess hierarchy, reading order, terminology, readability, spacing, density, cognitive load, primary/secondary actions, discoverability, and consistency.
-- Follow navigation and task flows for unnecessary steps, friction, confusing transitions, and iOS/Android expectations.
-- Examine forms, keyboard behavior, touch targets, accessibility, scrolling, safe areas, loading, empty states, errors, and recovery.
-- Review destructive actions and confirmations for proportionate protection, clear consequences, and user control.
-- Look for gamification, completion metrics implying spiritual worth, guilt around missed days, streak pressure, distracting treatment of Scripture, or private reflections appearing public.
-- Rank findings as Critical, High, Medium, or Low by user impact. For each include the location/state, problem, user impact, proposed change, and implementation scope.
-
-## Verification
-
-Reproduce important findings where possible, including affected themes, text sizes, and platforms. Distinguish observed behavior from source-based concerns and untested states. Do not infer mobile usability from static export or a desktop screenshot.
-
-## Final response
-
-Give prioritized findings and the smallest useful improvement sequence; say when no material issue is found. Report changes/files changed (normally none), checks actually performed and outcomes, and remaining concerns or observation limits.
+Reproduce important issues where possible in the affected themes, text sizes, and platforms. Label source-only concerns and untested states; a desktop screenshot cannot establish mobile usability. Return prioritized findings using the review format in `AGENTS.md`, with bounded corrections. Stop after the requested flow; no material findings is an acceptable result.

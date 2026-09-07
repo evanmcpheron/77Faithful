@@ -1,41 +1,21 @@
 # Firebase-backed feature
 
-## Role
-
-Act as a mobile/backend engineer implementing a focused Firebase-backed capability.
-
-## Task
+Implement the specified data capability. Read `AGENTS.md` and relevant architecture/testing guidance. Trace existing identity, service calls, document paths, rules, indexes, and tests. Verify the installed SDK's behavior against current official Firebase, React Native Firebase, and relevant Expo documentation.
 
 Feature: `<FEATURE>`
 
-Acceptance criteria: `<REQUIREMENTS>`
+Acceptance criteria and required reads/writes: `<REQUIREMENTS>`
 
-## Context gathering
+## Implement
 
-Read root and applicable directory `AGENTS.md` instructions and relevant project, architecture, and testing guides. Trace existing UI-to-service-to-backend paths, Auth handling, rules, indexes, configuration, and tests where present. Verify installed SDK versions against current official Expo, React Native Firebase, and Firebase documentation.
+- Follow the selected native Firebase/development-build architecture. Introduce only the Firebase products and focused service/backend modules needed for this feature; planned integrations are not configured infrastructure.
+- Map each operation to its owner, allowed actors, fields, query, and authorization boundary. Apply the Firebase rules in `AGENTS.md`, including the selected verified-account requirement for cloud personal-data writes.
+- Deliver the necessary rules, validation, indexes, and tests with each data path. Keep private records separate from shared data; include membership enforcement only when community behavior is in scope.
+- Bound queries/listeners and clean up subscriptions. Consider actual read/write costs, document growth, and required atomic operations without building a generic repository framework.
+- Handle realistic service failures and applicable offline, pending/saved/failed, concurrent-edit, retry, and duplicate-request behavior. Follow selected account-switching and nested-deletion semantics when personal records are affected.
 
-## Success criteria
+## Verify and finish
 
-The requested capability works through its actual data path, with validated inputs, server-enforced authorization, useful failures, and meaningful automated security/behavior tests.
+Use synthetic emulator tests for allowed access, unauthenticated/unverified/cross-user denial, invalid fields, ownership or privilege changes, and scoped membership cases. Test privileged handlers independently of rules and exercise service failure/state transitions.
 
-## Constraints
-
-Follow the selected native Firebase/development-build architecture; do not silently substitute a web SDK or treat planned services as configured. Keep SDK details out of presentation components. Create service/backend modules only with working scoped behavior.
-
-Never treat client checks or App Check as user authorization. Do not weaken rules, expose secrets, fabricate project credentials, or add sharing/community infrastructure outside the task. Production provisioning, deployment, and data migration require explicit scope.
-
-## Implementation expectations
-
-- Trace identity and permissions from sign-in through every document/file operation and privileged handler. Respect verified-account requirements, immutable ownership, and allowed fields/types. Admin SDK handlers must authorize separately because they bypass rules.
-- Implement relevant Auth, Firestore, Functions, Storage, server validation, rules, and indexes together.
-- Design actual queries, pagination/listeners, writes, and indexes around Firestore capabilities; consider read amplification and costs without speculative optimization.
-- Handle cancellation/unsubscription, expected failures, offline/pending/saved states, synchronization, retries, and duplicate requests where relevant.
-- Keep journals/reflections private, including caches and diagnostics. Apply the selected account-switching, concurrent-edit, and nested-deletion behavior when affected.
-
-## Verification
-
-Use synthetic data and emulator tests for authorized access, unauthenticated/cross-user denial, invalid writes, and relevant privileged operations. Test service failures and state transitions. Run `npm run check` plus applicable backend/rules checks; export web when shared code changes. Verify native persistence/build behavior separately when possible; report absent tools or external configuration without claiming integration success.
-
-## Final response
-
-Report behavior and authorization changes, files changed, tests/checks and outcomes, and remaining concerns, including any unverified configuration or native behavior.
+Complete `AGENTS.md` checks plus backend/rules checks. When introducing the separate backend or emulator setup, provide runnable scripts, document them, and include applicable checks in CI; root Jest currently only discovers `src/` tests. Verify native build/persistence behavior where available. Report missing external configuration and unverified boundaries without claiming the integration works. Stop at the requested capability; cloud provisioning, deployment, and data migration are separate unless included in the user's scope.

@@ -15,7 +15,7 @@ npm start
 
 `npm run ios`, `npm run android`, and `npm run web` launch the respective development targets. Native targets need an appropriate simulator, emulator, or device. The current starter can use Expo Go; the selected native Firebase integration will require development builds when implemented. Web is a development preview target for the first release.
 
-Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) and the exact [Expo 57 docs](https://docs.expo.dev/versions/v57.0.0/) before coding.
+Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) for engineering and verification guidance, including the versioned Expo documentation requirement. [Task prompts](prompts/README.md) provide focused implementation and review starting points.
 
 ## Verification
 

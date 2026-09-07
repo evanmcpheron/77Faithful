@@ -1,41 +1,17 @@
 # Application security and privacy review
 
-## Role
+Review only under `AGENTS.md`. Read relevant architecture decisions and trace the specified data flow through UI, local storage, transport, services, authorization, diagnostics, and deletion. Use current official documentation/advisories for uncertain security or provider behavior.
 
-Act as an engineer reviewing end-to-end application security and sensitive-data handling.
+Feature, data flow, diff, or bounded application scope: `<TASK>`
 
-## Task
+## Trace risks
 
-Feature, data flow, diff, or application scope: `<TASK>`
+- Check authentication, session lifetime, account switching, and access boundaries against `AGENTS.md`. Distinguish repository configuration from deployed-state evidence; use the Firebase security prompt's specific access cases when relevant.
+- Distinguish public client configuration from provider/Admin secrets. Inspect environment handling, transport, local caches/backups, and residual personal data after sign-out or deletion.
+- Examine collection, logging, analytics, crash reporting, third-party payloads, and sharing defaults for unintended disclosure. Follow deletion through affected nested records, files, caches, and copies.
+- For implemented community flows, inspect membership, visibility, and revocation without assuming membership grants journal access. Do not claim encryption or privacy properties absent from the implementation.
+- For Scripture integration, check gateway boundaries, current account/translation terms, attribution, cache/persistence policy, and version handling. Inspect installed dependencies against relevant authoritative advisories rather than treating every version lag as a vulnerability.
 
-## Context gathering
+## Verify and report
 
-Read root and applicable directory `AGENTS.md` instructions and relevant architecture, project, and testing guides. Trace data from UI input through local storage, transport, services, backend authorization, diagnostics, and deletion. Inspect actual configuration/dependencies and current official security advisories where relevant.
-
-## Success criteria
-
-Identify confirmed vulnerabilities separately from plausible risks, with concrete evidence, practical fixes, and appropriate verification.
-
-## Constraints
-
-Review only; do not edit source, tests, configuration, documentation, cloud resources, or dependencies unless explicitly asked. Use synthetic accounts/data and redact findings. Do not expose secrets or real journals/reflections in reports, logs, fixtures, or external tools.
-
-Apply conservative privacy treatment to spiritual reflections. Do not claim encryption or privacy guarantees that the implementation does not establish.
-
-## Review expectations
-
-- Trace authentication, authorization, session lifetime, account switching, Firebase rules, and privileged handlers. Client checks and App Check do not establish user permissions.
-- Distinguish public client configuration from true secrets such as provider/Admin credentials; inspect API-key exposure, environment handling, and transport protection.
-- Examine secure local storage, offline caches, backups, device/session access, and stale personal data after sign-out or deletion.
-- Review journals, reflections, and any implemented prayer-request/community flows for ownership, membership, visibility, and unintended sharing.
-- Inspect logs, analytics, crash/error reporting, and third-party payloads for unnecessary collection or sensitive content.
-- Follow data deletion through Auth, nested records, files, caches, and copies. Assess dependency risk using installed versions and relevant authoritative evidence.
-- Rank findings as Critical, High, Medium, or Low, labeling confirmed vulnerabilities versus possible risks. Give location/path, evidence, impact, correction, and a meaningful test or validation step.
-
-## Verification
-
-Use existing non-fixing checks and bounded emulator/local tests where available. Distinguish source configuration from deployed settings and missing future features from current vulnerabilities. Report unverified storage, platform, provider, or production boundaries explicitly.
-
-## Final response
-
-Give prioritized findings, confidence/evidence, and recommended fixes/tests. Report changes/files changed (normally none), checks actually run and outcomes, and remaining concerns.
+Use existing non-fixing local/emulator checks and synthetic accounts/data; redact findings and do not inspect real personal records. Return concrete exploit or disclosure paths, impact, corrections, and meaningful validation. Separate confirmed problems from hypotheses, unavailable evidence, and absent future features. Stop at the stated data flow; report verification limits instead of inferring production security.

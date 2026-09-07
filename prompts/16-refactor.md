@@ -1,42 +1,19 @@
 # Behavior-preserving refactor
 
-## Role
+Refactor the specified scope. Read `AGENTS.md` and inspect target modules, callers, contracts, platform variants, tests, and local changes before editing.
 
-Act as an engineer simplifying a specific maintenance problem without changing behavior.
+Scope and maintainability problem: `<TASK>`
 
-## Task
+Behavior/contracts to preserve: `<REQUIREMENTS>`
 
-Refactor scope and maintainability problem: `<TASK>`
+## Establish and make the change
 
-Behavior or contracts to preserve: `<REQUIREMENTS>`
+- Identify a specific maintenance burden in the current code and explain how the proposed change reduces it. If the request only says “refactor this screen,” establish that reason from the code first; if no material problem is evident, report that no refactor is warranted.
+- Protect important existing behavior with relevant tests; add narrow characterization cases first where that protection is missing.
+- Make the smallest coherent change that resolves the burden. Preserve observable behavior, data contracts, accessibility, and platform semantics. Do not combine feature additions or behavior-changing bug fixes unless the user's scope includes them; report discovered defects separately.
+- Preserve public contracts. If a local internal API change is necessary, update its affected consumers together rather than adding an unused compatibility layer or leaving them broken.
+- Update engineering documentation only when documented facts or conventions change.
 
-## Context gathering
+## Verify and finish
 
-Read root and applicable directory `AGENTS.md` instructions and relevant engineering guidance. Inspect the target modules, callers, public contracts, platform variants, and tests. Identify current local changes so unrelated work remains intact.
-
-## Success criteria
-
-Resolve the stated maintenance problem while preserving externally observable behavior, data contracts, accessibility, and relevant platform semantics.
-
-## Constraints
-
-Do not mix feature additions, bug fixes that change behavior, or unrelated cleanup into this refactor. Surface discovered defects separately. Avoid architecture churn or replacing simple working code with elaborate patterns without a concrete, demonstrable maintenance benefit.
-
-Do not add abstractions, dependencies, or compatibility layers solely to make the structure appear more formal.
-
-## Implementation expectations
-
-- State the specific source of maintenance difficulty and how the change reduces it.
-- Use existing tests as protection; add narrow characterization tests first where important current behavior is otherwise unprotected.
-- Work in small, verifiable increments, keeping the change within the stated responsibility.
-- Prefer clearer names, direct control flow, coherent modules, and useful composition over explanatory comments or speculative layers.
-- Preserve public APIs unless an internal API migration is explicitly part of the task; keep its consumers within the authorized scope.
-- Update engineering documentation only if a documented convention actually changes.
-
-## Verification
-
-Run relevant tests before and after the refactor. Run `npm run check` and additional checks required by `AGENTS.md` for affected UI, routing, configuration, or backend code. Inspect the final diff for accidental behavioral changes and test changes that merely accommodate the new implementation.
-
-## Final response
-
-Report the maintenance problem resolved, files changed, evidence that behavior was preserved, tests/checks and outcomes, and remaining concerns or separately discovered defects.
+Run relevant tests before and after, followed by required `AGENTS.md` checks. Inspect the diff for behavioral changes, unnecessary scope expansion, and assertions weakened to accommodate the rewrite. Report the concrete maintenance improvement and preservation evidence. Stop when the identified burden is resolved; do not continue restructuring surrounding code.

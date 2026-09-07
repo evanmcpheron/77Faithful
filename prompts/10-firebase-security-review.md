@@ -1,38 +1,17 @@
 # Firebase security review
 
-## Role
+Review only under `AGENTS.md`. Inspect relevant architecture decisions, actual Auth assumptions, client calls, Firestore/Storage rules, privileged handlers, indexes, emulator tests, and configuration. Use current official documentation for enforcement details in question.
 
-Act as an engineer reviewing Firebase authorization, validation, and private-data boundaries.
+Firebase feature, rules, or access boundary: `<TASK>`
 
-## Task
+## Trace access
 
-Firebase feature, rules, or security scope: `<TASK>`
+- Walk unauthenticated, unverified, ordinary-user, and privileged operations through each scoped entry point. Apply the authorization/field-protection rules in `AGENTS.md`; check both legitimate operations and attempted bypasses.
+- Inspect create/update/delete and get/list access, overlapping broad rule matches, ownership changes, injected fields, and client-controlled authorization data. Check handler authorization separately from Firestore enforcement.
+- If community access exists or is part of the reviewed change, test non-members, members, permitted roles, revoked members, and cross-community requests. Membership alone must not expose private journals.
+- For scoped Storage access, inspect paths, metadata, upload limits, and download/share mechanisms that may expose private files.
+- Separate missing future infrastructure from defects in an implemented or shipping data path. Repository configuration does not establish what is deployed.
 
-## Context gathering
+## Verify and report
 
-Read root and applicable directory `AGENTS.md` instructions, relevant architecture decisions, and testing guidance. Inspect actual Auth assumptions, client calls, Firestore/Storage rules, privileged handlers, indexes, emulator tests, and environment configuration where present. Distinguish selected design from deployed-state evidence.
-
-## Success criteria
-
-Find evidence-backed authorization or validation defects and provide concrete fixes and tests that preserve intended access.
-
-## Constraints
-
-Review only; do not edit code, rules, tests, configuration, documentation, or cloud resources unless explicitly asked. Never weaken rules for development convenience. Use synthetic emulator data; do not test cross-user access against real personal records.
-
-## Review expectations
-
-- Trace unauthenticated, unverified, ordinary-user, and administrative operations across every relevant entry point.
-- Check document/file ownership, mutable owner IDs, allowed fields/types, privilege escalation, and client-controlled roles or authorization data.
-- Examine cross-user reads/writes, queries, broad rule matches, and administrative operations. Backend Admin SDK access bypasses rules and needs its own authorization; App Check is not a permission system.
-- Treat journals and reflections as private. If community membership or prayer requests actually exist, check visibility, membership changes, and cross-community access; do not invent those features.
-- For Storage, inspect object paths, metadata validation, upload constraints, and download/share mechanisms that may expose private files.
-- Rank findings as Critical, High, Medium, or Low. Include exact location, evidence or attack path, impact, recommended correction, and a concrete allow/deny regression test. Separate confirmed vulnerabilities from hypotheses.
-
-## Verification
-
-Run existing relevant emulator/security tests where available and inspect both allowed and denied operations. Repository rules do not prove production deployment; mocked client tests do not prove enforcement. Report absent rules, deployment evidence, or test tooling without installing or deploying anything.
-
-## Final response
-
-Provide prioritized findings and fixes/tests, or state no confirmed issue within the reviewed scope. Report changes/files changed (normally none), checks performed and outcomes, and remaining concerns or unverified boundaries.
+Run existing relevant emulator/security tests with synthetic data and inspect their allow/deny assertions. Do not test cross-user access against real personal records. Report concrete attack paths or access failures with location, impact, correction, and a regression case; label hypotheses and missing evidence. Stop after the specified boundaries. An absent emulator or deployment evidence is a verification limit, not proof of secure access.

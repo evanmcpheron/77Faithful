@@ -27,24 +27,25 @@ Development tooling now includes Expo's ESLint 57 flat configuration, ESLint 9, 
 
 ## Observed: repository structure
 
-| Path                                                      | Current responsibility                                                                                    |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `src/app/`                                                | `_layout.tsx`, `index.tsx` (`/`), `explore.tsx` (`/explore`)                                              |
-| `src/components/`                                         | Themed text/view, platform-specific tabs and animated icon, external link, starter hint row and web badge |
-| `src/components/ui/`                                      | `collapsible.tsx` only                                                                                    |
-| `src/hooks/`                                              | Theme and color-scheme hooks, including a web variant                                                     |
-| `src/constants/theme.ts`                                  | Light/dark colors, font families, spacing, content width, tab inset                                       |
-| `src/global.css`                                          | Web font-family variables                                                                                 |
-| `assets/`                                                 | Expo/React starter images, density variants, tab icons, and an iOS `.icon` asset bundle                   |
-| `scripts/reset-project.js`                                | Moves or deletes `src/` and `scripts/`, then creates a blank `src/app/`                                   |
-| `app.json`, `tsconfig.json`                               | Expo app and TypeScript configuration                                                                     |
-| `docs/engineering/`                                       | Repository context, visual-system inventory, and verification notes                                       |
-| `src/**/*.test.tsx`                                       | Colocated component and hook regression tests, outside `src/app/`                                         |
-| `eslint.config.js`, `.prettierrc.json`, `.prettierignore` | Lint rules and formatting configuration                                                                   |
-| `jest.config.js`, `jest.setup.js`                         | Expo test preset, native animation mocks, and CSS setup                                                   |
-| `.github/workflows/ci.yml`, `.nvmrc`                      | Node 24 CI and local runtime selection                                                                    |
-| `AGENTS.md`, `CLAUDE.md`                                  | Engineering instructions; `CLAUDE.md` imports `AGENTS.md`                                                 |
-| `.vscode/`                                                | Expo extension recommendation and explicit save actions for fixes/import organization/member sorting      |
+| Path                                                      | Current responsibility                                                                                                       |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/app/`                                                | `_layout.tsx`, `index.tsx` (`/`), `explore.tsx` (`/explore`)                                                                 |
+| `src/components/`                                         | Themed text/view, platform-specific tabs and animated icon, external link, starter hint row and web badge                    |
+| `src/components/ui/`                                      | `collapsible.tsx` only                                                                                                       |
+| `src/hooks/`                                              | Theme and color-scheme hooks, including a web variant                                                                        |
+| `src/constants/theme.ts`                                  | Light/dark colors, font families, spacing, content width, tab inset                                                          |
+| `src/global.css`                                          | Web font-family variables                                                                                                    |
+| `assets/`                                                 | Expo/React starter images, density variants, tab icons, and an iOS `.icon` asset bundle                                      |
+| `scripts/reset-project.js`                                | Moves or deletes `src/` and `scripts/`, then creates a blank `src/app/`                                                      |
+| `app.json`, `tsconfig.json`                               | Expo app and TypeScript configuration                                                                                        |
+| `docs/engineering/`                                       | Repository context, visual-system inventory, and verification notes                                                          |
+| `src/**/*.test.tsx`                                       | Colocated component and hook regression tests, outside `src/app/`                                                            |
+| `eslint.config.js`, `.prettierrc.json`, `.prettierignore` | Lint rules and formatting configuration                                                                                      |
+| `jest.config.js`, `jest.setup.js`                         | Expo test preset, native animation mocks, and CSS setup                                                                      |
+| `.github/workflows/ci.yml`, `.nvmrc`                      | Node 24 CI and local runtime selection                                                                                       |
+| `AGENTS.md`, `CLAUDE.md`                                  | Persistent engineering rules; `CLAUDE.md` imports `AGENTS.md`                                                                |
+| `prompts/`                                                | Optional task prompts for bounded implementation, planning, testing, and review; see [prompt index](../../prompts/README.md) |
+| `.vscode/`                                                | Expo extension recommendation and explicit save actions for fixes/import organization/member sorting                         |
 
 There is no root `app/`, service layer, `lib/`, `utils/`, separate `theme/` directory, or backend implementation. There is no custom Babel, Metro, or EAS configuration. Native `ios/` and `android/` directories are absent and ignored; configuration is currently owned by Expo app config/plugins.
 
@@ -83,7 +84,7 @@ Firebase and API.Bible dependencies/integrations are absent. No authentication, 
 
 Concrete follow-up work, when relevant to an authorized task:
 
-- Device testing remains necessary for safe areas, text scaling, contrast, motion, and native startup. A web export succeeds but does not prove live browser behavior; the browser connection was unavailable during this task.
+- Device testing remains necessary for safe areas, text scaling, contrast, motion, and native startup. Historical verification and its limits are recorded in [testing.md](testing.md); recheck available runtimes when affected UI changes.
 - The visual system still has no dedicated radius/elevation scale or shared product buttons, inputs, and loading/empty/error states. Add them with the screens that need them.
 - No backend, domain, navigation end-to-end, or native binary tests exist yet. Cloud security-rule tests belong with the future integration.
 - Product branding is selected, but configured artwork/screens still use Expo examples. The tracked `assets/app-icon.png` is the 77/path/cross identity source; store-ready derivatives and replacement of starter art remain product work.

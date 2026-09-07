@@ -1,41 +1,19 @@
-# Code quality review
+# Code quality and human maintainability review
 
-## Role
+Review only under `AGENTS.md`. Inspect the requested code, nearby patterns, callers/contracts, platform variants, and tests. Establish the comparison scope for a diff.
 
-Act as a senior engineer reviewing a bounded implementation for correctness and maintainability.
+Files, feature, or diff: `<TASK>`
 
-## Task
+Intended behavior and known maintenance concerns: `<REQUIREMENTS>`
 
-Files, feature, or diff to review: `<TASK>`
+## Review
 
-Intended behavior or acceptance criteria: `<REQUIREMENTS>`
+- Trace correctness, state transitions, async races, subscription/resource lifetimes, validation, and expected failures. Check affected TypeScript, React, platform, accessibility, and security/privacy contracts.
+- Apply the naming, boundaries, reuse, comments, and dependency guidance in `AGENTS.md`. Evaluate whether a human can follow the behavior and locate the right place to change it.
+- Substantiate maintainability findings with a concrete edit or debugging scenario: repeated changes to one domain rule, indirection obscuring an error, or unrelated responsibilities making a local change risky. Fewer lines or a preferred architecture is not sufficient evidence.
+- Inspect test assertions and mocks, not only pass/fail results. Identify meaningful unprotected behavior and logic that tests replace instead of exercising.
+- Distinguish introduced problems, pre-existing issues, and optional improvements. Leave routine formatting to configured tools.
 
-## Context gathering
+## Verify and report
 
-Read root and applicable directory `AGENTS.md` instructions and relevant engineering guidance. Inspect the requested code, surrounding callers/contracts, platform variants, and tests. If reviewing a diff, establish the comparison scope and distinguish pre-existing issues from introduced ones.
-
-## Success criteria
-
-Identify substantive issues with evidence and proportionate corrections; acknowledge reasonable code without manufacturing findings.
-
-## Constraints
-
-Review only; do not change source, tests, configuration, or documentation unless explicitly asked. Leave formatting/style enforcement to configured tools. Repetition twice does not by itself justify an abstraction, and personal preference is not a defect.
-
-## Review expectations
-
-- Check correctness, race conditions, subscription/async lifecycles, error handling, validation, and materially relevant performance.
-- Review TypeScript types, React hooks/state ownership, platform behavior, and accessibility.
-- Examine security and privacy, particularly authorization and personal spiritual data.
-- Assess module responsibilities, naming, control flow, duplicated logic, unnecessary abstractions/helpers, overly broad types, and tests that miss important behavior.
-- Flag comments that restate operations or conceal unclear structure only when there is a useful, concrete correction.
-- Rank findings as Critical, High, Medium, or Low. For each give file/location, problem, evidence, why it matters, and the recommended correction. Identify relevant test gaps.
-- Separate confirmed defects from risks requiring additional evidence and optional improvements.
-
-## Verification
-
-Use existing non-fixing checks from the testing guide when they help validate a finding. Inspect test assertions as well as pass/fail results. Do not install tools, apply autofixes, or claim runtime/platform verification based on inspection alone.
-
-## Final response
-
-Present findings in severity order, or state no material findings in the reviewed scope. Report changes/files changed (normally none), tests/checks actually run and outcomes, and remaining concerns or coverage limits.
+Use existing non-fixing checks when they help validate a concern. Trace proposed corrections through callers so they preserve required behavior and reduce the demonstrated burden. Return prioritized findings with bounded fixes and verification under `AGENTS.md`; avoid long replacement implementations. Stop at the requested scope, including an explicit no-material-findings result when warranted.

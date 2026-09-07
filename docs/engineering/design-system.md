@@ -80,7 +80,7 @@ Static styles are generally colocated `StyleSheet.create` objects. Style arrays 
 - Several pressable examples reduce opacity to 0.7 when pressed. `Collapsible` mounts content with a 200 ms fade-in. Its trigger exposes a button role, the title as its accessible label, and expanded state; it has a minimum 48-by-48 target, a decorative icon, and a wrapping title.
 - The logo examples use Reanimated keyframes (600 ms native, 300 ms web, plus a four-minute glow rotation). The native splash overlay is hidden after its animation; the web overlay returns `null`. There is no application-level reduced-motion policy demonstrated in source.
 
-These patterns have not been visually or interactively verified on devices during this documentation task. In particular, fixed tab insets, the non-scrolling Home layout, contrast, text scaling, touch targets, motion, and web hydration deserve validation when affected UI is changed.
+Native visual/interaction checks were not recorded during engineering setup on 2026-09-07. Fixed tab insets, the non-scrolling Home layout, contrast, text scaling, touch targets, motion, and web hydration need validation when affected UI changes. This inventory describes starter patterns, not a requirement to preserve their limitations; use the reuse and accessibility criteria in `AGENTS.md` when adapting them.
 
 ## Selected visual direction and remaining work
 

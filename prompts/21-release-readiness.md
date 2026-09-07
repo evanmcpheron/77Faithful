@@ -1,43 +1,21 @@
 # Release readiness
 
-## Role
+Review only under `AGENTS.md`. Read relevant engineering decisions and inspect the release revision, app/build configuration, CI/build evidence, implemented flows, and scoped service configuration.
 
-Act as an engineer reviewing a 77Faithful release or milestone for concrete blockers.
+Release/milestone, revision, platforms, and audience: `<TASK>`
 
-## Task
+Shipping capabilities and acceptance criteria: `<REQUIREMENTS>`
 
-Release/milestone, revision, target platforms, and intended audience: `<TASK>`
+## Assess release evidence
 
-Release scope and acceptance criteria: `<REQUIREMENTS>`
+- Check formatting, lint, TypeScript, tests, and build results for the intended revision. Identify implemented capabilities separately from plans and fixtures.
+- Exercise critical included flows: authentication, navigation, forms, loading/empty/error recovery, offline/network behavior, synchronization, and crash-prone transitions.
+- Inspect app identifiers, permissions, environment setup, signing/build evidence, store metadata/artwork, and iOS/Android behavior for the target audience.
+- For shipping Firebase features, check production rules/indexes, authorization, private-data deletion, and operational limits. For Scripture integration, check gateway setup, real translation entitlements, attribution/licensing, and unavailable-text behavior.
+- Evaluate applicable accessibility, privacy, and product requirements. Missing prerequisites for shipping capabilities are blockers; unrelated future features are not.
 
-## Context gathering
+## Verify and conclude
 
-Read root and applicable directory `AGENTS.md` instructions and relevant project, architecture, design, and testing guidance. Inspect the release revision, app/build configuration, relevant CI results, implemented user flows, backend rules/indexes, and provider configuration evidence. Determine which capabilities exist versus remain planned.
+Run available non-fixing project and targeted flow checks. Inspect native build/device and deployment evidence within available access; do not install, provision, deploy, or publish during the review. A web export or unit suite does not establish native release readiness.
 
-## Success criteria
-
-Produce a practical release-blocker checklist tied to the stated milestone and platforms, separating blockers from improvements that can safely wait.
-
-## Constraints
-
-Review only; do not edit source, tests, configuration, documentation, cloud resources, or store metadata, deploy, or publish unless explicitly asked. Use synthetic data and avoid printing credentials.
-
-Do not declare production readiness from a successful web export or unit suite. The selected first release is native iOS/Android; web preview is not evidence of a production web release.
-
-## Review expectations
-
-- Check TypeScript, lint, formatting, automated tests, and relevant CI/build evidence for the intended revision.
-- Exercise critical authentication, navigation, input, loading, empty, error, offline/network, synchronization, and crash-prone paths.
-- Examine permissions, environment variables, app identifiers, build/signing setup, metadata/artwork, iOS behavior, and Android behavior.
-- Verify evidence for production Firebase configuration, rules, indexes, authorization, private-data deletion, and operational limits where required.
-- Review API.Bible gateway/configuration, real translation entitlements, attribution, licensing, and unavailable-text behavior where included.
-- Assess accessibility, privacy, and product-experience requirements without expanding the milestone.
-- Mark each relevant item verified, failed, or unverified, with evidence. A missing prerequisite for a shipping capability is a blocker; unrelated future functionality is not.
-
-## Verification
-
-Run available non-fixing project checks and targeted release-flow checks. Inspect native build/device evidence and deployment configuration only within available access. State checks that cannot run and what would establish readiness; do not install or provision missing infrastructure during this review.
-
-## Final response
-
-Give a readiness judgment and a concise blocker checklist with location, evidence, and required resolution. Separate deferrable improvements. Report changes/files changed (normally none), checks and outcomes, and remaining concerns or unverified release gates.
+Mark relevant gates verified, failed, or unverified with evidence. Return a readiness judgment and concrete blockers with required resolution, separating deferrable improvements. Stop at the stated milestone assessment and identify exactly which missing evidence prevents readiness.

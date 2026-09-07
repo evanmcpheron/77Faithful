@@ -1,42 +1,19 @@
 # Component tests
 
-## Role
-
-Act as a React Native engineer testing user-visible component behavior.
-
-## Task
+Add tests for user-visible behavior. Read `AGENTS.md` and `docs/engineering/testing.md`; inspect the component, consumers, providers, navigation boundaries, and related tests. Use the installed React Native Testing Library's async conventions.
 
 Component or flow: `<TASK>`
 
 Expected states and interactions: `<REQUIREMENTS>`
 
-## Context gathering
+## Test
 
-Read root and applicable directory `AGENTS.md` instructions and `docs/engineering/testing.md`. Inspect the component, its consumers, related tests, shared providers, and navigation boundaries. Check installed React Native Testing Library APIs and the repository's async rendering/interaction conventions.
+- Exercise relevant rendered, loading, empty, error/recovery, disabled, submitting, and success states that the component actually supports.
+- Use user interactions for input, validation, submission, toggling, recovery, and navigation triggers where applicable. Prefer accessible role/name queries and assert meaningful labels, roles, and states.
+- Keep the real component and behavior under test; isolate platform/external boundaries as needed. Await rendering, interactions, and async transitions.
+- Avoid incidental tree structure, internal hook state, and broad snapshots. Style assertions are useful for a specific visual contract or regression; a test ID must not conceal a missing accessible name.
+- Reuse the existing harness and synthetic fixtures, with tests outside `src/app/`. Keep production changes separate unless explicitly included; report exposed defects without rewriting expected behavior to make tests pass.
 
-## Success criteria
+## Verify and finish
 
-Tests show that users can understand and operate the component through its relevant states, and detect meaningful regressions.
-
-## Constraints
-
-Prefer accessible role/name queries and interaction-based testing. Do not assert hook state, private methods, incidental tree structure, exact style objects, or large snapshots as substitutes for behavior. Use style assertions only for a specific visual contract or regression.
-
-Keep the real component under test. Mock platform and external-service boundaries as needed; do not replace the behavior being verified. Do not change production behavior simply to make tests pass.
-
-## Implementation expectations
-
-- Cover relevant rendered, loading, empty, error, disabled, and success states without inventing unsupported scenarios.
-- Exercise user interactions, input, submission, validation, recovery, and navigation triggers where appropriate.
-- Assert accessible labels, roles, and states that matter to using the control; a test ID should not conceal a missing accessible name.
-- Await rendering, user interactions, and asynchronous state changes using the installed library's conventions.
-- Use minimal synthetic fixtures and deterministic async control. Keep private spiritual content out of fixtures and snapshots.
-- Follow colocated test conventions outside `src/app/`; reuse existing setup instead of creating a parallel harness.
-
-## Verification
-
-Run targeted suites and `npm run check`. Confirm assertions fail for the behavior they protect where practical. Identify what still needs runtime verification: keyboard overlap, safe areas, screen-reader focus, layout, gestures, or native navigation cannot be established by mocked component tests alone.
-
-## Final response
-
-Report behavior covered, files changed, tests/checks and outcomes, and remaining concerns or manual platform checks.
+Run targeted suites and required `AGENTS.md` checks. Check that assertions would fail if the protected interaction broke. Report behaviors covered and results, including failures. Identify runtime limits such as keyboard overlap, safe areas, screen-reader focus, gestures, and native navigation. Stop at meaningful protection of the specified interactions; mocked tests do not establish overall usability.

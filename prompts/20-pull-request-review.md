@@ -10,6 +10,7 @@ Original requirements and acceptance criteria: `<REQUIREMENTS>`
 
 - Check that the diff solves the stated behavior without unrelated refactors or deleted functionality. Distinguish new issues from pre-existing ones.
 - Evaluate correctness, error paths, async lifetimes, platform behavior, UX/accessibility, and security/privacy where affected.
+- Apply the navigation-review checklist in `AGENTS.md` against `docs/APP_NAVIGATION_AND_UX.md`: route/screen additions, removals or alterations, responsibilities, CTA destinations, back behavior, auth/onboarding redirects, day/progression/completion semantics, settings, deep links, duplicated logic or bypassed helpers, and Future features exposed in V1. Verify each material change includes the corresponding contract update; report omissions without editing during review.
 - Apply the reuse and human-maintainability guidance in `AGENTS.md`; justify concerns with concrete behavior or maintenance cost, not stylistic preference.
 - Inspect test assertions/mocks and important missing cases. Include affected dependencies, configuration, rules/indexes, and documentation claims in the review.
 

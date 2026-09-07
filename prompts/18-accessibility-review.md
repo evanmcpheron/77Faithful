@@ -9,6 +9,7 @@ Screens, components, or flow: `<TASK>`
 - Check accessible names, roles, necessary hints, icon-only controls, decorative elements, and disabled/selected/expanded states.
 - Measure relevant contrast and touch targets; check both themes, non-color cues, text scaling, wrapping, scrolling, and reading order.
 - Follow screen-reader focus, movement/restoration, keyboard behavior, and modal/route transitions.
+- Compare controls and transitions with `docs/APP_NAVIGATION_AND_UX.md`: named navigation actions, understandable future-day locks, reachable Scripture/reflection actions, source-aware back behavior, and safe modal dismissal. Evaluate actual navigation barriers without changing screen boundaries for preference; any necessary architectural proposal includes a proposed contract update.
 - Examine form labels, error association/announcement, validation recovery, submission feedback, and dynamic/loading announcements.
 - Check reduced-motion behavior and whether state changes remain understandable without animation.
 

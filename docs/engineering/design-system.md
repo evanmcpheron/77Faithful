@@ -72,6 +72,8 @@ There are no dedicated radius tokens. Components reuse spacing values for radii:
 
 ## Layout and interaction conventions
 
+This guide owns visual primitives and layout techniques. Before changing screen boundaries, navigating CTAs, tabs, headers/back behavior, editors, or modal/sheet flows, read [the navigation and UX contract](../APP_NAVIGATION_AND_UX.md). It owns screen relationships, flow states, and placement; visual consistency or component extraction alone does not justify new screens. An intentional material behavior change updates that contract in the same change; small visual adjustments do not.
+
 Static styles are generally colocated `StyleSheet.create` objects. Style arrays layer dynamic palette values, platform adjustments, pressed state, and caller overrides. Web additionally uses a CSS module for the logo gradient and global CSS font variables imported through the theme module; there is no utility-class styling system.
 
 - Home centers a `SafeAreaView` inside a themed view, caps content width at 800, uses horizontal `Spacing.four`, and adds `BottomTabInset + Spacing.three` at the bottom. Its hero fills available space; the screen is not scrollable.

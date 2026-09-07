@@ -2,6 +2,8 @@
 
 Updated 2026-09-07 after engineering setup. **Observed** describes files in this checkout; **selected/planned** describes decisions awaiting implementation, not deployed services. Recheck source and configuration when making changes.
 
+This is the implementation inventory. [The navigation and UX contract](../APP_NAVIGATION_AND_UX.md) is authoritative for intended screens, routes, flows, journey behavior, and V1/Future scope. Its source reconciliation distinguishes the starter from the target; do not infer final product navigation from observed Home/Explore examples.
+
 ## Observed: stack and dependencies
 
 The app is still a `create-expo-app` starter with Home and Explore example screens. The app name, slug, and URL scheme identify 77Faithful; the screens and configured artwork still use Expo branding.
@@ -39,6 +41,7 @@ Development tooling now includes Expo's ESLint 57 flat configuration, ESLint 9, 
 | `scripts/reset-project.js`                                | Moves or deletes `src/` and `scripts/`, then creates a blank `src/app/`                                                      |
 | `app.json`, `tsconfig.json`                               | Expo app and TypeScript configuration                                                                                        |
 | `docs/engineering/`                                       | Repository context, visual-system inventory, and verification notes                                                          |
+| `docs/APP_NAVIGATION_AND_UX.md`                           | Authoritative navigation/UX contract, planned screens and flow states, source reconciliation, and open product decisions     |
 | `src/**/*.test.tsx`                                       | Colocated component and hook regression tests, outside `src/app/`                                                            |
 | `eslint.config.js`, `.prettierrc.json`, `.prettierignore` | Lint rules and formatting configuration                                                                                      |
 | `jest.config.js`, `jest.setup.js`                         | Expo test preset, native animation mocks, and CSS setup                                                                      |
@@ -59,6 +62,8 @@ There is no root `app/`, service layer, `lib/`, `utils/`, separate `theme/` dire
 - Web [app-tabs.web.tsx](../../src/components/app-tabs.web.tsx) uses `Tabs`, `TabSlot`, `TabList`, and `TabTrigger` from `expo-router/ui`, with custom pressable tabs linking to `/` and `/explore`. See the [SDK 57 Router UI reference](https://docs.expo.dev/versions/v57.0.0/sdk/router/ui/).
 - `.web.tsx` variants also separate the web logo animation from native splash behavior. There are no nested route groups, authentication guards, detail stacks, or modal routes.
 - `ExternalLink` wraps Router `Link`: web uses a new tab, while native presses open `expo-web-browser` after preventing the default link action.
+
+The product's root session gate, Today/Journey tabs, auth/onboarding groups, day/detail routes, Scripture/reflection screens, and Settings are Planned — V1 in the contract. No journey state, settings persistence, route helpers, protected deep-link handling, notifications, or Community routes exist. The configured scheme is not evidence of tested product deep links; no universal-link association or Android App Links intent filters are configured. Android predictive-back configuration is an existing setting requiring native verification when navigation is implemented, not a measured hardware-back defect.
 
 ## Observed: source conventions and styling
 
@@ -94,4 +99,4 @@ Concrete follow-up work, when relevant to an authorized task:
 
 The supplied direction is a free iOS/Android app for a 77-day formation experience: Scripture reading, prayer, reflection, and two participant-selected practices, with weekly themes, daily passages/prompts/questions, intentions, completion tracking, and private journaling. None of this domain behavior or content is implemented yet. Product/privacy constraints live in [AGENTS.md](../../AGENTS.md).
 
-The owner delegated these choices. [Architecture decisions](architecture-decisions.md) now selects native Firebase with offline persistence, private user-owned data, email/password accounts, an authenticated API.Bible callable gateway, explicit translation IDs with WEB as the initial preference, session-only Scripture caching, a fixed-time-zone 77-calendar-day journey without missed-day resets, and mobile-first release scope. The visual direction follows the existing blue 77/path/cross artwork. These are implementation decisions, not claims that the integrations or product features already work.
+The owner delegated integration choices. [Architecture decisions](architecture-decisions.md) selects native Firebase with offline persistence, private user-owned data, email/password accounts with verified cloud personal-data writes, an authenticated API.Bible callable gateway, explicit translation IDs with WEB as the initial preference, and session-only Scripture caching. The [navigation contract](../APP_NAVIGATION_AND_UX.md) owns journey semantics and records open email-gate, offline-flow, and post-journey questions. The visual direction follows the existing blue 77/path/cross artwork. These are planned decisions, not claims that integrations or product features already work; Community stays Future.

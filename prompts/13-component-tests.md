@@ -10,6 +10,7 @@ Expected states and interactions: `<REQUIREMENTS>`
 
 - Exercise relevant rendered, loading, empty, error/recovery, disabled, submitting, and success states that the component actually supports.
 - Use user interactions for input, validation, submission, toggling, recovery, and navigation triggers where applicable. Prefer accessible role/name queries and assert meaningful labels, roles, and states.
+- Read the scoped specifications in `docs/APP_NAVIGATION_AND_UX.md` and use `docs/engineering/testing.md` for implemented user-flow cases: legitimate entry/CTA destinations, gates, back/dismissal, day states, and settings returns. A mocked router call proves only the trigger; test destination/guard behavior at the appropriate integration or native boundary. Do not test unimplemented Future features or turn open recommendations into settled assertions.
 - Keep the real component and behavior under test; isolate platform/external boundaries as needed. Await rendering, interactions, and async transitions.
 - Avoid incidental tree structure, internal hook state, and broad snapshots. Style assertions are useful for a specific visual contract or regression; a test ID must not conceal a missing accessible name.
 - Reuse the existing harness and synthetic fixtures, with tests outside `src/app/`. Keep production changes separate unless explicitly included; report exposed defects without rewriting expected behavior to make tests pass.

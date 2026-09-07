@@ -4,6 +4,10 @@ Choose one prompt for a bounded task, replace its placeholders, and supply the r
 
 [AGENTS.md](../AGENTS.md) owns shared engineering, product, scope, review, and verification rules. Prompts add task-specific guidance; they are not a sequence to run on every change. Implementation includes necessary verification. Planning/review stays analysis-only unless your request also includes changes.
 
+Every prompt inherits the **Navigation and UX contract** rule in `AGENTS.md`; `CLAUDE.md` imports that same file. [docs/APP_NAVIGATION_AND_UX.md](../docs/APP_NAVIGATION_AND_UX.md) owns routes, screen relationships, flow/state behavior, and V1/Future boundaries. Read its applicable specifications before frontend or flow work and use it as the baseline for relevant reviews/tests. Material navigation changes require a contract update in the same change; reviews propose that update without editing. Keep open decisions explicit and follow the documentation-ownership/conflict rule in `AGENTS.md`.
+
+Use the live files in this directory. `Archive.zip` is a historical snapshot containing superseded prompts, not an instruction source or prompt generator. There is no generated prompt layer to update.
+
 ## Choose a prompt
 
 | Prompt                                                           | Use for                                                     | Mode          |
@@ -36,4 +40,4 @@ A small bug may need only 14. For a feature, use planning/research when uncertai
 
 Screen prompt 04 was merged into 03; human maintainability prompt 24 was merged into 15. Remaining numbers are unchanged. Prompt 11 now focuses on implementation; for an API.Bible review, use 19 and include the provider contract checks from 11. Specify “investigate only” with 14 when you want diagnosis without a fix.
 
-Consult the relevant [project context](../docs/engineering/project-context.md), [decisions](../docs/engineering/architecture-decisions.md), [design inventory](../docs/engineering/design-system.md), and [testing guide](../docs/engineering/testing.md) as needed. When maintaining this library, keep shared rules in `AGENTS.md`, retain task-specific verification and stopping conditions, and check prompts against actual repository changes rather than duplicating a version inventory.
+Consult the relevant [project context](../docs/engineering/project-context.md), [integration/architecture decisions](../docs/engineering/architecture-decisions.md), [design inventory](../docs/engineering/design-system.md), and [testing guide](../docs/engineering/testing.md) as needed. When maintaining this library, keep shared rules in `AGENTS.md`, reference the navigation contract rather than duplicating its routes or screen specifications, retain task-specific verification and stopping conditions, and check prompts against actual repository changes rather than duplicating a version inventory.

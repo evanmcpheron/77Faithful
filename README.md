@@ -17,6 +17,8 @@ npm start
 
 Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) for engineering and verification guidance, including the versioned Expo documentation requirement. [Task prompts](prompts/README.md) provide focused implementation and review starting points.
 
+Before screen, navigation, auth/onboarding, or journey-flow work, read [the navigation and UX contract](docs/APP_NAVIGATION_AND_UX.md). It owns intended routes, screen relationships, user flows, navigation states, and V1/Future boundaries. Material flow changes update it in the same change. Home/Explore are existing starter screens; the product flows in the contract are planned.
+
 ## Verification
 
 ```sh
@@ -41,6 +43,7 @@ GitHub Actions runs `npm ci`, `npm run check`, and the web export for pull reque
 ## Engineering context
 
 - [Current implementation](docs/engineering/project-context.md)
+- [Authoritative navigation and UX flows](docs/APP_NAVIGATION_AND_UX.md)
 - [Architecture and product decisions](docs/engineering/architecture-decisions.md)
 - [Design system and visual direction](docs/engineering/design-system.md)
 

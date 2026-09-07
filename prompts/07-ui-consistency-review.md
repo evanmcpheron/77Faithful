@@ -9,6 +9,7 @@ Screens, components, or diff to compare: `<TASK>`
 - Check typography, spacing, colors, radius, control sizes, buttons, fields, icons, and loading/empty/error presentation for accidental drift.
 - Find independently recreated primitives or shared styles that would benefit from one owner. Name the existing primitive/token to extend or the concrete responsibility a missing primitive would own.
 - Distinguish dynamic style arrays and purposeful screen-specific layout from duplication. Similar markup alone is not evidence that two components should merge.
+- Check navigation controls, CTA meaning, back behavior, and modal placement against `docs/APP_NAVIGATION_AND_UX.md`. Visual consolidation must preserve documented screen responsibilities and legitimate platform differences; an architectural recommendation needs flow evidence and a proposed contract update, not just visual uniformity.
 - Inspect light/dark and platform variants while preserving legitimate native/web differences. Test proposed reuse against current consumers so consolidation does not require a large configuration API.
 
 ## Verify and report

@@ -4,6 +4,8 @@ Diagnose and fix the specified defect, unless the user requests investigation on
 
 Bug, reproduction, expected/actual behavior, and affected platform: `<BUG>`
 
+For a screen, redirect, back, day-state, or completion bug, establish expected behavior from `docs/APP_NAVIGATION_AND_UX.md` before repairing code. Distinguish an observed defect from a planned feature or unresolved decision. A repair that restores the contract needs no invented flow; an intentionally changed material behavior requires a same-change contract update under `AGENTS.md`.
+
 ## Diagnose and repair
 
 1. Reproduce the bug or establish the failing path from reliable tests, logs, or source evidence. Separate supported causes from hypotheses.

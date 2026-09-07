@@ -10,7 +10,8 @@ Acceptance criteria and required reads/writes: `<REQUIREMENTS>`
 
 - Follow the selected native Firebase/development-build architecture. Introduce only the Firebase products and focused service/backend modules needed for this feature; planned integrations are not configured infrastructure.
 - Map each operation to its owner, allowed actors, fields, query, and authorization boundary. Apply the Firebase rules in `AGENTS.md`, including the selected verified-account requirement for cloud personal-data writes.
-- Deliver the necessary rules, validation, indexes, and tests with each data path. Keep private records separate from shared data; include membership enforcement only when community behavior is in scope.
+- When state affects auth/onboarding redirects, journey start/progression, completion, settings, or sign-out, read `docs/APP_NAVIGATION_AND_UX.md`. Honor its state transitions and persistence-before-navigation requirements. Resolve its documented email-gate dependency without weakening verified-write authorization or reporting a failed write as successful onboarding.
+- Deliver the necessary rules, validation, indexes, and tests with each data path. Reflections, journals, intentions, and personal prayer content stay private; Community membership is not sharing consent. Keep private records separate from explicitly shared data and include membership enforcement only when future community behavior is in scope; backend models do not enable V1 Community navigation.
 - Bound queries/listeners and clean up subscriptions. Consider actual read/write costs, document growth, and required atomic operations without building a generic repository framework.
 - Handle realistic service failures and applicable offline, pending/saved/failed, concurrent-edit, retry, and duplicate-request behavior. Follow selected account-switching and nested-deletion semantics when personal records are affected.
 

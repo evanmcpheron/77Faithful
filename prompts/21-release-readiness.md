@@ -9,7 +9,7 @@ Shipping capabilities and acceptance criteria: `<REQUIREMENTS>`
 ## Assess release evidence
 
 - Check formatting, lint, TypeScript, tests, and build results for the intended revision. Identify implemented capabilities separately from plans and fixtures.
-- Exercise critical included flows: authentication, navigation, forms, loading/empty/error recovery, offline/network behavior, synchronization, and crash-prone transitions.
+- Compare included flows with `docs/APP_NAVIGATION_AND_UX.md` and select applicable user-flow checks from `docs/engineering/testing.md`: authentication/onboarding, daily/history/end states, settings/back, forms, recovery, offline/network behavior, synchronization, and crash-prone transitions. Check required contract updates and that Community/Future or absent optional features have no V1 entry points; do not demand tests for features outside the milestone.
 - Inspect app identifiers, permissions, environment setup, signing/build evidence, store metadata/artwork, and iOS/Android behavior for the target audience.
 - For shipping Firebase features, check production rules/indexes, authorization, private-data deletion, and operational limits. For Scripture integration, check gateway setup, real translation entitlements, attribution/licensing, and unavailable-text behavior.
 - Evaluate applicable accessibility, privacy, and product requirements. Missing prerequisites for shipping capabilities are blockers; unrelated future features are not.

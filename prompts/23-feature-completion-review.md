@@ -10,7 +10,8 @@ Original acceptance criteria: `<REQUIREMENTS>`
 
 - Use the original requirements as the baseline; do not infer them solely from what was built. Identify material missing criteria before making a completion claim.
 - Map each criterion to implementation and test/runtime evidence. Distinguish actual integrations from fixtures, plans, and fake success paths.
-- Follow the included user flow through navigation, loading/empty/error recovery, forms, accessibility, and affected platforms. Check pending/offline, cancellation, or repeated actions where supported.
+- Follow the included user flow against `docs/APP_NAVIGATION_AND_UX.md`, including entries/CTAs, gates, back, applicable day states, completion, loading/empty/error recovery, forms, accessibility, and affected platforms. Check pending/offline, cancellation, or repeated actions where supported; use the implemented user-flow cases in `docs/engineering/testing.md`.
+- Apply the shared navigation-review checklist in `AGENTS.md`: material flow changes need contract updates, Community stays Future unless explicitly enabled, and open decisions must remain visible in the completion assessment.
 - Inspect important behavior tests and consistency with existing UI/architecture. Trace authorization and privacy for affected data.
 - Identify missing pieces that block the stated outcome and the smallest correction/verification, without adding hypothetical future requirements.
 

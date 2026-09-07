@@ -9,6 +9,7 @@ Intended behavior and known maintenance concerns: `<REQUIREMENTS>`
 ## Review
 
 - Trace correctness, state transitions, async races, subscription/resource lifetimes, validation, and expected failures. Check affected TypeScript, React, platform, accessibility, and security/privacy contracts.
+- Apply the navigation-review checklist in `AGENTS.md` against `docs/APP_NAVIGATION_AND_UX.md` when routes, screen responsibilities, CTAs, gates, back behavior, or journey state are affected. Check duplicate navigation logic, bypassed existing helpers, Future UI in V1, and missing contract updates for material changes.
 - Apply the naming, boundaries, reuse, comments, and dependency guidance in `AGENTS.md`. Evaluate whether a human can follow the behavior and locate the right place to change it.
 - Substantiate maintainability findings with a concrete edit or debugging scenario: repeated changes to one domain rule, indirection obscuring an error, or unrelated responsibilities making a local change risky. Fewer lines or a preferred architecture is not sufficient evidence.
 - Inspect test assertions and mocks, not only pass/fail results. Identify meaningful unprotected behavior and logic that tests replace instead of exercising.

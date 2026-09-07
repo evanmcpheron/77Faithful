@@ -22,6 +22,7 @@ it.each([
   { value: '0x10' },
   { value: 'NaN' },
   { value: 'Infinity' },
+  { value: 'abc' },
   { value: 'day1' },
   { value: '1/prayer' },
   { value: ' 1' },

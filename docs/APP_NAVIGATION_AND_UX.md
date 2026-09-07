@@ -1879,6 +1879,7 @@ Never place reflection text, prayer text, intention text, email addresses, or pr
 ## 20.1 Screen-reader semantics
 
 - Every icon-only header action has an accessibility label.
+- Native Today/Journey tabs use platform tab semantics. Their web equivalents are links in a named navigation region with the current page exposed to assistive technology.
 - Completion controls expose checked/unchecked state.
 - Future days announce `upcoming`/`locked`, not only a gray color.
 - Errors are announced when they appear.

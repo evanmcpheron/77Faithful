@@ -72,6 +72,8 @@ There are no dedicated radius tokens. Components reuse spacing values for radii:
 
 `ThemedView` honors the active scheme's `lightColor`/`darkColor` override, falls back to the selected palette token when that override is absent, and applies caller `style` last. Prefer tokens for ordinary screen work; use overrides only when a specific surface needs them. There is no final product button, input, card, or loading/empty/error system. `NavigationPlaceholder` is a temporary screen treatment using the existing themed primitives; `PlaceholderLink` supplies underlined link rows with a minimum 48-point target and pressed feedback.
 
+With Router 57.0.19, keep layout styles on a direct `Link asChild` Pressable child static: the slot merges style objects and drops style callbacks. Put pressed feedback in the Pressable's children render function so minimum target dimensions survive. Navigation text uses 0.95 pressed opacity to preserve small-text contrast in both palettes; the icon-only Settings action retains 0.7.
+
 ## Layout and interaction conventions
 
 This guide owns visual primitives and layout techniques. Before changing screen boundaries, navigating CTAs, tabs, headers/back behavior, editors, or modal/sheet flows, read [the navigation and UX contract](../APP_NAVIGATION_AND_UX.md). It owns screen relationships, flow states, and placement; visual consistency or component extraction alone does not justify new screens. An intentional material behavior change updates that contract in the same change; small visual adjustments do not.

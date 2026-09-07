@@ -60,12 +60,12 @@ type PlaceholderLinkProps = Pick<LinkProps, 'href' | 'push' | 'replace' | 'dismi
 export function PlaceholderLink({ children, ...props }: PlaceholderLinkProps) {
   return (
     <Link {...props} asChild>
-      <Pressable
-        accessibilityRole="link"
-        style={({ pressed }) => [styles.link, pressed && styles.pressed]}>
-        <ThemedText themeColor="link" style={styles.linkText}>
-          {children}
-        </ThemedText>
+      <Pressable accessibilityRole="link" style={styles.link}>
+        {({ pressed }) => (
+          <ThemedText themeColor="link" style={[styles.linkText, pressed && styles.pressed]}>
+            {children}
+          </ThemedText>
+        )}
       </Pressable>
     </Link>
   );
@@ -87,5 +87,5 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two,
   },
   linkText: { textDecorationLine: 'underline' },
-  pressed: { opacity: 0.7 },
+  pressed: { opacity: 0.95 },
 });

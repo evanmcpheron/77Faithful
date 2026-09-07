@@ -9,16 +9,16 @@ export function SettingsHeaderAction() {
 
   return (
     <Link href="/settings" push asChild>
-      <Pressable
-        accessibilityRole="link"
-        accessibilityLabel="Settings"
-        style={({ pressed }) => [styles.button, pressed && styles.pressed]}>
-        <SymbolView
-          name={{ ios: 'gearshape', android: 'settings', web: 'settings' }}
-          size={24}
-          tintColor={theme.link}
-          accessible={false}
-        />
+      <Pressable accessibilityRole="link" accessibilityLabel="Settings" style={styles.button}>
+        {({ pressed }) => (
+          <SymbolView
+            name={{ ios: 'gearshape', android: 'settings', web: 'settings' }}
+            size={24}
+            tintColor={theme.link}
+            accessible={false}
+            style={pressed && styles.pressed}
+          />
+        )}
       </Pressable>
     </Link>
   );

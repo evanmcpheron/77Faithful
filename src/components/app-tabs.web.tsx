@@ -16,6 +16,8 @@ export default function AppTabs() {
     <Tabs style={[styles.container, { backgroundColor: colors.background }]}>
       <TabSlot style={styles.slot} />
       <TabList
+        role="navigation"
+        aria-label="Main navigation"
         style={[
           styles.tabList,
           {
@@ -42,8 +44,8 @@ function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
   return (
     <Pressable
       {...props}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isFocused }}
+      role="link"
+      aria-current={isFocused ? 'page' : undefined}
       style={({ pressed }) => [
         styles.tabButton,
         { backgroundColor: isFocused ? colors.backgroundSelected : colors.backgroundElement },
@@ -78,5 +80,5 @@ const styles = StyleSheet.create({
     padding: Spacing.two,
     borderRadius: Spacing.three,
   },
-  pressed: { opacity: 0.7 },
+  pressed: { opacity: 0.95 },
 });

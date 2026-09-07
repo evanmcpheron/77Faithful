@@ -1,56 +1,49 @@
-# Welcome to your Expo app 👋
+# 77Faithful
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A free 77-day Christian spiritual formation app for iOS and Android, centered on Scripture, prayer, and reflection. The repository currently contains an Expo 57 starter with engineering checks; the formation experience, Firebase, and API.Bible are not implemented yet.
 
-## Get started
+## Development
 
-1. Install dependencies
+Use Node 24 and npm 11. With nvm:
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```sh
+nvm install
+nvm use
+npm ci
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+`npm run ios`, `npm run android`, and `npm run web` launch the respective development targets. Native targets need an appropriate simulator, emulator, or device. The current starter can use Expo Go; the selected native Firebase integration will require development builds when implemented. Web is a development preview target for the first release.
 
-### Other setup steps
+Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) and the exact [Expo 57 docs](https://docs.expo.dev/versions/v57.0.0/) before coding.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Verification
 
-## Learn more
+```sh
+npm run check
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+This runs formatting, ESLint, route generation and TypeScript, and the regression tests. It works without starting Metro or supplying service credentials.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+| Command                                                          | Purpose                                                  |
+| ---------------------------------------------------------------- | -------------------------------------------------------- |
+| `npm run typecheck`                                              | Generate Expo route types, then run strict TypeScript    |
+| `npm run lint` / `npm run lint:fix`                              | Check code / apply available lint fixes                  |
+| `npm run format:check` / `npm run format`                        | Check formatting / format repository files               |
+| `npm test`                                                       | Run tests once                                           |
+| `npm run test:watch`                                             | Watch relevant tests during development                  |
+| `npm test -- --runInBand src/components/ui/collapsible.test.tsx` | Run one regression suite                                 |
+| `npm run test:coverage`                                          | Run tests and report coverage, including untested source |
+| `npm run export:web`                                             | Build the static web preview into `dist/`                |
 
-## Join the community
+GitHub Actions runs `npm ci`, `npm run check`, and the web export for pull requests and pushes to `main`. Component tests are colocated as `*.test.tsx` outside the route directory. See [testing notes](docs/engineering/testing.md) for mocks and verification limits.
 
-Join our community of developers creating universal apps.
+## Engineering context
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Current implementation](docs/engineering/project-context.md)
+- [Architecture and product decisions](docs/engineering/architecture-decisions.md)
+- [Design system and visual direction](docs/engineering/design-system.md)
+
+No environment variables are required for the current starter or its checks. Service credentials and cloud resources must be supplied when the selected integrations are built; API.Bible secrets belong only on the backend. Local `.env*` files are ignored, with `.env.example` reserved for non-secret examples.
+
+The inherited `npm run reset-project` command moves `src/` and `scripts/` into `example/`, or deletes them if deletion is selected, before creating a blank `src/app/`. It is not a development setup step.

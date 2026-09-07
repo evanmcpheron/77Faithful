@@ -6,7 +6,7 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
 
 77Faithful is a free 77-day Christian spiritual formation app for iOS and Android. Scripture reading, prayer, and reflection are foundational daily practices; participants choose two additional practices. Scripture is central to the experience. Encourage faithfulness rather than perfection: never imply that disciplines earn God's favor, rank spirituality, or make formation competitive, manipulative, or transactional. Journals and reflections are private unless the user explicitly shares something.
 
-The repository currently contains an Expo 57 / React Native / TypeScript starter, including web support. Firebase Authentication, Firestore/backend services, API.Bible licensed Scripture access, and the formation experience are planned, not implemented.
+The repository currently contains an Expo 57 / React Native / TypeScript starter with engineering checks. Native Firebase, an API.Bible backend gateway, and the formation experience are selected but not implemented. Ship iOS/Android first; web is a development preview. Follow the selected [architecture and product decisions](docs/engineering/architecture-decisions.md), including calendar-day progression without missed-day resets and private journals.
 
 ## Engineering priorities
 
@@ -26,7 +26,7 @@ Write the smallest amount of good code that solves the actual problem and is eas
 - Keep routes and layouts in `src/app/`. Native tabs live in `src/components/app-tabs.tsx`; web tabs use `app-tabs.web.tsx`. Preserve platform variants when changing shared behavior.
 - Use the existing `@/*` alias for `src/*` and `@/assets/*` for root assets; nearby relative imports are also established. Match local formatting: source generally uses two spaces, single quotes, and semicolons. Files use kebab-case, components/types PascalCase, and functions/hooks camelCase (`use...` for hooks). Routes and `AppTabs` use default exports; most shared components/hooks use named exports. Avoid new barrel files without a concrete benefit.
 - Keep local UI state local. No global application store or data-access architecture exists yet; introduce either only for a current requirement.
-- See [project context](docs/engineering/project-context.md), [design system](docs/engineering/design-system.md), and [testing](docs/engineering/testing.md) for observed details and gaps. Update these when work changes the documented conventions or setup.
+- See [project context](docs/engineering/project-context.md), [design system](docs/engineering/design-system.md), and [testing](docs/engineering/testing.md) for observed details and gaps. Update these when work changes the documented conventions or setup. Use Node 24, npm 11, and the committed npm lockfile.
 
 ## Types, names, and module boundaries
 
@@ -55,7 +55,7 @@ Comment only information code cannot communicate well: a non-obvious decision an
 - Reuse established spacing, typography, colors, radius, elevation/shadows, and sizing tokens where available. Use colocated `StyleSheet.create` for static styles and style arrays for dynamic values. Avoid copying and slightly modifying components or repeating styles that belong in a shared primitive.
 - Extract UI when it repeats, establishes an important design primitive, encapsulates meaningful behavior, or materially clarifies a screen. Do not extract every visual fragment or generalize prematurely. The starter has only a partial token system; expand it deliberately during relevant design work instead of scattering new constants.
 - Prioritize clear hierarchy, obvious primary actions, readable text, predictable navigation, appropriate touch targets, accessible contrast/labels, useful loading/empty/error states, keyboard and safe-area behavior, and layouts that work across common phone sizes and text scaling settings.
-- Keep the experience calm, intentional, focused, and trustworthy without feeling sterile. Avoid visual complexity that does not aid comprehension. Starter branding and animations are examples, not an approved product design.
+- Keep the experience calm, intentional, focused, and trustworthy without feeling sterile. Use the selected blue 77/path/cross identity and readable system typography described in the design guide. Avoid visual complexity that does not aid comprehension; remaining Expo starter branding and animations are examples to replace during product work.
 
 ## Data integrations and errors
 
@@ -71,5 +71,5 @@ These integration rules apply when the planned services are introduced; do not s
 - Test behavior and meaningful business logic: domain rules, important hooks, transformations, services, validation, user-visible component behavior, regressions, and security-sensitive behavior where testable. Add a regression test for each bug fix when practical. Avoid tests that mirror implementation and excessive snapshots.
 - Before adding a dependency, check for an adequate repository solution, then platform/standard-library capabilities, then maintenance status and Expo compatibility. Add it only when its value exceeds the maintenance cost; never for a trivial utility.
 - For focused work, inspect adjacent code, change only what is required, and fix directly related problems when correctness requires it. Avoid unrelated cleanup, architecture redesign, and rewriting working modules because another pattern is preferred. Do not use `npm run reset-project` as routine setup; it moves or deletes source directories.
-- Run relevant available TypeScript, lint, unit/integration, and targeted checks before declaring implementation complete. Follow [testing setup and limitations](docs/engineering/testing.md): plain TypeScript needs Expo-generated types, lint is not configured, and no test runner exists yet. Do not silently install tooling just to report a check as passed.
+- Run `npm run check` for code/tooling changes: formatting, ESLint, generated route types and TypeScript, and regression tests. Run `npm run export:web` when routing, shared UI, or build configuration changes. Use targeted tests during iteration; see [testing setup and limitations](docs/engineering/testing.md). Markdown-only edits need formatting/link checks. Do not install extra tooling merely to report a check as passed.
 - Report checks actually run, their outcomes, and any checks unavailable or skipped. Never claim a pass based on inspection alone.

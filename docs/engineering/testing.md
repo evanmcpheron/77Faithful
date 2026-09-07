@@ -1,74 +1,56 @@
 # Testing and verification
 
-Observed on 2026-09-07. There is **no configured application test suite**. This document distinguishes available commands from future testing guidance and records the checks actually performed during repository inspection.
+Updated 2026-09-07. The repository has an operational lint/format/type/test setup and a small regression suite. Product/backend tests are still future work.
 
-## Current tooling and locations
+## Tooling and conventions
 
-- TypeScript is a direct development dependency and `strict` is enabled in [tsconfig.json](../../tsconfig.json). There is no `typecheck` script.
-- [package.json](../../package.json) defines `lint: expo lint`, but ESLint, `eslint-config-expo`, and an ESLint configuration are absent. Prettier is also absent and no formatter configuration is committed.
-- There is no `test` script, test file/location convention, Jest/Jest Expo/Vitest runner, React Native Testing Library, snapshot suite, integration suite, end-to-end setup, or coverage threshold. Jest-related utilities and optional testing-library peer references in the lockfile are dependency internals, not an application test setup.
-- No CI workflow, Firebase emulator configuration, or security-rule tests exist.
+- Node 24 and npm 11; `.nvmrc` and package engines define the supported development runtime. Use `npm ci` and commit lockfile changes with dependency changes.
+- ESLint uses `eslint-config-expo/flat` plus `eslint-config-prettier`, which disables conflicting formatting rules. Prettier runs separately. Explicit `any`, incorrect type imports, and lint warnings fail verification.
+- Jest 29 uses `jest-expo ~57.0.5` and the React Native 0.86.3 preset. React Native Testing Library 14 uses its `test-renderer` peer. Await `render`, `renderHook`, `act`, and user interactions; prefer accessible role/name queries and behavioral assertions.
+- Tests are colocated as `src/**/*.test.tsx` or `*.test.ts`, outside `src/app/`. There are no snapshots or arbitrary coverage thresholds. Coverage collection includes untested source rather than just imported modules.
+- `jest.setup.js` uses the official Worklets mock before Reanimated's test setup, and mocks the global CSS import. Keep real components/hooks under test; isolate native/platform or external-service boundaries. [Worklets setup](https://docs.swmansion.com/react-native-worklets/docs/guides/testing/), [Reanimated setup](https://docs.swmansion.com/react-native-reanimated/docs/guides/testing/).
+- Jest disables Watchman for portable local/CI runs. Mock call history and spies are reset between tests; configure individual mock return values in each suite.
 
-## Commands and prerequisites
+ESLint 9 is currently required by the peer range of `eslint-plugin-react` used by Expo's SDK 57 configuration. npm marks this ESLint major unsupported. Keep this constraint visible and move to a supported major when the Expo/plugin combination supports it; do not force incompatible peer dependencies. Jest 29 likewise follows this version of `jest-expo` rather than an independent latest-major upgrade.
 
-Run commands from the repository root with dependencies installed. `npm ci` uses the committed lockfile; dependency installation was not needed or performed during this inspection.
+## Commands
 
-| Purpose | Command | Current status |
-| --- | --- | --- |
-| TypeScript | `node node_modules/typescript/bin/tsc --noEmit` | Uses installed TypeScript; requires Expo's environment types for the CSS imports |
-| Expo development server | `npm start` | Starts Expo/Metro and its type-generation setup; not a test command |
-| Manual platform checks | `npm run ios`, `npm run android`, `npm run web` | Launch development targets; native runs require a suitable simulator/emulator/device setup |
-| Lint | `npm run lint` | Setup is incomplete; can install packages and create configuration |
-| Unit/integration/targeted tests | None configured | No command to run until a runner is deliberately introduced |
-| Diff whitespace | `git diff --check` | Checks the tracked diff for whitespace problems, not application correctness |
+| Command                                                          | Purpose                                                                                                        |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `npm run check`                                                  | Formatting, lint, generated route types and TypeScript, then CI-mode tests                                     |
+| `npm run typegen`                                                | `expo customize tsconfig.json`; regenerates ignored Expo environment/route declarations without starting Metro |
+| `npm run typecheck`                                              | Type generation followed by `tsc --noEmit`                                                                     |
+| `npm run lint` / `npm run lint:fix`                              | Check the repository / apply available lint fixes                                                              |
+| `npm run format:check` / `npm run format`                        | Check formatting / format supported repository files                                                           |
+| `npm test` / `npm run test:watch`                                | Run tests once / watch tests                                                                                   |
+| `npm run test:ci`                                                | Run Jest once, serially, in CI mode                                                                            |
+| `npm test -- --runInBand src/components/ui/collapsible.test.tsx` | Target one suite                                                                                               |
+| `npm run test:coverage`                                          | Report coverage and write ignored output to `coverage/`                                                        |
+| `npm run export:web`                                             | Build the static web preview in ignored `dist/`                                                                |
+| `git diff --check`                                               | Check diff whitespace only                                                                                     |
 
-### Expo-generated types
+The committed TypeScript configuration explicitly loads `expo/types`, so CSS imports type-check even before Expo's first run. The normal `typecheck` command also generates route-specific declarations, avoiding a misleading pass without route validation. Keep `.expo/` and `expo-env.d.ts` ignored and do not hand-edit them. [Expo typed routes](https://docs.expo.dev/router/reference/typed-routes/).
 
-Both `.expo/types/**/*.ts` and `expo-env.d.ts` are included by `tsconfig.json` and ignored by Git. Neither existed in this checkout at inspection time. The installed Expo 57 CLI's type-generation code writes `expo-env.d.ts` with a reference to `expo/types` and generates route declarations while starting the development server with typed routes enabled.
+GitHub Actions runs `npm ci`, `npm run check`, and `npm run export:web` for pull requests and pushes to `main`, using `.nvmrc`, read-only repository permissions, and no application secrets. It does not build signed native binaries or deploy anything.
 
-For normal development, start Expo and allow generation to complete, then run TypeScript. This startup path was confirmed by reading the installed CLI, not by starting the app during this task. A reproducible type-generation step for future CI still needs to be established. Do not hand-edit generated files or weaken strict checking to bypass missing types.
+## Regression coverage
 
-The following diagnostic explicitly loads Expo's existing CSS/global declarations without generating files:
+| Location                                 | Behavior covered                                                                                 |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `src/components/themed-view.test.tsx`    | Light/dark overrides, unspecified-scheme fallback, palette fallback, and caller style precedence |
+| `src/components/themed-text.test.tsx`    | Theme-aware primary link colors and explicit palette overrides                                   |
+| `src/components/ui/collapsible.test.tsx` | Accessible name/role, expanded/collapsed state, and content toggling through user presses        |
+| `src/hooks/use-color-scheme.test.tsx`    | Web appearance subscription, updates, and cleanup                                                |
 
-```sh
-node node_modules/typescript/bin/tsc --noEmit --types expo/types
-```
+Local validation on 2026-09-07: a clean `npm ci`, `npm run check` (including all ten tests without snapshots), and `npm run export:web` passed. The source no longer has the original missing-CSS type errors or ignored themed-view overrides. Browser startup failed in the available automation connection, so live browser interaction/hydration and native-device checks have not been verified. A successful static export does not replace those checks. CI configuration is present for execution on GitHub; a remote CI run has not been observed from this local task.
 
-It does not generate typed-route declarations or verify runtime behavior, so its success is not a substitute for normal route-aware type checking.
+## Remaining coverage
 
-### Lint setup side effects
+Add regression cases when fixing bugs and practical behavior tests with each domain/integration feature. In particular:
 
-The installed Expo CLI's `lint/ESlintPrerequisite.js` checks configuration and bootstraps ESLint when missing. Interactive use prompts; noninteractive use can configure it automatically, installing `eslint`/`eslint-config-expo` and writing `eslint.config.js`. Therefore `npm run lint` is currently a setup mutation, not an established read-only check. It was not run for this documentation task. Configure lint deliberately in an appropriate tooling task before relying on it in verification or CI.
+- Router navigation, native splash lifecycle, external links, safe areas, larger text, contrast, reduced motion, and future keyboard/forms need platform verification.
+- The chosen calendar/time-zone rules need date-boundary, daylight-saving, travel, missed-day, and historical-edit tests when implemented. Use deterministic clocks and synthetic records.
+- Future Firebase tests must exercise unauthenticated/cross-user denial, validated writes, offline/pending data, account switching/deletion, and journal edit conflicts using emulators where relevant.
+- Future API.Bible tests must cover input validation, explicit translation selection, response parsing, attribution, timeouts, quotas, and unavailable Scripture states without calling the live provider in routine tests.
 
-## Inspection results
-
-Environment: Node 24.10.0, npm 11.16.0, installed TypeScript 6.0.3.
-
-| Check actually run | Result |
-| --- | --- |
-| `node node_modules/typescript/bin/tsc --noEmit` | Failed with the two missing CSS declarations below |
-| `node node_modules/typescript/bin/tsc --noEmit --types expo/types` | Passed with exit code 0; ambient-type diagnostic only |
-| `git diff --check` | Passed for the tracked documentation diff |
-| Local Markdown link/whitespace validation (temporary Python script) | Passed for all four engineering instruction/context documents, including new untracked files |
-
-The plain check reported:
-
-- `src/components/animated-icon.web.tsx:5`: TS2307, cannot find `./animated-icon.module.css` or its type declarations.
-- `src/constants/theme.ts:6`: TS2882, cannot find module/type declarations for the side-effect import of `@/global.css`.
-
-Expo already supplies these declarations in `expo/types/global.d.ts`. The diagnostic pass is consistent with the missing generated environment reference; no application or configuration fix was made. Lint, automated tests, builds, and device/browser smoke checks were not run. No test libraries were installed.
-
-## Conventions for future tests
-
-No test placement, naming, mocking, or runner convention is established. When testing is introduced, choose an Expo 57-compatible setup for the work at hand and document its actual commands and locations here. Keep test files outside `src/app/` so the route directory remains for screens/layouts. Do not create multiple runners or a framework of helpers for hypothetical coverage.
-
-Follow [AGENTS.md](../../AGENTS.md): favor observable behavior and meaningful domain logic, regression tests when practical, and minimal snapshots. Mock external boundaries where needed rather than internal implementation details. Use synthetic data, not personal journal/reflection contents, in fixtures and diagnostics.
-
-Major coverage gaps:
-
-- **Existing code:** tab navigation on native/web, theme selection and hydration, collapsible interaction/accessibility, external-link behavior, and native splash lifecycle have no application tests.
-- **Platform verification:** safe areas, back navigation, common phone sizes, larger text, touch targets, screen-reader semantics, light/dark contrast, and motion behavior have no recorded verification in this repository. Keyboard behavior will need coverage when inputs exist.
-- **Planned domain behavior:** day/date boundaries, practice selection, intentions/completion tracking, transformations, and validation need behavior tests when implemented; their precise rules are not established yet.
-- **Planned integrations:** authentication lifecycle, Firestore authorization/private journals, persistence and sync conflicts, API.Bible version selection/response handling, and network/error states need tests when implemented. No existing backend behavior can be validated yet.
-
-For a change, run the relevant available checks and report exactly what ran and what did not. TypeScript success alone does not establish visual, accessibility, security, or runtime correctness.
+Follow [AGENTS.md](../../AGENTS.md) for scope and test quality. Report the exact checks run and their limits; never imply that mocked tests establish native runtime behavior or production security.

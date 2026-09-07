@@ -1,0 +1,48 @@
+# Architecture and product decisions
+
+Selected on 2026-09-07 under the owner's delegation to choose practical defaults. These decisions guide future implementation. The formation experience, authentication, backend, and Scripture integration are **not implemented** by this tooling task. [Project context](project-context.md) records what actually exists.
+
+## Platform and application structure
+
+Ship iOS and Android first. Keep the current web target for development previews and static-export checks; a production web experience is outside the first release. Preview builds use synthetic data and must not connect to production journals. Keep Expo Router, TypeScript, React's local state, and the current themed primitives. Add an auth context when authentication exists; do not introduce a global store, query-cache library, or repository framework preemptively.
+
+Put actual integrations in focused modules under `src/services/` when their features are built. Keep SDK objects and transport errors out of screens, and keep domain/date rules independent of React and Firebase. Server code belongs in a separate `functions/` TypeScript package. These directories should be created with working implementations, not empty scaffolding.
+
+## Firebase
+
+Use the modular APIs of **React Native Firebase** for Auth, Firestore, Functions, and App Check in native development builds. Durable offline personal data is a mobile requirement: the Firebase JavaScript SDK does not support Firestore persistence in React Native, while the native SDK supports it. This justifies the native-build setup and means Expo Go will cease to be the primary runtime when integration begins. [Firebase environment support](https://firebase.google.com/docs/web/environments-js-sdk), [native Firestore persistence](https://rnfirebase.io/firestore/usage#offline-capabilities), [Expo integration](https://docs.expo.dev/guides/using-firebase/).
+
+- Use separate development and production Firebase projects, local Auth/Firestore/Functions emulators for integration tests, Firestore Standard edition, and `us-central1` for the initial database and functions. This is a US-first infrastructure default; provision it deliberately because database location is a durable choice.
+- Start with email/password accounts, email verification, password reset, and account deletion. Require a verified account for cloud personal-data writes. Avoid anonymous accounts and social sign-in in the first release. Static formation content does not require authentication.
+- Keep user settings at `users/{uid}`, journeys at `users/{uid}/journeys/{journeyId}`, daily records under each journey's `days/{dayNumber}`, and journal entries separately at `users/{uid}/journalEntries/{entryId}`. Store references between records rather than large growing arrays on the user document. Version the formation content so updates cannot silently change an existing journey.
+- Rules must deny unauthenticated and cross-user access, validate allowed fields/types, and prevent ownership changes. Application-authored formation content is read-only to clients. Add emulator tests alongside each collection's implementation. Backend Admin SDK calls require their own authorization because they bypass Firestore rules. [Security rules](https://firebase.google.com/docs/firestore/security/get-started).
+- Use native offline persistence for personal records, with explicit pending/saved/failed states. Merge independent practice fields rather than overwriting whole days. Preserve concurrent journal edits as revisions instead of silently choosing one version of prose. Resolve pending writes and clear account-specific cached state during sign-out/account switching. Do not describe cached journals as end-to-end encrypted or copy them into logs, analytics, crash reports, or general-purpose unencrypted storage. Firestore otherwise resolves competing document writes with last-write-wins behavior. [Offline behavior](https://firebase.google.com/docs/firestore/manage-data/enable-offline).
+- Use second-generation callable Functions with TypeScript and Node 22 for privileged operations. Verify Auth and enforce native App Check for production requests; use only development debug providers in local testing. Store third-party secrets in Secret Manager through Firebase secret parameters. The mobile bundle must never contain API.Bible credentials or Admin credentials. [Callable Functions](https://firebase.google.com/docs/functions/callable), [secret configuration](https://firebase.google.com/docs/functions/config-env).
+
+The app stays free to participants. Hosting services can still incur costs: production provisioning must include billing budgets/alerts, bounded function instances, and request quotas. No cloud project, billing configuration, or deployment is created by this decision record.
+
+## API.Bible and Scripture
+
+Use an authenticated, App Check-protected callable Function as the API.Bible gateway. Accept only an allowed `bibleId` and a bounded passage identifier, validate responses, and apply timeouts and per-user quotas. Add at most one bounded retry for transient upstream failures; do not retry invalid credentials, invalid passages, or exhausted quotas indefinitely. API.Bible uses an `api-key` request header; attach it only on the server. [Authentication](https://docs.api.bible/quick-start/authentication/).
+
+Default to English and the **World English Bible (WEB)** when it is available to the application's API.Bible account. Resolve the actual `bibleId` from that account's catalog and keep an explicit server allowlist; never guess an ID or silently switch translations. Users may choose among the translations actually enabled and licensed for the app. A missing configured version should produce an unavailable state, not substituted text.
+
+Keep weekly themes, intentions, prayer prompts, reflection questions, and passage references as versioned application-authored content. Fetch Bible text on demand, request plain text for native rendering, and display the returned reference, translation name, and copyright/attribution beside it. Do not render arbitrary upstream HTML or automatically copy licensed passages into journal records.
+
+For the first release, use session-memory caching only, keyed by Bible and passage identifiers. Do not persist licensed text in Firestore, app bundles, device storage, or an offline Bible download. When Scripture cannot load, keep the passage reference and the other practices usable; users can read in their own Bible and record that practice themselves. Durable Scripture caching needs a separate implementation decision against the actual license. Current provider policies require attribution and require FUMS on web Scripture displays; production web would need that additional integration. [API.Bible licensing policies](https://care.api.bible/article/396-licensing-policies-quick-reference).
+
+Actual project IDs, credentials, app registrations, account entitlements, and signed licensing terms are external facts that cannot be inferred. Supply and validate them during integration; sample or fabricated credentials must never make an integration appear configured.
+
+## Journey and completion semantics
+
+- A journey spans **77 consecutive calendar days**, starting on the participant's chosen local start date. Save that date and the device's IANA time zone at enrollment; keep the journey time zone fixed. Travel does not move existing days. Compare calendar dates in that zone rather than dividing elapsed milliseconds by 24 hours, so daylight-saving changes do not distort day numbers.
+- Day 1 is the start date, day 77 is start date plus 76 calendar days, and the journey ends at the following midnight in its saved zone. Weekly themes cover days 1–7 through 71–77. Before the start date it is scheduled; after day 77 it is finished, regardless of completion counts.
+- Each day has Scripture, prayer, reflection, and two distinct participant-selected additional practices. Save the applicable practice choices with the daily record; later changes apply to future days and do not rewrite history.
+- Practices are self-reported, independently reversible checkmarks. A fully completed day means all five were marked. Writing a journal entry is optional and neither required for reflection completion nor an automatic completion trigger. Timers, word counts, and app usage do not prove a spiritual practice happened.
+- Missed or partial days never reset the journey, erase progress, incur penalties, or extend the 77-day calendar. Let users correct earlier days, including after the journey ends; do not permit completion of future days. Keep the represented practice date separate from the actual edit timestamp.
+- Show neutral progress such as "Day 12 of 77" and "3 of 5 practices." Finishing the journey and completing every practice are distinct facts. Do not add perfection scores, spiritual rankings, competitive streaks, or automatic restarts. A new journey requires an explicit user action; preserve the previous one.
+- First-release journals have no public sharing, community feed, or public profile. Account deletion must remove the user's nested personal records through an authenticated backend operation, not only delete the Auth account.
+
+## Visual direction
+
+Use the existing blue **77 / path / cross** artwork in [assets/app-icon.png](../../assets/app-icon.png) as the identity source. Favor white/light neutral reading surfaces, restrained deep-blue actions, readable system typography, and matching dark-mode contrast. Keep ornament and motion secondary to Scripture and reflection. [Design-system guidance](design-system.md) distinguishes current tokens from the remaining production asset work.

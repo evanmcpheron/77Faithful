@@ -1,6 +1,6 @@
 # Testing and verification
 
-Updated 2026-09-07. The repository has an operational lint/format/type/test setup and a small regression suite. Product/backend tests are still future work.
+Updated 2026-09-07. The repository has an operational lint/format/type/test setup and a small regression suite. Navigation-scaffold tests now exercise parser and route relationships; integrated product/backend tests are still future work.
 
 ## Tooling and conventions
 
@@ -43,14 +43,20 @@ Root Jest currently discovers only `src/**/*.test.[jt]s?(x)`. A passing root che
 
 ## Regression coverage
 
-| Location                                 | Behavior covered                                                                                 |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `src/components/themed-view.test.tsx`    | Light/dark overrides, unspecified-scheme fallback, palette fallback, and caller style precedence |
-| `src/components/themed-text.test.tsx`    | Theme-aware primary link colors and explicit palette overrides                                   |
-| `src/components/ui/collapsible.test.tsx` | Accessible name/role, expanded/collapsed state, and content toggling through user presses        |
-| `src/hooks/use-color-scheme.test.tsx`    | Web appearance subscription, updates, and cleanup                                                |
+| Location                                 | Behavior covered                                                                                                                      |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/components/themed-view.test.tsx`    | Light/dark overrides, unspecified-scheme fallback, palette fallback, and caller style precedence                                      |
+| `src/components/themed-text.test.tsx`    | Theme-aware primary link colors and explicit palette overrides                                                                        |
+| `src/components/ui/collapsible.test.tsx` | Accessible name/role, expanded/collapsed state, and content toggling through user presses                                             |
+| `src/navigation/day-number.test.ts`      | Every valid day plus malformed, noncanonical, array, and out-of-range parameters                                                      |
+| `src/navigation/navigation.test.tsx`     | Auth/onboarding links, two tabs, Settings source returns, focused day routes, invalid redirects, completion review, static parameters |
+| `src/hooks/use-color-scheme.test.tsx`    | Web appearance subscription, updates, and cleanup                                                                                     |
 
 Historical validation during engineering setup on 2026-09-07: a clean `npm ci`, `npm run check` (including all ten tests without snapshots), and `npm run export:web` passed. The source no longer has the original missing-CSS type errors or ignored themed-view overrides. Browser startup failed in that automation connection, and no native-device checks or remote CI run were observed. These results describe that checkout and environment; they are not evidence for later changes or a reason to skip newly available runtime checks.
+
+Navigation-foundation validation on 2026-09-07: `npm test -- --runInBand src/navigation` passed all 35 new cases. `npm run check` passed formatting, lint, generated route types, strict TypeScript, and all 45 tests across six suites. `npm run export:web` passed; the source/typed-route audit found all 23 required URL patterns, no duplicates or excluded routes, and every expected static output including 231 concrete day pages. Relative documentation links and `git diff --check` passed. An additional `expo export --platform ios` to temporary output passed native JavaScript/Hermes bundling. Router interaction tests load the actual route directory, substitute the existing web tab variant for native tabs, and omit the native splash overlay. They exercise JavaScript navigation state and accessible controls, including ordinary Settings returns to both tabs. They do not verify native tab gestures, iOS swipe-back, Android hardware Back, or authentication/persistence.
+
+Runtime limits for this change: an iPhone 17 Pro simulator on iOS 26.3 was available. The first launch failed when the simulator shut down during Expo Go installation; retry installed Expo Go 57.0.9, but the local Metro server remained unreachable from both Expo Go and a host HTTP check. No application screen or native Back/gesture flow was verified. Android SDK/device tooling was unavailable. The in-app browser connection failed during setup before page access, so browser layout, focus, scrolling, and theme checks were not performed. JavaScript/router tests and static/native bundle exports do not replace these runtime checks.
 
 ## Navigation and user-flow coverage
 

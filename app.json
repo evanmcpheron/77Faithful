@@ -8,7 +8,7 @@
     "scheme": "77faithful",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/app-icon.png"
     },
     "android": {
       "adaptiveIcon": {

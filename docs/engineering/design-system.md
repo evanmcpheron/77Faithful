@@ -1,6 +1,6 @@
 # Design system
 
-Updated 2026-09-07. The repository has a small set of theme primitives with working color overrides and accessible collapsibles. The blue 77/path/cross identity is selected for product work; the current screens still contain Expo starter artwork. This document separates implemented tokens from the visual direction and remaining production assets.
+Updated 2026-09-07. The repository has a small set of theme primitives with working color overrides and accessible collapsibles. The blue 77/path/cross identity is selected for product work; route screens now use minimal navigation placeholders; the splash and configured artwork still use starter assets. This document separates implemented tokens from the visual direction and remaining production assets.
 
 ## Colors and theme selection
 
@@ -15,7 +15,7 @@ Updated 2026-09-07. The repository has a small set of theme primitives with work
 | `textSecondary`      | `#60646C` | `#B0B4BA` |
 | `link`               | `#1B5FA7` | `#91C7FF` |
 
-`useTheme` selects this palette using the shared `useColorScheme` hook and maps `unspecified` to light. On web, `useSyncExternalStore` reads `Appearance`, subscribes to changes, and uses light for the server and initial hydration snapshot. Layout, tabs, and badges all use the shared hooks. Router's `ThemeProvider` still uses its separate default light/dark navigation themes. There is no saved theme preference or custom navigation palette.
+`useTheme` selects this palette using the shared `useColorScheme` hook and maps `unspecified` to light. On web, `useSyncExternalStore` reads `Appearance`, subscribes to changes, and uses light for the server and initial hydration snapshot. Layout, tabs, and navigation placeholders use the shared hooks. Router's `ThemeProvider` still uses its separate default light/dark navigation themes. There is no saved theme preference or custom navigation palette.
 
 Colors outside the shared palette include the starter logo gradient (`#3C9FFE` to `#0274DF`), splash blue (`#208AEF`), and Android adaptive-icon background (`#E6F4FE`). These are remaining starter artwork values. Primary link colors now use the theme palette. There are no success, warning, or error color tokens.
 
@@ -52,23 +52,25 @@ The existing `Spacing` scale is intentionally recorded exactly; the key names ar
 | `five`  | 32    |
 | `six`   | 64    |
 
-`MaxContentWidth` is 800. `BottomTabInset` is a fixed platform value: iOS 50, Android 80, and 0 otherwise. It is not a measured safe-area inset or live tab-bar height.
+`MaxContentWidth` is 800. `BottomTabInset` remains an unused starter token: iOS 50, Android 80, and 0 otherwise. Navigation placeholders do not use it. It is not a measured safe-area inset or live tab-bar height.
 
-There are no dedicated radius tokens. Components reuse spacing values for radii: hint snippet 8, collapsible content and web tab button 16, Home's starter panel 24, and documentation button/web tab container 32. The collapsible icon box uses a literal radius of 12 and the logo uses 40. No shared elevation/shadow scale or control-height/touch-target sizing tokens exist; image and icon dimensions are mostly local values.
+There are no dedicated radius tokens. Components reuse spacing values for radii: collapsible content and web tab buttons use 16. The collapsible icon box uses a literal radius of 12 and the logo uses 40. No shared elevation/shadow scale or control-height/touch-target sizing tokens exist; image and icon dimensions are mostly local values.
 
 ## Reusable primitives
 
-| Component / hook                                               | Existing responsibility and limits                                                                                  |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `ThemedText`                                                   | Shared text variants and palette selection; a link text style does not itself make text interactive                 |
-| `ThemedView`                                                   | Background-colored `View`, with `type` selecting a palette key; forwards native view props and allows caller styles |
-| `useTheme` / `useColorScheme`                                  | System palette selection with a web hydration fallback                                                              |
-| `ExternalLink`                                                 | Router link with native in-app browser behavior                                                                     |
-| `Collapsible`                                                  | Local open/closed state, chevron, press feedback, and animated content entry                                        |
-| `AppTabs`                                                      | Platform-specific native/web navigation; see [project context](project-context.md)                                  |
-| `HintRow`, `WebBadge`, `AnimatedIcon`, `AnimatedSplashOverlay` | Starter tutorial/branding components, not general product primitives                                                |
+| Component / hook                            | Existing responsibility and limits                                                                                  |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `ThemedText`                                | Shared text variants and palette selection; a link text style does not itself make text interactive                 |
+| `ThemedView`                                | Background-colored `View`, with `type` selecting a palette key; forwards native view props and allows caller styles |
+| `useTheme` / `useColorScheme`               | System palette selection with a web hydration fallback                                                              |
+| `ExternalLink`                              | Router link with native in-app browser behavior                                                                     |
+| `Collapsible`                               | Local open/closed state, chevron, press feedback, and animated content entry                                        |
+| `NavigationPlaceholder` / `PlaceholderLink` | Temporary scrollable scaffold and accessible typed link rows; not a final screen/form framework                     |
+| `SettingsHeaderAction`                      | Shared 48-point Settings link for the Today/Journey stack headers                                                   |
+| `AppTabs`                                   | Platform-specific native/web navigation; see [project context](project-context.md)                                  |
+| `AnimatedIcon`, `AnimatedSplashOverlay`     | Preserved starter branding/splash infrastructure; hint row and web badge removed                                    |
 
-`ThemedView` honors the active scheme's `lightColor`/`darkColor` override, falls back to the selected palette token when that override is absent, and applies caller `style` last. Prefer tokens for ordinary screen work; use overrides only when a specific surface needs them. There is no shared product button, input, card, screen container, header, loading state, empty state, or error state. The inline documentation button and starter panels are examples, not general component APIs.
+`ThemedView` honors the active scheme's `lightColor`/`darkColor` override, falls back to the selected palette token when that override is absent, and applies caller `style` last. Prefer tokens for ordinary screen work; use overrides only when a specific surface needs them. There is no final product button, input, card, or loading/empty/error system. `NavigationPlaceholder` is a temporary screen treatment using the existing themed primitives; `PlaceholderLink` supplies underlined link rows with a minimum 48-point target and pressed feedback.
 
 ## Layout and interaction conventions
 
@@ -76,13 +78,13 @@ This guide owns visual primitives and layout techniques. Before changing screen 
 
 Static styles are generally colocated `StyleSheet.create` objects. Style arrays layer dynamic palette values, platform adjustments, pressed state, and caller overrides. Web additionally uses a CSS module for the logo gradient and global CSS font variables imported through the theme module; there is no utility-class styling system.
 
-- Home centers a `SafeAreaView` inside a themed view, caps content width at 800, uses horizontal `Spacing.four`, and adds `BottomTabInset + Spacing.three` at the bottom. Its hero fills available space; the screen is not scrollable.
-- Explore uses a `ScrollView` with `useSafeAreaInsets`. It supplies `contentInset`, applies explicit inset padding on Android, and uses separate web padding. Inner content is centered and capped at the same width.
-- Native tabs use system tab controls. Web places a custom tab strip in an absolute container with themed focused/unfocused surfaces. There is no shared screen/header layout abstraction or keyboard/form convention.
+- Navigation placeholders use one `ScrollView`, `contentInsetAdjustmentBehavior="automatic"` for iOS navigation insets, safe-area padding where needed, existing spacing, and centered content capped at 800. Welcome accounts for its headerless layout. There are no fixed tab-height offsets, final forms, or fixed-height text cards.
+- Native tabs retain system tab controls and inset handling. Web uses a flex layout with the tab bar beneath the content, keeping content clear of the bar without a hard-coded offset.
+- Each tab has a native stack header with a consistent labeled Settings action and no back control. Pushed screens use native stack headers/back behavior; the root theme provider remains in place.
 - Several pressable examples reduce opacity to 0.7 when pressed. `Collapsible` mounts content with a 200 ms fade-in. Its trigger exposes a button role, the title as its accessible label, and expanded state; it has a minimum 48-by-48 target, a decorative icon, and a wrapping title.
 - The logo examples use Reanimated keyframes (600 ms native, 300 ms web, plus a four-minute glow rotation). The native splash overlay is hidden after its animation; the web overlay returns `null`. There is no application-level reduced-motion policy demonstrated in source.
 
-Native visual/interaction checks were not recorded during engineering setup on 2026-09-07. Fixed tab insets, the non-scrolling Home layout, contrast, text scaling, touch targets, motion, and web hydration need validation when affected UI changes. This inventory describes starter patterns, not a requirement to preserve their limitations; use the reuse and accessibility criteria in `AGENTS.md` when adapting them.
+Native visual/interaction checks were not recorded during engineering setup on 2026-09-07. The navigation foundation replaces Home/Explore layout limitations, but runtime safe areas, text scaling, contrast, touch targets, and motion still need platform evidence; use the reuse and accessibility criteria in `AGENTS.md` when adapting them.
 
 ## Selected visual direction and remaining work
 

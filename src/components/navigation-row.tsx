@@ -1,4 +1,4 @@
-import { useState, type ComponentProps } from 'react';
+import { useState, type ComponentProps, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import { AppIcon, type AppIconName } from './app-icon';
@@ -13,17 +13,20 @@ export type NavigationRowProps = Omit<
   'children' | 'style' | 'accessibilityRole' | 'accessibilityState' | 'aria-disabled' | 'role'
 > & {
   label: string;
-  supportingText?: string;
   icon?: AppIconName;
   appearance?: 'row' | 'card';
   style?: ViewStyle;
   // Forwarded by Link asChild; destinations and navigation history belong to the caller.
   href?: string;
-};
+} & (
+    | { supportingText?: string; supportingContent?: never }
+    | { supportingText?: never; supportingContent: ReactNode; accessibilityLabel: string }
+  );
 
 export function NavigationRow({
   label,
   supportingText,
+  supportingContent,
   icon,
   appearance = 'row',
   disabled = false,
@@ -87,6 +90,7 @@ export function NavigationRow({
                 {supportingText}
               </ThemedText>
             ) : null}
+            {supportingContent}
           </View>
           <AppIcon name="chevronRight" themeColor={disabled ? 'onDisabled' : 'textSecondary'} />
         </Container>

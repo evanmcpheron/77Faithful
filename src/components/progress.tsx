@@ -68,7 +68,7 @@ export type DayStatusProps = { dayNumber: number } & (
   | { state: 'upcoming'; recordedCount?: never }
 );
 
-export function DayStatus(props: DayStatusProps) {
+export function getDayStatusPresentation(props: DayStatusProps) {
   const upcoming = props.state === 'upcoming';
   let label: string;
   let spokenStatus: string;
@@ -93,11 +93,17 @@ export function DayStatus(props: DayStatusProps) {
       .join(', ');
   }
 
+  return { label, accessibilityLabel: `Day ${props.dayNumber}, ${spokenStatus}` };
+}
+
+export function DayStatus(props: DayStatusProps) {
+  const { label, accessibilityLabel } = getDayStatusPresentation(props);
+
   return (
     <ThemedText
       accessible
-      accessibilityLabel={`Day ${props.dayNumber}, ${spokenStatus}`}
-      accessibilityState={{ disabled: upcoming }}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ disabled: props.state === 'upcoming' }}
       type="supporting"
       themeColor="textSecondary"
       style={styles.text}>

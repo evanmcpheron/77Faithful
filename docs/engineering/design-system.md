@@ -287,6 +287,16 @@ All labels use existing typography and readable theme colors without pills, scor
 
 [Progress tests](../../src/components/progress.test.tsx) cover day boundaries, all recorded-practice counts, current/historical/upcoming labels and accessibility state, corrected supplied counts, ended-period context, both themes, and unrestricted text-scaling props. Native large-text rendering and VoiceOver/TalkBack delivery still require device verification.
 
+## Journey presentation
+
+Reuse `JourneyProgress` for the summary. [JourneyWeekSection](../../src/components/journey-week-section.tsx) takes `weekNumber`, `theme`, and the week's seven ordered `days` from the pinned content version. It composes a wrapping section heading and separated rows without a theme route, internal scroll container, or animation. Screen owners retain scrolling and safe areas; a list can render one seven-row week per item without fixed item heights that would clip larger text.
+
+[JourneyDayRow](../../src/components/journey-day-row.tsx) uses `DayStatus` and the shared `NavigationRow`. Supply `dayNumber`, `state`, an optional preformatted `dateLabel` in the journey timezone, and `recordedCount` for `today`/`historical`. These states require an `onPress` callback; optional `href` supplies the matching web destination. Callers own Today switching and historical push/back behavior under the [Journey contract](../APP_NAVIGATION_AND_UX.md#1012-journey-overview). Upcoming accepts neither navigation nor recorded counts and renders a passive row with no content slots. No Scripture or prompt fields are accepted. Dates and status are included in the row's accessible name; nested status text is hidden from accessibility to avoid duplicate announcements.
+
+`NavigationRow` now also accepts passive `supportingContent` instead of `supportingText`, requiring an explicit `accessibilityLabel` for this composition. Keep interactive controls outside its press target. `getDayStatusPresentation` shares status wording between passive text and the enclosing row's accessible name.
+
+[Journey component tests](../../src/components/journey.test.tsx) cover caller navigation, current and historical Day 77, all eleven week groups, new-journey Upcoming rows, excluded future content/actions, corrections, both palettes, and scaling/focus props. The components add presentation only; the Journey route remains a scaffold. Device scrolling performance, large-text layout, and VoiceOver/TalkBack delivery still require native verification.
+
 ## Verification and remaining work
 
 [Theme tests](../../src/constants/theme.test.ts) calculate contrast for the documented foreground/background pairs in both schemes. [Text tests](../../src/components/themed-text.test.tsx) check typography, palette selection, style/prop forwarding, and unrestricted scaling defaults; existing view, appearance, collapsible, and navigation tests cover their corresponding contracts. See [testing guidance](testing.md) for required checks and evidence limits.

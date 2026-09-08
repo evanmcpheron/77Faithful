@@ -363,7 +363,7 @@ IF authenticated AND email verified AND onboarding complete AND journeyStatus ==
     → User may open /journey-complete
 ```
 
-A user should not normally reach `onboardingStatus == complete` with `journeyStatus == notStarted`; the confirmation step should atomically establish the journey start. If code allows this inconsistent state, route to `/onboarding/confirm` rather than crashing or inventing Day 1 client-side.
+A user should not normally reach `onboardingStatus == complete` with `journeyStatus == notStarted`; the confirmation step should atomically establish the journey start. If a persisted completion flag conflicts with confirmed `notStarted` journey state, resolve `onboardingStatus = incomplete` before applying launch and route guards, then resume the first incomplete step (`/onboarding/confirm` when only journey creation remains). Unreadable journey data follows section 17.3 rather than being treated as `notStarted`; do not invent Day 1 client-side.
 
 ## 7.3 Day route validation
 
@@ -2480,6 +2480,8 @@ The two prior cross-concern contradictions are now reconciled by explicit produc
 | Canonical current-day redirect versus historical Day 77 after journey end         | Current-day detail → Today applies only while active. Ended journeys open every historical Day 1–77 from Journey, including Day 77 and its focused routes.     | Test active Day 77 canonicalization, end-date transition, incomplete Day 77 summary copy, ended Day 77 editing/Back without redirects or lost access, and recomputed history statistics. |
 
 No known unresolved V1 product contradiction remains. Source scaffolding and diagrams do not establish native persistence, deployed authorization, or passing integrated flows.
+
+The missing-journey recovery in section 7.2 now resolves onboarding state before the guards in sections 7.1 and 24.1 and the route registry in section 23. This reconciles the recovery destination with guards that otherwise block onboarding for a completed account.
 
 ## 29.2 Product tensions resolved by this contract
 

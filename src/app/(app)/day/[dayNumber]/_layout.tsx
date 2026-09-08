@@ -18,7 +18,7 @@ export default function DayLayout() {
   }
 
   // Add shared journey access checks here once real state exists, before rendering any day content.
-  // Resolve the contract's ended-Day-77 rule before adding the current-day index redirect.
+  // Follow the settled active/ended access rules in docs/APP_NAVIGATION_AND_UX.md, section 7.3.
   return (
     <DayNumberContext value={dayNumber}>
       <Stack>

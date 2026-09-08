@@ -8,7 +8,7 @@
 - Journals, reflections, prayer content, and intentions are private by default, including in caches and diagnostics. Sharing requires an explicit action for the specific item and is outside the first release. Future communities should emphasize encouragement, not popularity or competition; community membership never implies consent to share personal content.
 - Support people with different schedules, responsibilities, and physical abilities. Avoid guilt, manipulative engagement, and unnecessary time or physical-performance requirements.
 
-Follow [product requirements](docs/PRODUCT_REQUIREMENTS.md) for settled product policy and release scope, the [formation content specification](docs/FORMATION_CONTENT_SPEC.md) for curriculum and approval, and the concern owners below. The current Expo 57 / React Native / TypeScript checkout has a navigation scaffold; a curated Scripture data boundary exists, while AWS Amplify Gen 2, production content, and formation behavior remain unimplemented. Ship iOS/Android first; web is a development preview.
+Follow [product requirements](docs/PRODUCT_REQUIREMENTS.md) for settled product policy and release scope, the [formation content specification](docs/FORMATION_CONTENT_SPEC.md) for curriculum and approval, and the concern owners below. The current Expo 57 / React Native / TypeScript checkout has a navigation scaffold, shared UI, a curated Scripture data boundary, and a local Auth-only AWS Amplify Gen 2 foundation. Application authentication, Data/persistence, production content, and formation behavior remain unimplemented; native acceptance and application Auth lifecycle verification remain outstanding. Ship iOS/Android first; web is a development preview.
 
 ## Documentation ownership
 

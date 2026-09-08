@@ -88,6 +88,13 @@ async function main() {
       'the app client permits SRP password auth and refresh only',
     ],
     [
+      userPoolClient.Properties.AllowedOAuthFlowsUserPoolClient === false &&
+        ['AllowedOAuthFlows', 'AllowedOAuthScopes', 'CallbackURLs', 'LogoutURLs'].every(
+          (property) => !userPoolClient.Properties[property]?.length,
+        ),
+      'OAuth authorization-server features and redirect URLs are disabled',
+    ],
+    [
       identityPool.Properties.AllowUnauthenticatedIdentities === false,
       'guest identities are disabled',
     ],

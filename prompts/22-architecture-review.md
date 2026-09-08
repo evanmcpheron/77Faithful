@@ -10,11 +10,11 @@ Current requirements and demonstrated pain: `<REQUIREMENTS>`
 
 - Evaluate ownership, dependency direction/cycles, data flow, state ownership, and feature boundaries against current requirements. Use `docs/PRODUCT_REQUIREMENTS.md` for product/release policy, `docs/FORMATION_CONTENT_SPEC.md` for curriculum/storage/version/fixture rules, `docs/APP_NAVIGATION_AND_UX.md` for navigation/screen responsibilities, architecture decisions for technical boundaries, and source for implementation facts.
 - Apply the shared navigation-review checklist in `AGENTS.md`, including duplicate paths/redirect logic, unnecessary screen fragmentation, helper bypasses, and undocumented material changes. Preserve existing Expo Router conventions; a proposed router or flow change needs a documented problem and corresponding contract revision. Keep settled V1 policy, deferred Future questions, and external setup prerequisites distinct.
-- Check whether SDK objects or transport details leak into presentation, or domain/date rules depend unnecessarily on React/Firebase.
+- Check whether SDK objects or transport details leak into presentation, or domain/date rules depend unnecessarily on React/backend SDKs.
 - Follow a concrete routine change to assess how many responsibilities must change together. Identify duplicated behavior, unclear ownership, or difficult testing with actual examples.
 - Examine whether state, caching, or generic infrastructure introduces more complexity than the current need warrants. Selected future integrations are not a reason to scaffold unused layers.
 - Identify boundaries worth retaining. Recommend incremental corrections for demonstrated problems, not a rewrite toward a theoretical enterprise architecture.
 
 ## Verify and report
 
-Trace representative flows and maintenance edits through proposed corrections. Use existing non-fixing checks only when they help confirm a concern. Return a judgment of current fit and prioritized, bounded corrections with migration/testing implications. Separate observed coupling from hypothetical future risk. Stop after the scoped architectural question is answered; retaining the current design may be the appropriate result.
+Trace representative flows and maintenance edits through proposed corrections. Use existing non-fixing checks only when they help confirm a concern. Return a judgment of current fit and prioritized, bounded corrections with implementation/testing implications. Separate observed coupling from hypothetical future risk. Stop after the scoped architectural question is answered; retaining the current design may be the appropriate result.

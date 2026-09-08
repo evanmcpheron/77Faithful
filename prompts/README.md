@@ -6,6 +6,8 @@ Choose one prompt for a bounded task, replace its placeholders, and supply the r
 
 Every prompt inherits the documentation-ownership and **Navigation and UX contract** rules in `AGENTS.md`; `CLAUDE.md` imports that same file. [docs/PRODUCT_REQUIREMENTS.md](../docs/PRODUCT_REQUIREMENTS.md) owns settled product policy and feature-level release scope. [docs/FORMATION_CONTENT_SPEC.md](../docs/FORMATION_CONTENT_SPEC.md) owns curriculum structure, human production approval, content versions/storage, fixtures, and future variants/group consistency. [docs/APP_NAVIGATION_AND_UX.md](../docs/APP_NAVIGATION_AND_UX.md) owns routes, screen relationships, flow/state behavior, and route-level release exposure. Read its applicable specifications before frontend or flow work and use it as the baseline for relevant reviews/tests. Material navigation changes require a contract update in the same change; reviews propose that update without editing. Keep settled V1 policy, deferred Future questions, and external setup prerequisites distinct; follow the documentation-ownership/conflict rule in `AGENTS.md`.
 
+Backend work follows [AWS Amplify Gen 2 architecture](../docs/engineering/architecture-decisions.md#aws-amplify-gen-2), including Cognito Lite, private Amplify Data access, and the scoped offline boundary. Generic prompts inherit those decisions without repeating backend setup.
+
 Use the live files in this directory. `Archive.zip` is a historical snapshot containing superseded prompts, not an instruction source or prompt generator. There is no generated prompt layer to update.
 
 ## Choose a prompt
@@ -18,9 +20,9 @@ Use the live files in this directory. `Archive.zip` is a historical snapshot con
 | [05 Component/design system](05-component-design-system.md)      | One shared primitive and scoped caller updates                  | Implement     |
 | [06 UI/UX audit](06-ui-ux-audit.md)                              | Obstacles to understanding or completing a flow                 | Review        |
 | [07 UI consistency](07-ui-consistency-review.md)                 | Accidental visual drift and duplicated primitives               | Review        |
-| [08 Firebase feature](08-backend-firebase-feature.md)            | Data access with authorization, rules, and tests                | Implement     |
-| [09 Firestore data model](09-firestore-data-model.md)            | Paths, access patterns, queries, and data lifecycle             | Design/review |
-| [10 Firebase security](10-firebase-security-review.md)           | Rules, handlers, and allow/deny boundaries                      | Review        |
+| [08 Amplify feature](08-backend-amplify-feature.md)              | Data access with authorization, validation, and tests           | Implement     |
+| [09 Amplify Data model](09-amplify-data-model.md)                | Models, relationships, queries, and data lifecycle              | Design/review |
+| [10 Amplify/AWS security](10-amplify-security-review.md)         | Data authorization, handlers, and IAM boundaries                | Review        |
 | [11 Scripture content](11-scripture-content.md)                  | Curated reading plans and verified translation text             | Implement     |
 | [12 Unit tests](12-unit-tests.md)                                | Meaningful service/domain/hook behavior                         | Tests only    |
 | [13 Component tests](13-component-tests.md)                      | Rendered states and user interactions                           | Tests only    |

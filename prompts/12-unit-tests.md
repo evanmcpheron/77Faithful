@@ -17,4 +17,4 @@ Expected rules and important cases: `<REQUIREMENTS>`
 
 ## Verify and finish
 
-Run the targeted suites and required `AGENTS.md` checks. For regressions, confirm the test detects the original failure when practical without disturbing unrelated work. Report useful behaviors protected, results including any exposed failures, and cases requiring emulator/native evidence. Stop when the specified behavior is meaningfully protected, not at an arbitrary coverage percentage.
+Run the targeted suites and required `AGENTS.md` checks. For regressions, confirm the test detects the original failure when practical without disturbing unrelated work. Report useful behaviors protected, results including any exposed failures, and cases requiring backend integration/native evidence. Stop when the specified behavior is meaningfully protected, not at an arbitrary coverage percentage.

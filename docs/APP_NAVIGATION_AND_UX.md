@@ -2,11 +2,11 @@
 
 **Project path:** `docs/APP_NAVIGATION_AND_UX.md`  
 **Document role:** Single source of truth for pages, navigation, screen relationships, major user flows, navigation state, and navigation-related UI/UX behavior.  
-**Last updated:** 2026-09-07  
+**Last updated:** 2026-09-08\
 **Product scope:** V1 personal 77-day journey, with future community architecture documented separately.
 
 > [!IMPORTANT]
-> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. Firebase, authentication, onboarding persistence, and journey state are not implemented. Curated Scripture data access and validation exist, with no approved assignments or translation text; reader/selection routes remain scaffolds.
+> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. AWS Amplify Gen 2, authentication, onboarding persistence, and journey state are not implemented. Curated Scripture data access and validation exist, with no approved assignments or translation text; reader/selection routes remain scaffolds.
 >
 > The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications are **Planned — V1**, but their routes/features are absent. Community remains Future. Sections 28–29 record settled V1 decisions and intentionally deferred Future questions; section 30 separates specification coverage from implementation evidence.
 
@@ -73,7 +73,7 @@ Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-an
 
 ### 3.1 Settled product context
 
-[Product requirements](PRODUCT_REQUIREMENTS.md) owns the personal-journey V1 scope, practice catalog/semantics, audience, commercial/privacy principles, and exclusions. [Formation content](FORMATION_CONTENT_SPEC.md) owns the 11-week curriculum and approval/versioning rules. This contract translates those requirements into flows; Firebase and curated Scripture technical choices remain in [architecture decisions](engineering/architecture-decisions.md).
+[Product requirements](PRODUCT_REQUIREMENTS.md) owns the personal-journey V1 scope, practice catalog/semantics, audience, commercial/privacy principles, and exclusions. [Formation content](FORMATION_CONTENT_SPEC.md) owns the 11-week curriculum and approval/versioning rules. This contract translates those requirements into flows; backend and curated Scripture technical choices remain in [architecture decisions](engineering/architecture-decisions.md).
 
 ### 3.2 Existing source and configuration — inspected 2026-09-07
 
@@ -83,7 +83,7 @@ Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-an
 | Routes                     | [src/app/](../src/app/) contains the existing V1 route groups and placeholders, excluding planned Verify Email/Notifications; `/` redirects to `/auth/welcome`; `/explore` removed                                               | Screen Inventory and Route Registry distinguish scaffolding from feature behavior                                                                       |
 | Root layout/startup        | [Root layout](../src/app/_layout.tsx) retains theme integration and `AnimatedSplashOverlay`, and hosts the bootstrap/auth/onboarding/app stack                                                                                   | Root group declarations are the future centralized `Stack.Protected` boundary; splash restoration gating remains deferred                               |
 | Native/web navigation      | [Native tabs](../src/components/app-tabs.tsx) and [web tabs](../src/components/app-tabs.web.tsx) expose exactly Today/Journey; each tab has a header stack and Settings action                                                   | Settings and focused routes push above tabs; ordinary history preserves the originating tab                                                             |
-| Auth and backend           | No Firebase dependency, auth provider, rules, Functions, or profile/onboarding persistence                                                                                                                                       | No guards backed by fabricated state; direct scaffold routes are not protected                                                                          |
+| Auth and backend           | No Amplify dependency, Auth/Data definitions, authorization, Lambda handlers, or profile/onboarding persistence                                                                                                                  | No guards backed by fabricated state; direct scaffold routes are not protected                                                                          |
 | Formation state            | No journey records, dates, completion, practices, reflections, or intentions                                                                                                                                                     | Today/Journey show no sample day or history; implementation of settled current/future/ended-day policies remains deferred                               |
 | Dynamic days               | Shared `day/[dayNumber]/_layout.tsx` validates through [parseDayNumber](../src/navigation/day-number.ts), redirects invalid values to Journey, and provides the validated number to children                                     | One future journey-access boundary; `generateStaticParams` supplies exactly Day 1–77 to all three routes                                                |
 | Scripture                  | Reader and translation-setting routes remain navigation placeholders; curated content data access and validation exist                                                                                                           | No approved passage assignments, supplied translation text, saved preferences, or completion actions                                                    |
@@ -108,15 +108,17 @@ When an affected feature is implemented or navigation changes, update:
 
 ## 4. Core Product Model That Drives Navigation
 
-Navigation depends on a small set of conceptual state. Exact Firebase schemas are intentionally out of scope.
+Navigation depends on a small set of conceptual state. Exact backend schemas are intentionally out of scope.
 
 ### 4.1 Session state
 
 ```text
-authStatus = restoring | signedOut | signedIn
+authStatus = restoring | signedOut | confirmingSignUp | signedIn
 ```
 
-`restoring` is a first-class state. Do not render the signed-out UI until Firebase has finished restoring the session. A signed-in session also requires verified email before onboarding/app access; use restored Firebase verification state, not an invented client flag.
+`restoring` is a first-class state. Do not render the signed-out UI until authentication has finished restoring the session. A signed-in session also requires verified email before onboarding/app access; use verified authentication state from the service, not an invented client flag.
+
+`confirmingSignUp` represents the authentication service's pending account-confirmation step, not a signed-in session. It permits Verify Email before Cognito issues session tokens. After confirmation, complete the required sign-in step before onboarding; if no session is available, use Sign In. After relaunch without confirmation context, normal Sign In must resume any required confirmation without creating another account. Never persist passwords or confirmation codes in app storage or routes.
 
 ### 4.2 Onboarding state
 
@@ -339,6 +341,9 @@ IF authStatus == restoring
     → Keep native splash/bootstrap surface visible
     → Do not show auth or app UI yet
 
+ELSE IF authStatus == confirmingSignUp
+    → /auth/verify-email
+
 ELSE IF authStatus == signedOut
     → /auth/welcome
 
@@ -397,18 +402,21 @@ ELSE
 
 ```mermaid
 flowchart TD
-    Launch[App Launch] --> Restore[Restore Firebase Session]
+    Launch[App Launch] --> Restore[Restore Authentication Session]
     Restore -->|Restoring| Splash[Bootstrap / Native Splash]
+    Restore -->|Confirmation pending| Verify[Verify Email]
     Restore -->|Signed out| Welcome[Welcome]
     Restore -->|Signed in| Verified{Email verified?}
-    Verified -->|No| Verify[Verify Email]
+    Verified -->|No| Verify
     Verified -->|Yes| OnboardingCheck{Onboarding complete?}
 
     Welcome --> SignUp[Sign Up]
     Welcome --> SignIn[Sign In]
     SignIn --> Verified
+    SignIn -->|Confirmation required| Verify
     SignUp --> Verify
-    Verify -->|Confirmed| OnboardingCheck
+    Verify -->|Verified and signed in| OnboardingCheck
+    Verify -->|Confirmed; sign-in required| SignIn
     SignIn --> Forgot[Forgot Password]
     Forgot --> SignIn
 
@@ -492,40 +500,40 @@ flowchart TD
 
 > **Implementation status note:** Most V1 routes exist as navigation scaffolding; Verify Email and Notifications remain Planned — V1 and absent. Screen purposes, data requirements, auth requirements, and successful submissions below describe the intended product, which remains planned. `/` currently performs only the signed-out launch redirect. Home and Explore have been removed; Future routes are absent. In the target policy, every onboarding/app screen requires verified email; the Yes auth cells below include that requirement, with onboarding completion additionally required for app screens.
 
-| Screen                       | Recommended route                       | Purpose                                                                | Entry points                                  | Primary exit / destination             | Auth                  | Scope  | Status                         |
-| ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- | -------------------------------------- | --------------------- | ------ | ------------------------------ |
-| Bootstrap / Session Gate     | `/`                                     | Restore session and route without UI flash                             | App launch, external route fallback           | Auth / Onboarding / Today              | No                    | V1     | Existing — navigation scaffold |
-| Welcome                      | `/auth/welcome`                         | Entry for signed-out users                                             | Bootstrap, sign-out                           | Sign Up or Sign In                     | No                    | V1     | Existing — navigation scaffold |
-| Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, protected-route redirect             | Verify Email / Onboarding / Today      | No                    | V1     | Existing — navigation scaffold |
-| Sign Up                      | `/auth/sign-up`                         | Create account                                                         | Welcome                                       | Verify Email                           | No                    | V1     | Existing — navigation scaffold |
-| Forgot Password              | `/auth/forgot-password`                 | Request password reset                                                 | Sign In                                       | Sign In                                | No                    | V1     | Existing — navigation scaffold |
-| Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Onboarding resume / Today through gate | Yes, unverified email | V1     | Planned — V1                   |
-| Onboarding Overview          | `/onboarding`                           | Explain journey + 3 required practices                                 | Auth gate                                     | Practice Selection                     | Yes                   | V1     | Existing — navigation scaffold |
-| Practice Selection           | `/onboarding/practices`                 | Choose exactly 2 optional practices                                    | Onboarding Overview                           | Bible Translation                      | Yes                   | V1     | Existing — navigation scaffold |
-| Bible Translation Onboarding | `/onboarding/bible-translation`         | Select an available registry translation                               | Practice Selection                            | Journey Confirmation                   | Yes                   | V1     | Existing — navigation scaffold |
-| Journey Confirmation         | `/onboarding/confirm`                   | Review configuration and start Day 1                                   | Bible Translation                             | Today                                  | Yes                   | V1     | Existing — navigation scaffold |
-| Today                        | `/today`                                | Complete current day's journey                                         | Launch, Today tab, current-day Journey row    | Scripture / Reflection / Settings      | Yes                   | V1     | Existing — navigation scaffold |
-| Journey Overview             | `/journey`                              | Review all 77 days + weekly groupings                                  | Journey tab                                   | Historical Day / Today / Settings      | Yes                   | V1     | Existing — navigation scaffold |
-| Historical Day Detail        | `/day/[dayNumber]`                      | Review/edit previous unlocked day                                      | Journey previous-day row                      | Scripture / Reflection / Back          | Yes                   | V1     | Existing — navigation scaffold |
-| Scripture Reader             | `/day/[dayNumber]/scripture`            | Read day's passage and record Scripture practice                       | Today / Historical Day                        | Return to source                       | Yes                   | V1     | Existing — navigation scaffold |
-| Reflection                   | `/day/[dayNumber]/reflection`           | Respond to reflection question or record private reflection completion | Today / Historical Day                        | Return to source                       | Yes                   | V1     | Existing — navigation scaffold |
-| Journey Completion           | `/journey-complete`                     | Acknowledge reaching the end and offer review                          | Day 77 completion, post-Day-77 Today          | Journey / Today                        | Yes                   | V1     | Existing — navigation scaffold |
-| Settings                     | `/settings`                             | Preference/account hub                                                 | Header action from Today/Journey              | Settings subpage / Back                | Yes                   | V1     | Existing — navigation scaffold |
-| Practice Settings            | `/settings/practices`                   | Change 2 optional practices                                            | Settings                                      | Save → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
-| Bible Translation Settings   | `/settings/bible-translation`           | Change Scripture translation                                           | Settings                                      | Save → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
-| Notification Settings        | `/settings/notifications`               | Configure optional reminders                                           | Settings                                      | Back → Settings                        | Yes                   | V1     | Planned — V1                   |
-| Privacy & Data               | `/settings/privacy`                     | Explain private data, policy links, data controls                      | Settings                                      | Back → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
-| Account                      | `/settings/account`                     | Account identity, sign out, deletion entry                             | Settings                                      | Back / Sign Out / Delete Account       | Yes                   | V1     | Existing — navigation scaffold |
-| Delete Account               | `/settings/account/delete`              | Confirm destructive deletion                                           | Account                                       | Sign-out completion or Back            | Yes                   | V1     | Existing — navigation scaffold |
-| About                        | `/settings/about`                       | Product purpose, version, legal/about links                            | Settings                                      | Back → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
-| Help / Feedback              | `/settings/help-feedback`               | Support and feedback path                                              | Settings                                      | Back / external support action         | Yes                   | V1     | Existing — navigation scaffold |
-| Communities                  | `/communities`                          | Private community list                                                 | Future Community tab                          | Community Detail                       | Yes                   | Future | Future                         |
-| Community Detail             | `/communities/[communityId]`            | Community home                                                         | Communities / invite                          | Prayer / Discussion / Progress         | Yes                   | Future | Future                         |
-| Community Prayer Requests    | `/communities/[communityId]/prayer`     | Shared prayer requests                                                 | Community Detail                              | Request interaction within screen      | Yes                   | Future | Future                         |
-| Community Discussion         | `/communities/[communityId]/discussion` | Weekly/group discussion                                                | Community Detail                              | Discussion interaction within screen   | Yes                   | Future | Future                         |
-| Group Progress               | `/communities/[communityId]/progress`   | High-level group participation                                         | Community Detail                              | Back                                   | Yes                   | Future | Future                         |
-| Community Settings           | `/communities/[communityId]/settings`   | Membership/admin settings                                              | Community Detail                              | Back                                   | Yes                   | Future | Future                         |
-| Community Invite             | `/invite/[inviteId]`                    | Accept private invitation                                              | External deep link                            | Auth → Onboarding → Community          | Depends               | Future | Future                         |
+| Screen                       | Recommended route                       | Purpose                                                                | Entry points                                  | Primary exit / destination           | Auth               | Scope  | Status                         |
+| ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------ | ------------------ | ------ | ------------------------------ |
+| Bootstrap / Session Gate     | `/`                                     | Restore session and route without UI flash                             | App launch, external route fallback           | Auth / Onboarding / Today            | No                 | V1     | Existing — navigation scaffold |
+| Welcome                      | `/auth/welcome`                         | Entry for signed-out users                                             | Bootstrap, sign-out                           | Sign Up or Sign In                   | No                 | V1     | Existing — navigation scaffold |
+| Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, protected-route redirect             | Verify Email / Onboarding / Today    | No                 | V1     | Existing — navigation scaffold |
+| Sign Up                      | `/auth/sign-up`                         | Create account                                                         | Welcome                                       | Verify Email                         | No                 | V1     | Existing — navigation scaffold |
+| Forgot Password              | `/auth/forgot-password`                 | Request and complete password reset                                    | Sign In                                       | Sign In                              | No                 | V1     | Existing — navigation scaffold |
+| Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Sign In / Onboarding / Today         | Pending/unverified | V1     | Planned — V1                   |
+| Onboarding Overview          | `/onboarding`                           | Explain journey + 3 required practices                                 | Auth gate                                     | Practice Selection                   | Yes                | V1     | Existing — navigation scaffold |
+| Practice Selection           | `/onboarding/practices`                 | Choose exactly 2 optional practices                                    | Onboarding Overview                           | Bible Translation                    | Yes                | V1     | Existing — navigation scaffold |
+| Bible Translation Onboarding | `/onboarding/bible-translation`         | Select an available registry translation                               | Practice Selection                            | Journey Confirmation                 | Yes                | V1     | Existing — navigation scaffold |
+| Journey Confirmation         | `/onboarding/confirm`                   | Review configuration and start Day 1                                   | Bible Translation                             | Today                                | Yes                | V1     | Existing — navigation scaffold |
+| Today                        | `/today`                                | Complete current day's journey                                         | Launch, Today tab, current-day Journey row    | Scripture / Reflection / Settings    | Yes                | V1     | Existing — navigation scaffold |
+| Journey Overview             | `/journey`                              | Review all 77 days + weekly groupings                                  | Journey tab                                   | Historical Day / Today / Settings    | Yes                | V1     | Existing — navigation scaffold |
+| Historical Day Detail        | `/day/[dayNumber]`                      | Review/edit previous unlocked day                                      | Journey previous-day row                      | Scripture / Reflection / Back        | Yes                | V1     | Existing — navigation scaffold |
+| Scripture Reader             | `/day/[dayNumber]/scripture`            | Read day's passage and record Scripture practice                       | Today / Historical Day                        | Return to source                     | Yes                | V1     | Existing — navigation scaffold |
+| Reflection                   | `/day/[dayNumber]/reflection`           | Respond to reflection question or record private reflection completion | Today / Historical Day                        | Return to source                     | Yes                | V1     | Existing — navigation scaffold |
+| Journey Completion           | `/journey-complete`                     | Acknowledge reaching the end and offer review                          | Day 77 completion, post-Day-77 Today          | Journey / Today                      | Yes                | V1     | Existing — navigation scaffold |
+| Settings                     | `/settings`                             | Preference/account hub                                                 | Header action from Today/Journey              | Settings subpage / Back              | Yes                | V1     | Existing — navigation scaffold |
+| Practice Settings            | `/settings/practices`                   | Change 2 optional practices                                            | Settings                                      | Save → Settings                      | Yes                | V1     | Existing — navigation scaffold |
+| Bible Translation Settings   | `/settings/bible-translation`           | Change Scripture translation                                           | Settings                                      | Save → Settings                      | Yes                | V1     | Existing — navigation scaffold |
+| Notification Settings        | `/settings/notifications`               | Configure optional reminders                                           | Settings                                      | Back → Settings                      | Yes                | V1     | Planned — V1                   |
+| Privacy & Data               | `/settings/privacy`                     | Explain private data, policy links, data controls                      | Settings                                      | Back → Settings                      | Yes                | V1     | Existing — navigation scaffold |
+| Account                      | `/settings/account`                     | Account identity, sign out, deletion entry                             | Settings                                      | Back / Sign Out / Delete Account     | Yes                | V1     | Existing — navigation scaffold |
+| Delete Account               | `/settings/account/delete`              | Confirm destructive deletion                                           | Account                                       | Sign-out completion or Back          | Yes                | V1     | Existing — navigation scaffold |
+| About                        | `/settings/about`                       | Product purpose, version, legal/about links                            | Settings                                      | Back → Settings                      | Yes                | V1     | Existing — navigation scaffold |
+| Help / Feedback              | `/settings/help-feedback`               | Support and feedback path                                              | Settings                                      | Back / external support action       | Yes                | V1     | Existing — navigation scaffold |
+| Communities                  | `/communities`                          | Private community list                                                 | Future Community tab                          | Community Detail                     | Yes                | Future | Future                         |
+| Community Detail             | `/communities/[communityId]`            | Community home                                                         | Communities / invite                          | Prayer / Discussion / Progress       | Yes                | Future | Future                         |
+| Community Prayer Requests    | `/communities/[communityId]/prayer`     | Shared prayer requests                                                 | Community Detail                              | Request interaction within screen    | Yes                | Future | Future                         |
+| Community Discussion         | `/communities/[communityId]/discussion` | Weekly/group discussion                                                | Community Detail                              | Discussion interaction within screen | Yes                | Future | Future                         |
+| Group Progress               | `/communities/[communityId]/progress`   | High-level group participation                                         | Community Detail                              | Back                                 | Yes                | Future | Future                         |
+| Community Settings           | `/communities/[communityId]/settings`   | Membership/admin settings                                              | Community Detail                              | Back                                 | Yes                | Future | Future                         |
+| Community Invite             | `/invite/[inviteId]`                    | Accept private invitation                                              | External deep link                            | Auth → Onboarding → Community        | Depends            | Future | Future                         |
 
 ---
 
@@ -533,22 +541,22 @@ flowchart TD
 
 ## 10.1 Bootstrap / Session Gate
 
-| Field              | Specification                                                                                                                                                  |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Purpose**        | Restore authentication and required app state without showing the wrong navigation tree.                                                                       |
-| **Route**          | `/`                                                                                                                                                            |
-| **Context**        | Root stack; routing-only surface.                                                                                                                              |
-| **Entry points**   | Cold launch, app reload, external route fallback.                                                                                                              |
-| **Primary action** | None. Automatic state resolution only.                                                                                                                         |
-| **Destinations**   | Signed out → Welcome. Signed in + unverified → Verify Email. Verified + onboarding incomplete → first incomplete step. Verified + onboarding complete → Today. |
-| **Back behavior**  | Not applicable. This route should be replaced, not pushed beneath the destination.                                                                             |
-| **Required data**  | Firebase auth restoration; verification state first, then minimal onboarding state for verified accounts.                                                      |
-| **Persistence**    | None directly. Reads persisted auth/onboarding state.                                                                                                          |
+| Field              | Specification                                                                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**        | Restore authentication and required app state without showing the wrong navigation tree.                                                                    |
+| **Route**          | `/`                                                                                                                                                         |
+| **Context**        | Root stack; routing-only surface.                                                                                                                           |
+| **Entry points**   | Cold launch, app reload, external route fallback.                                                                                                           |
+| **Primary action** | None. Automatic state resolution only.                                                                                                                      |
+| **Destinations**   | Confirmation pending → Verify Email. Signed out → Welcome. Signed in + unverified → Verify Email. Verified → onboarding resume or Today according to state. |
+| **Back behavior**  | Not applicable. This route should be replaced, not pushed beneath the destination.                                                                          |
+| **Required data**  | Authentication restoration; verification state first, then minimal onboarding state for verified accounts.                                                  |
+| **Persistence**    | None directly. Reads persisted auth/onboarding state.                                                                                                       |
 
 **States**
 
 - **Restoring:** keep native splash or neutral bootstrap surface; do not flash Welcome.
-- **Auth restore failure:** if Firebase definitively reports no valid session, route to Welcome. If network failure leaves cached Firebase session valid, follow the Firebase SDK's actual session semantics rather than force-signing out.
+- **Auth restore failure:** if Amplify Auth definitively reports no valid session, route to Welcome. If network failure leaves a cached session valid, follow Amplify Auth's actual session semantics rather than force-signing out.
 - **Profile/onboarding fetch loading:** keep protected neutral shell/splash until enough state exists to route safely.
 - **Profile fetch error:** show a retryable bootstrap error only after auth is known; do not alternate between signed-in and signed-out trees.
 
@@ -587,8 +595,8 @@ flowchart TD
 | **Primary action**    | `Sign In` → auth gate → Verify Email, Onboarding, or Today.                                                      |
 | **Secondary actions** | `Forgot password?` → Forgot Password; `Create account` → Sign Up.                                                |
 | **Back behavior**     | Back → Welcome unless entered as an auth gate from a deep link; destination preservation must not create a loop. |
-| **Required data**     | Configured Firebase Auth methods.                                                                                |
-| **Persistence**       | Firebase Auth session on success. Form input is transient; password is never persisted by app state.             |
+| **Required data**     | Configured email/password authentication.                                                                        |
+| **Persistence**       | Authenticated session on success. Form input is transient; password is never persisted by app state.             |
 
 **States**
 
@@ -596,24 +604,24 @@ flowchart TD
 - **Invalid credentials:** inline error; remain on screen.
 - **Network error:** clear retryable error; remain on screen.
 - **Success:** use `replace`, not `push`, so Back cannot return to Sign In.
-- **Authenticated but unverified:** replace with Verify Email, including existing sessions.
+- **Confirmation required or authenticated but unverified:** replace with Verify Email. A pending account-confirmation step does not establish a signed-in session; existing unverified sessions use the same gate.
 - **Verified but onboarding incomplete:** resume the first incomplete step; do not route directly to Today.
 
 ---
 
 ## 10.4 Sign Up
 
-| Field                 | Specification                                                                      |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| **Purpose**           | Create a Firebase-backed user account.                                             |
-| **Route**             | `/auth/sign-up`                                                                    |
-| **Context**           | Auth stack.                                                                        |
-| **Entry points**      | Welcome; Sign In.                                                                  |
-| **Primary action**    | `Create Account` → Verify Email.                                                   |
-| **Secondary actions** | `Sign in instead` → Sign In.                                                       |
-| **Back behavior**     | Back → previous auth screen.                                                       |
-| **Required data**     | Email and password only; no extra profile fields under product requirements.       |
-| **Persistence**       | Firebase Auth account; defer cloud personal-data/onboarding writes until verified. |
+| Field                 | Specification                                                                                      |
+| --------------------- | -------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Create an email/password user account.                                                             |
+| **Route**             | `/auth/sign-up`                                                                                    |
+| **Context**           | Auth stack.                                                                                        |
+| **Entry points**      | Welcome; Sign In.                                                                                  |
+| **Primary action**    | `Create Account` → Verify Email.                                                                   |
+| **Secondary actions** | `Sign in instead` → Sign In.                                                                       |
+| **Back behavior**     | Back → previous auth screen.                                                                       |
+| **Required data**     | Email and password only; no extra profile fields under product requirements.                       |
+| **Persistence**       | Authentication identity; defer cloud personal-data/onboarding writes until verified and signed in. |
 
 **States**
 
@@ -628,42 +636,44 @@ Do not collect profile fields solely because future Community might need them.
 
 ## 10.5 Forgot Password
 
-| Field                 | Specification                                       |
-| --------------------- | --------------------------------------------------- |
-| **Purpose**           | Trigger the V1 Firebase email/password reset flow.  |
-| **Route**             | `/auth/forgot-password`                             |
-| **Context**           | Auth stack.                                         |
-| **Entry points**      | Sign In.                                            |
-| **Primary action**    | `Send reset email`.                                 |
-| **Secondary actions** | Back to Sign In.                                    |
-| **Back behavior**     | Standard back → Sign In.                            |
-| **Required data**     | Email address.                                      |
-| **Persistence**       | No app persistence. Firebase handles reset request. |
+| Field                 | Specification                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------ |
+| **Purpose**           | Complete the V1 email/password recovery flow.                                                    |
+| **Route**             | `/auth/forgot-password`                                                                          |
+| **Context**           | Auth stack.                                                                                      |
+| **Entry points**      | Sign In.                                                                                         |
+| **Primary action**    | `Send reset email`, then `Reset password` with the emailed code and new password on this screen. |
+| **Secondary actions** | Back to Sign In.                                                                                 |
+| **Back behavior**     | Standard back → Sign In.                                                                         |
+| **Required data**     | Email address, then reset code and new password.                                                 |
+| **Persistence**       | Authentication service handles recovery; code/password input stays transient.                    |
 
 **States**
 
-- Success should show a calm confirmation with `Back to Sign In`.
+- After a reset email is requested, collect its code and the new password inline on this route; sending the email alone is not a completed password reset.
+- Show usable validation and invalid/expired-code, resend, submission, and network/retry states. Keep passwords and codes out of persisted app state, routes, and diagnostics.
+- Only after the authentication service confirms the new password should success show a calm confirmation with `Back to Sign In`.
 - Avoid revealing whether an email address exists if the chosen auth/security pattern intentionally prevents account enumeration.
 
 ---
 
 ## 10.6 Verify Email — Planned — V1
 
-| Field                 | Specification                                                                                                                           |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Purpose**           | Require verified email before onboarding and cloud personal-data writes.                                                                |
-| **Route**             | `/auth/verify-email` — not implemented yet.                                                                                             |
-| **Context**           | Auth stack with authenticated but unverified session.                                                                                   |
-| **Entry points**      | Successful sign-up; sign-in or restored session with unverified email.                                                                  |
-| **Primary action**    | `I've verified my email` refreshes verification state; confirmed verification passes through the normal onboarding/journey gate.        |
-| **Secondary actions** | Resend verification; sign out.                                                                                                          |
-| **Back behavior**     | Cannot bypass verification into onboarding/app content or return to account creation as though signed out. Sign out returns to Welcome. |
-| **Required data**     | Firebase user email and current verification state; connectivity to confirm verification.                                               |
-| **Persistence**       | Firebase Auth verification state; no cloud personal-data writes while unverified.                                                       |
+| Field                 | Specification                                                                                                                |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Require verified email before onboarding and cloud personal-data writes.                                                     |
+| **Route**             | `/auth/verify-email` — not implemented yet.                                                                                  |
+| **Context**           | Auth stack for pending account confirmation or an authenticated but unverified session.                                      |
+| **Entry points**      | Successful sign-up; sign-in or restored session with unverified email.                                                       |
+| **Primary action**    | `Verify email` submits the emailed code; verified users complete sign-in before the normal onboarding/journey gate.          |
+| **Secondary actions** | Resend verification; cancel to Welcome before sign-in, or sign out for an existing session.                                  |
+| **Back behavior**     | Cannot bypass verification into onboarding/app content. Cancel/sign out returns to Welcome; Sign In can resume confirmation. |
+| **Required data**     | Account email and current confirmation/verification state; connectivity to confirm verification.                             |
+| **Persistence**       | Authentication-service verification state; no cloud personal-data writes while unverified.                                   |
 
-**States:** waiting for verification, refresh/resend in progress, still unverified, retryable network/send/refresh failure, and confirmed verification. Do not claim verification succeeded from a button press or stale local flag. After confirmation, refresh the authorization state needed for verified cloud writes before those writes can succeed; backend enforcement remains mandatory under [architecture decisions](engineering/architecture-decisions.md#firebase).
+**States:** waiting for the emailed confirmation code, confirmation/refresh/resend in progress, invalid or expired code, still unverified, retryable network/send/refresh failure, and confirmed verification. Submit the code through the authentication service; for an existing unverified session, complete its required email-verification step and refresh authorization state. Do not claim verification or sign-in succeeded from a button press or stale local flag. Confirmation alone does not create a session: complete the SDK's supported sign-in continuation or replace with Sign In when credentials are needed. Backend enforcement remains mandatory under [architecture decisions](engineering/architecture-decisions.md#aws-amplify-gen-2).
 
-New accounts continue to the overview; returning accounts resume their first incomplete onboarding step, or Today when onboarding/journey state is already complete and readable. This resolves the earlier friction-versus-write-authorization contradiction without weakening verified-write authorization.
+Once verified and signed in, new accounts continue to the overview; returning accounts resume their first incomplete onboarding step, or Today when onboarding/journey state is already complete and readable. No unconfirmed or unverified account can bypass this gate into cloud personal-data writes.
 
 ---
 
@@ -1174,23 +1184,23 @@ Must state accurately that reflection/intention/journal-like content is private 
 
 ## 10.22 Account
 
-| Field                 | Specification                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------------- |
-| **Purpose**           | Manage authentication/account actions.                                                          |
-| **Route**             | `/settings/account`                                                                             |
-| **Context**           | Settings stack.                                                                                 |
-| **Entry points**      | Settings.                                                                                       |
-| **Primary action**    | None; display account actions.                                                                  |
-| **Secondary actions** | Sign Out; Delete Account; provider-specific security actions if implemented.                    |
-| **Back behavior**     | Back → Settings.                                                                                |
-| **Required data**     | Firebase current user email; no additional profile or dedicated change-email requirement in V1. |
-| **Persistence**       | Auth/session changes only when user acts.                                                       |
+| Field                 | Specification                                                                                |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| **Purpose**           | Manage authentication/account actions.                                                       |
+| **Route**             | `/settings/account`                                                                          |
+| **Context**           | Settings stack.                                                                              |
+| **Entry points**      | Settings.                                                                                    |
+| **Primary action**    | None; display account actions.                                                               |
+| **Secondary actions** | Sign Out; Delete Account; provider-specific security actions if implemented.                 |
+| **Back behavior**     | Back → Settings.                                                                             |
+| **Required data**     | Authenticated user email; no additional profile or dedicated change-email requirement in V1. |
+| **Persistence**       | Auth/session changes only when user acts.                                                    |
 
 ### Sign out
 
 1. If online, attempt to complete synchronization of pending private writes before signing out.
 2. If writes remain pending, keep them and offer an explicit choice: **cancel sign-out and keep pending work**, or **discard unsynced changes and sign out**. Destructive discard requires clear confirmation identifying that unsynced work will be lost; cancellation leaves the account and work intact. Offline sign-out uses the same choice when writes are pending.
-3. After synchronization succeeds or discard is explicitly confirmed, end the Firebase session, clear protected in-memory state/history, and complete the private-cache account boundary before allowing another sign-in. Failure to complete that boundary is a recoverable sign-out error, not successful sign-out.
+3. After synchronization succeeds or discard is explicitly confirmed, end the authenticated session, clear protected in-memory state/history, and complete the private-cache account boundary before allowing another sign-in. Failure to complete that boundary is a recoverable sign-out error, not successful sign-out.
 4. Replace the protected navigation tree with Welcome. Back cannot return to Today or private content.
 
 Direct multi-account switching is not a V1 feature: sign out completely before another sign-in. A subsequently signed-in account must never see the previous account's cached private data. [Architecture decisions](engineering/architecture-decisions.md#offline-persistence-and-account-boundaries) owns the SDK/cache implementation dependency; the selected persistence architecture does not prove this flow works.
@@ -1199,21 +1209,21 @@ Direct multi-account switching is not a V1 feature: sign out completely before a
 
 ## 10.23 Delete Account
 
-| Field                 | Specification                                                                         |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| **Purpose**           | Let users initiate permanent account and associated-data deletion.                    |
-| **Route**             | `/settings/account/delete`                                                            |
-| **Context**           | Dedicated destructive push screen, not a one-line alert.                              |
-| **Entry points**      | Account.                                                                              |
-| **Primary action**    | `Delete my account` after explicit confirmation/reauthentication as required.         |
-| **Secondary actions** | `Cancel` → Account.                                                                   |
-| **Back behavior**     | Back/cancel safely aborts. After success, replace with Welcome.                       |
-| **Required data**     | Authenticated Firebase user; deletion requirements; reauthentication state if needed. |
-| **Persistence**       | Permanent backend deletion plus sign-out on success.                                  |
+| Field                 | Specification                                                                 |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Purpose**           | Let users initiate permanent account and associated-data deletion.            |
+| **Route**             | `/settings/account/delete`                                                    |
+| **Context**           | Dedicated destructive push screen, not a one-line alert.                      |
+| **Entry points**      | Account.                                                                      |
+| **Primary action**    | `Delete my account` after explicit confirmation/reauthentication as required. |
+| **Secondary actions** | `Cancel` → Account.                                                           |
+| **Back behavior**     | Back/cancel safely aborts. After success, replace with Welcome.               |
+| **Required data**     | Authenticated user; deletion requirements; reauthentication state if needed.  |
+| **Persistence**       | Permanent backend deletion plus sign-out on success.                          |
 
 Use a dedicated screen because the action is consequential and may require reauthentication/network work.
 
-Account deletion is required in V1 and requires connectivity. The authenticated backend operation must remove Firebase Auth identity and nested personal application data. Do not report success after deleting only Auth, and do not promise exact backup-erasure timing without verified infrastructure/provider policy.
+Account deletion is required in V1 and requires connectivity. The authenticated backend operation must remove the authentication identity and all related personal application data. Do not report success after deleting only Auth, and do not promise exact backup-erasure timing without verified infrastructure/provider policy.
 
 ---
 
@@ -1237,17 +1247,17 @@ Keep this informational. Do not duplicate onboarding or create a marketing feed.
 
 ## 10.25 Help / Feedback
 
-| Field                 | Specification                                                                                        |
-| --------------------- | ---------------------------------------------------------------------------------------------------- |
-| **Purpose**           | Give users a clear support/feedback path.                                                            |
-| **Route**             | `/settings/help-feedback`                                                                            |
-| **Context**           | Settings stack.                                                                                      |
-| **Entry points**      | Settings; recoverable error screens may link here when appropriate.                                  |
-| **Primary action**    | Send feedback/open configured support destination.                                                   |
-| **Secondary actions** | FAQ/help links if they exist.                                                                        |
-| **Back behavior**     | Back → Settings.                                                                                     |
-| **Required data**     | Configured support destination.                                                                      |
-| **Persistence**       | None; open the configured support contact destination, with no Firebase support-ticket system in V1. |
+| Field                 | Specification                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| **Purpose**           | Give users a clear support/feedback path.                                                   |
+| **Route**             | `/settings/help-feedback`                                                                   |
+| **Context**           | Settings stack.                                                                             |
+| **Entry points**      | Settings; recoverable error screens may link here when appropriate.                         |
+| **Primary action**    | Send feedback/open configured support destination.                                          |
+| **Secondary actions** | FAQ/help links if they exist.                                                               |
+| **Back behavior**     | Back → Settings.                                                                            |
+| **Required data**     | Configured support destination.                                                             |
+| **Persistence**       | None; open the configured support contact destination, with no support-ticket system in V1. |
 
 Never prefill support diagnostics with private Scripture reflection, intention, prayer, or journal text. Support email, website/domain, policy URLs, and legal identity remain external launch prerequisites until supplied; see [project context](engineering/project-context.md#external-setup-and-release-prerequisites). Do not fabricate support/legal destinations.
 
@@ -1497,7 +1507,9 @@ flowchart LR
     Install[Install / First Launch] --> Welcome
     Welcome --> Create[Create Account]
     Create --> Verify[Verify Email]
-    Verify -->|Confirmed| Overview[Journey Overview]
+    Verify -->|Verified and signed in| Overview[Journey Overview]
+    Verify -->|Confirmed; sign-in required| SignIn[Sign In]
+    SignIn -->|Verified session| Overview
     Overview --> Practices[Choose 2 Practices]
     Practices --> Bible[Bible Translation]
     Bible --> Confirm[Confirm Journey]
@@ -1513,7 +1525,9 @@ flowchart LR
     Verified -->|Signed out| Auth[Welcome / Sign In]
     Verified -->|Unverified| Verify[Verify Email]
     Auth --> Verified
-    Verify -->|Confirmed| Check{Onboarding complete?}
+    Auth -->|Confirmation required| Verify
+    Verify -->|Verified and signed in| Check{Onboarding complete?}
+    Verify -->|Confirmed; sign-in required| Auth
     Verified -->|Yes| Check
     Check -->|Yes| Today
     Check -->|No| Resume[Resume Onboarding]
@@ -1734,25 +1748,25 @@ When Scripture text is unavailable:
 - allow explicit manual completion after reading the assigned passage in the participant's own Bible,
 - never substitute an unlicensed or guessed Bible text.
 
-## 17.3 Firebase read failure
+## 17.3 Application-data read failure
 
 Minimum behavior:
 
 - keep last successfully loaded local UI state visible if available,
 - show a non-blocking sync/read error,
 - provide Retry,
-- do not sign the user out solely because a Firestore/database request failed.
+- do not sign the user out solely because an application-data request failed.
 
 If no cached data exists and required journey state cannot be resolved, show a retryable blocking error rather than inventing Day 1 or resetting progress.
 
-## 17.4 Firebase write failure
+## 17.4 Application-data write failure
 
 Settled V1 UX contract:
 
 - user edits should update local UI immediately when a local persistence/sync layer exists,
 - distinguish locally saved/pending writes from rejected or failed writes with a recoverable `Failed` state; retain private drafts rather than silently reverting,
 - private reflection/intention drafts should be retained locally until sync succeeds or the user deletes them,
-- do not mark a write as synced before Firebase confirms it.
+- do not mark a write as synced before the backend confirms it.
 
 If the current codebase has no reliable local write queue, document that limitation explicitly and do not falsely present full offline completion as supported.
 
@@ -1802,8 +1816,9 @@ If Community ships and user belongs to none:
 
 | State                                      | Expected navigation                                                                     |
 | ------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Confirmation pending                       | Verify Email; no onboarding/app access until verified and signed in                     |
 | Logged out                                 | Welcome/Auth only                                                                       |
-| Firebase restoring session                 | Native splash/bootstrap; no auth flash                                                  |
+| Authentication restoring session           | Native splash/bootstrap; no auth flash                                                  |
 | Returning verified + onboarding complete   | Today                                                                                   |
 | Returning verified + onboarding incomplete | Resume first incomplete onboarding step                                                 |
 | Authenticated + email unverified           | Verify Email before onboarding/app access                                               |
@@ -1814,23 +1829,23 @@ If Community ships and user belongs to none:
 
 ## 18.1 Preventing auth flash
 
-The root app must treat Firebase session restoration as unresolved state.
+The root app must treat authentication session restoration as unresolved state.
 
 Do not:
 
 ```text
-initial render → Welcome → Firebase restores → Today
+initial render → Welcome → authentication restores → Today
 ```
 
 Prefer:
 
 ```text
-initial render → native splash/bootstrap → Firebase resolves → correct destination
+initial render → native splash/bootstrap → authentication resolves → correct destination
 ```
 
 ## 18.2 Partial profile state
 
-If Firebase Auth succeeds but the user's application onboarding document is missing, check verification first. Unverified sessions go to Verify Email without attempting cloud personal-data writes. For a verified session:
+If authentication succeeds but the user's application onboarding record is missing, check verification first. Unverified sessions go to Verify Email without attempting cloud personal-data writes. For a verified session:
 
 - do not assume onboarding complete,
 - do not automatically overwrite remote data,
@@ -1993,18 +2008,18 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 
 | From                         | Action                                   | Destination                       | Navigation type            | Conditions / result                                                                       |
 | ---------------------------- | ---------------------------------------- | --------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------- |
-| Bootstrap                    | Session = signed out                     | Welcome                           | Replace                    | Firebase auth restored                                                                    |
-| Bootstrap                    | Signed in + email unverified             | Verify Email                      | Replace                    | Required before onboarding/app access                                                     |
+| Bootstrap                    | Session = signed out                     | Welcome                           | Replace                    | Authentication restoration resolved                                                       |
+| Bootstrap                    | Confirmation pending or email unverified | Verify Email                      | Replace                    | Required before onboarding/app access                                                     |
 | Bootstrap                    | Verified + onboarding incomplete         | Onboarding resume step            | Replace                    | Resume first incomplete step                                                              |
 | Bootstrap                    | Verified + onboarding complete           | Today                             | Replace                    | Journey readable                                                                          |
 | Welcome                      | Get Started                              | Sign Up                           | Push                       | Always                                                                                    |
 | Welcome                      | I already have an account                | Sign In                           | Push                       | Always                                                                                    |
-| Sign In                      | Sign In succeeds                         | Verify Email / Onboarding / Today | Replace                    | Verification first, then onboarding/journey gate                                          |
+| Sign In                      | Sign In next step                        | Verify Email / Onboarding / Today | Replace                    | Confirmation if required; otherwise verification and onboarding/journey gate              |
 | Sign In                      | Forgot password                          | Forgot Password                   | Push                       | Email/password auth exists                                                                |
 | Sign In                      | Create account                           | Sign Up                           | Replace/Push               | Avoid duplicate auth stacks                                                               |
 | Sign Up                      | Create account succeeds                  | Verify Email                      | Replace                    | Required immediately after sign-up                                                        |
-| Forgot Password              | Reset request complete                   | Sign In                           | Back/CTA                   | User chooses return                                                                       |
-| Verify Email                 | Verification confirmed                   | Onboarding resume / Today         | Replace                    | Refresh verified authorization, then normal state gate                                    |
+| Forgot Password              | Password reset confirmed                 | Sign In                           | Back/CTA                   | User chooses return after successful code/new-password submission                         |
+| Verify Email                 | Verification confirmed                   | Sign In / Onboarding / Today      | Replace                    | Establish verified session, then normal state gate                                        |
 | Onboarding Overview          | Continue                                 | Practice Selection                | Push                       | Verified authenticated account                                                            |
 | Practice Selection           | Continue                                 | Bible Translation                 | Push                       | Exactly 2 selected                                                                        |
 | Bible Translation Onboarding | Continue                                 | Journey Confirmation              | Push                       | Valid translation selected                                                                |
@@ -2124,6 +2139,10 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 ```text
 IF authStatus == restoring
     RENDER bootstrap/splash only
+
+ELSE IF authStatus == confirmingSignUp
+    ALLOW verify-email + cancel confirmation
+    BLOCK onboarding and app routes
 
 ELSE IF authStatus == signedOut
     ALLOW welcome, sign-in, sign-up, forgot-password
@@ -2421,7 +2440,7 @@ Email-gate placement and ended-Day-77 access are settled under section 29.1; the
 
 The code inspection should specifically look for:
 
-- auth-screen flash during Firebase restore,
+- auth-screen flash during authentication restore,
 - duplicate current-day screens,
 - more than two V1 tabs without a high-frequency use case,
 - Community exposed before feature readiness,
@@ -2596,7 +2615,7 @@ These checks establish source facts and absences, not native runtime behavior, w
 9. Keep navigation/state decisions separate from presentation components where practical.
 10. Do not hard-code navigation behavior that conflicts with the documented route/state rules.
 11. Do not silently change authentication, email-verification, onboarding, or journey redirects.
-12. Do not show signed-out UI while Firebase authentication is still restoring.
+12. Do not show signed-out UI while authentication is still restoring.
 13. Do not create a duplicate current-day detail experience. `/today` is the canonical current-day destination.
 14. Do not allow future-day completion or editing.
 15. Do not advance days based on completion count. Journey progression is calendar-based unless the product owner changes this decision.
@@ -2630,10 +2649,10 @@ These checks establish source facts and absences, not native runtime behavior, w
 
 Source inspection for the navigation foundation is recorded in sections 3 and 30. Before editing product code, refresh the affected parts of this procedure; trace an integration only when it exists and record absent work as planned. This is not a requirement to build or re-audit unrelated features for every task.
 
-1. Locate `package.json` and confirm Expo, React Native, Expo Router/React Navigation, Firebase, and relevant package versions.
+1. Locate `package.json` and confirm Expo, React Native, Expo Router/React Navigation, installed Amplify packages when present, and relevant package versions.
 2. Generate an actual route tree from `app/` or `src/app/`.
 3. Open every `_layout.*`, navigator, route-group layout, tab config, and modal presentation declaration.
-4. Trace initial launch from native/root layout through Firebase session restoration.
+4. Trace initial launch from native/root layout through authentication session restoration.
 5. Trace signed-out → sign-in → signed-in redirects.
 6. Trace first account creation through onboarding and Day 1.
 7. Identify persisted fields that determine onboarding completion and journey day.
@@ -2642,7 +2661,7 @@ Source inspection for the navigation foundation is recorded in sections 3 and 30
 10. Search for practice completion, streak, missed-day, reset, and day-progression logic.
 11. Verify whether past/future days can be opened and edited.
 12. Inspect curated Scripture availability, attribution, fallback labels, and actual loading behavior.
-13. Inspect Firebase failure/offline behavior and local persistence.
+13. Inspect Amplify Auth/Data failure behavior and application-owned offline persistence/synchronization.
 14. Inspect notification permission and deep-link configuration.
 15. Inspect Settings/account deletion/sign-out behavior.
 16. Search for Community routes/placeholders and confirm they are not exposed in V1.

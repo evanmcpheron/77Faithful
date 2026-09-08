@@ -106,7 +106,7 @@ Use the Expo Router protected-route mechanism supported by the installed version
 
 Do not:
 
-- create fake Firebase authentication,
+- create fake authentication,
 - create a placeholder auth context merely to make guards appear implemented,
 - create hard-coded signed-in users,
 - fabricate onboarding completion,
@@ -117,7 +117,7 @@ If authentication/onboarding state does not exist yet, make the route/layout str
 
 The current implementation may truthfully treat initial launch as signed out until authentication actually exists, but do not create fake authenticated states to demonstrate other routes.
 
-V1 requires `/auth/verify-email` immediately after sign-up and before onboarding/cloud personal-data writes, including restored unverified sessions. Include its navigation scaffold in broad V1 foundation scope, but defer its state-backed redirects, refresh/resend, and verification success until real Firebase state exists. Missing integration-backed guards must be reported as deferred integration work rather than represented as production-complete authorization.
+V1 requires `/auth/verify-email` immediately after sign-up and before onboarding/cloud personal-data writes, including restored unverified sessions. Include its navigation scaffold in broad V1 foundation scope, but defer its state-backed redirects, confirmation/refresh/resend, and verification success until real Amplify Auth state exists. Missing integration-backed guards must be reported as deferred integration work rather than represented as production-complete authorization.
 
 ## Dynamic day routes
 
@@ -174,7 +174,7 @@ They must not fabricate:
 
 - successful authentication,
 - successful account creation,
-- Firebase persistence,
+- backend persistence,
 - approved Scripture text,
 - journey progress,
 - practice completion,
@@ -192,7 +192,7 @@ Navigation scaffolding is not final screen design.
 
 A broad V1 foundation task includes `/auth/verify-email` and `/settings/notifications` plus the Notifications Settings row. Both are **Planned — V1**, even though their features are currently absent. Preserve existing focused day and Settings routes; do not duplicate or rename them.
 
-Scaffold these routes and deterministic entry/back relationships without pretending verification or local reminder scheduling works. Notification permission is outside onboarding, and a placeholder must not simulate enablement, a chosen time, or successful scheduling. The navigation contract owns the feature flow; this prompt does not authorize integrating notifications or Firebase.
+Scaffold these routes and deterministic entry/back relationships without pretending verification or local reminder scheduling works. Notification permission is outside onboarding, and a placeholder must not simulate enablement, a chosen time, or successful scheduling. The navigation contract owns the feature flow; this prompt does not authorize integrating notifications or the Amplify backend.
 
 Do not create Future Community or invitation routes during V1 navigation work. No disabled Community tab, teaser, badge, or placeholder card.
 
@@ -225,7 +225,7 @@ Use component tests for meaningful navigation triggers and accessible controls w
 
 A mocked router call proves only that a trigger was issued. Do not claim it proves native stack behavior, protected-route behavior, hardware Back behavior, gestures, or end-to-end navigation.
 
-Do not create speculative tests for authentication, journey state, Firebase, Scripture content, Community, or notification behavior that is not implemented; route/link checks may cover their truthful scaffolds.
+Do not create speculative tests for authentication, journey state, backend data, Scripture content, Community, or notification behavior that is not implemented; route/link checks may cover their truthful scaffolds.
 
 ## Verification
 

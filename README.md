@@ -1,6 +1,6 @@
 # 77Faithful
 
-A free 77-day Christian spiritual formation app for iOS and Android, centered on Scripture, prayer, intentional action, and reflection. The repository currently contains an Expo 57 navigation scaffold with engineering checks; curated Scripture data access and validation exist, while approved Scripture content, formation behavior, and Firebase remain pending.
+A free 77-day Christian spiritual formation app for iOS and Android, centered on Scripture, prayer, intentional action, and reflection. The repository currently contains an Expo 57 navigation scaffold with engineering checks; curated Scripture data access and validation exist, while approved Scripture content, formation behavior, and AWS Amplify Gen 2 remain pending.
 
 ## Development
 
@@ -13,7 +13,7 @@ npm ci
 npm start
 ```
 
-`npm run ios`, `npm run android`, and `npm run web` launch the respective development targets. Native targets need an appropriate simulator, emulator, or device. The current navigation scaffold can use Expo Go; the selected native Firebase integration will require development builds when implemented. Web is a development preview target for the first release.
+`npm run ios`, `npm run android`, and `npm run web` launch the respective development targets. Native targets need an appropriate simulator, emulator, or device. The current navigation scaffold can use Expo Go; the planned Amplify React Native integration will require development builds when implemented. EAS remains the intended mobile build/signing/distribution path; see the [backend setup and environments](docs/engineering/architecture-decisions.md#setup-and-environments--planned). Web is a development preview target for the first release.
 
 Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) for engineering and verification guidance, including the versioned Expo documentation requirement. [Task prompts](prompts/README.md) provide focused implementation and review starting points.
 
@@ -49,6 +49,6 @@ GitHub Actions runs `npm ci`, `npm run check`, and the web export for pull reque
 - [Architecture and integration decisions](docs/engineering/architecture-decisions.md)
 - [Design system and visual direction](docs/engineering/design-system.md)
 
-Scripture requires no service credentials or environment variables. The [curated Scripture architecture](docs/engineering/architecture-decisions.md#curated-scripture) separates reading plans, passages, translation metadata, and text. Run `npm run scripture:audit` to reproduce content validation and verse counts; `npm run scripture:audit -- --release` additionally checks publication and fallback readiness. The current draft has no assigned passages or imported text, so release readiness intentionally fails. Local `.env*` files are ignored except the non-secret [.env.example](.env.example). Firebase setup remains separate planned work.
+Scripture requires no service credentials or environment variables. The [curated Scripture architecture](docs/engineering/architecture-decisions.md#curated-scripture) separates reading plans, passages, translation metadata, and text. Run `npm run scripture:audit` to reproduce content validation and verse counts; `npm run scripture:audit -- --release` additionally checks publication and fallback readiness. The current draft has no assigned passages or imported text, so release readiness intentionally fails. Local `.env*` files are ignored except the non-secret [.env.example](.env.example). AWS Amplify Gen 2 setup remains planned: Amplify Auth with Amazon Cognito Lite, and Amplify Data with AWS AppSync/Amazon DynamoDB. Amplify Storage/S3 and AWS Lambda are added only for concrete storage or trusted-logic requirements. No backend dependency or cloud configuration is required to run the current scaffold.
 
 The inherited `npm run reset-project` command moves `src/` and `scripts/` into `example/`, or deletes them if deletion is selected, before creating a blank `src/app/`. It is not a development setup step.

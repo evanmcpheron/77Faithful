@@ -2,11 +2,11 @@
 
 Updated 2026-09-07 after the V1 navigation foundation. **Observed** describes files in this checkout; **selected/planned** describes decisions awaiting implementation, not deployed services. Recheck source and configuration when making changes.
 
-This is the implementation inventory. [The navigation and UX contract](../APP_NAVIGATION_AND_UX.md) is authoritative for intended screens, routes, flows, journey behavior, and V1/Future scope. Its source reconciliation distinguishes working navigation scaffolding from planned feature behavior and state-backed protection.
+This is the implementation inventory. [The navigation and UX contract](../APP_NAVIGATION_AND_UX.md) is authoritative for intended screens, routes, flows, journey behavior, and route-level V1/Future exposure. Its source reconciliation distinguishes working navigation scaffolding from planned feature behavior and state-backed protection. [Product requirements](../PRODUCT_REQUIREMENTS.md) owns feature-level release scope and settled product policy; [formation content](../FORMATION_CONTENT_SPEC.md) owns curriculum structure, approval, storage/versioning, and fixtures.
 
 ## Observed: stack and dependencies
 
-The app now contains the complete required V1 navigation scaffold with Today/Journey tabs, auth/onboarding steps, focused day routes, Settings, and journey completion. Screens are intentionally minimal and contain no user records or working submissions. The preserved splash and other configured assets still include starter artwork; iOS currently points to the product PNG icon.
+The app contains a V1 navigation scaffold with Today/Journey tabs, auth/onboarding steps, focused day routes, Settings, and journey completion. Verify Email and Notifications are now required V1 additions but their routes/features are absent. Screens are intentionally minimal and contain no user records or working submissions. The preserved splash and other configured assets still include starter artwork; iOS currently points to the product PNG icon.
 
 Versions below are declarations from [package.json](../../package.json). [package-lock.json](../../package-lock.json) is an npm lockfile (version 3); its root dependency declarations match the manifest.
 
@@ -29,27 +29,29 @@ Development tooling now includes Expo's ESLint 57 flat configuration, ESLint 9, 
 
 ## Observed: repository structure
 
-| Path                                                      | Current responsibility                                                                                                       |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `src/app/`                                                | Root stack/launch redirect, auth/onboarding/app groups, two tabs, dynamic days, Settings, completion                         |
-| `src/components/`                                         | Themed text/view, platform tabs, placeholder/link UI, Settings header action, splash/animated icon, external link            |
-| `src/components/ui/`                                      | `collapsible.tsx` only                                                                                                       |
-| `src/navigation/`                                         | Day-number parsing, validated route context, and navigation regression tests                                                 |
-| `src/hooks/`                                              | Theme and color-scheme hooks, including a web variant                                                                        |
-| `src/constants/theme.ts`                                  | Light/dark colors, font families, spacing, content width, tab inset                                                          |
-| `src/global.css`                                          | Web font-family variables                                                                                                    |
-| `assets/`                                                 | Product icon and remaining Expo/React starter images, density variants, and unused starter tab icons                         |
-| `scripts/reset-project.js`                                | Moves or deletes `src/` and `scripts/`, then creates a blank `src/app/`                                                      |
-| `app.json`, `tsconfig.json`                               | Expo app and TypeScript configuration                                                                                        |
-| `docs/engineering/`                                       | Repository context, visual-system inventory, and verification notes                                                          |
-| `docs/APP_NAVIGATION_AND_UX.md`                           | Authoritative navigation/UX contract, planned screens and flow states, source reconciliation, and open product decisions     |
-| `src/**/*.test.{ts,tsx}`                                  | Colocated component, hook, parser, and router regression tests, outside `src/app/`                                           |
-| `eslint.config.js`, `.prettierrc.json`, `.prettierignore` | Lint rules and formatting configuration                                                                                      |
-| `jest.config.js`, `jest.setup.js`                         | Expo test preset, native animation mocks, and CSS setup                                                                      |
-| `.github/workflows/ci.yml`, `.nvmrc`                      | Node 24 CI and local runtime selection                                                                                       |
-| `AGENTS.md`, `CLAUDE.md`                                  | Persistent engineering rules; `CLAUDE.md` imports `AGENTS.md`                                                                |
-| `prompts/`                                                | Optional task prompts for bounded implementation, planning, testing, and review; see [prompt index](../../prompts/README.md) |
-| `.vscode/`                                                | Expo extension recommendation and explicit save actions for fixes/import organization/member sorting                         |
+| Path                                                      | Current responsibility                                                                                                                            |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/app/`                                                | Root stack/launch redirect, auth/onboarding/app groups, two tabs, dynamic days, Settings, completion                                              |
+| `src/components/`                                         | Themed text/view, platform tabs, placeholder/link UI, Settings header action, splash/animated icon, external link                                 |
+| `src/components/ui/`                                      | `collapsible.tsx` only                                                                                                                            |
+| `src/navigation/`                                         | Day-number parsing, validated route context, and navigation regression tests                                                                      |
+| `src/hooks/`                                              | Theme and color-scheme hooks, including a web variant                                                                                             |
+| `src/constants/theme.ts`                                  | Light/dark colors, font families, spacing, content width, tab inset                                                                               |
+| `src/global.css`                                          | Web font-family variables                                                                                                                         |
+| `assets/`                                                 | Product icon and remaining Expo/React starter images, density variants, and unused starter tab icons                                              |
+| `scripts/reset-project.js`                                | Moves or deletes `src/` and `scripts/`, then creates a blank `src/app/`                                                                           |
+| `app.json`, `tsconfig.json`                               | Expo app and TypeScript configuration                                                                                                             |
+| `docs/PRODUCT_REQUIREMENTS.md`                            | Settled product policy, audience, feature scope, practices, trust/privacy, and theological guardrails                                             |
+| `docs/FORMATION_CONTENT_SPEC.md`                          | Curriculum structure, human production approval, versioned local content, fixtures, and future variants                                           |
+| `docs/engineering/`                                       | Repository context, visual-system inventory, and verification notes                                                                               |
+| `docs/APP_NAVIGATION_AND_UX.md`                           | Authoritative navigation/UX contract, planned screens and flow states, source reconciliation, settled V1 decisions, and deferred Future questions |
+| `src/**/*.test.{ts,tsx}`                                  | Colocated component, hook, parser, and router regression tests, outside `src/app/`                                                                |
+| `eslint.config.js`, `.prettierrc.json`, `.prettierignore` | Lint rules and formatting configuration                                                                                                           |
+| `jest.config.js`, `jest.setup.js`                         | Expo test preset, native animation mocks, and CSS setup                                                                                           |
+| `.github/workflows/ci.yml`, `.nvmrc`                      | Node 24 CI and local runtime selection                                                                                                            |
+| `AGENTS.md`, `CLAUDE.md`                                  | Persistent engineering rules; `CLAUDE.md` imports `AGENTS.md`                                                                                     |
+| `prompts/`                                                | Optional task prompts for bounded implementation, planning, testing, and review; see [prompt index](../../prompts/README.md)                      |
+| `.vscode/`                                                | Expo extension recommendation and explicit save actions for fixes/import organization/member sorting                                              |
 
 There is no root `app/`, service layer, `lib/`, `utils/`, separate `theme/` directory, or backend implementation. There is no custom Babel, Metro, or EAS configuration. Native `ios/` and `android/` directories are absent and ignored; configuration is currently owned by Expo app config/plugins.
 
@@ -65,7 +67,7 @@ There is no root `app/`, service layer, `lib/`, `utils/`, separate `theme/` dire
 - Shared `day/[dayNumber]/_layout.tsx` validates the decimal URL segment with [parseDayNumber](../../src/navigation/day-number.ts), replaces invalid parameters with `/journey`, and supplies the number through a route-scoped context to the three day screens. Only canonical decimal strings `1` through `77` are accepted; whitespace, leading zeros, arrays, fractional/exponential forms, and out-of-range values are rejected.
 - The shared day layout exports `generateStaticParams` for exactly Day 1–77. Static export includes all 231 concrete ungrouped day pages plus Expo's generated group aliases and dynamic fallback files, without private/user-specific data. `web.output` remains `static`.
 - Root group declarations are the future centralized `Stack.Protected` boundary. Authentication restoration, onboarding resume/completion, sign-out history removal, and session-aware splash gating are deferred until actual state exists. Direct routes currently expose public placeholders; no fake auth provider, global store, or successful onboarding state exists.
-- Add journey-dependent access checks centrally in the shared day layout. Current-day detail → Today, future-day → Journey, and ended-Day-77 behavior remain deferred. Resolve the contract's email-verification placement and ended-Day-77 access decisions before implementing those flows.
+- Add journey-dependent access checks centrally in the shared day layout. Current-day detail → Today, future-day → Journey, and ended-Day-77 behavior remain deferred. Follow the now-settled verification-before-onboarding and ended-Day-77 historical-access rules when implementing those flows.
 - `/explore`, Verify Email, Notifications, Community, invitation, Prayer, and generic Practice routes are absent. `ExternalLink` remains a reusable utility; unused tutorial hint and web badge components have been removed. Splash assets/animation are retained.
 
 API verification used the exact [SDK 57 Router](https://docs.expo.dev/versions/v57.0.0/sdk/router/), [Stack](https://docs.expo.dev/versions/v57.0.0/sdk/router/stack/), [Link](https://docs.expo.dev/versions/v57.0.0/sdk/router/link/), [native tabs](https://docs.expo.dev/versions/v57.0.0/sdk/router/native-tabs/), and [Router UI](https://docs.expo.dev/versions/v57.0.0/sdk/router/ui/) references, supplemented by the [static rendering guide](https://docs.expo.dev/router/web/static-rendering/) and installed package implementation/types. Expo 57.0.20 and Expo Router 57.0.19 were not upgraded; no dependency or app-config change was needed.
@@ -86,7 +88,7 @@ Most styles are colocated `StyleSheet.create` objects with arrays for theme/plat
 
 State is local React `useState` for the collapsible and native splash transition. Theme selection uses the system color scheme; all application consumers go through the shared hooks. The web color hook uses `useSyncExternalStore` with a light server/hydration snapshot and an `Appearance` subscription. There is no global application store, reducer-based domain state, server-state cache, persistence, data model, network client, or implemented data-access layer. Navigation placeholders render static explanatory content. A context scoped to the dynamic day layout contains only the validated route number; it is not journey or authentication state.
 
-Firebase and API.Bible dependencies/integrations are absent. No authentication, Firestore rules/indexes/emulator configuration, Cloud Functions, journal storage, or other backend code was found. No environment files, environment example, or environment validation exist. The only explicit `process.env` usage in source is Expo's `EXPO_OS` platform check in `ExternalLink`.
+Firebase, API.Bible, local notifications, Crashlytics, and behavioral analytics dependencies/integrations are absent. No authentication, Firestore rules/indexes/emulator configuration, Cloud Functions, journal storage, or other backend code was found. No environment files, environment example, or environment validation exist. The only explicit `process.env` usage in source is Expo's `EXPO_OS` platform check in `ExternalLink`.
 
 `.gitignore` excludes `.env*` except `.env.example`, plus `.expo/`, `expo-env.d.ts`, native folders, coverage, lint cache, and `example/`. No service credentials or external account settings have been configured or inspected.
 
@@ -100,10 +102,30 @@ Concrete follow-up work, when relevant to an authorized task:
 - The visual system still has no dedicated radius/elevation scale or shared product buttons, inputs, and loading/empty/error states. Add them with the screens that need them.
 - No backend, domain, navigation end-to-end, or native binary tests exist yet. Cloud security-rule tests belong with the future integration.
 - Product branding is selected, but configured artwork and splash still use Expo assets; route screens now use restrained text placeholders. The tracked `assets/app-icon.png` is the 77/path/cross identity source; store-ready derivatives and replacement of starter art remain product work.
-- Store identifiers, signing, Firebase registrations, EAS profiles, and provider licensing entitlements require actual external account values; none are provisioned.
+- Store identifiers, signing, Firebase registrations, EAS profiles, provider licensing entitlements, and legal/support destinations require actual external values; no such configuration is established in this checkout. See the prerequisite table below.
 
-## Selected: product and architecture
+## Selected/planned: product, content, and architecture
 
-The supplied direction is a free iOS/Android app for a 77-day formation experience: Scripture reading, prayer, reflection, and two participant-selected practices, with weekly themes, daily passages/prompts/questions, intentions, completion tracking, and private journaling. None of this domain behavior or content is implemented yet. Product/privacy constraints live in [AGENTS.md](../../AGENTS.md).
+[Product requirements](../PRODUCT_REQUIREMENTS.md) now records the settled V1 scope and exclusions. [Formation content](../FORMATION_CONTENT_SPEC.md) records the approved theme structure and human publication workflow; no approved 77-day production curriculum, structured content assets, or content loader exists yet. The navigation contract records settled V1 flows, including verification before onboarding, local reminder Settings, fixed journey timezone, native offline/pending-write sign-out, and editable historical Day 77 after the period ends. These are requirements, not implemented product behavior.
 
-The owner delegated integration choices. [Architecture decisions](architecture-decisions.md) selects native Firebase with offline persistence, private user-owned data, email/password accounts with verified cloud personal-data writes, an authenticated API.Bible callable gateway, explicit translation IDs with WEB as the initial preference, and session-only Scripture caching. The [navigation contract](../APP_NAVIGATION_AND_UX.md) owns journey semantics and records open email-gate, offline-flow, and post-journey questions. The visual direction follows the existing blue 77/path/cross artwork. These are planned decisions, not claims that integrations or product features already work; Community stays Future.
+[Architecture decisions](architecture-decisions.md) retains native Firebase/offline persistence, private user-owned data and verified cloud writes, an authenticated API.Bible callable gateway, explicit account-enabled translation IDs with WEB only when available, and session-memory-only Scripture caching. No services are configured. V1.x / post-launch covers maintenance/refinement without another committed feature set. Repeat journeys/variants, Community, and app lock remain Future under product requirements, not missing V1 integrations.
+
+## External setup and release prerequisites
+
+These are **external setup prerequisites**, not unresolved V1 product decisions. No real values or account ownership for the items below are established by the inspected repository. The product owner must supply them and implementation/release work must verify them; never invent permanent identifiers, legal destinations, or credentials.
+
+| Fact                                                                                  | Repository status / required input                                                                                                               |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Support email/contact destination                                                     | **TBD — product owner must supply.** Help/Feedback opens the configured contact; no V1 ticket backend.                                           |
+| Website/domain and organization identity                                              | **TBD — product owner must supply.** The product name, Expo slug, and `77faithful` URL scheme do not establish domain or organization ownership. |
+| Privacy Policy URL and approved policy                                                | **TBD — product owner must supply before launch.** Disclosures must match actual data handling.                                                  |
+| Terms of Service URL and approved terms                                               | **TBD — product owner must supply before launch.**                                                                                               |
+| Legal entity/business name                                                            | **TBD — product owner must supply.** Do not invent it from the app name or repository owner.                                                     |
+| Production Apple bundle identifier                                                    | **TBD — product owner must supply/confirm.** No `ios.bundleIdentifier` in app config.                                                            |
+| Production Android application ID/package                                             | **TBD — product owner must supply/confirm.** No `android.package` in app config.                                                                 |
+| Apple Developer and Google Play accounts                                              | **TBD — product owner must supply/confirm ownership and release access.**                                                                        |
+| Development/production Firebase project IDs and native registrations                  | **TBD — product owner must supply/confirm.** Architecture selects products/region; no projects are configured here.                              |
+| EAS account/project ownership and build/signing setup                                 | **TBD — product owner must supply/confirm.** No EAS project ID or build profiles in the checkout.                                                |
+| API.Bible account/key, enabled translations, actual Bible IDs, licensing entitlements | **TBD — product owner must supply/confirm.** Key stays on the backend; no guessed WEB ID or fabricated provider fallback.                        |
+
+Human-approved, versioned production formation content is also a launch deliverable, separate from these account/configuration facts. Its structure is settled in the content specification, but this documentation task does not author or approve the complete curriculum. Exact backup-erasure timing and any jurisdictional legal-support claims require verified provider/infrastructure/legal evidence before being promised.

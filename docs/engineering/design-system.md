@@ -1,6 +1,6 @@
 # Design system
 
-Updated 2026-09-07. The repository has a small set of theme primitives with working color overrides and accessible collapsibles. The blue 77/path/cross identity is selected for product work; route screens now use minimal navigation placeholders; the splash and configured artwork still use starter assets. This document separates implemented tokens from the visual direction and remaining production assets.
+Updated 2026-09-07. The repository has a small set of theme primitives with working color overrides and accessible collapsibles. The blue 77/path/cross identity direction is approved for product work; route screens now use minimal navigation placeholders; the splash and configured artwork still use starter assets. This document separates implemented tokens from the visual direction and remaining production assets.
 
 ## Colors and theme selection
 
@@ -15,7 +15,7 @@ Updated 2026-09-07. The repository has a small set of theme primitives with work
 | `textSecondary`      | `#60646C` | `#B0B4BA` |
 | `link`               | `#1B5FA7` | `#91C7FF` |
 
-`useTheme` selects this palette using the shared `useColorScheme` hook and maps `unspecified` to light. On web, `useSyncExternalStore` reads `Appearance`, subscribes to changes, and uses light for the server and initial hydration snapshot. Layout, tabs, and navigation placeholders use the shared hooks. Router's `ThemeProvider` still uses its separate default light/dark navigation themes. There is no saved theme preference or custom navigation palette.
+`useTheme` selects this palette using the shared `useColorScheme` hook and maps `unspecified` to light. On web, `useSyncExternalStore` reads `Appearance`, subscribes to changes, and uses light for the server and initial hydration snapshot. Layout, tabs, and navigation placeholders use the shared hooks. Router's `ThemeProvider` still uses its separate default light/dark navigation themes. There is no saved theme preference or custom navigation palette. V1 supports automatic system light/dark mode and requires no manual theme setting.
 
 Colors outside the shared palette include the starter logo gradient (`#3C9FFE` to `#0274DF`), splash blue (`#208AEF`), and Android adaptive-icon background (`#E6F4FE`). These are remaining starter artwork values. Primary link colors now use the theme palette. There are no success, warning, or error color tokens.
 
@@ -96,4 +96,4 @@ The implemented blue link tokens support this direction. Keep spacing consistent
 
 The source icon contains a baked rounded square and surrounding light margin; it is not yet a finished full-bleed iOS icon or Android adaptive foreground. Produce platform-specific derivatives and replace the configured Expo icon/splash assets during branding implementation. The existing binary artwork has not been modified or substituted in app config by this tooling task.
 
-Keep the product calm, focused, trustworthy, and welcoming. Avoid perfection scores, competitive visuals, or celebratory pressure. Product and reuse rules are in [AGENTS.md](../../AGENTS.md); selected release scope and service decisions are in [architecture-decisions.md](architecture-decisions.md).
+Keep the product calm, focused, trustworthy, and welcoming. Avoid perfection scores, competitive visuals, or celebratory pressure. [Product requirements](../PRODUCT_REQUIREMENTS.md) owns release scope and product guardrails; [AGENTS.md](../../AGENTS.md) owns engineering/reuse rules and [architecture decisions](architecture-decisions.md) owns service boundaries.

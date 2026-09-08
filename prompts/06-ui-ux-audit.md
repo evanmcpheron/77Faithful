@@ -1,6 +1,6 @@
 # UI/UX audit
 
-Review only under `AGENTS.md`. Read `docs/APP_NAVIGATION_AND_UX.md` for the scoped screen/flow specifications, relationships, states, and open decisions, and the design guide for visuals. Inspect comparable UI and observe the selected flow in available runtimes or supplied captures.
+Review only under `AGENTS.md`. Read `docs/PRODUCT_REQUIREMENTS.md` for scope and practice/trust policy, `docs/FORMATION_CONTENT_SPEC.md` when reviewing authored formation content, and `docs/APP_NAVIGATION_AND_UX.md` for the scoped screen/flow specifications, relationships, states, settled V1 decisions, and deferred Future questions, and the design guide for visuals. Inspect comparable UI and observe the selected flow in available runtimes or supplied captures.
 
 Screens or flow: `<TASK>`
 

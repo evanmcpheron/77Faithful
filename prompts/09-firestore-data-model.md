@@ -1,6 +1,6 @@
 # Firestore data-model design or review
 
-Design/review only under `AGENTS.md`. Read the selected architecture and inspect existing paths, types, services, rules, indexes, and tests. Consult current official Firebase documentation for capabilities affecting this model.
+Design/review only under `AGENTS.md`. Read `docs/PRODUCT_REQUIREMENTS.md`, `docs/FORMATION_CONTENT_SPEC.md` for journey/content ownership, and the selected architecture and inspect existing paths, types, services, rules, indexes, and tests. Consult current official Firebase documentation for capabilities affecting this model.
 
 Feature or query problem: `<TASK>`
 
@@ -13,7 +13,7 @@ Required reads, writes, and behavior: `<REQUIREMENTS>`
 - Map required operations to filters/order, pagination, indexes, and authorization. Apply the access boundaries in `AGENTS.md`; a private field cannot be hidden inside a document readable by others, and rules do not filter query results.
 - Consider bounded document/list growth, listener scope, contention, and read amplification. Denormalize only for actual access needs and identify who keeps copies consistent.
 - Explain relevant offline/conflict behavior, partial updates, and required atomic operations. Trace deletion through nested records and affected copies/files.
-- Address migration/versioning for existing data or an explicit requirement, not hypothetical future formats. Community models belong only to an explicitly included feature.
+- Address migration/versioning for existing data or an explicit requirement, not hypothetical future formats. Pin immutable local content versions and preserve historical journeys/day practice definitions as required; future variants/group plans do not authorize speculative V1 collections. Community models belong only to an explicitly included feature.
 
 ## Verify and report
 

@@ -6,9 +6,9 @@
 **Product scope:** V1 personal 77-day journey, with future community architecture documented separately.
 
 > [!IMPORTANT]
-> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The required auth, onboarding, Today/Journey, day, Settings, and journey-completion routes now exist as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. Firebase, authentication, onboarding persistence, journey state, and API.Bible are not implemented.
+> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. Firebase, authentication, onboarding persistence, journey state, and API.Bible are not implemented.
 >
-> The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications remain omitted and optional; Community remains Future. Sections 28–29 retain the email-verification and ended-Day-77 decisions; section 30 records verification limits.
+> The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications are **Planned — V1**, but their routes/features are absent. Community remains Future. Sections 28–29 record settled V1 decisions and intentionally deferred Future questions; section 30 separates specification coverage from implementation evidence.
 
 ---
 
@@ -23,7 +23,9 @@ Use the following labels consistently when reconciling this document with the co
 | **Provided product context**       | Explicitly supplied as a product requirement, but not verified in source code.                                               |
 | **Planned — V1**                   | Expected in the first personal-journey release.                                                                              |
 | **Future**                         | Intentionally excluded from V1 navigation.                                                                                   |
-| **Optional / undecided**           | Product behavior remains legitimately unresolved.                                                                            |
+| **V1.x / post-launch**             | Follow-up maintenance/refinement scope under product requirements; not a substitute for required V1 work.                    |
+| **Future — undecided**             | A deliberately deferred question about a feature outside V1.                                                                 |
+| **External setup prerequisite**    | Real account, configuration, legal, or support facts that the product owner must supply.                                     |
 | **Recommended change**             | Preferred behavior if the current code differs, subject to codebase reconciliation.                                          |
 | **Unverified**                     | Must not be assumed to exist until source inspection confirms it.                                                            |
 
@@ -31,13 +33,16 @@ Use the following labels consistently when reconciling this document with the co
 
 Explicit current requirements from the product owner take precedence. Otherwise, identify the owner of the concern:
 
-| Concern                                                                                                                                     | Authority                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Intended screens, routes, screen relationships, redirects, daily/journey behavior, back navigation, navigation states, V1/Future boundaries | This contract                                                                                                              |
-| Code architecture, integration and security/data boundaries                                                                                 | [Architecture decisions](engineering/architecture-decisions.md), with actual source/configuration establishing what exists |
-| Visual primitives, theme, layout techniques                                                                                                 | [Design system](engineering/design-system.md)                                                                              |
-| Feature-specific content and requirements                                                                                                   | The applicable feature document, within this contract's navigation boundaries                                              |
-| Shared agent workflow, scope, verification and review rules                                                                                 | [AGENTS.md](../AGENTS.md); task prompts inherit it                                                                         |
+| Concern                                                                                                                                               | Authority                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Intended screens, routes, screen relationships, redirects, daily/journey behavior, back navigation, navigation states, route-level V1/Future exposure | This contract                                                                                                              |
+| Code architecture, integration and security/data boundaries                                                                                           | [Architecture decisions](engineering/architecture-decisions.md), with actual source/configuration establishing what exists |
+| Visual primitives, theme, layout techniques                                                                                                           | [Design system](engineering/design-system.md)                                                                              |
+| Product identity, audience, feature-level release scope, practice semantics, trust/privacy and theological guardrails                                 | [Product requirements](PRODUCT_REQUIREMENTS.md)                                                                            |
+| Curriculum structure, authored fields, content approval, versioning/storage, fixtures and future variants                                             | [Formation content specification](FORMATION_CONTENT_SPEC.md)                                                               |
+| Current implementation inventory and external setup facts                                                                                             | [Project context](engineering/project-context.md), with source/configuration establishing what exists                      |
+| Verification requirements and evidence limits                                                                                                         | [Testing](engineering/testing.md)                                                                                          |
+| Shared agent workflow, scope, verification and review rules                                                                                           | [AGENTS.md](../AGENTS.md); task prompts inherit it                                                                         |
 
 Identify conflicts, follow the concern's authority, and update stale documentation within an authorized change; reviews report the required correction without editing. Record unresolved cross-concern conflicts in section 29 instead of introducing a third behavior. A navigation recommendation cannot waive backend authorization, privacy, or provider terms. Existing starter code, older mockups, TODOs, and archived prompts do not define the target product flow.
 
@@ -49,7 +54,7 @@ Do **not** rewrite working architecture merely to match example file paths. Expo
 
 77Faithful is a Christian spiritual formation application, not a competitive habit tracker.
 
-The navigation and UI must reinforce the following product principles:
+Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-and-commercial-principles) to navigation and UI:
 
 - Scripture is central to the daily experience.
 - The app supports faithfulness and continued participation rather than perfection.
@@ -66,34 +71,20 @@ The navigation and UI must reinforce the following product principles:
 
 ## 3. Provided Product Context vs. Code Verification
 
-### 3.1 Provided product context
+### 3.1 Settled product context
 
-The following are product requirements supplied for 77Faithful:
-
-- Expo + React Native mobile application.
-- Firebase is the intended backend/authentication/synchronization platform.
-- API.Bible is the intended Scripture provider.
-- The V1 experience is a personal 77-day journey.
-- Every day has five practices:
-  1. Scripture — required.
-  2. Prayer — required.
-  3. Reflection — required.
-  4. Optional practice A — user-selected.
-  5. Optional practice B — user-selected.
-- The journey is divided into 11 seven-day themes.
-- Communities are future scope.
-- The service is intended to remain free to the user.
+[Product requirements](PRODUCT_REQUIREMENTS.md) owns the personal-journey V1 scope, practice catalog/semantics, audience, commercial/privacy principles, and exclusions. [Formation content](FORMATION_CONTENT_SPEC.md) owns the 11-week curriculum and approval/versioning rules. This contract translates those requirements into flows; Firebase and API.Bible technical choices remain in [architecture decisions](engineering/architecture-decisions.md).
 
 ### 3.2 Existing source and configuration — inspected 2026-09-07
 
 | Area                       | Existing implementation and evidence                                                                                                                                                                                             | Relationship to this contract                                                                                                                           |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Stack                      | [package.json](../package.json), lockfile, installed Expo 57.0.20 / Expo Router 57.0.19 / React Native 0.86.3 / React 19.2.3                                                                                                     | Versions preserved; SDK 57 references and installed APIs checked                                                                                        |
-| Routes                     | [src/app/](../src/app/) contains the required V1 route groups and placeholders; `/` redirects to `/auth/welcome`; `/explore` removed                                                                                             | Screen Inventory and Route Registry distinguish scaffolding from feature behavior                                                                       |
+| Routes                     | [src/app/](../src/app/) contains the existing V1 route groups and placeholders, excluding planned Verify Email/Notifications; `/` redirects to `/auth/welcome`; `/explore` removed                                               | Screen Inventory and Route Registry distinguish scaffolding from feature behavior                                                                       |
 | Root layout/startup        | [Root layout](../src/app/_layout.tsx) retains theme integration and `AnimatedSplashOverlay`, and hosts the bootstrap/auth/onboarding/app stack                                                                                   | Root group declarations are the future centralized `Stack.Protected` boundary; splash restoration gating remains deferred                               |
 | Native/web navigation      | [Native tabs](../src/components/app-tabs.tsx) and [web tabs](../src/components/app-tabs.web.tsx) expose exactly Today/Journey; each tab has a header stack and Settings action                                                   | Settings and focused routes push above tabs; ordinary history preserves the originating tab                                                             |
 | Auth and backend           | No Firebase dependency, auth provider, rules, Functions, or profile/onboarding persistence                                                                                                                                       | No guards backed by fabricated state; direct scaffold routes are not protected                                                                          |
-| Formation state            | No journey records, dates, completion, practices, reflections, or intentions                                                                                                                                                     | Today/Journey show no sample day or history; current/future/ended-day policies remain deferred                                                          |
+| Formation state            | No journey records, dates, completion, practices, reflections, or intentions                                                                                                                                                     | Today/Journey show no sample day or history; implementation of settled current/future/ended-day policies remains deferred                               |
 | Dynamic days               | Shared `day/[dayNumber]/_layout.tsx` validates through [parseDayNumber](../src/navigation/day-number.ts), redirects invalid values to Journey, and provides the validated number to children                                     | One future journey-access boundary; `generateStaticParams` supplies exactly Day 1–77 to all three routes                                                |
 | Scripture                  | Reader and translation-setting routes exist as navigation placeholders; API.Bible is absent                                                                                                                                      | No provider text, invented translations, or completion actions                                                                                          |
 | Navigation UI              | [NavigationPlaceholder](../src/components/navigation-placeholder.tsx) provides scrollable themed scaffolding and typed links; [SettingsHeaderAction](../src/components/settings-header-action.tsx) is shared by both tab headers | Direct Expo Router APIs; no route registry/store/service in application code                                                                            |
@@ -101,7 +92,7 @@ The following are product requirements supplied for 77Faithful:
 | State/privacy              | Local UI/theme state and a route-scoped validated day number only; no private data or persistence                                                                                                                                | No offline, sync, authentication, save, or deletion success is implied                                                                                  |
 | Shared UI and instructions | Existing theme primitives, reusable collapsible/external link, and splash infrastructure retained; obsolete tutorial hint/badge removed                                                                                          | [Design inventory](engineering/design-system.md) and [project context](engineering/project-context.md) record current limits; no Community entry points |
 
-The route architecture is implemented; product integrations and domain policies remain planned. The full implementation inventory remains in [project context](engineering/project-context.md).
+The base route architecture exists; Verify Email/Notifications additions, integrations, and implementation of settled domain policies remain planned. The full implementation inventory remains in [project context](engineering/project-context.md).
 
 ### 3.3 Keeping reconciliation current
 
@@ -125,7 +116,7 @@ Navigation depends on a small set of conceptual state. Exact Firebase schemas ar
 authStatus = restoring | signedOut | signedIn
 ```
 
-`restoring` is a first-class state. Do not render the signed-out UI until Firebase has finished restoring the session.
+`restoring` is a first-class state. Do not render the signed-out UI until Firebase has finished restoring the session. A signed-in session also requires verified email before onboarding/app access; use restored Firebase verification state, not an invented client flag.
 
 ### 4.2 Onboarding state
 
@@ -140,7 +131,7 @@ Onboarding is complete only after the user has:
 - selected a supported Bible translation,
 - confirmed and started the journey.
 
-Notification permission is **not** a blocker for onboarding completion.
+Resume the first incomplete step after relaunch. Notification permission is not part of onboarding, and morning intention is not required during onboarding.
 
 ### 4.3 Journey state
 
@@ -148,9 +139,9 @@ Notification permission is **not** a blocker for onboarding completion.
 journeyStatus = notStarted | active | ended
 ```
 
-Recommended V1 behavior:
+Settled V1 behavior:
 
-- `notStarted`: authenticated user has not confirmed a journey start.
+- `notStarted`: verified authenticated user has not confirmed a journey start.
 - `active`: current calendar day is Day 1 through Day 77.
 - `ended`: the local journey calendar has advanced beyond the Day 77 calendar date. Completing Day 77 may open the Journey Completion screen immediately, but the journey remains the current Day 77 experience until the calendar period ends.
 
@@ -168,24 +159,27 @@ For an unlocked day:
 
 Do not introduce a `failed` day status.
 
-### 4.5 Current-day calculation — Recommended V1
+### 4.5 Current-day calculation — Planned — V1
 
 The journey advances by **calendar day**, not by number of completed days.
 
 ```text
-currentDay = min(77, calendarDayDifference(journeyStartDate, today) + 1)
+journeyToday = current calendar date in the fixed journey timezone
+elapsedJourneyDay = calendarDayDifference(journeyStartDate, journeyToday) + 1
+journeyStatus = active when 1 <= elapsedJourneyDay <= 77, ended when elapsedJourneyDay > 77
+currentDay = elapsedJourneyDay only while active (1..77)
 ```
 
 Rules:
 
-- Day 1 begins when the user confirms the journey.
+- Day 1 begins today when Journey Confirmation succeeds; initial creation requires connectivity.
 - Missing Day 4 does not make the next calendar day still Day 4.
 - The next calendar day becomes Day 5.
 - Day 4 remains reviewable/editable as an incomplete historical day.
 - Completion count never controls which day is current.
 - Never reset `journeyStartDate` because a day is incomplete.
 
-**Recommended implementation detail:** store the journey start as a calendar date plus a stable journey time-zone identifier. Do not calculate day number solely from elapsed 24-hour intervals or UTC timestamps, because DST and time-zone changes can produce incorrect day boundaries.
+**Settled timezone rule:** capture the current IANA timezone when creating the journey and keep it fixed for its duration. No future scheduling or manual journey-timezone change in V1. Device travel does not change journey-day boundaries. Persist the start calendar date and timezone under the architecture record; elapsed 24-hour intervals or UTC-only dates do not model DST calendar boundaries correctly. After the period ends there is no current day: all Days 1–77 are historical, and Today is a summary.
 
 ### 4.6 Weekly theme calculation
 
@@ -195,27 +189,11 @@ Rules:
 weekNumber = floor((dayNumber - 1) / 7) + 1
 ```
 
-Recommended theme sequence unless content requirements specify otherwise:
-
-| Week |  Days | Theme               |
-| ---: | ----: | ------------------- |
-|    1 |   1–7 | Abiding in Christ   |
-|    2 |  8–14 | Scripture           |
-|    3 | 15–21 | Prayer              |
-|    4 | 22–28 | Renewal             |
-|    5 | 29–35 | Identity in Christ  |
-|    6 | 36–42 | Love                |
-|    7 | 43–49 | Service             |
-|    8 | 50–56 | Stewardship         |
-|    9 | 57–63 | Christian Community |
-|   10 | 64–70 | Mission             |
-|   11 | 71–77 | Perseverance        |
-
-If content data defines different theme names or ordering, content data is authoritative; do not duplicate the theme mapping in navigation code.
+The settled theme order and authored theme identifiers belong to the [V1 curriculum structure](FORMATION_CONTENT_SPEC.md#v1-curriculum-structure). Read the journey's pinned content version; do not duplicate its theme mapping in navigation code or let an incidental content edit change the published sequence.
 
 ---
 
-# 5. Recommended Top-Level Navigation Architecture
+# 5. V1 Top-Level Navigation Architecture
 
 ## 5.1 V1 main navigation: two tabs
 
@@ -230,7 +208,7 @@ V1 should use **two permanent bottom tabs**:
 
 - Today and Journey are the only high-frequency top-level destinations in V1.
 - Settings, account, help, and about are infrequent utilities and do not justify permanent tab space.
-- A consistent header settings/profile action should open Settings from either tab.
+- A consistent header Settings action should open Settings from either tab.
 - Community must not appear as a disabled or empty V1 tab.
 - When Community ships, it can become a third tab if community use is frequent enough to justify permanent navigation.
 
@@ -272,9 +250,9 @@ Do not create separate daily Prayer or Practices routes unless later usability t
 
 ---
 
-## 6. Recommended Expo Router Mapping
+## 6. Expo Router Mapping
 
-Expo Router, the route groups/stacks, and the required V1 paths below are **Existing — navigation scaffold**. Guards, data, and feature actions remain **Planned — V1**. Verify Email and Notifications are optional target entries and are not present in source. Native/web `AppTabs` variants are preserved. Additional tab layouts provide native headers, and the shared dynamic day layout owns validation and static parameters; these additions do not change URLs.
+Expo Router, the route groups/stacks, and most V1 paths below are **Existing — navigation scaffold**. Guards, data, and feature actions remain **Planned — V1**. Verify Email and Notifications are required V1 target entries but are not present in source. Native/web `AppTabs` variants are preserved. Additional tab layouts provide native headers, and the shared dynamic day layout owns validation and static parameters; these additions do not change URLs.
 
 ```text
 src/app/
@@ -288,7 +266,7 @@ src/app/
 │       ├── sign-in.tsx
 │       ├── sign-up.tsx
 │       ├── forgot-password.tsx
-│       └── verify-email.tsx          # Optional / only if verification is enforced
+│       └── verify-email.tsx          # Planned — V1; required before onboarding; absent
 │
 ├── (onboarding)/
 │   ├── _layout.tsx
@@ -299,7 +277,7 @@ src/app/
 │       └── confirm.tsx               # Review + Start Day 1
 │
 └── (app)/
-    ├── _layout.tsx                   # Authenticated + onboarding-complete guard
+    ├── _layout.tsx                   # Verified account + onboarding-complete guard
     │
     ├── (tabs)/
     │   ├── _layout.tsx
@@ -322,7 +300,7 @@ src/app/
     │   ├── index.tsx
     │   ├── practices.tsx
     │   ├── bible-translation.tsx
-    │   ├── notifications.tsx        # Optional; not implemented
+    │   ├── notifications.tsx        # Planned — V1; local reminders; absent
     │   ├── privacy.tsx
     │   ├── account.tsx
     │   ├── about.tsx
@@ -364,6 +342,9 @@ IF authStatus == restoring
 ELSE IF authStatus == signedOut
     → /auth/welcome
 
+ELSE IF signedIn AND emailUnverified
+    → /auth/verify-email
+
 ELSE IF onboardingStatus == incomplete
     → Resume the first incomplete onboarding step
 
@@ -374,10 +355,10 @@ ELSE
 ## 7.2 Journey gate
 
 ```text
-IF authenticated AND onboarding complete AND journeyStatus == active
+IF authenticated AND email verified AND onboarding complete AND journeyStatus == active
     → /today
 
-IF authenticated AND onboarding complete AND journeyStatus == ended
+IF authenticated AND email verified AND onboarding complete AND journeyStatus == ended
     → /today in post-journey state
     → User may open /journey-complete
 ```
@@ -386,26 +367,27 @@ A user should not normally reach `onboardingStatus == complete` with `journeySta
 
 ## 7.3 Day route validation
 
-For any `/day/[dayNumber]` route:
+For any `/day/[dayNumber]` route, after the real auth/verification/onboarding and journey gates resolve:
 
 ```text
-IF dayNumber is not an integer from 1 through 77
+IF dayNumber is not a canonical integer from 1 through 77
     → Replace with /journey
 
-ELSE IF dayNumber > currentDay
+ELSE IF journeyStatus == ended
+    → Render requested historical detail / Scripture / Reflection for any Day 1–77
+
+ELSE IF journeyStatus == active AND dayNumber > currentDay
     → Replace with /journey
     → Optionally announce "That day has not opened yet."
 
-ELSE IF dayNumber == currentDay AND route is day detail index
+ELSE IF journeyStatus == active AND dayNumber == currentDay AND route is day detail index
     → Replace with /today
 
 ELSE
-    → Render historical day detail
+    → Render requested unlocked historical/focused screen
 ```
 
-`scripture` and `reflection` child routes are valid for current or previous days, but never for future days.
-
-**Unresolved ended-journey case:** the examples above and in section 24.4 use `currentDay`, which section 4.5 clamps to 77. They do not yet define access to historical Day 77 after Today becomes the post-journey summary. See sections 28–29 before implementing that edge case; do not let the current-day redirect silently prevent the promised historical editing.
+`scripture` and `reflection` child routes are valid for current or previous days, but never for future days. While active, only the current-day detail index canonicalizes to Today. Once ended, Journey opens historical Day 77 exactly like Days 1–76, including editing and child routes; it never redirects that historical day to the Today summary. Missing/unreadable journey state follows the gates and recovery rules, not invented day data.
 
 ---
 
@@ -418,19 +400,23 @@ flowchart TD
     Launch[App Launch] --> Restore[Restore Firebase Session]
     Restore -->|Restoring| Splash[Bootstrap / Native Splash]
     Restore -->|Signed out| Welcome[Welcome]
-    Restore -->|Signed in| OnboardingCheck{Onboarding complete?}
+    Restore -->|Signed in| Verified{Email verified?}
+    Verified -->|No| Verify[Verify Email]
+    Verified -->|Yes| OnboardingCheck{Onboarding complete?}
 
     Welcome --> SignUp[Sign Up]
     Welcome --> SignIn[Sign In]
-    SignIn --> OnboardingCheck
-    SignUp --> VerifyDecision{Email verification required?}
-    VerifyDecision -->|Yes| Verify[Verify Email]
-    VerifyDecision -->|No| OnboardingCheck
-    Verify --> OnboardingCheck
+    SignIn --> Verified
+    SignUp --> Verify
+    Verify -->|Confirmed| OnboardingCheck
     SignIn --> Forgot[Forgot Password]
     Forgot --> SignIn
 
-    OnboardingCheck -->|No| Intro[Onboarding Overview]
+    OnboardingCheck -->|No| Resume[Resume first incomplete step; overview for a new account]
+    Resume -->|Overview incomplete| Intro[Onboarding Overview]
+    Resume -->|Practices incomplete| Practices
+    Resume -->|Translation incomplete| Bible
+    Resume -->|Confirmation incomplete| Confirm
     Intro --> Practices[Choose 2 Practices]
     Practices --> Bible[Choose Bible Translation]
     Bible --> Confirm[Journey Confirmation]
@@ -469,12 +455,14 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Journey[Journey Overview] --> Current[Current Day Row]
-    Journey --> Past[Previous Day Row]
-    Journey --> Future[Future Day Row]
+    Journey[Journey Overview] --> Current[Active journey: current day row]
+    Journey --> Past[Active journey: previous day row]
+    Journey --> Future[Active journey: future day row]
 
     Current --> Today[Switch to Today tab]
     Past --> DayDetail[Historical Day Detail]
+    Journey --> Ended[Ended journey: any Day 1-77 row]
+    Ended --> DayDetail
     Future --> Locked[No navigation; locked state]
 
     DayDetail --> Scripture[Historical Scripture Reader]
@@ -502,42 +490,42 @@ flowchart TD
 
 # 9. Complete Screen Inventory
 
-> **Implementation status note:** Required V1 routes exist as navigation scaffolding. Screen purposes, data requirements, auth requirements, and successful submissions below describe the intended product, which remains planned. `/` currently performs only the signed-out launch redirect. Home and Explore have been removed; optional and Future routes are absent.
+> **Implementation status note:** Most V1 routes exist as navigation scaffolding; Verify Email and Notifications remain Planned — V1 and absent. Screen purposes, data requirements, auth requirements, and successful submissions below describe the intended product, which remains planned. `/` currently performs only the signed-out launch redirect. Home and Explore have been removed; Future routes are absent. In the target policy, every onboarding/app screen requires verified email; the Yes auth cells below include that requirement, with onboarding completion additionally required for app screens.
 
-| Screen                       | Recommended route                       | Purpose                                                                | Entry points                               | Primary exit / destination           | Auth                  | Scope                         | Status                         |
-| ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------ | --------------------- | ----------------------------- | ------------------------------ |
-| Bootstrap / Session Gate     | `/`                                     | Restore session and route without UI flash                             | App launch, external route fallback        | Auth / Onboarding / Today            | No                    | V1                            | Existing — navigation scaffold |
-| Welcome                      | `/auth/welcome`                         | Entry for signed-out users                                             | Bootstrap, sign-out                        | Sign Up or Sign In                   | No                    | V1                            | Existing — navigation scaffold |
-| Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, protected-route redirect          | Onboarding or Today                  | No                    | V1                            | Existing — navigation scaffold |
-| Sign Up                      | `/auth/sign-up`                         | Create account                                                         | Welcome                                    | Onboarding / Verify Email            | No                    | V1                            | Existing — navigation scaffold |
-| Forgot Password              | `/auth/forgot-password`                 | Request password reset                                                 | Sign In                                    | Sign In                              | No                    | V1                            | Existing — navigation scaffold |
-| Verify Email                 | `/auth/verify-email`                    | Verification gate if enabled                                           | Sign Up / auth gate                        | Onboarding                           | Yes, unverified email | Optional / undecided          | Optional / undecided           |
-| Onboarding Overview          | `/onboarding`                           | Explain journey + 3 required practices                                 | Auth gate                                  | Practice Selection                   | Yes                   | V1                            | Existing — navigation scaffold |
-| Practice Selection           | `/onboarding/practices`                 | Choose exactly 2 optional practices                                    | Onboarding Overview                        | Bible Translation                    | Yes                   | V1                            | Existing — navigation scaffold |
-| Bible Translation Onboarding | `/onboarding/bible-translation`         | Select supported API.Bible translation                                 | Practice Selection                         | Journey Confirmation                 | Yes                   | V1                            | Existing — navigation scaffold |
-| Journey Confirmation         | `/onboarding/confirm`                   | Review configuration and start Day 1                                   | Bible Translation                          | Today                                | Yes                   | V1                            | Existing — navigation scaffold |
-| Today                        | `/today`                                | Complete current day's journey                                         | Launch, Today tab, current-day Journey row | Scripture / Reflection / Settings    | Yes                   | V1                            | Existing — navigation scaffold |
-| Journey Overview             | `/journey`                              | Review all 77 days + weekly groupings                                  | Journey tab                                | Historical Day / Today / Settings    | Yes                   | V1                            | Existing — navigation scaffold |
-| Historical Day Detail        | `/day/[dayNumber]`                      | Review/edit previous unlocked day                                      | Journey previous-day row                   | Scripture / Reflection / Back        | Yes                   | V1                            | Existing — navigation scaffold |
-| Scripture Reader             | `/day/[dayNumber]/scripture`            | Read day's passage and record Scripture practice                       | Today / Historical Day                     | Return to source                     | Yes                   | V1                            | Existing — navigation scaffold |
-| Reflection                   | `/day/[dayNumber]/reflection`           | Respond to reflection question or record private reflection completion | Today / Historical Day                     | Return to source                     | Yes                   | V1                            | Existing — navigation scaffold |
-| Journey Completion           | `/journey-complete`                     | Acknowledge reaching the end and offer review                          | Day 77 completion, post-Day-77 Today       | Journey / Today                      | Yes                   | V1                            | Existing — navigation scaffold |
-| Settings                     | `/settings`                             | Preference/account hub                                                 | Header action from Today/Journey           | Settings subpage / Back              | Yes                   | V1                            | Existing — navigation scaffold |
-| Practice Settings            | `/settings/practices`                   | Change 2 optional practices                                            | Settings                                   | Save → Settings                      | Yes                   | V1                            | Existing — navigation scaffold |
-| Bible Translation Settings   | `/settings/bible-translation`           | Change Scripture translation                                           | Settings                                   | Save → Settings                      | Yes                   | V1                            | Existing — navigation scaffold |
-| Notification Settings        | `/settings/notifications`               | Configure optional reminders                                           | Settings                                   | Back → Settings                      | Yes                   | Optional V1                   | Optional / undecided           |
-| Privacy & Data               | `/settings/privacy`                     | Explain private data, policy links, data controls                      | Settings                                   | Back → Settings                      | Yes                   | V1                            | Existing — navigation scaffold |
-| Account                      | `/settings/account`                     | Account identity, sign out, deletion entry                             | Settings                                   | Back / Sign Out / Delete Account     | Yes                   | V1                            | Existing — navigation scaffold |
-| Delete Account               | `/settings/account/delete`              | Confirm destructive deletion                                           | Account                                    | Sign-out completion or Back          | Yes                   | V1 if account creation exists | Existing — navigation scaffold |
-| About                        | `/settings/about`                       | Product purpose, version, legal/about links                            | Settings                                   | Back → Settings                      | Yes                   | V1                            | Existing — navigation scaffold |
-| Help / Feedback              | `/settings/help-feedback`               | Support and feedback path                                              | Settings                                   | Back / external support action       | Yes                   | V1                            | Existing — navigation scaffold |
-| Communities                  | `/communities`                          | Private community list                                                 | Future Community tab                       | Community Detail                     | Yes                   | Future                        | Future                         |
-| Community Detail             | `/communities/[communityId]`            | Community home                                                         | Communities / invite                       | Prayer / Discussion / Progress       | Yes                   | Future                        | Future                         |
-| Community Prayer Requests    | `/communities/[communityId]/prayer`     | Shared prayer requests                                                 | Community Detail                           | Request interaction within screen    | Yes                   | Future                        | Future                         |
-| Community Discussion         | `/communities/[communityId]/discussion` | Weekly/group discussion                                                | Community Detail                           | Discussion interaction within screen | Yes                   | Future                        | Future                         |
-| Group Progress               | `/communities/[communityId]/progress`   | High-level group participation                                         | Community Detail                           | Back                                 | Yes                   | Future                        | Future                         |
-| Community Settings           | `/communities/[communityId]/settings`   | Membership/admin settings                                              | Community Detail                           | Back                                 | Yes                   | Future                        | Future                         |
-| Community Invite             | `/invite/[inviteId]`                    | Accept private invitation                                              | External deep link                         | Auth → Onboarding → Community        | Depends               | Future                        | Future                         |
+| Screen                       | Recommended route                       | Purpose                                                                | Entry points                                  | Primary exit / destination             | Auth                  | Scope  | Status                         |
+| ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- | -------------------------------------- | --------------------- | ------ | ------------------------------ |
+| Bootstrap / Session Gate     | `/`                                     | Restore session and route without UI flash                             | App launch, external route fallback           | Auth / Onboarding / Today              | No                    | V1     | Existing — navigation scaffold |
+| Welcome                      | `/auth/welcome`                         | Entry for signed-out users                                             | Bootstrap, sign-out                           | Sign Up or Sign In                     | No                    | V1     | Existing — navigation scaffold |
+| Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, protected-route redirect             | Verify Email / Onboarding / Today      | No                    | V1     | Existing — navigation scaffold |
+| Sign Up                      | `/auth/sign-up`                         | Create account                                                         | Welcome                                       | Verify Email                           | No                    | V1     | Existing — navigation scaffold |
+| Forgot Password              | `/auth/forgot-password`                 | Request password reset                                                 | Sign In                                       | Sign In                                | No                    | V1     | Existing — navigation scaffold |
+| Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Onboarding resume / Today through gate | Yes, unverified email | V1     | Planned — V1                   |
+| Onboarding Overview          | `/onboarding`                           | Explain journey + 3 required practices                                 | Auth gate                                     | Practice Selection                     | Yes                   | V1     | Existing — navigation scaffold |
+| Practice Selection           | `/onboarding/practices`                 | Choose exactly 2 optional practices                                    | Onboarding Overview                           | Bible Translation                      | Yes                   | V1     | Existing — navigation scaffold |
+| Bible Translation Onboarding | `/onboarding/bible-translation`         | Select supported API.Bible translation                                 | Practice Selection                            | Journey Confirmation                   | Yes                   | V1     | Existing — navigation scaffold |
+| Journey Confirmation         | `/onboarding/confirm`                   | Review configuration and start Day 1                                   | Bible Translation                             | Today                                  | Yes                   | V1     | Existing — navigation scaffold |
+| Today                        | `/today`                                | Complete current day's journey                                         | Launch, Today tab, current-day Journey row    | Scripture / Reflection / Settings      | Yes                   | V1     | Existing — navigation scaffold |
+| Journey Overview             | `/journey`                              | Review all 77 days + weekly groupings                                  | Journey tab                                   | Historical Day / Today / Settings      | Yes                   | V1     | Existing — navigation scaffold |
+| Historical Day Detail        | `/day/[dayNumber]`                      | Review/edit previous unlocked day                                      | Journey previous-day row                      | Scripture / Reflection / Back          | Yes                   | V1     | Existing — navigation scaffold |
+| Scripture Reader             | `/day/[dayNumber]/scripture`            | Read day's passage and record Scripture practice                       | Today / Historical Day                        | Return to source                       | Yes                   | V1     | Existing — navigation scaffold |
+| Reflection                   | `/day/[dayNumber]/reflection`           | Respond to reflection question or record private reflection completion | Today / Historical Day                        | Return to source                       | Yes                   | V1     | Existing — navigation scaffold |
+| Journey Completion           | `/journey-complete`                     | Acknowledge reaching the end and offer review                          | Day 77 completion, post-Day-77 Today          | Journey / Today                        | Yes                   | V1     | Existing — navigation scaffold |
+| Settings                     | `/settings`                             | Preference/account hub                                                 | Header action from Today/Journey              | Settings subpage / Back                | Yes                   | V1     | Existing — navigation scaffold |
+| Practice Settings            | `/settings/practices`                   | Change 2 optional practices                                            | Settings                                      | Save → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
+| Bible Translation Settings   | `/settings/bible-translation`           | Change Scripture translation                                           | Settings                                      | Save → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
+| Notification Settings        | `/settings/notifications`               | Configure optional reminders                                           | Settings                                      | Back → Settings                        | Yes                   | V1     | Planned — V1                   |
+| Privacy & Data               | `/settings/privacy`                     | Explain private data, policy links, data controls                      | Settings                                      | Back → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
+| Account                      | `/settings/account`                     | Account identity, sign out, deletion entry                             | Settings                                      | Back / Sign Out / Delete Account       | Yes                   | V1     | Existing — navigation scaffold |
+| Delete Account               | `/settings/account/delete`              | Confirm destructive deletion                                           | Account                                       | Sign-out completion or Back            | Yes                   | V1     | Existing — navigation scaffold |
+| About                        | `/settings/about`                       | Product purpose, version, legal/about links                            | Settings                                      | Back → Settings                        | Yes                   | V1     | Existing — navigation scaffold |
+| Help / Feedback              | `/settings/help-feedback`               | Support and feedback path                                              | Settings                                      | Back / external support action         | Yes                   | V1     | Existing — navigation scaffold |
+| Communities                  | `/communities`                          | Private community list                                                 | Future Community tab                          | Community Detail                       | Yes                   | Future | Future                         |
+| Community Detail             | `/communities/[communityId]`            | Community home                                                         | Communities / invite                          | Prayer / Discussion / Progress         | Yes                   | Future | Future                         |
+| Community Prayer Requests    | `/communities/[communityId]/prayer`     | Shared prayer requests                                                 | Community Detail                              | Request interaction within screen      | Yes                   | Future | Future                         |
+| Community Discussion         | `/communities/[communityId]/discussion` | Weekly/group discussion                                                | Community Detail                              | Discussion interaction within screen   | Yes                   | Future | Future                         |
+| Group Progress               | `/communities/[communityId]/progress`   | High-level group participation                                         | Community Detail                              | Back                                   | Yes                   | Future | Future                         |
+| Community Settings           | `/communities/[communityId]/settings`   | Membership/admin settings                                              | Community Detail                              | Back                                   | Yes                   | Future | Future                         |
+| Community Invite             | `/invite/[inviteId]`                    | Accept private invitation                                              | External deep link                            | Auth → Onboarding → Community          | Depends               | Future | Future                         |
 
 ---
 
@@ -545,17 +533,17 @@ flowchart TD
 
 ## 10.1 Bootstrap / Session Gate
 
-| Field              | Specification                                                                                                                        |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Purpose**        | Restore authentication and required app state without showing the wrong navigation tree.                                             |
-| **Route**          | `/`                                                                                                                                  |
-| **Context**        | Root stack; routing-only surface.                                                                                                    |
-| **Entry points**   | Cold launch, app reload, external route fallback.                                                                                    |
-| **Primary action** | None. Automatic state resolution only.                                                                                               |
-| **Destinations**   | Signed out → Welcome. Signed in + onboarding incomplete → first incomplete onboarding step. Signed in + onboarding complete → Today. |
-| **Back behavior**  | Not applicable. This route should be replaced, not pushed beneath the destination.                                                   |
-| **Required data**  | Firebase auth restoration; minimal profile/onboarding state after auth resolves.                                                     |
-| **Persistence**    | None directly. Reads persisted auth/onboarding state.                                                                                |
+| Field              | Specification                                                                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**        | Restore authentication and required app state without showing the wrong navigation tree.                                                                       |
+| **Route**          | `/`                                                                                                                                                            |
+| **Context**        | Root stack; routing-only surface.                                                                                                                              |
+| **Entry points**   | Cold launch, app reload, external route fallback.                                                                                                              |
+| **Primary action** | None. Automatic state resolution only.                                                                                                                         |
+| **Destinations**   | Signed out → Welcome. Signed in + unverified → Verify Email. Verified + onboarding incomplete → first incomplete step. Verified + onboarding complete → Today. |
+| **Back behavior**  | Not applicable. This route should be replaced, not pushed beneath the destination.                                                                             |
+| **Required data**  | Firebase auth restoration; verification state first, then minimal onboarding state for verified accounts.                                                      |
+| **Persistence**    | None directly. Reads persisted auth/onboarding state.                                                                                                          |
 
 **States**
 
@@ -568,23 +556,23 @@ flowchart TD
 
 ## 10.2 Welcome
 
-| Field                 | Specification                                                                                            |
-| --------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Purpose**           | Give signed-out users a concise entry into account creation or sign-in.                                  |
-| **Route**             | `/auth/welcome`                                                                                          |
-| **Context**           | Authentication stack; headerless.                                                                        |
-| **Entry points**      | Bootstrap when signed out; successful sign-out; protected-route redirect.                                |
-| **Primary action**    | `Get Started` → Sign Up.                                                                                 |
-| **Secondary actions** | `I already have an account` → Sign In. Privacy/Terms links may open external documents if required.      |
-| **Back behavior**     | Android back may exit/minimize the app when this is the root auth screen. No artificial previous screen. |
-| **Required data**     | None beyond static product copy and configured auth-provider availability.                               |
-| **Persistence**       | None.                                                                                                    |
+| Field                 | Specification                                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Give signed-out users a concise entry into account creation or sign-in.                                                   |
+| **Route**             | `/auth/welcome`                                                                                                           |
+| **Context**           | Authentication stack; headerless.                                                                                         |
+| **Entry points**      | Bootstrap when signed out; successful sign-out; protected-route redirect.                                                 |
+| **Primary action**    | `Get Started` → Sign Up.                                                                                                  |
+| **Secondary actions** | `I already have an account` → Sign In. Privacy Policy/Terms links open configured external documents required for launch. |
+| **Back behavior**     | Android back may exit/minimize the app when this is the root auth screen. No artificial previous screen.                  |
+| **Required data**     | None beyond static product copy and configured auth-provider availability.                                                |
+| **Persistence**       | None.                                                                                                                     |
 
 **States**
 
 - Avoid a carousel or multi-screen marketing tour before account creation.
 - Do not imply performance, streak, or scoring benefits here.
-- Only show authentication providers actually configured in Firebase/source code.
+- V1 uses email/password only; no guest, anonymous, or social provider entry points.
 
 ---
 
@@ -596,7 +584,7 @@ flowchart TD
 | **Route**             | `/auth/sign-in`                                                                                                  |
 | **Context**           | Auth stack; pushed from Welcome.                                                                                 |
 | **Entry points**      | Welcome; protected deep-link redirect if supported.                                                              |
-| **Primary action**    | `Sign In` → auth gate → Onboarding or Today.                                                                     |
+| **Primary action**    | `Sign In` → auth gate → Verify Email, Onboarding, or Today.                                                      |
 | **Secondary actions** | `Forgot password?` → Forgot Password; `Create account` → Sign Up.                                                |
 | **Back behavior**     | Back → Welcome unless entered as an auth gate from a deep link; destination preservation must not create a loop. |
 | **Required data**     | Configured Firebase Auth methods.                                                                                |
@@ -608,30 +596,31 @@ flowchart TD
 - **Invalid credentials:** inline error; remain on screen.
 - **Network error:** clear retryable error; remain on screen.
 - **Success:** use `replace`, not `push`, so Back cannot return to Sign In.
-- **Authenticated but onboarding incomplete:** resume onboarding; do not route directly to Today.
+- **Authenticated but unverified:** replace with Verify Email, including existing sessions.
+- **Verified but onboarding incomplete:** resume the first incomplete step; do not route directly to Today.
 
 ---
 
 ## 10.4 Sign Up
 
-| Field                 | Specification                                                     |
-| --------------------- | ----------------------------------------------------------------- |
-| **Purpose**           | Create a Firebase-backed user account.                            |
-| **Route**             | `/auth/sign-up`                                                   |
-| **Context**           | Auth stack.                                                       |
-| **Entry points**      | Welcome; Sign In.                                                 |
-| **Primary action**    | `Create Account` → optional Verify Email or Onboarding.           |
-| **Secondary actions** | `Sign in instead` → Sign In.                                      |
-| **Back behavior**     | Back → previous auth screen.                                      |
-| **Required data**     | Only fields required by actual configured authentication method.  |
-| **Persistence**       | Firebase Auth account and minimal user profile/onboarding record. |
+| Field                 | Specification                                                                      |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| **Purpose**           | Create a Firebase-backed user account.                                             |
+| **Route**             | `/auth/sign-up`                                                                    |
+| **Context**           | Auth stack.                                                                        |
+| **Entry points**      | Welcome; Sign In.                                                                  |
+| **Primary action**    | `Create Account` → Verify Email.                                                   |
+| **Secondary actions** | `Sign in instead` → Sign In.                                                       |
+| **Back behavior**     | Back → previous auth screen.                                                       |
+| **Required data**     | Email and password only; no extra profile fields under product requirements.       |
+| **Persistence**       | Firebase Auth account; defer cloud personal-data/onboarding writes until verified. |
 
 **States**
 
 - **Validation:** show field-level errors without clearing form.
 - **Duplicate account:** explain existing-account path and link to Sign In.
 - **Network error:** preserve form except password according to security decisions.
-- **Success:** replace auth stack with verification/onboarding destination.
+- **Success:** replace Sign Up with Verify Email before onboarding.
 
 Do not collect profile fields solely because future Community might need them.
 
@@ -639,17 +628,17 @@ Do not collect profile fields solely because future Community might need them.
 
 ## 10.5 Forgot Password
 
-| Field                 | Specification                                                                 |
-| --------------------- | ----------------------------------------------------------------------------- |
-| **Purpose**           | Trigger Firebase password-reset flow if email/password authentication exists. |
-| **Route**             | `/auth/forgot-password`                                                       |
-| **Context**           | Auth stack.                                                                   |
-| **Entry points**      | Sign In.                                                                      |
-| **Primary action**    | `Send reset email`.                                                           |
-| **Secondary actions** | Back to Sign In.                                                              |
-| **Back behavior**     | Standard back → Sign In.                                                      |
-| **Required data**     | Email address.                                                                |
-| **Persistence**       | No app persistence. Firebase handles reset request.                           |
+| Field                 | Specification                                       |
+| --------------------- | --------------------------------------------------- |
+| **Purpose**           | Trigger the V1 Firebase email/password reset flow.  |
+| **Route**             | `/auth/forgot-password`                             |
+| **Context**           | Auth stack.                                         |
+| **Entry points**      | Sign In.                                            |
+| **Primary action**    | `Send reset email`.                                 |
+| **Secondary actions** | Back to Sign In.                                    |
+| **Back behavior**     | Standard back → Sign In.                            |
+| **Required data**     | Email address.                                      |
+| **Persistence**       | No app persistence. Firebase handles reset request. |
 
 **States**
 
@@ -658,39 +647,39 @@ Do not collect profile fields solely because future Community might need them.
 
 ---
 
-## 10.6 Verify Email — Optional / Undecided
+## 10.6 Verify Email — Planned — V1
 
-| Field                 | Specification                                                            |
-| --------------------- | ------------------------------------------------------------------------ |
-| **Purpose**           | Gate onboarding only if product/security policy requires verified email. |
-| **Route**             | `/auth/verify-email`                                                     |
-| **Context**           | Auth stack with authenticated but unverified session.                    |
-| **Entry points**      | Sign Up; session gate if verification is mandatory.                      |
-| **Primary action**    | `I've verified my email` / refresh verification state.                   |
-| **Secondary actions** | Resend verification; sign out.                                           |
-| **Back behavior**     | Must not bypass the verification gate if verification is required.       |
-| **Required data**     | Firebase user email verification state.                                  |
-| **Persistence**       | Firebase Auth verification state.                                        |
+| Field                 | Specification                                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Require verified email before onboarding and cloud personal-data writes.                                                                |
+| **Route**             | `/auth/verify-email` — not implemented yet.                                                                                             |
+| **Context**           | Auth stack with authenticated but unverified session.                                                                                   |
+| **Entry points**      | Successful sign-up; sign-in or restored session with unverified email.                                                                  |
+| **Primary action**    | `I've verified my email` refreshes verification state; confirmed verification passes through the normal onboarding/journey gate.        |
+| **Secondary actions** | Resend verification; sign out.                                                                                                          |
+| **Back behavior**     | Cannot bypass verification into onboarding/app content or return to account creation as though signed out. Sign out returns to Welcome. |
+| **Required data**     | Firebase user email and current verification state; connectivity to confirm verification.                                               |
+| **Persistence**       | Firebase Auth verification state; no cloud personal-data writes while unverified.                                                       |
 
-**Recommended V1:** do not make email verification a hard navigation gate unless there is a concrete abuse/security requirement. It adds friction before the user has experienced the product.
+**States:** waiting for verification, refresh/resend in progress, still unverified, retryable network/send/refresh failure, and confirmed verification. Do not claim verification succeeded from a button press or stale local flag. After confirmation, refresh the authorization state needed for verified cloud writes before those writes can succeed; backend enforcement remains mandatory under [architecture decisions](engineering/architecture-decisions.md#firebase).
 
-**Repository constraint / unresolved placement:** [architecture decisions](engineering/architecture-decisions.md) already requires verified accounts for cloud personal-data writes. Sign-up/profile persistence and Journey Confirmation cannot report success for denied writes. The non-gating recommendation is conditional on that security constraint; decide whether verification precedes onboarding or the first personal write, then update the affected gates and matrix together. Do not disable verified-write authorization or invent a local-only onboarding policy to hide this dependency.
+New accounts continue to the overview; returning accounts resume their first incomplete onboarding step, or Today when onboarding/journey state is already complete and readable. This resolves the earlier friction-versus-write-authorization contradiction without weakening verified-write authorization.
 
 ---
 
 ## 10.7 Onboarding Overview
 
-| Field                 | Specification                                                                                                                                              |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Purpose**           | Explain what the 77-day journey is and the five-practice structure.                                                                                        |
-| **Route**             | `/onboarding`                                                                                                                                              |
-| **Context**           | Onboarding stack.                                                                                                                                          |
-| **Entry points**      | Auth gate; resumed incomplete onboarding.                                                                                                                  |
-| **Primary action**    | `Continue` → Practice Selection.                                                                                                                           |
-| **Secondary actions** | Sign out through a small account action if needed; no extra marketing pages.                                                                               |
-| **Back behavior**     | If entered after sign-up, back may return to previous onboarding/auth context only if it does not expose signed-out routes incorrectly. Progress is saved. |
-| **Required data**     | Static product copy; optional saved onboarding progress.                                                                                                   |
-| **Persistence**       | Mark overview step viewed/advanced if onboarding resume is step-based.                                                                                     |
+| Field                 | Specification                                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Explain what the 77-day journey is and the five-practice structure.                                                                     |
+| **Route**             | `/onboarding`                                                                                                                           |
+| **Context**           | Onboarding stack.                                                                                                                       |
+| **Entry points**      | Auth gate; resumed incomplete onboarding.                                                                                               |
+| **Primary action**    | `Continue` → Practice Selection.                                                                                                        |
+| **Secondary actions** | Sign out through a small account action if needed; no extra marketing pages.                                                            |
+| **Back behavior**     | Onboarding root does not return to Sign Up/verification after verification succeeds. Sign out returns to Welcome; progress is retained. |
+| **Required data**     | Static product copy and saved onboarding progress.                                                                                      |
+| **Persistence**       | Persist overview completion when Continue succeeds so relaunch resumes the first incomplete step.                                       |
 
 **Must communicate:**
 
@@ -715,7 +704,7 @@ Keep this to one screen unless content cannot be made readable with scrolling.
 | **Primary action**    | `Continue` → Bible Translation; enabled only when exactly 2 distinct practices are selected.                                         |
 | **Secondary actions** | Select/deselect optional practice cards.                                                                                             |
 | **Back behavior**     | Back → Onboarding Overview; selected values remain saved.                                                                            |
-| **Required data**     | Allowed practice catalog; current selections.                                                                                        |
+| **Required data**     | The ten-practice catalog in [product requirements](PRODUCT_REQUIREMENTS.md#v1-optional-practice-catalog); current selections.        |
 | **Persistence**       | Save selection as onboarding configuration after each change or on Continue; final selection becomes journey configuration at Start. |
 
 **States**
@@ -750,27 +739,28 @@ Required practices are visible as context but cannot be deselected.
 - **No selection:** Continue disabled.
 - **Selection unavailable later:** reader should prompt for replacement translation without corrupting day progress.
 
-Do not hard-code translation availability in navigation code.
+V1 translations are English and limited to the app account's enabled/allowed/licensed catalog. WEB may be preselected only when actually available; Continue confirms the participant's choice. Never guess a `bibleId` or hard-code availability in navigation code.
 
 ---
 
 ## 10.10 Journey Confirmation
 
-| Field                 | Specification                                                                                                          |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **Purpose**           | Review the selected practices and translation, then create the journey.                                                |
-| **Route**             | `/onboarding/confirm`                                                                                                  |
-| **Context**           | Final onboarding screen.                                                                                               |
-| **Entry points**      | Bible Translation.                                                                                                     |
-| **Primary action**    | `Start Day 1` → create journey → replace with Today.                                                                   |
-| **Secondary actions** | Edit practices → Practice Selection; edit translation → Bible Translation.                                             |
-| **Back behavior**     | Back → Bible Translation before journey starts. After successful start, onboarding is removed from navigation history. |
-| **Required data**     | Exactly 2 optional practices; selected Bible translation; authenticated user.                                          |
-| **Persistence**       | Persist onboarding complete, journey start calendar date/time zone, selected practices, translation preference.        |
+| Field                 | Specification                                                                                                                                         |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Review the selected practices and translation, then create the journey.                                                                               |
+| **Route**             | `/onboarding/confirm`                                                                                                                                 |
+| **Context**           | Final onboarding screen.                                                                                                                              |
+| **Entry points**      | Bible Translation.                                                                                                                                    |
+| **Primary action**    | `Start Day 1` → create journey → replace with Today.                                                                                                  |
+| **Secondary actions** | Edit practices → Practice Selection; edit translation → Bible Translation.                                                                            |
+| **Back behavior**     | Back → Bible Translation before journey starts. After successful start, onboarding is removed from navigation history.                                |
+| **Required data**     | Exactly 2 optional practices; confirmed allowed translation; verified user; approved content version; connectivity.                                   |
+| **Persistence**       | Persist onboarding complete, journey start calendar date/fixed IANA timezone, selected practices, translation preference, and pinned content version. |
 
 **Important behavior**
 
-- V1 starts Day 1 **today**. Do not add a future start-date picker unless explicitly requested.
+- V1 starts Day 1 **today** and captures the current IANA timezone, fixed for this journey. No future scheduling or manual journey-timezone change.
+- Enforce at most one active journey. No restart/reset, individual journey deletion, or new-journey action in initial V1.
 - Submission must be idempotent. Double-tap/network retry must not create multiple journeys.
 - If write partially fails, remain on Confirmation with retry; do not route to Today until the journey state can be read coherently.
 
@@ -792,7 +782,7 @@ Do not hard-code translation availability in navigation code.
 
 ### Required content order
 
-1. Day number + weekly theme.
+1. Day number + weekly theme, including the concise inline theme explanation on the first day of each week.
 2. Scripture passage reference and Scripture card.
 3. Morning intention area.
 4. Five-practice progress/controls in a clear sequence.
@@ -803,7 +793,7 @@ The exact visual order can evolve, but Scripture must not be visually demoted be
 
 ### Practice interaction
 
-Recommended ordering:
+Default interaction order:
 
 1. Scripture — tap card → Scripture Reader.
 2. Prayer — prompt displayed/expanded inline; explicit completion control.
@@ -828,7 +818,8 @@ Scripture → Prayer → Optional A → Optional B → Reflection
 ### Morning intention
 
 - Intention is encouraged but **does not count as one of the five practices**.
-- It is optional for daily-complete calculation.
+- It is optional, including during onboarding, and never affects daily completion.
+- Drafts autosave when persistence exists; show truthful save/sync state. The stable prompt is specified in [formation content](FORMATION_CONTENT_SPEC.md#authored-data-for-each-v1-day).
 - It should be editable on the current day and viewable/editable on previous days.
 - Recommended interaction: inline expandable editor or lightweight sheet, not a dedicated route.
 - Treat intention text as private journal-like data.
@@ -887,7 +878,7 @@ Do not surface a growing stack of missed-day warnings on Today. Journey is the p
 
 ### Recommended layout
 
-Group days by Week 1–11, with each week showing theme and Days 1–7 for that week.
+Group journey Days 1–77 by Week 1–11, with each week showing its theme and seven journey day numbers from the pinned content version.
 
 Per-day status can use text/icon combinations:
 
@@ -901,17 +892,20 @@ Do not use red `failed` states for incomplete past days.
 
 ### Row behavior
 
-- **Current day:** tap → switch/replace to Today, not duplicate current day in Historical Day Detail.
-- **Previous day:** tap → `/day/[dayNumber]`.
-- **Future day:** non-navigable. It may show day number and week/theme context, but daily content stays locked.
+- **Current day while active:** tap → switch/replace to Today, not duplicate current day in Historical Day Detail.
+- **Historical day:** tap → `/day/[dayNumber]`; after journey end every Day 1–77 row, including Day 77, uses this path.
+- **Future day:** non-navigable. It may show day number, theme, and date, but no future Scripture, prompts, completion, or editing UI.
 
 ### Progress summary
 
-Acceptable V1 summary examples:
+Required V1 summary:
 
-- Current Day: 24 of 77.
-- Days recorded/completed.
-- Current complete-day streak, if implemented.
+- Current day / 77 while active; ended-period context after Day 77.
+- Count of fully recorded days (5 of 5).
+- Count of days with partial participation (1–4 of 5).
+- Complete-day streak, shown only as subdued accountability information on Journey; see section 12.4.
+
+Historical edits recompute these derived values. The streak is informational, not the product's primary success measure.
 
 Avoid:
 
@@ -934,16 +928,16 @@ Avoid:
 | **Secondary actions** | Scripture Reader; Reflection; edit intention; toggle manual practice completion.                                    |
 | **Back behavior**     | Back returns to the actual source stack when navigated internally; deep-link fallback should return to Journey.     |
 | **Required data**     | Valid previous day number; historical content and progress snapshot; practice configuration applicable to that day. |
-| **Persistence**       | Historical edits persist and may recompute derived status/streak.                                                   |
+| **Persistence**       | Historical edits persist and recompute derived progress/statistics, including the streak.                           |
 
 ### Important rules
 
-- Previous days remain editable in V1.
+- Historical days remain editable indefinitely in V1, including all Days 1–77 after the journey ends.
 - Editing a previous day never changes the current day number.
 - Historical days must retain the optional practices that applied to that day. Changing current settings must not rewrite old day labels.
 - If a past day becomes complete after an edit, recompute any derived complete-day streak rather than preserving a stale value.
-- If `dayNumber == currentDay`, redirect to Today.
-- If `dayNumber > currentDay`, redirect to Journey.
+- While active only: if `dayNumber == currentDay`, the detail index redirects to Today; if `dayNumber > currentDay`, redirect to Journey.
+- Once ended: valid Days 1–77 all render historical detail and remain editable; Day 77 never redirects to the Today summary.
 
 ---
 
@@ -956,7 +950,7 @@ Avoid:
 | **Context**           | Pushed focused screen.                                                                                                                                   |
 | **Entry points**      | Today Scripture card; Historical Day Detail Scripture card.                                                                                              |
 | **Primary action**    | `Mark Scripture complete` / `Scripture complete` toggle.                                                                                                 |
-| **Secondary actions** | Back; translation context; optional `I read this passage elsewhere` path if API content is unavailable or the user uses a physical Bible.                |
+| **Secondary actions** | Back; translation context; `I read this passage elsewhere` manual completion path if API content is unavailable or the user uses a physical Bible.       |
 | **Back behavior**     | Standard back to source. Reading progress is not required to be saved unless implemented.                                                                |
 | **Required data**     | Valid unlocked day; passage reference; selected translation; API.Bible response or permitted session-memory cache under the selected integration policy. |
 | **Persistence**       | Scripture practice completion; selected translation is a separate user preference.                                                                       |
@@ -977,11 +971,11 @@ This manual path should still show the assigned passage reference so the practic
 
 If Scripture text cannot load:
 
-1. Keep the passage reference visible if already known.
+1. Keep the locally authored passage reference visible.
 2. Show a clear retry action.
 3. Keep the rest of the day's experience accessible.
 4. Do not auto-complete Scripture.
-5. If product permits external reading, provide `I read this passage elsewhere` as an explicit manual completion action.
+5. Provide `I read this passage elsewhere` as an explicit manual completion action.
 
 ### Translation changes
 
@@ -1003,7 +997,7 @@ If the user changes translation in Settings, both current and historical Scriptu
 | **Required data**     | Valid unlocked day; reflection question; existing private response; reflection completion state.                                    |
 | **Persistence**       | Private reflection text/draft and reflection completion.                                                                            |
 
-### Recommended completion rule
+### Settled V1 completion rule
 
 Reflection is complete when either:
 
@@ -1012,7 +1006,7 @@ Reflection is complete when either:
 
 This preserves Reflection as a real practice without forcing journaling as a condition of spiritual participation.
 
-Typing, draft autosave, or creating a separate journal entry is not a completion action. Persisting a draft and explicitly recording the practice are distinct operations.
+Reflection drafts autosave when persistence exists. Typing, draft autosave, or creating a separate journal entry is not a completion action. Persisting a draft and explicitly recording the practice are distinct operations.
 
 ### Privacy
 
@@ -1025,33 +1019,33 @@ Typing, draft autosave, or creating a separate journal entry is not a completion
 
 - Current and previous reflection responses may be edited later.
 - Editing text does not un-complete Reflection unless the user explicitly marks it incomplete.
-- Clearing all text from a completed written reflection should either preserve completion with an explicit `reflected without writing` state or ask whether the practice should remain complete; do not silently create inconsistent state.
+- Clearing text does not silently un-complete Reflection. Keep its recorded completion separate from whether written text remains, and retain an explicit control to mark the practice incomplete.
 
 ---
 
 ## 10.16 Journey Completion
 
-| Field                 | Specification                                                                         |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| **Purpose**           | Mark the end of the 77-day period without implying perfect performance.               |
-| **Route**             | `/journey-complete`                                                                   |
-| **Context**           | Root pushed screen; may be presented after Day 77 completion.                         |
-| **Entry points**      | Completion of final Day 77 practice; post-journey Today action.                       |
-| **Primary action**    | `Review your journey` → Journey.                                                      |
-| **Secondary actions** | `Back to Today`. Future `Start another journey` only if multi-journey history exists. |
-| **Back behavior**     | Back → Today or source; must not expose onboarding.                                   |
-| **Required data**     | Journey dates, participation summary, Day 77 status.                                  |
-| **Persistence**       | Optional one-time `completionAcknowledged` UI flag; no spiritual score.               |
+| Field                 | Specification                                                           |
+| --------------------- | ----------------------------------------------------------------------- |
+| **Purpose**           | Mark the end of the 77-day period without implying perfect performance. |
+| **Route**             | `/journey-complete`                                                     |
+| **Context**           | Root pushed screen; may be presented after Day 77 completion.           |
+| **Entry points**      | Completion of final Day 77 practice; post-journey Today action.         |
+| **Primary action**    | `Review your journey` → Journey.                                        |
+| **Secondary actions** | `Back to Today`. No `Start another journey` action in initial V1.       |
+| **Back behavior**     | Back → Today or source; must not expose onboarding.                     |
+| **Required data**     | Journey dates, participation summary, Day 77 status.                    |
+| **Persistence**       | Optional one-time `completionAcknowledged` UI flag; no spiritual score. |
 
 ### Copy principle
 
 Say that the user has **reached the end of the 77-day journey**, not that they achieved perfection.
 
-A journey can end with incomplete days. The end state should still allow reviewing and completing/correcting historical records if V1 keeps historical editing enabled.
+A journey can end with incomplete days. The end state allows reviewing and completing/correcting all historical Days 1–77 indefinitely, including incomplete Day 77, without claiming all practices were completed.
 
 ### Repeating the journey
 
-Do not show `Start another 77 days` unless the data model can safely preserve multiple historical journeys. This is an open product decision.
+Starting another journey is excluded from initial V1 even if the data model can retain history. Do not auto-start, reset, or overwrite a journey. [Product requirements](PRODUCT_REQUIREMENTS.md#future-repeat-journeys) owns Future repeat-journey scope; [formation content](FORMATION_CONTENT_SPEC.md#future-repeat-journey-variants--not-v1) owns pinned variant plans.
 
 ---
 
@@ -1062,7 +1056,7 @@ Do not show `Start another 77 days` unless the data model can safely preserve mu
 | **Purpose**           | Central hub for preferences, privacy, account, and support.                          |
 | **Route**             | `/settings`                                                                          |
 | **Context**           | Root push from either main tab.                                                      |
-| **Entry points**      | Consistent header settings/account icon on Today and Journey.                        |
+| **Entry points**      | Consistent header Settings icon on Today and Journey.                                |
 | **Primary action**    | None; this is a destination list.                                                    |
 | **Secondary actions** | Practices, Bible Translation, Notifications, Privacy, Account, About, Help/Feedback. |
 | **Back behavior**     | Back returns to the tab from which Settings was opened.                              |
@@ -1087,18 +1081,18 @@ Use standard list-row navigation. Do not make rows look like toggles unless they
 | **Required data**     | Current two optional practices; allowed practice catalog; current journey day.           |
 | **Persistence**       | Effective-dated practice configuration.                                                  |
 
-### Recommended V1 rule for mid-journey changes
+### Settled V1 rule for mid-journey changes
 
-Changing optional practices is allowed, but once a journey has started the change takes effect **the next calendar day**.
+Changing optional practices is allowed, but once a journey has started the change takes effect **the next calendar day in the fixed journey timezone**, never retroactively.
 
 Example:
 
 ```text
 Current day: Day 18
 Current optional practices: Movement + Gratitude
-User changes to: Service + Memorization
+User changes to: Serve or Encourage + Scripture Memorization
 Day 18 keeps Movement + Gratitude
-Day 19 and later use Service + Memorization
+Day 19 and later use Serve or Encourage + Scripture Memorization
 Days 1–18 history remains unchanged
 ```
 
@@ -1109,7 +1103,7 @@ Reasons:
 - avoids rewriting previous day records,
 - still allows the journey to adapt to changing circumstances.
 
-Before Day 1 is started, changes apply immediately.
+Before Day 1 is started, changes apply immediately. If no next journey day remains (Day 77 or an ended journey), explain that a selection change cannot affect this journey; never create Day 78 or rewrite its current/historical practices.
 
 The Save confirmation should state when the change begins. No additional confirmation dialog is needed unless data would be lost.
 
@@ -1129,32 +1123,34 @@ The Save confirmation should state when the change begins. No additional confirm
 | **Required data**     | Supported API.Bible translations; current selection.                                                                           |
 | **Persistence**       | User translation preference.                                                                                                   |
 
-Change applies immediately to all Scripture Reader screens, current and historical. It does not change completion state.
+Change applies immediately to current and historical Scripture Reader rendering without altering completion states or the authored passage reference. Select only the app account's explicitly enabled/allowed/licensed English translations; never silently substitute a version.
 
 ---
 
-## 10.20 Notification Settings — Optional V1
+## 10.20 Notification Settings — Planned — V1
 
-| Field                 | Specification                                                                                |
-| --------------------- | -------------------------------------------------------------------------------------------- |
-| **Purpose**           | Configure optional daily reminder behavior.                                                  |
-| **Route**             | `/settings/notifications`                                                                    |
-| **Context**           | Settings stack.                                                                              |
-| **Entry points**      | Settings; optional contextual invitation after the user has experienced the app.             |
-| **Primary action**    | Enable/disable reminder and set time if supported.                                           |
-| **Secondary actions** | Open OS Settings when permission is denied.                                                  |
-| **Back behavior**     | Standard back; preferences should save immediately or through one consistent Save pattern.   |
-| **Required data**     | OS permission state; existing reminder preference.                                           |
-| **Persistence**       | Local notification scheduling settings and any synced preference required by implementation. |
+| Field                 | Specification                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------- |
+| **Purpose**           | Configure one optional local-device daily reminder.                                 |
+| **Route**             | `/settings/notifications` — required V1 route, not implemented yet.                 |
+| **Context**           | Settings stack.                                                                     |
+| **Entry points**      | Notifications row in Settings, required for V1.                                     |
+| **Primary action**    | Explicitly enable/disable reminders and explicitly select the reminder time.        |
+| **Secondary actions** | Open OS Settings when permission is denied.                                         |
+| **Back behavior**     | Standard back to Settings; use one consistent save pattern for time/enable changes. |
+| **Required data**     | OS permission, device-local reminder preference/time, scheduling result.            |
+| **Persistence**       | Local-device reminder settings and scheduling; no backend push infrastructure.      |
 
-### Permission behavior
+### Permission and reminder behavior
 
-- Do not make notification permission part of required onboarding.
-- Do not repeatedly prompt after denial.
-- Explain the benefit before triggering the OS prompt.
-- If permission is denied, show `Open Settings` rather than re-request loops.
+- Notification permission is not part of onboarding. Request permission only through the participant's reminder-enabling action, explaining the benefit first.
+- Both enablement and a chosen time are explicit. Do not silently enable 8:00 AM or any other default reminder.
+- Schedule one daily reminder at the device's current local time; travel may change its wall-clock scheduling context while journey-day boundaries stay in the fixed journey timezone.
+- Show enabled, disabled, permission-denied, and scheduling-failure/retry states truthfully. Do not claim a reminder is scheduled when permission or scheduling failed.
+- Do not repeatedly prompt after denial; provide `Open Settings` instead.
+- Keep copy generic (for example `Your 77Faithful day is ready`) and payloads free of reflection/intention/prayer text. No missed-practice escalation, streak-loss warning, or guilt/pressure copy.
 
-If notifications are not implemented in V1, omit this row from the rendered Settings screen rather than showing a dead destination.
+The route and row are required V1 work. Their current absence is an implementation gap; it does not make reminders an undecided launch feature. Navigation-only scaffolding may add the route/row under prompt 26 without simulating permissions or scheduling.
 
 ---
 
@@ -1178,23 +1174,26 @@ Must state accurately that reflection/intention/journal-like content is private 
 
 ## 10.22 Account
 
-| Field                 | Specification                                                                |
-| --------------------- | ---------------------------------------------------------------------------- |
-| **Purpose**           | Manage authentication/account actions.                                       |
-| **Route**             | `/settings/account`                                                          |
-| **Context**           | Settings stack.                                                              |
-| **Entry points**      | Settings.                                                                    |
-| **Primary action**    | None; display account actions.                                               |
-| **Secondary actions** | Sign Out; Delete Account; provider-specific security actions if implemented. |
-| **Back behavior**     | Back → Settings.                                                             |
-| **Required data**     | Firebase current user and configured auth providers.                         |
-| **Persistence**       | Auth/session changes only when user acts.                                    |
+| Field                 | Specification                                                                                   |
+| --------------------- | ----------------------------------------------------------------------------------------------- |
+| **Purpose**           | Manage authentication/account actions.                                                          |
+| **Route**             | `/settings/account`                                                                             |
+| **Context**           | Settings stack.                                                                                 |
+| **Entry points**      | Settings.                                                                                       |
+| **Primary action**    | None; display account actions.                                                                  |
+| **Secondary actions** | Sign Out; Delete Account; provider-specific security actions if implemented.                    |
+| **Back behavior**     | Back → Settings.                                                                                |
+| **Required data**     | Firebase current user email; no additional profile or dedicated change-email requirement in V1. |
+| **Persistence**       | Auth/session changes only when user acts.                                                       |
 
 ### Sign out
 
-- Sign Out should end the Firebase session, clear sensitive in-memory state, and replace the protected navigation tree with Welcome.
-- Do not let Back return to Today after sign-out.
-- If local unsynced private data exists, resolve the sync/local-storage policy before clearing it. Do not silently discard a reflection draft.
+1. If online, attempt to complete synchronization of pending private writes before signing out.
+2. If writes remain pending, keep them and offer an explicit choice: **cancel sign-out and keep pending work**, or **discard unsynced changes and sign out**. Destructive discard requires clear confirmation identifying that unsynced work will be lost; cancellation leaves the account and work intact. Offline sign-out uses the same choice when writes are pending.
+3. After synchronization succeeds or discard is explicitly confirmed, end the Firebase session, clear protected in-memory state/history, and complete the private-cache account boundary before allowing another sign-in. Failure to complete that boundary is a recoverable sign-out error, not successful sign-out.
+4. Replace the protected navigation tree with Welcome. Back cannot return to Today or private content.
+
+Direct multi-account switching is not a V1 feature: sign out completely before another sign-in. A subsequently signed-in account must never see the previous account's cached private data. [Architecture decisions](engineering/architecture-decisions.md#offline-persistence-and-account-boundaries) owns the SDK/cache implementation dependency; the selected persistence architecture does not prove this flow works.
 
 ---
 
@@ -1214,23 +1213,23 @@ Must state accurately that reflection/intention/journal-like content is private 
 
 Use a dedicated screen because the action is consequential and may require reauthentication/network work.
 
-If the app permits in-app account creation, account deletion belongs in V1 rather than being deferred as a convenience feature.
+Account deletion is required in V1 and requires connectivity. The authenticated backend operation must remove Firebase Auth identity and nested personal application data. Do not report success after deleting only Auth, and do not promise exact backup-erasure timing without verified infrastructure/provider policy.
 
 ---
 
 ## 10.24 About
 
-| Field                 | Specification                                                        |
-| --------------------- | -------------------------------------------------------------------- |
-| **Purpose**           | Explain 77Faithful's purpose and show app/version/legal information. |
-| **Route**             | `/settings/about`                                                    |
-| **Context**           | Settings stack.                                                      |
-| **Entry points**      | Settings.                                                            |
-| **Primary action**    | None.                                                                |
-| **Secondary actions** | Privacy/terms/site links as applicable.                              |
-| **Back behavior**     | Back → Settings.                                                     |
-| **Required data**     | App version/build number; static product copy.                       |
-| **Persistence**       | None.                                                                |
+| Field                 | Specification                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| **Purpose**           | Explain 77Faithful's purpose and show app/version/legal information.                        |
+| **Route**             | `/settings/about`                                                                           |
+| **Context**           | Settings stack.                                                                             |
+| **Entry points**      | Settings.                                                                                   |
+| **Primary action**    | None.                                                                                       |
+| **Secondary actions** | Required Privacy Policy and Terms of Service links; configured product website if supplied. |
+| **Back behavior**     | Back → Settings.                                                                            |
+| **Required data**     | App version/build number; static product copy.                                              |
+| **Persistence**       | None.                                                                                       |
 
 Keep this informational. Do not duplicate onboarding or create a marketing feed.
 
@@ -1238,19 +1237,19 @@ Keep this informational. Do not duplicate onboarding or create a marketing feed.
 
 ## 10.25 Help / Feedback
 
-| Field                 | Specification                                                       |
-| --------------------- | ------------------------------------------------------------------- |
-| **Purpose**           | Give users a clear support/feedback path.                           |
-| **Route**             | `/settings/help-feedback`                                           |
-| **Context**           | Settings stack.                                                     |
-| **Entry points**      | Settings; recoverable error screens may link here when appropriate. |
-| **Primary action**    | Send feedback/open configured support destination.                  |
-| **Secondary actions** | FAQ/help links if they exist.                                       |
-| **Back behavior**     | Back → Settings.                                                    |
-| **Required data**     | Configured support destination.                                     |
-| **Persistence**       | None unless an in-app feedback form is implemented.                 |
+| Field                 | Specification                                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Give users a clear support/feedback path.                                                            |
+| **Route**             | `/settings/help-feedback`                                                                            |
+| **Context**           | Settings stack.                                                                                      |
+| **Entry points**      | Settings; recoverable error screens may link here when appropriate.                                  |
+| **Primary action**    | Send feedback/open configured support destination.                                                   |
+| **Secondary actions** | FAQ/help links if they exist.                                                                        |
+| **Back behavior**     | Back → Settings.                                                                                     |
+| **Required data**     | Configured support destination.                                                                      |
+| **Persistence**       | None; open the configured support contact destination, with no Firebase support-ticket system in V1. |
 
-Never prefill support diagnostics with private Scripture reflection, intention, prayer, or journal text.
+Never prefill support diagnostics with private Scripture reflection, intention, prayer, or journal text. Support email, website/domain, policy URLs, and legal identity remain external launch prerequisites until supplied; see [project context](engineering/project-context.md#external-setup-and-release-prerequisites). Do not fabricate support/legal destinations.
 
 ---
 
@@ -1275,7 +1274,7 @@ flowchart TD
     Done -->|Yes| Complete[Today complete state]
 ```
 
-The user does not need to follow the sequence rigidly. They may complete practices in any order. `Continue Day N` simply directs them to the first incomplete item in the recommended sequence.
+The user does not need to follow the sequence rigidly. They may complete practices in any order. `Continue Day N` simply directs them to the first incomplete item in the settled sequence.
 
 ## 11.2 Scripture behavior
 
@@ -1296,7 +1295,7 @@ The user does not need to follow the sequence rigidly. They may complete practic
 
 ## 11.4 Optional practices
 
-- Display the two practices chosen for that day.
+- Display the two practices from the [V1 catalog](PRODUCT_REQUIREMENTS.md#v1-optional-practice-catalog) applicable to that day; no custom practices, timers, metrics, or per-practice note fields.
 - Each has one clear completion control.
 - Tapping the completion control records/unrecords completion.
 - Tapping the explanatory area may expand instructions if needed, but should not unexpectedly navigate unless the card clearly looks navigational.
@@ -1370,7 +1369,7 @@ On Journey:
 
 ## 12.3 Can previous days be edited later?
 
-**Recommended V1: yes.**
+**Settled V1: yes, indefinitely, including after Day 77.**
 
 Users may:
 
@@ -1383,7 +1382,7 @@ Historical edits never change the current day number.
 
 ## 12.4 Streak behavior
 
-A complete-day streak, if implemented, is derived from consecutive calendar days with all five practices complete.
+The V1 complete-day streak is derived from consecutive calendar days with all five practices complete.
 
 - An incomplete day breaks the derived streak.
 - The journey continues regardless.
@@ -1391,7 +1390,7 @@ A complete-day streak, if implemented, is derived from consecutive calendar days
 - Do not make streak loss the primary message on Today.
 - Do not show streak restoration animations intended to pressure daily completion.
 
-**Recommended placement:** Journey summary, not the main Today hero.
+**Required placement:** subdued Journey summary only. No streak display or streak-loss pressure on Today. It is informational accountability, not the primary success measure.
 
 ## 12.5 Appropriate missed-day language
 
@@ -1436,15 +1435,16 @@ Avoid:
 
 ## 13.4 Future days
 
-**Recommended V1:** future days are visible in Journey but locked.
+**Settled V1:** future days may expose limited metadata in Journey but cannot be opened.
 
 They may show:
 
 - day number,
 - week number/theme,
+- calendar date,
 - `Upcoming` state.
 
-They should not allow:
+They must not expose future Scripture or prompts, nor allow:
 
 - completion changes,
 - reflection entry,
@@ -1456,7 +1456,7 @@ Do not expose an interactive lock screen. The row can simply be disabled/non-nav
 ## 13.5 Weekly transitions
 
 - Week changes automatically based on day number.
-- Today should show the current week theme.
+- Today shows the current week theme and its concise inline explanation on the first day of that theme, from the journey's pinned content version.
 - Journey groups days under weekly theme headings.
 - A separate Weekly Theme screen is **not** required in V1.
 - If longer weekly content is later authored, add a theme-detail route only after there is meaningful content that warrants a screen.
@@ -1479,14 +1479,12 @@ If the calendar advances beyond Day 77 while Day 77 or earlier days remain incom
 - journey status becomes `ended`,
 - Today becomes a post-journey summary rather than creating Day 78,
 - Journey remains fully accessible,
-- historical days remain editable under the V1 recommendation,
+- all historical Days 1–77 remain editable indefinitely, with Day 77 reached through its Journey row exactly like Days 1–76,
 - completion copy must say the 77-day period has ended, not that every practice was completed.
 
 ## 13.8 Starting another journey
 
-**Optional / undecided.**
-
-Recommended V1 behavior is to **not** expose a restart/new-journey action until the backend supports multiple journey records without overwriting the first journey.
+**Settled: excluded from initial V1.** No manual active-journey restart/reset, individual journey deletion, auto-start, or new-journey action. At most one journey is active. Preserve the data boundary for future multiple historical journeys; implementation of that Future flow requires its own scope and the content specification's variant rules.
 
 ---
 
@@ -1498,7 +1496,8 @@ Recommended V1 behavior is to **not** expose a restart/new-journey action until 
 flowchart LR
     Install[Install / First Launch] --> Welcome
     Welcome --> Create[Create Account]
-    Create --> Overview[Journey Overview]
+    Create --> Verify[Verify Email]
+    Verify -->|Confirmed| Overview[Journey Overview]
     Overview --> Practices[Choose 2 Practices]
     Practices --> Bible[Bible Translation]
     Bible --> Confirm[Confirm Journey]
@@ -1510,7 +1509,12 @@ flowchart LR
 ```mermaid
 flowchart LR
     Launch --> Restore[Restore Session]
-    Restore --> Check{Onboarding complete?}
+    Restore --> Verified{Signed in and email verified?}
+    Verified -->|Signed out| Auth[Welcome / Sign In]
+    Verified -->|Unverified| Verify[Verify Email]
+    Auth --> Verified
+    Verify -->|Confirmed| Check{Onboarding complete?}
+    Verified -->|Yes| Check
     Check -->|Yes| Today
     Check -->|No| Resume[Resume Onboarding]
 ```
@@ -1565,13 +1569,21 @@ flowchart LR
 ## 14.7 Sign out
 
 ```mermaid
-flowchart LR
+flowchart TD
     Settings --> Account --> SignOut[Sign Out]
-    SignOut --> Clear[Clear protected in-memory session state]
-    Clear --> Welcome
+    SignOut --> Sync[Attempt sync if online]
+    Sync --> Pending{Private writes still pending?}
+    Pending -->|No| Clear[End session and complete private-cache boundary]
+    Pending -->|Yes| Choice{Participant choice}
+    Choice -->|Cancel sign-out| Account
+    Choice -->|Discard unsynced work| Confirm{Confirm destructive discard}
+    Confirm -->|Cancel| Account
+    Confirm -->|Confirmed| Clear
+    Clear -->|Success| Welcome
+    Clear -->|Failure| Recovery[Recoverable sign-out error]
 ```
 
-Back navigation must not return to protected screens.
+Back navigation must not return to protected screens. Another account cannot sign in until the previous account's private cache boundary is complete; see section 10.22.
 
 ---
 
@@ -1621,10 +1633,11 @@ A card should behave consistently:
 
 ## 15.5 Save vs. autosave
 
-**Autosave recommended:**
+**Required when persistence exists:** autosave intention and reflection drafts; typing/autosave never completes Reflection.
 
-- intention drafts,
-- reflection drafts,
+**Immediate persistence recommended:**
+
+- intention/reflection draft changes,
 - simple toggles,
 - completion controls.
 
@@ -1641,6 +1654,7 @@ Bible translation may use either explicit Save or immediate selection, but match
 Require confirmation/reauthentication where appropriate for:
 
 - account deletion,
+- explicitly discarding unsynced private changes during sign-out,
 - deleting user-created content if such deletion is irreversible.
 
 Do not add confirmation dialogs to routine completion toggles, back navigation with reliable autosave, or ordinary settings rows.
@@ -1655,7 +1669,7 @@ Do not add confirmation dialogs to routine completion toggles, back navigation w
 
 - no back button,
 - clear page title or accessible heading,
-- consistent settings/account icon in the same header position,
+- consistent Settings icon in the same header position,
 - bottom tab bar visible.
 
 ## 16.2 Pushed screens
@@ -1696,7 +1710,7 @@ Discard changes?
 
 Use a modal/form sheet only for short transient tasks. If a modal can be dismissed by gesture, unsaved destructive state must either autosave or block interactive dismissal.
 
-No core daily practice requires a modal route in the recommended V1 architecture.
+No core daily practice requires a modal route in the settled V1 architecture.
 
 ---
 
@@ -1717,7 +1731,7 @@ When API.Bible is unavailable:
 - display the known Scripture reference,
 - show retry on the Scripture card/reader,
 - do not auto-complete Scripture,
-- allow explicit external-reading completion if that product rule is enabled,
+- allow explicit manual completion after reading the assigned passage in the participant's own Bible,
 - never substitute an unlicensed or guessed Bible text.
 
 ## 17.3 Firebase read failure
@@ -1733,10 +1747,10 @@ If no cached data exists and required journey state cannot be resolved, show a r
 
 ## 17.4 Firebase write failure
 
-Recommended V1 UX contract:
+Settled V1 UX contract:
 
 - user edits should update local UI immediately when a local persistence/sync layer exists,
-- failed writes should become a visible `Pending sync`/retry state rather than silently reverting,
+- distinguish locally saved/pending writes from rejected or failed writes with a recoverable `Failed` state; retain private drafts rather than silently reverting,
 - private reflection/intention drafts should be retained locally until sync succeeds or the user deletes them,
 - do not mark a write as synced before Firebase confirms it.
 
@@ -1746,18 +1760,19 @@ If the current codebase has no reliable local write queue, document that limitat
 
 Do **not** claim full offline support unless code verification confirms it.
 
-Recommended minimum V1 target:
+Required native V1 behavior once relevant journey data has loaded:
 
-| Capability                                        | Offline target                                           |
-| ------------------------------------------------- | -------------------------------------------------------- |
-| Open last-cached Today content                    | Yes, if cached                                           |
-| View previously cached Journey history            | Yes, if cached                                           |
-| Edit completion/reflection                        | Prefer local pending sync; otherwise clearly unavailable |
-| Load uncached API.Bible Scripture                 | No                                                       |
-| Mark Scripture automatically from failed API load | No                                                       |
-| Read assigned passage reference                   | Yes if day content/reference was cached                  |
+| Capability                                                                               | Offline requirement                                                              |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Open loaded Today/Journey data                                                           | Available through native personal-record persistence.                            |
+| Completion toggles, intentions, reflection drafts                                        | Work offline through native persistence; sync when connectivity returns.         |
+| Application-authored local formation content and passage references                      | Available offline for unlocked days from the pinned content version.             |
+| Uncached API.Bible Scripture text                                                        | Not promised offline; keep passage reference and own-Bible completion available. |
+| Login, sign-up, verification, password reset, account deletion, initial journey creation | Require connectivity with clear unavailable/retry states.                        |
 
-The selected API.Bible policy in [architecture decisions](engineering/architecture-decisions.md) permits only session-memory caching within verified provider limits. Do not persist Bible text with offline personal records; keep the passage reference available. Native offline personal-data persistence is selected but not implemented, and the remaining offline UX decisions are recorded in section 28. An unavailable-write state accurately describes a partial implementation; it does not fulfill that persistence requirement or authorize changing V1 to online-only.
+Show saved / pending sync / failed when material without making status dominant. Sign-out with pending private writes follows section 10.22, including the online sync attempt, cancel-or-confirmed-discard choice, and subsequent-account isolation.
+
+[Architecture decisions](engineering/architecture-decisions.md#offline-persistence-and-account-boundaries) owns native persistence and cache account boundaries. API.Bible text stays within the session-memory-only licensing policy, separate from durable personal records. These requirements are **Planned — V1**, not implemented/tested offline support. An unavailable-write state is honest for a partial implementation but does not fulfill V1 or authorize an online-only release.
 
 ## 17.6 Empty states
 
@@ -1785,17 +1800,17 @@ If Community ships and user belongs to none:
 
 # 18. Authentication Edge Cases
 
-| State                                           | Expected navigation                                                                     |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Logged out                                      | Welcome/Auth only                                                                       |
-| Firebase restoring session                      | Native splash/bootstrap; no auth flash                                                  |
-| Returning authenticated + onboarding complete   | Today                                                                                   |
-| Returning authenticated + onboarding incomplete | Resume first incomplete onboarding step                                                 |
-| Authenticated + mandatory email unverified      | Verify Email if that gate is enabled                                                    |
-| Session revoked/expired                         | Replace protected tree with Sign In/Welcome; preserve only safe local drafts per policy |
-| User signs out                                  | Replace with Welcome; clear protected navigation history                                |
-| User deletes account                            | Complete backend deletion, sign out, replace with Welcome                               |
-| User reauthenticates after password reset       | Normal auth gate → onboarding or Today                                                  |
+| State                                      | Expected navigation                                                                     |
+| ------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Logged out                                 | Welcome/Auth only                                                                       |
+| Firebase restoring session                 | Native splash/bootstrap; no auth flash                                                  |
+| Returning verified + onboarding complete   | Today                                                                                   |
+| Returning verified + onboarding incomplete | Resume first incomplete onboarding step                                                 |
+| Authenticated + email unverified           | Verify Email before onboarding/app access                                               |
+| Session revoked/expired                    | Replace protected tree with Sign In/Welcome; preserve only safe local drafts per policy |
+| User signs out                             | Replace with Welcome; clear protected navigation history                                |
+| User deletes account                       | Complete backend deletion, sign out, replace with Welcome                               |
+| User reauthenticates after password reset  | Normal verification gate → onboarding resume or Today                                   |
 
 ## 18.1 Preventing auth flash
 
@@ -1815,7 +1830,7 @@ initial render → native splash/bootstrap → Firebase resolves → correct des
 
 ## 18.2 Partial profile state
 
-If Firebase Auth succeeds but the user's application profile/onboarding document is missing:
+If Firebase Auth succeeds but the user's application onboarding document is missing, check verification first. Unverified sessions go to Verify Email without attempting cloud personal-data writes. For a verified session:
 
 - do not assume onboarding complete,
 - do not automatically overwrite remote data,
@@ -1853,6 +1868,9 @@ Restore session
 IF signed out
     → Authenticate
     ↓
+IF email unverified
+    → Verify email
+    ↓
 IF onboarding incomplete
     → Finish onboarding
     ↓
@@ -1863,7 +1881,7 @@ Navigate to original destination
 
 Validation can change the destination:
 
-- current-day detail link → Today,
+- while active, current-day detail link → Today; once ended, every valid Day 1–77 link remains historical,
 - future day → Journey,
 - invalid day → Journey,
 - future community link without membership → invitation/join flow, not community content.
@@ -1954,6 +1972,8 @@ On navigation:
 
 ## 21.3 Shared behavior
 
+Architect and test iOS and Android together even if store release timing later differs. Use automatic system light/dark mode with no required manual theme setting in V1. Web remains a development/preview/static-export target.
+
 Prefer shared product behavior for:
 
 - day progression,
@@ -1969,131 +1989,131 @@ Platform-specific behavior should be limited to native navigation, keyboard, per
 
 # 22. Screen Relationship Matrix
 
-This matrix is the contract for meaningful interactive navigation. The existing scaffold wires only deterministic navigation: auth links, onboarding step links (explicitly without selection/persistence), tab switching, Settings pushes and returns, validated day-child links, and completion review. Successful submissions and all state-dependent conditions remain planned. See section 3.2 for the integration boundary.
+This matrix is the contract for meaningful interactive navigation. The existing scaffold wires only deterministic navigation: auth links, onboarding step links (explicitly without selection/persistence), tab switching, Settings pushes and returns, validated day-child links, and completion review. Successful submissions and all state-dependent conditions remain planned. Authenticated conditions for onboarding/app entries below include verified email; app entries also require completed onboarding. Verify Email and the Notifications route/row remain required V1 additions. See section 3.2 for the integration boundary.
 
-| From                         | Action                                   | Destination                | Navigation type            | Conditions / result                                                                 |
-| ---------------------------- | ---------------------------------------- | -------------------------- | -------------------------- | ----------------------------------------------------------------------------------- |
-| Bootstrap                    | Session = signed out                     | Welcome                    | Replace                    | Firebase auth restored                                                              |
-| Bootstrap                    | Signed in + onboarding incomplete        | Onboarding resume step     | Replace                    | Resume first incomplete step                                                        |
-| Bootstrap                    | Signed in + onboarding complete          | Today                      | Replace                    | Journey readable                                                                    |
-| Welcome                      | Get Started                              | Sign Up                    | Push                       | Always                                                                              |
-| Welcome                      | I already have an account                | Sign In                    | Push                       | Always                                                                              |
-| Sign In                      | Sign In succeeds                         | Onboarding or Today        | Replace                    | Based on onboarding state                                                           |
-| Sign In                      | Forgot password                          | Forgot Password            | Push                       | Email/password auth exists                                                          |
-| Sign In                      | Create account                           | Sign Up                    | Replace/Push               | Avoid duplicate auth stacks                                                         |
-| Sign Up                      | Create account succeeds                  | Verify Email               | Replace                    | Only if verification enforced                                                       |
-| Sign Up                      | Create account succeeds                  | Onboarding Overview        | Replace                    | Default recommendation                                                              |
-| Forgot Password              | Reset request complete                   | Sign In                    | Back/CTA                   | User chooses return                                                                 |
-| Verify Email                 | Verification confirmed                   | Onboarding Overview        | Replace                    | Verification required                                                               |
-| Onboarding Overview          | Continue                                 | Practice Selection         | Push                       | Authenticated                                                                       |
-| Practice Selection           | Continue                                 | Bible Translation          | Push                       | Exactly 2 selected                                                                  |
-| Bible Translation Onboarding | Continue                                 | Journey Confirmation       | Push                       | Valid translation selected                                                          |
-| Journey Confirmation         | Start Day 1                              | Today                      | Replace                    | Journey write succeeds                                                              |
-| Journey Confirmation         | Edit practices                           | Practice Selection         | Navigate within onboarding | Preserve translation selection                                                      |
-| Journey Confirmation         | Edit translation                         | Bible Translation          | Back/navigate              | Preserve practices                                                                  |
-| Today                        | Tap Today tab                            | Today                      | Tab                        | No-op if already selected; may scroll to top on repeated tap if established pattern |
-| Today                        | Continue Day N — Scripture incomplete    | Scripture Reader           | Push                       | Current day                                                                         |
-| Today                        | Continue Day N — Prayer incomplete       | Prayer card                | In-page focus/scroll       | Current day                                                                         |
-| Today                        | Continue Day N — Optional A/B incomplete | Practice card              | In-page focus/scroll       | Current day                                                                         |
-| Today                        | Continue Day N — Reflection incomplete   | Reflection                 | Push                       | Current day                                                                         |
-| Today                        | Scripture card                           | Scripture Reader           | Push                       | Current day unlocked                                                                |
-| Today                        | Reflection card                          | Reflection                 | Push                       | Current day unlocked                                                                |
-| Today                        | Prayer completion                        | Today                      | In-place state             | Persist toggle                                                                      |
-| Today                        | Optional practice completion             | Today                      | In-place state             | Persist toggle                                                                      |
-| Today                        | Edit intention                           | Today editor/sheet         | In-place / transient       | Does not affect complete-day status                                                 |
-| Today                        | Review yesterday                         | Historical Day Detail      | Push                       | Yesterday < current day and incomplete                                              |
-| Today                        | Settings header action                   | Settings                   | Push                       | Authenticated                                                                       |
-| Today                        | Journey tab                              | Journey Overview           | Tab                        | Authenticated                                                                       |
-| Today                        | Final Day 1–76 practice completed        | Day Complete state         | In-place                   | All five complete                                                                   |
-| Today                        | Final Day 77 practice completed          | Journey Completion         | Push after persistence     | All five complete                                                                   |
-| Today post-journey           | Review your journey                      | Journey Overview           | Tab/replace                | Journey ended                                                                       |
-| Today post-journey           | View completion                          | Journey Completion         | Push                       | Journey ended                                                                       |
-| Journey                      | Today row                                | Today                      | Tab switch                 | row day == current day                                                              |
-| Journey                      | Previous day row                         | Historical Day Detail      | Push                       | day < current day                                                                   |
-| Journey                      | Future day row                           | None                       | Disabled                   | day > current day                                                                   |
-| Journey                      | Settings header action                   | Settings                   | Push                       | Authenticated                                                                       |
-| Historical Day Detail        | Continue — Scripture incomplete          | Scripture Reader           | Push                       | Previous unlocked day                                                               |
-| Historical Day Detail        | Continue — Reflection incomplete         | Reflection                 | Push                       | Previous unlocked day                                                               |
-| Historical Day Detail        | Prayer/optional toggle                   | Same screen                | In-place                   | Recompute day state                                                                 |
-| Historical Day Detail        | Edit intention                           | Same screen editor/sheet   | In-place                   | Private                                                                             |
-| Historical Day Detail        | Header back                              | Source                     | Pop                        | Usually Journey/Today                                                               |
-| Scripture Reader             | Mark complete                            | Same screen then source    | In-place + Back optional   | User action only; never auto from scroll                                            |
-| Scripture Reader             | Retry API                                | Same screen                | In-place                   | API failed                                                                          |
-| Scripture Reader             | Back                                     | Today/Historical Day       | Pop                        | Preserve completion state                                                           |
-| Reflection                   | Save & mark complete                     | Source                     | Save + Back                | Valid response                                                                      |
-| Reflection                   | I reflected without writing              | Source                     | Save + Back                | Explicit action                                                                     |
-| Reflection                   | Back                                     | Source                     | Pop                        | Autosaved draft or discard guard                                                    |
-| Journey Completion           | Review your journey                      | Journey Overview           | Replace/Tab                | Always                                                                              |
-| Journey Completion           | Back to Today                            | Today                      | Replace/Back               | Always                                                                              |
-| Settings                     | Optional Practices                       | Practice Settings          | Push                       | Authenticated                                                                       |
-| Settings                     | Bible Translation                        | Bible Translation Settings | Push                       | Authenticated                                                                       |
-| Settings                     | Notifications                            | Notification Settings      | Push                       | Only if implemented                                                                 |
-| Settings                     | Privacy & Data                           | Privacy & Data             | Push                       | Authenticated                                                                       |
-| Settings                     | Account                                  | Account                    | Push                       | Authenticated                                                                       |
-| Settings                     | About                                    | About                      | Push                       | Authenticated                                                                       |
-| Settings                     | Help / Feedback                          | Help / Feedback            | Push                       | Authenticated                                                                       |
-| Practice Settings            | Save Changes                             | Settings                   | Save + Pop                 | Exactly 2 selected; takes effect next day                                           |
-| Bible Translation Settings   | Save                                     | Settings                   | Save + Pop                 | Valid supported translation                                                         |
-| Notification Settings        | Open Settings                            | OS app settings            | External/native            | Permission denied                                                                   |
-| Account                      | Sign Out                                 | Welcome                    | Replace root               | Firebase sign-out succeeds                                                          |
-| Account                      | Delete Account                           | Delete Account             | Push                       | Authenticated                                                                       |
-| Delete Account               | Cancel                                   | Account                    | Pop                        | No deletion                                                                         |
-| Delete Account               | Confirm deletion succeeds                | Welcome                    | Replace root               | Account + required data deletion complete                                           |
-| About                        | Back                                     | Settings                   | Pop                        | Always                                                                              |
-| Help / Feedback              | Back                                     | Settings                   | Pop                        | Always                                                                              |
-| Communities                  | Community row                            | Community Detail           | Push                       | Active membership                                                                   |
-| Community Detail             | Prayer Requests                          | Community Prayer Requests  | Push                       | Active membership                                                                   |
-| Community Detail             | Discussion                               | Community Discussion       | Push                       | Active membership                                                                   |
-| Community Detail             | Group Progress                           | Group Progress             | Push                       | Active membership                                                                   |
-| Community Detail             | Settings                                 | Community Settings         | Push                       | Authorized role/member                                                              |
-| Community Prayer Requests    | Back                                     | Community Detail           | Pop                        | Active membership                                                                   |
-| Community Discussion         | Back                                     | Community Detail           | Pop                        | Active membership                                                                   |
-| Group Progress               | Back                                     | Community Detail           | Pop                        | Active membership                                                                   |
-| Community Settings           | Back                                     | Community Detail           | Pop                        | Active membership                                                                   |
-| Community Invite             | Authenticate                             | Sign In / Sign Up          | Redirect preserving invite | Signed out                                                                          |
-| Community Invite             | Finish onboarding                        | Onboarding                 | Redirect preserving invite | Onboarding incomplete                                                               |
-| Community Invite             | Join Community                           | Community Detail           | Replace                    | Invite valid and membership created                                                 |
+| From                         | Action                                   | Destination                       | Navigation type            | Conditions / result                                                                       |
+| ---------------------------- | ---------------------------------------- | --------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------- |
+| Bootstrap                    | Session = signed out                     | Welcome                           | Replace                    | Firebase auth restored                                                                    |
+| Bootstrap                    | Signed in + email unverified             | Verify Email                      | Replace                    | Required before onboarding/app access                                                     |
+| Bootstrap                    | Verified + onboarding incomplete         | Onboarding resume step            | Replace                    | Resume first incomplete step                                                              |
+| Bootstrap                    | Verified + onboarding complete           | Today                             | Replace                    | Journey readable                                                                          |
+| Welcome                      | Get Started                              | Sign Up                           | Push                       | Always                                                                                    |
+| Welcome                      | I already have an account                | Sign In                           | Push                       | Always                                                                                    |
+| Sign In                      | Sign In succeeds                         | Verify Email / Onboarding / Today | Replace                    | Verification first, then onboarding/journey gate                                          |
+| Sign In                      | Forgot password                          | Forgot Password                   | Push                       | Email/password auth exists                                                                |
+| Sign In                      | Create account                           | Sign Up                           | Replace/Push               | Avoid duplicate auth stacks                                                               |
+| Sign Up                      | Create account succeeds                  | Verify Email                      | Replace                    | Required immediately after sign-up                                                        |
+| Forgot Password              | Reset request complete                   | Sign In                           | Back/CTA                   | User chooses return                                                                       |
+| Verify Email                 | Verification confirmed                   | Onboarding resume / Today         | Replace                    | Refresh verified authorization, then normal state gate                                    |
+| Onboarding Overview          | Continue                                 | Practice Selection                | Push                       | Verified authenticated account                                                            |
+| Practice Selection           | Continue                                 | Bible Translation                 | Push                       | Exactly 2 selected                                                                        |
+| Bible Translation Onboarding | Continue                                 | Journey Confirmation              | Push                       | Valid translation selected                                                                |
+| Journey Confirmation         | Start Day 1                              | Today                             | Replace                    | Online verified write succeeds; fixed timezone/content version pinned; one active journey |
+| Journey Confirmation         | Edit practices                           | Practice Selection                | Navigate within onboarding | Preserve translation selection                                                            |
+| Journey Confirmation         | Edit translation                         | Bible Translation                 | Back/navigate              | Preserve practices                                                                        |
+| Today                        | Tap Today tab                            | Today                             | Tab                        | No-op if already selected; may scroll to top on repeated tap if established pattern       |
+| Today                        | Continue Day N — Scripture incomplete    | Scripture Reader                  | Push                       | Current day                                                                               |
+| Today                        | Continue Day N — Prayer incomplete       | Prayer card                       | In-page focus/scroll       | Current day                                                                               |
+| Today                        | Continue Day N — Optional A/B incomplete | Practice card                     | In-page focus/scroll       | Current day                                                                               |
+| Today                        | Continue Day N — Reflection incomplete   | Reflection                        | Push                       | Current day                                                                               |
+| Today                        | Scripture card                           | Scripture Reader                  | Push                       | Current day unlocked                                                                      |
+| Today                        | Reflection card                          | Reflection                        | Push                       | Current day unlocked                                                                      |
+| Today                        | Prayer completion                        | Today                             | In-place state             | Persist toggle                                                                            |
+| Today                        | Optional practice completion             | Today                             | In-place state             | Persist toggle                                                                            |
+| Today                        | Edit intention                           | Today editor/sheet                | In-place / transient       | Does not affect complete-day status                                                       |
+| Today                        | Review yesterday                         | Historical Day Detail             | Push                       | Yesterday < current day and incomplete                                                    |
+| Today                        | Settings header action                   | Settings                          | Push                       | Authenticated                                                                             |
+| Today                        | Journey tab                              | Journey Overview                  | Tab                        | Authenticated                                                                             |
+| Today                        | Final Day 1–76 practice completed        | Day Complete state                | In-place                   | All five complete                                                                         |
+| Today                        | Final Day 77 practice completed          | Journey Completion                | Push after persistence     | All five complete                                                                         |
+| Today post-journey           | Review your journey                      | Journey Overview                  | Tab/replace                | Journey ended                                                                             |
+| Today post-journey           | View completion                          | Journey Completion                | Push                       | Journey ended                                                                             |
+| Journey                      | Today row                                | Today                             | Tab switch                 | Journey active; row day == current day                                                    |
+| Journey                      | Historical day row                       | Historical Day Detail             | Push                       | Active: day < current day; ended: every Day 1–77, including Day 77                        |
+| Journey                      | Future day row                           | None                              | Disabled                   | Journey active; day > current day; metadata only                                          |
+| Journey                      | Settings header action                   | Settings                          | Push                       | Authenticated                                                                             |
+| Historical Day Detail        | Continue — Scripture incomplete          | Scripture Reader                  | Push                       | Previous unlocked day                                                                     |
+| Historical Day Detail        | Continue — Reflection incomplete         | Reflection                        | Push                       | Previous unlocked day                                                                     |
+| Historical Day Detail        | Prayer/optional toggle                   | Same screen                       | In-place                   | Recompute day state                                                                       |
+| Historical Day Detail        | Edit intention                           | Same screen editor/sheet          | In-place                   | Private                                                                                   |
+| Historical Day Detail        | Header back                              | Source                            | Pop                        | Usually Journey/Today                                                                     |
+| Scripture Reader             | Mark complete                            | Same screen then source           | In-place + Back optional   | User action only; never auto from scroll                                                  |
+| Scripture Reader             | Retry API                                | Same screen                       | In-place                   | API failed                                                                                |
+| Scripture Reader             | Back                                     | Today/Historical Day              | Pop                        | Preserve completion state                                                                 |
+| Reflection                   | Save & mark complete                     | Source                            | Save + Back                | Valid response                                                                            |
+| Reflection                   | I reflected without writing              | Source                            | Save + Back                | Explicit action                                                                           |
+| Reflection                   | Back                                     | Source                            | Pop                        | Autosaved draft or discard guard                                                          |
+| Journey Completion           | Review your journey                      | Journey Overview                  | Replace/Tab                | Always                                                                                    |
+| Journey Completion           | Back to Today                            | Today                             | Replace/Back               | Always                                                                                    |
+| Settings                     | Optional Practices                       | Practice Settings                 | Push                       | Authenticated                                                                             |
+| Settings                     | Bible Translation                        | Bible Translation Settings        | Push                       | Authenticated                                                                             |
+| Settings                     | Notifications                            | Notification Settings             | Push                       | Planned — V1; route/feature currently absent                                              |
+| Settings                     | Privacy & Data                           | Privacy & Data                    | Push                       | Authenticated                                                                             |
+| Settings                     | Account                                  | Account                           | Push                       | Authenticated                                                                             |
+| Settings                     | About                                    | About                             | Push                       | Authenticated                                                                             |
+| Settings                     | Help / Feedback                          | Help / Feedback                   | Push                       | Authenticated                                                                             |
+| Practice Settings            | Save Changes                             | Settings                          | Save + Pop                 | Exactly 2 selected; takes effect next day                                                 |
+| Bible Translation Settings   | Save                                     | Settings                          | Save + Pop                 | Valid supported translation                                                               |
+| Notification Settings        | Open Settings                            | OS app settings                   | External/native            | Permission denied                                                                         |
+| Account                      | Sign Out                                 | Welcome                           | Replace root               | Sync succeeds or discard confirmed; session/cache boundary completes                      |
+| Account                      | Delete Account                           | Delete Account                    | Push                       | Authenticated                                                                             |
+| Delete Account               | Cancel                                   | Account                           | Pop                        | No deletion                                                                               |
+| Delete Account               | Confirm deletion succeeds                | Welcome                           | Replace root               | Account + required data deletion complete                                                 |
+| About                        | Back                                     | Settings                          | Pop                        | Always                                                                                    |
+| Help / Feedback              | Back                                     | Settings                          | Pop                        | Always                                                                                    |
+| Communities                  | Community row                            | Community Detail                  | Push                       | Active membership                                                                         |
+| Community Detail             | Prayer Requests                          | Community Prayer Requests         | Push                       | Active membership                                                                         |
+| Community Detail             | Discussion                               | Community Discussion              | Push                       | Active membership                                                                         |
+| Community Detail             | Group Progress                           | Group Progress                    | Push                       | Active membership                                                                         |
+| Community Detail             | Settings                                 | Community Settings                | Push                       | Authorized role/member                                                                    |
+| Community Prayer Requests    | Back                                     | Community Detail                  | Pop                        | Active membership                                                                         |
+| Community Discussion         | Back                                     | Community Detail                  | Pop                        | Active membership                                                                         |
+| Group Progress               | Back                                     | Community Detail                  | Pop                        | Active membership                                                                         |
+| Community Settings           | Back                                     | Community Detail                  | Pop                        | Active membership                                                                         |
+| Community Invite             | Authenticate                             | Sign In / Sign Up                 | Redirect preserving invite | Signed out                                                                                |
+| Community Invite             | Finish onboarding                        | Onboarding                        | Redirect preserving invite | Onboarding incomplete                                                                     |
+| Community Invite             | Join Community                           | Community Detail                  | Replace                    | Invite valid and membership created                                                       |
 
 ---
 
 # 23. Route Registry
 
-> Required V1 paths are implemented as navigation scaffolding. The protection column specifies the target policy, not a working guard: auth/onboarding and journey state are absent. Only day-parameter validity is enforced today. Optional and Future paths remain absent. Product responsibilities and URL semantics are unchanged.
+> Most V1 paths are implemented as navigation scaffolding; Verify Email and Notifications remain Planned — V1 additions. The protection column specifies the target policy, not a working guard: auth/onboarding and journey state are absent. Only day-parameter validity is enforced today. Future paths remain absent. Yes in the protection column means verified account plus completed onboarding; no client gate replaces backend authorization.
 
-| Route                                   | Screen                     | Route group     | Parameters                                | Protection required          | V1/Future   | Notes                                                    | Status                         |
-| --------------------------------------- | -------------------------- | --------------- | ----------------------------------------- | ---------------------------- | ----------- | -------------------------------------------------------- | ------------------------------ |
-| `/`                                     | Bootstrap / Session Gate   | Root            | None                                      | No                           | V1          | Routing only; no auth flash                              | Existing — navigation scaffold |
-| `/auth/welcome`                         | Welcome                    | `(auth)`        | None                                      | Signed-out only              | V1          | Auth anchor                                              | Existing — navigation scaffold |
-| `/auth/sign-in`                         | Sign In                    | `(auth)`        | Optional preserved destination internally | Signed-out only              | V1          | Do not expose private data in redirect params            | Existing — navigation scaffold |
-| `/auth/sign-up`                         | Sign Up                    | `(auth)`        | None                                      | Signed-out only              | V1          | Only configured auth methods                             | Existing — navigation scaffold |
-| `/auth/forgot-password`                 | Forgot Password            | `(auth)`        | None                                      | Signed-out only              | V1          | Only if password auth exists                             | Existing — navigation scaffold |
-| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Authenticated/unverified     | Optional    | Omit if verification not enforced                        | Optional / undecided           |
-| `/onboarding`                           | Onboarding Overview        | `(onboarding)`  | None                                      | Auth + onboarding incomplete | V1          | Resume flow                                              | Existing — navigation scaffold |
-| `/onboarding/practices`                 | Practice Selection         | `(onboarding)`  | None                                      | Auth + onboarding incomplete | V1          | Exactly two optional practices                           | Existing — navigation scaffold |
-| `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Auth + onboarding incomplete | V1          | API.Bible supported list                                 | Existing — navigation scaffold |
-| `/onboarding/confirm`                   | Journey Confirmation       | `(onboarding)`  | None                                      | Auth + onboarding incomplete | V1          | Creates journey                                          | Existing — navigation scaffold |
-| `/today`                                | Today                      | `(app)/(tabs)`  | None                                      | Yes                          | V1          | Canonical current-day screen                             | Existing — navigation scaffold |
-| `/journey`                              | Journey Overview           | `(app)/(tabs)`  | None                                      | Yes                          | V1          | 77-day history/overview                                  | Existing — navigation scaffold |
-| `/day/[dayNumber]`                      | Historical Day Detail      | `(app)`         | `dayNumber: 1..77`                        | Yes                          | V1          | Current day redirects to Today; future redirects Journey | Existing — navigation scaffold |
-| `/day/[dayNumber]/scripture`            | Scripture Reader           | `(app)`         | `dayNumber: 1..currentDay`                | Yes                          | V1          | Manual completion                                        | Existing — navigation scaffold |
-| `/day/[dayNumber]/reflection`           | Reflection                 | `(app)`         | `dayNumber: 1..currentDay`                | Yes                          | V1          | Private content                                          | Existing — navigation scaffold |
-| `/journey-complete`                     | Journey Completion         | `(app)`         | None                                      | Yes                          | V1          | End state, not perfection claim                          | Existing — navigation scaffold |
-| `/settings`                             | Settings                   | `(app)`         | None                                      | Yes                          | V1          | Open from tab headers                                    | Existing — navigation scaffold |
-| `/settings/practices`                   | Practice Settings          | `(app)`         | None                                      | Yes                          | V1          | Effective next day                                       | Existing — navigation scaffold |
-| `/settings/bible-translation`           | Bible Translation Settings | `(app)`         | None                                      | Yes                          | V1          | Immediate display preference                             | Existing — navigation scaffold |
-| `/settings/notifications`               | Notification Settings      | `(app)`         | None                                      | Yes                          | Optional V1 | Route omitted if feature absent                          | Optional / undecided           |
-| `/settings/privacy`                     | Privacy & Data             | `(app)`         | None                                      | Yes                          | V1          | Do not overpromise behavior                              | Existing — navigation scaffold |
-| `/settings/account`                     | Account                    | `(app)`         | None                                      | Yes                          | V1          | Sign out/delete                                          | Existing — navigation scaffold |
-| `/settings/account/delete`              | Delete Account             | `(app)`         | None                                      | Yes                          | V1          | Destructive flow                                         | Existing — navigation scaffold |
-| `/settings/about`                       | About                      | `(app)`         | None                                      | Yes                          | V1          | Version/legal info                                       | Existing — navigation scaffold |
-| `/settings/help-feedback`               | Help / Feedback            | `(app)`         | None                                      | Yes                          | V1          | No private-content diagnostics                           | Existing — navigation scaffold |
-| `/communities`                          | Communities                | Future app tabs | None                                      | Yes                          | Future      | Not exposed in V1                                        | Future                         |
-| `/communities/[communityId]`            | Community Detail           | Future app      | `communityId`                             | Yes + member check           | Future      | Membership validated                                     | Future                         |
-| `/communities/[communityId]/prayer`     | Community Prayer Requests  | Future app      | `communityId`                             | Yes + member check           | Future      | Shared only when explicitly submitted                    | Future                         |
-| `/communities/[communityId]/discussion` | Community Discussion       | Future app      | `communityId`                             | Yes + member check           | Future      | Weekly/group discussion                                  | Future                         |
-| `/communities/[communityId]/progress`   | Group Progress             | Future app      | `communityId`                             | Yes + member check           | Future      | High-level only                                          | Future                         |
-| `/communities/[communityId]/settings`   | Community Settings         | Future app      | `communityId`                             | Yes + role check             | Future      | Admin/member controls                                    | Future                         |
-| `/invite/[inviteId]`                    | Community Invite           | Future root     | `inviteId`                                | Conditional                  | Future      | Preserve destination through auth/onboarding             | Future                         |
+| Route                                   | Screen                     | Route group     | Parameters                                | Protection required              | V1/Future | Notes                                                                     | Status                         |
+| --------------------------------------- | -------------------------- | --------------- | ----------------------------------------- | -------------------------------- | --------- | ------------------------------------------------------------------------- | ------------------------------ |
+| `/`                                     | Bootstrap / Session Gate   | Root            | None                                      | No                               | V1        | Routing only; no auth flash                                               | Existing — navigation scaffold |
+| `/auth/welcome`                         | Welcome                    | `(auth)`        | None                                      | Signed-out only                  | V1        | Auth anchor                                                               | Existing — navigation scaffold |
+| `/auth/sign-in`                         | Sign In                    | `(auth)`        | Optional preserved destination internally | Signed-out only                  | V1        | Do not expose private data in redirect params                             | Existing — navigation scaffold |
+| `/auth/sign-up`                         | Sign Up                    | `(auth)`        | None                                      | Signed-out only                  | V1        | Email/password; success → Verify Email                                    | Existing — navigation scaffold |
+| `/auth/forgot-password`                 | Forgot Password            | `(auth)`        | None                                      | Signed-out only                  | V1        | Email/password reset is required V1                                       | Existing — navigation scaffold |
+| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Authenticated/unverified         | V1        | Required before onboarding/cloud personal writes                          | Planned — V1                   |
+| `/onboarding`                           | Onboarding Overview        | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Resume flow                                                               | Existing — navigation scaffold |
+| `/onboarding/practices`                 | Practice Selection         | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Exactly two optional practices                                            | Existing — navigation scaffold |
+| `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | API.Bible supported list                                                  | Existing — navigation scaffold |
+| `/onboarding/confirm`                   | Journey Confirmation       | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Creates journey                                                           | Existing — navigation scaffold |
+| `/today`                                | Today                      | `(app)/(tabs)`  | None                                      | Yes                              | V1        | Canonical current-day screen                                              | Existing — navigation scaffold |
+| `/journey`                              | Journey Overview           | `(app)/(tabs)`  | None                                      | Yes                              | V1        | 77-day history/overview                                                   | Existing — navigation scaffold |
+| `/day/[dayNumber]`                      | Historical Day Detail      | `(app)`         | `dayNumber: 1..77`                        | Yes                              | V1        | Active current → Today; active future → Journey; ended Days 1–77 editable | Existing — navigation scaffold |
+| `/day/[dayNumber]/scripture`            | Scripture Reader           | `(app)`         | `dayNumber: 1..77`; unlocked only         | Yes                              | V1        | Manual completion                                                         | Existing — navigation scaffold |
+| `/day/[dayNumber]/reflection`           | Reflection                 | `(app)`         | `dayNumber: 1..77`; unlocked only         | Yes                              | V1        | Private content                                                           | Existing — navigation scaffold |
+| `/journey-complete`                     | Journey Completion         | `(app)`         | None                                      | Yes                              | V1        | End state, not perfection claim                                           | Existing — navigation scaffold |
+| `/settings`                             | Settings                   | `(app)`         | None                                      | Yes                              | V1        | Open from tab headers                                                     | Existing — navigation scaffold |
+| `/settings/practices`                   | Practice Settings          | `(app)`         | None                                      | Yes                              | V1        | Effective next day                                                        | Existing — navigation scaffold |
+| `/settings/bible-translation`           | Bible Translation Settings | `(app)`         | None                                      | Yes                              | V1        | Immediate display preference                                              | Existing — navigation scaffold |
+| `/settings/notifications`               | Notification Settings      | `(app)`         | None                                      | Yes                              | V1        | One explicitly enabled local daily reminder                               | Planned — V1                   |
+| `/settings/privacy`                     | Privacy & Data             | `(app)`         | None                                      | Yes                              | V1        | Do not overpromise behavior                                               | Existing — navigation scaffold |
+| `/settings/account`                     | Account                    | `(app)`         | None                                      | Yes                              | V1        | Sign out/delete                                                           | Existing — navigation scaffold |
+| `/settings/account/delete`              | Delete Account             | `(app)`         | None                                      | Yes                              | V1        | Destructive flow                                                          | Existing — navigation scaffold |
+| `/settings/about`                       | About                      | `(app)`         | None                                      | Yes                              | V1        | Version/legal info                                                        | Existing — navigation scaffold |
+| `/settings/help-feedback`               | Help / Feedback            | `(app)`         | None                                      | Yes                              | V1        | No private-content diagnostics                                            | Existing — navigation scaffold |
+| `/communities`                          | Communities                | Future app tabs | None                                      | Yes                              | Future    | Not exposed in V1                                                         | Future                         |
+| `/communities/[communityId]`            | Community Detail           | Future app      | `communityId`                             | Yes + member check               | Future    | Membership validated                                                      | Future                         |
+| `/communities/[communityId]/prayer`     | Community Prayer Requests  | Future app      | `communityId`                             | Yes + member check               | Future    | Shared only when explicitly submitted                                     | Future                         |
+| `/communities/[communityId]/discussion` | Community Discussion       | Future app      | `communityId`                             | Yes + member check               | Future    | Weekly/group discussion                                                   | Future                         |
+| `/communities/[communityId]/progress`   | Group Progress             | Future app      | `communityId`                             | Yes + member check               | Future    | High-level only                                                           | Future                         |
+| `/communities/[communityId]/settings`   | Community Settings         | Future app      | `communityId`                             | Yes + role check                 | Future    | Admin/member controls                                                     | Future                         |
+| `/invite/[inviteId]`                    | Community Invite           | Future root     | `inviteId`                                | Conditional                      | Future    | Preserve destination through auth/onboarding                              | Future                         |
 
 ---
 
@@ -2106,16 +2126,16 @@ IF authStatus == restoring
     RENDER bootstrap/splash only
 
 ELSE IF authStatus == signedOut
-    ALLOW auth routes
-    BLOCK onboarding and app routes
+    ALLOW welcome, sign-in, sign-up, forgot-password
+    BLOCK verify-email, onboarding, and app routes
 
-ELSE IF emailVerificationRequired AND emailUnverified
+ELSE IF emailUnverified
     ALLOW verify-email + sign-out
-    BLOCK onboarding and app routes
+    BLOCK signed-out auth screens, onboarding, and app routes
 
 ELSE IF onboardingStatus == incomplete
-    ALLOW onboarding routes
-    BLOCK main app routes
+    ALLOW onboarding routes + sign-out
+    BLOCK auth and main app routes
 
 ELSE
     ALLOW main app routes
@@ -2147,21 +2167,26 @@ IF selectedTranslation becomes unavailable
 
 ## 24.4 Day access
 
-This example needs an explicit ended-journey Day 77 rule before that state is implemented; see sections 7.3 and 29.1.
+After real auth/verification/onboarding and journey state resolve, apply the shared day-access boundary from section 7.3:
 
 ```text
-IF requestedDay < 1 OR requestedDay > 77
+IF requestedDay is not a canonical integer from 1 through 77
     → Journey
 
-ELSE IF requestedDay > currentDay
+ELSE IF journeyStatus == ended
+    → Requested historical/focused screen for Day 1–77, including Day 77
+
+ELSE IF journeyStatus == active AND requestedDay > currentDay
     → Journey
 
-ELSE IF requestedDay == currentDay AND target == day-detail
+ELSE IF journeyStatus == active AND requestedDay == currentDay AND target == day-detail
     → Today
 
 ELSE
-    → Requested historical/focused screen
+    → Requested unlocked historical/focused screen
 ```
+
+Never clamp an ended journey to an active `currentDay = 77` and apply the canonical-current-day redirect; Today is then a summary, and historical Day 77 must stay reachable/editable.
 
 ## 24.5 Daily completion
 
@@ -2179,14 +2204,14 @@ Intention never changes `dayStatus`.
 ## 24.6 Journey end
 
 ```text
-IF current calendar date is after Day 77 date
+IF current calendar date in the fixed journey timezone is after Day 77 date
     journeyStatus = ended
 
 IF Day 77 becomes complete while it is current
     SHOW journey-completion affordance
 ```
 
-No Day 78 route exists.
+No Day 78 exists. Once ended, Today is summary/review and Journey opens all historical Days 1–77 indefinitely. No restart/reset, individual journey deletion, or new-journey action in initial V1.
 
 ---
 
@@ -2209,9 +2234,9 @@ Use these rules when a screen decision is not otherwise specified.
 
 # 26. Future Community Architecture
 
-Community is intentionally not part of V1 navigation.
+Community is intentionally not part of V1 navigation. [Product requirements](PRODUCT_REQUIREMENTS.md#community--intentional-future-scope) owns its guardrails and unresolved Future mechanics. The following existing route sketches are Future proposals, not launch commitments or decisions on roles, group sizes, joining, moderation, profiles, invite expiry, or progress formulas. Shared group Scripture assignments must follow the [content plan consistency rule](FORMATION_CONTENT_SPEC.md#future-group-curriculum-consistency).
 
-When introduced, recommended top-level navigation becomes:
+When introduced, a possible top-level navigation is:
 
 - Today
 - Journey
@@ -2248,6 +2273,7 @@ Future invitation flow:
 Open invite
 → Restore session
 → Sign in/sign up if needed
+→ Verify email if unverified
 → Complete onboarding if needed
 → Validate invite
 → Join/confirm membership
@@ -2376,14 +2402,15 @@ Source inspection after the navigation foundation on 2026-09-07 confirms that st
 
 | Observed state                                                                                          | Classification                               | Consequence / next scoped work                                                                |
 | ------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Required V1 routes and Today/Journey tabs exist with navigation-only content                            | Existing — navigation scaffold               | Implement individual screens and their actual data/state contracts in place                   |
+| Existing auth/onboarding/app route scaffold and Today/Journey tabs                                      | Existing — navigation scaffold               | Implement individual screens and their actual data/state contracts in place                   |
 | Root launch replaces to Welcome; auth/onboarding route groups have no guards yet                        | Planned integration                          | Connect real session restoration and onboarding state centrally before adding private content |
-| All day routes reject invalid parameters, but no current/future/ended journey state exists              | Existing validation; planned domain access   | Add journey access checks in the shared day layout; resolve the ended-Day-77 rule first       |
+| All day routes reject invalid parameters, but no current/future/ended journey state exists              | Existing validation; planned domain access   | Add shared journey access checks using the settled active/ended rules                         |
 | Settings has pushed child routes and source-aware stack returns; no preference/account operations exist | Existing navigation; planned feature actions | Add persistence, unsaved-change behavior, and real account operations within these routes     |
 | URL scheme exists without protected destination preservation                                            | Planned product deep links                   | Preserve and validate destinations through real gates before publishing links                 |
-| Community, Verify Email, and Notifications are absent                                                   | Consistent with Future / Optional scope      | Keep their routes and entry points absent until explicitly enabled                            |
+| Community is absent                                                                                     | Consistent with Future scope                 | Keep all Community routes and entry points absent in V1                                       |
+| Verify Email and Notifications are absent                                                               | Planned — V1; implementation gap             | Add their required routes and feature behavior in scoped work                                 |
 
-Email-gate placement and ended-Day-77 access remain **Requires product decision / specification clarification** under section 29.1. Native back/gesture verification is recorded separately in section 30.
+Email-gate placement and ended-Day-77 access are settled under section 29.1; their implementation remains deferred. Native back/gesture verification is recorded separately in section 30.
 
 ### Mandatory review targets
 
@@ -2410,24 +2437,32 @@ These are **review targets, not discovered defects**.
 
 ---
 
-# 28. Open Product Decisions
+# 28. Settled V1 Decisions and Deferred Future Decisions
 
-These decisions are not all permanently settled. Recommended V1 behavior is provided where it can guide implementation without inventing policy. Inspect current source and the relevant recommendation; record an explicit decision when the owner makes one. Earlier integration choices constrain some options (verified cloud writes, native personal-data persistence, session-only Scripture caching); they do not resolve every navigation detail. Source inspection found none of the features below implemented.
+## 28.1 Settled V1 decisions
 
-| Question                                                                    | Current implementation                         | Recommended V1 behavior                                                                                                                                                        | Reasoning                                                                                              | What changes if decided differently                                                                                                                   |
-| --------------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Is email verification mandatory before onboarding?                          | Not implemented                                | A hard gate is conditional on security needs; verified cloud personal-data writes are already required. Resolve gate placement before onboarding/personal persistence          | Avoids both unnecessary friction and denied writes presented as successful onboarding                  | Specify verification before onboarding or before the first personal write; update all gates and the matrix without weakening authorization            |
-| Are notifications in V1?                                                    | Not implemented                                | Optional V1; not required for onboarding                                                                                                                                       | Keeps core journey independent of permissions                                                          | If omitted, remove Settings row entirely                                                                                                              |
-| Is written reflection required?                                             | Not implemented                                | No; require writing **or** explicit `I reflected without writing`                                                                                                              | Preserves Reflection without forcing journaling                                                        | If writing mandatory, remove private-reflection completion alternative                                                                                |
-| Can historical days be edited indefinitely?                                 | Not implemented                                | Yes, including after Day 77                                                                                                                                                    | Supports honest correction and personal record                                                         | If locked, define exact lock date and make it explicit                                                                                                |
-| Can future days be opened?                                                  | Not implemented                                | No; show metadata only in Journey                                                                                                                                              | Keeps daily focus and avoids premature completion                                                      | If previews allowed, define exactly what is visible/read-only                                                                                         |
-| Can optional practices change mid-journey?                                  | Not implemented                                | Yes, effective next calendar day                                                                                                                                               | Adapts to circumstances while preserving history                                                       | Immediate changes require current-day migration rules                                                                                                 |
-| Should complete-day streak be shown in V1?                                  | Not implemented                                | Optional; de-emphasized on Journey only                                                                                                                                        | Accountability without gamification dominance                                                          | If omitted, remove all streak logic/UI                                                                                                                |
-| What happens after Day 77?                                                  | Not implemented                                | Completion/review state; do not auto-start another journey                                                                                                                     | Avoids overwriting history                                                                             | Multi-journey support needs journey selection/history model                                                                                           |
-| Should users be able to start a future date?                                | Not implemented                                | No; `Start Day 1` starts today                                                                                                                                                 | Simpler onboarding/state                                                                               | Future scheduling adds date rules/reminders                                                                                                           |
-| What time zone controls day boundaries?                                     | Not implemented                                | Store a journey time zone at start                                                                                                                                             | Prevents UTC/DST ambiguity                                                                             | Device-current timezone requires travel/multi-device behavior definition                                                                              |
-| Which offline mutations and account transitions are supported at V1 launch? | Not implemented                                | Native offline personal-data persistence is selected; define draft/pending-write and sign-out/account-switch behavior before claiming support. Bible text remains session-only | Protects private drafts and avoids confusing an integration choice with a working offline flow         | An online-only release requires an explicit revision of the selected requirement; partial implementations must show unavailable/retry states honestly |
-| How is historical Day 77 reached after the journey ends?                    | Not implemented; guard examples are incomplete | Preserve the promised access to all historical days; specify the ended-state entry/guard before implementing it                                                                | Clamping `currentDay` to 77 plus redirecting that day to post-journey Today can prevent Day 77 editing | Reconcile sections 7.3, 10.12–10.13, 22–24 with the ended-journey state; do not silently reuse active-day guards                                      |
+The product owner settled these decisions on 2026-09-07. **No known V1 product decisions remain unresolved.** This records the decision locations and rationale, not working feature evidence; source inspection found the domain/integration behavior unimplemented. External account/legal/support facts remain [setup prerequisites](engineering/project-context.md#external-setup-and-release-prerequisites).
+
+| Decision                                                                                                          | Owning flow/rule                                                      | Rationale retained                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Verification is mandatory immediately after sign-up and before onboarding, including restored unverified sessions | Sections 7.1, 10.6, 18, 24.1; verified-write boundary in architecture | Resolves friction versus denied personal writes without weakening authorization.                    |
+| One explicitly enabled local daily reminder is V1; permission is outside onboarding                               | Section 10.20                                                         | Keeps participation independent of permission while allowing a participant-chosen reminder.         |
+| Reflection is required; writing is optional with explicit completion                                              | Section 10.15                                                         | Preserves Reflection without coercing journaling; autosave is not completion.                       |
+| Historical days remain editable indefinitely, including after Day 77                                              | Sections 10.13, 12.3                                                  | Supports honest correction and an enduring personal record.                                         |
+| Future days cannot be opened; only limited metadata may appear                                                    | Sections 7.3, 13.4                                                    | Keeps daily focus and prevents premature content/completion access.                                 |
+| Mid-journey optional-practice changes take effect next journey/calendar day                                       | Section 10.18                                                         | Adapts to circumstances without changing today's requirements or history.                           |
+| V1 includes a subdued complete-day streak on Journey only                                                         | Sections 10.12, 12.4                                                  | Provides accountability without score/rank or streak pressure on Today.                             |
+| After Day 77's date, Today is a summary; no Day 78 or automatic/new journey in initial V1                         | Sections 10.16, 13.7–13.8                                             | Preserves history and distinguishes reaching the period's end from completing every practice.       |
+| Start Day 1 starts today; no future scheduling                                                                    | Section 10.10                                                         | Keeps onboarding and initial journey state coherent.                                                |
+| Capture the current IANA timezone at creation and keep it fixed; no manual change                                 | Section 4.5                                                           | Avoids DST/UTC ambiguity and travel/device-dependent day progression.                               |
+| Loaded native personal records support offline edits; pending sign-out offers cancel or confirmed discard         | Sections 17.5, 10.22; architecture owns cache boundary                | Protects private drafts and subsequent-account isolation; selected SDKs alone do not prove support. |
+| Ended-journey Day 77 opens from Journey as editable history                                                       | Sections 7.3, 10.12–10.13, 22–24                                      | Prevents a clamped current-day redirect from hiding the final historical day behind Today summary.  |
+
+Intentional changes to settled policy require an explicit product decision and updates to the affected concern owners, screen specs, relationships, registry, and state rules. Missing implementation is not permission to reopen or bypass these rules.
+
+## 28.2 Deferred Future decisions
+
+[Product requirements](PRODUCT_REQUIREMENTS.md#community--intentional-future-scope) lists the intentionally unresolved Community mechanics, including roles, size/membership rules, synchronized starts/joining, moderation, profiles, invitations, and group-progress formulas. Future repeat-journey scope and [content-variant requirements](FORMATION_CONTENT_SPEC.md#future-repeat-journey-variants--not-v1) are recorded without choosing selection algorithms or exposing a V1 flow. These Future questions are not V1 gaps; section 26's navigation sketches do not resolve them.
 
 ---
 
@@ -2437,14 +2472,14 @@ These decisions are not all permanently settled. Recommended V1 behavior is prov
 
 The source-to-target differences in sections 3 and 27 now distinguish existing navigation scaffolding from planned integrations. The navigation foundation does not implement auth, onboarding persistence, journey state, or Community policy. No product policy was changed to make a placeholder appear functional.
 
-The following documentation dependencies remain unresolved and must be addressed in the affected implementation task:
+The two prior cross-concern contradictions are now reconciled by explicit product-owner decisions. Implementation/test dependencies remain:
 
-| Conflict                                                                          | Evidence and consequence                                                                                                                                                                                   | Classification                                                                             | Required resolution / verification                                                                                                                                                               |
-| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Non-gating email verification recommendation versus verified personal-data writes | Sections 10.4/10.6/10.10 contemplate profile/journey writes; architecture decisions requires verified accounts for those cloud writes. Unverified confirmation could be denied while UI appears successful | Requires product decision                                                                  | Choose gate placement without weakening authorization, update affected specs/gates/matrix, and test unverified onboarding/writes, verification refresh, resume, and coherent completion redirect |
-| Current-day canonical redirect versus historical Day 77 after journey end         | Section 4.5 clamps to 77; sections 7.3/24.4 redirect current-day detail to Today; sections 10.11/13.7 make ended Today a summary while all history remains editable                                        | Requires product decision / specification clarification; likely defect if copied literally | Define the ended-state Day 77 entry/guard in the contract before implementation; test reaching and editing Day 77 from an ended journey without a redirect loop or lost access                   |
+| Former conflict                                                                   | Settled resolution                                                                                                                                             | Required implementation verification                                                                                                                                                     |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Non-gating verification recommendation versus verified cloud personal-data writes | Verification precedes onboarding and any cloud personal-data writes, including resumed unverified sessions. Sign-up creates Auth identity only until verified. | Test unverified direct-route/writes denial, resend/refresh failures, verified authorization refresh, first-incomplete-step resume, and coherent successful persistence before redirects. |
+| Canonical current-day redirect versus historical Day 77 after journey end         | Current-day detail → Today applies only while active. Ended journeys open every historical Day 1–77 from Journey, including Day 77 and its focused routes.     | Test active Day 77 canonicalization, end-date transition, incomplete Day 77 summary copy, ended Day 77 editing/Back without redirects or lost access, and recomputed history statistics. |
 
-The diagrams and pseudocode are product guidance, not executable guards that resolve these open cases. Do not silently fill the gaps with a new policy.
+No known unresolved V1 product contradiction remains. Source scaffolding and diagrams do not establish native persistence, deployed authorization, or passing integrated flows.
 
 ## 29.2 Product tensions resolved by this contract
 
@@ -2452,29 +2487,29 @@ The diagrams and pseudocode are product guidance, not executable guards that res
 
 **Tension:** A 77-day product could be interpreted as either calendar-based or 77 completed days.
 
-**Recommended authority:** calendar-based progression.
+**Settled authority:** calendar-based progression.
 
 **Why:** it preserves a real 77-day period while allowing incomplete days to remain honest historical records. Completion-based progression can turn the journey into an indefinite checklist and creates pressure to catch up before moving forward.
 
 ### B. Reflection is required vs. private journaling should not be coerced
 
-**Recommended authority:** Reflection is a required practice, but written text is optional if the user explicitly confirms they reflected without writing.
+**Settled authority:** Reflection is a required practice, but written text is optional if the user explicitly confirms they reflected without writing.
 
 ### C. Scripture centrality vs. API outage/external Bible use
 
-**Recommended authority:** The assigned passage remains central, but API rendering is not the sole valid way to complete Scripture. Completion is manual and never inferred from reader activity.
+**Settled authority:** The assigned passage remains central, but API rendering is not the sole valid way to complete Scripture. Completion is manual and never inferred from reader activity.
 
 ### D. Adaptable optional practices vs. historical integrity
 
-**Recommended authority:** practice changes take effect the next calendar day; past/current day labels do not mutate.
+**Settled authority:** practice changes take effect the next calendar day; past/current day labels do not mutate.
 
 ### E. Progress accountability vs. anti-gamification principles
 
-**Recommended authority:** counts/streaks may exist as subdued accountability information, but no score/rank/competitive framing.
+**Settled authority:** V1 includes participation counts and a subdued Journey-only complete-day streak, with no score/rank/competitive framing.
 
 ### F. Future Community vs. V1 simplicity
 
-**Recommended authority:** no Community tab, placeholders, or disabled community destinations in V1.
+**Settled authority:** no Community tab, placeholders, or disabled community destinations in V1.
 
 ### G. Reconciliation of older engineering guidance
 
@@ -2490,8 +2525,8 @@ The diagrams and pseudocode are product guidance, not executable guards that res
 
 ## 30.1 Behavioral contract coverage and remaining dependencies
 
-- [x] Every recommended V1 user-facing destination is listed.
-- [x] Every recommended V1 route has at least one legitimate entry point.
+- [x] Every required V1 user-facing destination is listed.
+- [x] Every required V1 route has at least one legitimate entry point.
 - [x] Every major CTA has an explicit destination or in-place behavior.
 - [x] Authenticated/signed-out routing is defined.
 - [x] Onboarding resume routing is defined.
@@ -2507,19 +2542,20 @@ The diagrams and pseudocode are product guidance, not executable guards that res
 - [x] Reflection/intention privacy is represented in navigation behavior.
 - [x] API.Bible failure behavior is defined without falsely completing Scripture.
 - [x] Offline behavior is not overclaimed.
-- [ ] Email-verification placement is reconciled with verified cloud personal-data writes; see section 29.1.
-- [ ] Ended-journey Day 77 entry/guard is fully specified; see section 29.1.
+- [x] Email-verification placement is reconciled with verified cloud personal-data writes; see section 29.1 (specification only).
+- [x] Ended-journey Day 77 entry/guard is fully specified; see section 29.1 (specification only).
+- [x] V1 reminders and pending-write sign-out choices are specified; implementation remains planned.
 
 ## 30.2 Navigation foundation inspection — 2026-09-07
 
-- [x] Required V1 route files and groups are present; bootstrap replaces to Welcome.
+- [x] Route files/groups for the original scaffold scope are present; bootstrap replaces to Welcome. Verify Email and Notifications are additional required V1 routes and remain absent.
 - [x] Today and Journey are the only permanent tabs on native and web.
 - [x] Tab header stacks and Settings/focused stacks retain ordinary push/pop history.
 - [x] Auth links and onboarding navigation-only steps are wired without fake submissions.
 - [x] Shared day validation rejects malformed/noncanonical values and values outside 1–77, replacing with Journey before content renders.
 - [x] Shared static parameters generate all 77 public day/detail/Scripture/Reflection paths without user data; Expo also emits its group aliases and dynamic fallback files.
 - [x] Home/Explore navigation and unused tutorial hint/badge components are removed; splash and theme integration are retained.
-- [x] No Verify Email, Notifications, Community, invitation, Prayer, or generic Practice route is exposed.
+- [x] Source has no Verify Email or Notifications routes (required V1 work remains); Community/invitation and separate Prayer/generic Practice routes are also absent as intended.
 - [x] Auth/onboarding guards, session-aware splash gating, and protected deep-link preservation are deferred at the root group boundary.
 - [x] Current/future-day guards, historical status, Day 77 completion, and ended-journey access are deferred at the shared day layout until journey state exists.
 - [x] No authentication, save, completion, sign-out, deletion, support submission, or provider response is fabricated.
@@ -2530,7 +2566,7 @@ Open a required path directly in the local preview to inspect its placeholder, i
 
 ### Verification results
 
-Targeted navigation tests passed: day parsing plus real Expo Router JavaScript navigation using the web tab component and mocked native boundaries. Tests cover auth links, onboarding navigation, tab selection, Settings → Account → Delete Account and return to each source tab, focused day returns, invalid day redirects, completion review, and the bounded static parameter set. `npm run export:web` passed with 231 concrete ungrouped day pages (77 × 3), plus the other V1 routes and Router-generated files. These are not native gesture or deployed authorization tests. Final full-check and runtime results are recorded in [testing guidance](engineering/testing.md).
+Targeted navigation tests passed: day parsing plus real Expo Router JavaScript navigation using the web tab component and mocked native boundaries. Tests cover auth links, onboarding navigation, tab selection, Settings → Account → Delete Account and return to each source tab, focused day returns, invalid day redirects, completion review, and the bounded static parameter set. `npm run export:web` passed with 231 concrete ungrouped day pages (77 × 3), plus the then-existing V1 scaffold routes and Router-generated files; Verify Email/Notifications are absent from that evidence. These are not native gesture or deployed authorization tests. Final full-check and runtime results are recorded in [testing guidance](engineering/testing.md).
 
 ### Code verification completion rule
 
@@ -2541,7 +2577,7 @@ These checks establish source facts and absences, not native runtime behavior, w
 # 31. Rules for AI Coding Agents
 
 1. Read this document before creating/deleting screens, renaming routes, changing navigation/tabs or navigating CTAs, auth/onboarding, modals/sheets, day/progression/completion states, settings flows, deep links, or future Community navigation.
-2. Check the repository-status note and current source. Existing, Planned — V1, Future, and Optional / undecided are distinct; a listed route is not necessarily implemented.
+2. Check the repository-status note and current source. Existing, Planned — V1, V1.x / post-launch, Future, and external setup prerequisites are distinct; a listed route is not necessarily implemented.
 3. Do not create or remove a screen/route, or change its responsibility, without updating the affected specification in this document as part of the same change.
 4. Do not create duplicate routes for an existing experience.
 5. V1 permanent bottom navigation is Today + Journey unless an explicit product decision changes it.
@@ -2561,7 +2597,7 @@ These checks establish source facts and absences, not native runtime behavior, w
 19. Optional-practice changes during an active journey take effect the next calendar day unless this contract is explicitly revised.
 20. Do not infer Scripture completion from opening, scrolling, or time spent in the reader.
 21. Do not mark Scripture complete because API.Bible failed.
-22. Do not require written journal text to prove Reflection if `I reflected without writing` remains the product rule.
+22. Do not require written journal text to prove Reflection; `I reflected without writing` is a settled V1 completion action.
 23. Keep intention outside the five-practice complete-day calculation.
 24. Do not expose private reflections, intentions, journal entries, or private prayer content by default.
 25. Do not include private journal-like text in analytics, navigation URLs, crash breadcrumbs, logs, notifications, or support diagnostics.
@@ -2570,12 +2606,12 @@ These checks establish source facts and absences, not native runtime behavior, w
 28. Use standard mobile push/tab behavior unless a documented UX need justifies a modal or custom navigator.
 29. Preserve Android hardware-back behavior and iOS native back gestures unless unsaved destructive state requires a guard.
 30. Do not add repeated confirmation dialogs for normal practice completion or ordinary back navigation when autosave makes them unnecessary.
-31. A Settings feature that is not implemented should be omitted, not shown as a dead row.
+31. Do not ship dead Settings rows. Navigation-only development scaffolds may expose planned routes honestly; required V1 rows/features, including Notifications, must work before launch.
 32. Validate dynamic `dayNumber` parameters before rendering day content.
 33. Never encode private user content in route/query parameters.
 34. Preserve the rest of the daily experience when API.Bible fails.
 35. Do not claim full offline support unless the implemented persistence/sync architecture actually provides it.
-36. If code, product requirements, or documents conflict, identify the owning concern under section 1.1, record the conflict in **Architecture / Product Conflicts**, and resolve it explicitly. Inspect open decisions and current code; use a recommended V1 rule only where it resolves the task. Keep unresolved choices labeled and record explicit decisions without weakening security or privacy. Reviews report corrections without editing.
+36. If code, product requirements, or documents conflict, identify the owning concern under section 1.1, record the conflict in **Architecture / Product Conflicts**, and resolve it explicitly. Inspect settled V1 decisions, deferred Future questions, and current code. Follow the concern owners in section 1.1 and record intentional policy changes explicitly without weakening security or privacy. Reviews report corrections without editing.
 37. Update **Screen Relationship Matrix** and **Route Registry** whenever navigation materially changes.
 38. Update this document in the same change/PR whenever navigation behavior materially changes, including auth/onboarding, CTA destinations, back behavior, screen responsibilities, progression/completion, historical/future days, Day 77, settings, deep links, or enabling Community. Small visual changes do not require updates unless behavior changes. Do not copy the full specification into prompts or feature docs.
 
@@ -2624,4 +2660,4 @@ These are implementation references, not product requirements. Read the relevant
 
 ## End of Contract
 
-Keep the top-level source-status note accurate as implementation advances. An inspection that confirms a feature is absent does not verify its planned user flow; retain the distinction and the open decisions until evidence or an explicit product decision resolves them.
+Keep the top-level source-status note accurate as implementation advances. An inspection that confirms a feature is absent does not verify its planned user flow; retain that distinction, follow settled V1 decisions, and label Future questions and external setup prerequisites separately.

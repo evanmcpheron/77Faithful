@@ -9,7 +9,7 @@ Requirements and constraints: `<REQUIREMENTS>`
 ## Research
 
 - Compare the existing solution, adequate platform/standard-library capabilities, and only plausible alternatives. Revisit a selected decision only for a concrete requirement or compatibility problem.
-- For routing, auth/onboarding, journey state, deep links, or Community, read `docs/APP_NAVIGATION_AND_UX.md` and its open decisions first. Evaluate technical options within that flow contract; distinguish a recommended V1 approach from a settled product decision and identify any contract revision a recommendation would require.
+- For routing, auth/onboarding, journey state, deep links, or Community, read `docs/PRODUCT_REQUIREMENTS.md` and the applicable settled rules/Future questions in `docs/APP_NAVIGATION_AND_UX.md` first; include `docs/FORMATION_CONTENT_SPEC.md` for content/versioning. Evaluate technical options within that flow contract; distinguish technical implementation choices from settled V1 policy and identify any contract revision a recommendation would require.
 - Use current authoritative documentation for the APIs and platforms involved. Follow the versioned Expo requirement in `AGENTS.md`. Cite the supporting pages, relevant versions, and research date.
 - Evaluate behavior, native/web support, offline needs, maintenance, privacy/security, dependency burden, and operating cost where relevant to this decision.
 - Distinguish repository observations, documented facts, and inferences. If current sources or account terms are unavailable, mark the unresolved claims; do not treat remembered support, prices, or licensing as verified.

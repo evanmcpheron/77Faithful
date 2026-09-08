@@ -1,6 +1,6 @@
 # Frontend feature or screen
 
-Implement the specified screen, interaction, or bounded flow. Read `AGENTS.md`, `docs/APP_NAVIGATION_AND_UX.md`, `docs/engineering/design-system.md`, and relevant feature requirements. Inspect similar screens, actual shared primitives/tokens, affected routes, data contracts, and tests before designing or coding.
+Implement the specified screen, interaction, or bounded flow. Read `AGENTS.md`, `docs/PRODUCT_REQUIREMENTS.md`, `docs/APP_NAVIGATION_AND_UX.md`, `docs/engineering/design-system.md`, and relevant feature requirements. For formation copy, content versions, or fixtures, read `docs/FORMATION_CONTENT_SPEC.md`; coding does not confer production content approval. Inspect similar screens, actual shared primitives/tokens, affected routes, data contracts, and tests before designing or coding.
 
 Feature/screen and optional design reference: `<FEATURE>`
 
@@ -8,7 +8,7 @@ Content, behavior, and acceptance criteria: `<REQUIREMENTS>`
 
 ## Before implementation
 
-1. Identify the existing route and applicable screen specification in the navigation contract. Distinguish current starter code from Planned — V1, Future, and Optional / undecided behavior; inspect open decisions that affect the task.
+1. Identify the existing route and applicable screen specification in the navigation contract. Distinguish existing navigation scaffolding from Planned — V1, V1.x / post-launch, and Future behavior; apply settled V1 decisions and keep external prerequisites separate.
 2. Map legitimate entry points, every CTA destination, expected back/dismissal behavior, and auth/onboarding requirements. Verify current, previous, future, and ended-journey states where relevant.
 3. Decide whether this belongs on an existing screen, a pushed screen, a modal, a bottom sheet, or inline. Do not create a screen merely to organize code.
 4. Reuse existing route-group, stack/tab, and navigation-helper patterns under `AGENTS.md`. Identify any intentional material departure and update the contract in the same change; do not independently invent a competing flow.

@@ -118,7 +118,7 @@ authStatus = restoring | signedOut | confirmingSignUp | signedIn
 
 `restoring` is a first-class state. Do not render the signed-out UI until authentication has finished restoring the session. A signed-in session also requires verified email before onboarding/app access; use verified authentication state from the service, not an invented client flag.
 
-`confirmingSignUp` represents the authentication service's pending account-confirmation step, not a signed-in session. It permits Verify Email before Cognito issues session tokens. After confirmation, complete the required sign-in step before onboarding; if no session is available, use Sign In. After relaunch without confirmation context, normal Sign In must resume any required confirmation without creating another account. Never persist passwords or confirmation codes in app storage or routes.
+`confirmingSignUp` represents the authentication service's pending account-confirmation step, not a signed-in session. It permits Verify Email before Cognito issues session tokens. After confirmation, leave `confirmingSignUp` and complete the required sign-in step before onboarding; if no session is available, use Sign In. After relaunch without confirmation context, normal Sign In must resume any required confirmation without creating another account. Never persist passwords or confirmation codes in app storage or routes.
 
 ### 4.2 Onboarding state
 
@@ -504,7 +504,7 @@ flowchart TD
 | ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------ | ------------------ | ------ | ------------------------------ |
 | Bootstrap / Session Gate     | `/`                                     | Restore session and route without UI flash                             | App launch, external route fallback           | Auth / Onboarding / Today            | No                 | V1     | Existing — navigation scaffold |
 | Welcome                      | `/auth/welcome`                         | Entry for signed-out users                                             | Bootstrap, sign-out                           | Sign Up or Sign In                   | No                 | V1     | Existing — navigation scaffold |
-| Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, protected-route redirect             | Verify Email / Onboarding / Today    | No                 | V1     | Existing — navigation scaffold |
+| Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, Verify Email, protected redirect     | Verify Email / Onboarding / Today    | No                 | V1     | Existing — navigation scaffold |
 | Sign Up                      | `/auth/sign-up`                         | Create account                                                         | Welcome                                       | Verify Email                         | No                 | V1     | Existing — navigation scaffold |
 | Forgot Password              | `/auth/forgot-password`                 | Request and complete password reset                                    | Sign In                                       | Sign In                              | No                 | V1     | Existing — navigation scaffold |
 | Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Sign In / Onboarding / Today         | Pending/unverified | V1     | Planned — V1                   |
@@ -556,7 +556,7 @@ flowchart TD
 **States**
 
 - **Restoring:** keep native splash or neutral bootstrap surface; do not flash Welcome.
-- **Auth restore failure:** if Amplify Auth definitively reports no valid session, route to Welcome. If network failure leaves a cached session valid, follow Amplify Auth's actual session semantics rather than force-signing out.
+- **Auth restore failure:** if Amplify Auth definitively reports no valid session and no confirmation step is pending, route to Welcome. If network failure leaves a cached session valid, follow Amplify Auth's actual session semantics rather than force-signing out.
 - **Profile/onboarding fetch loading:** keep protected neutral shell/splash until enough state exists to route safely.
 - **Profile fetch error:** show a retryable bootstrap error only after auth is known; do not alternate between signed-in and signed-out trees.
 
@@ -591,7 +591,7 @@ flowchart TD
 | **Purpose**           | Authenticate an existing user.                                                                                   |
 | **Route**             | `/auth/sign-in`                                                                                                  |
 | **Context**           | Auth stack; pushed from Welcome.                                                                                 |
-| **Entry points**      | Welcome; protected deep-link redirect if supported.                                                              |
+| **Entry points**      | Welcome; Verify Email when sign-in is required; protected deep-link redirect if supported.                       |
 | **Primary action**    | `Sign In` → auth gate → Verify Email, Onboarding, or Today.                                                      |
 | **Secondary actions** | `Forgot password?` → Forgot Password; `Create account` → Sign Up.                                                |
 | **Back behavior**     | Back → Welcome unless entered as an auth gate from a deep link; destination preservation must not create a loop. |
@@ -2018,8 +2018,10 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | Sign In                      | Forgot password                          | Forgot Password                   | Push                       | Email/password auth exists                                                                |
 | Sign In                      | Create account                           | Sign Up                           | Replace/Push               | Avoid duplicate auth stacks                                                               |
 | Sign Up                      | Create account succeeds                  | Verify Email                      | Replace                    | Required immediately after sign-up                                                        |
+| Forgot Password              | Reset email sent                         | Code/new-password form            | Inline                     | Stay on this route; reset is not complete                                                 |
 | Forgot Password              | Password reset confirmed                 | Sign In                           | Back/CTA                   | User chooses return after successful code/new-password submission                         |
 | Verify Email                 | Verification confirmed                   | Sign In / Onboarding / Today      | Replace                    | Establish verified session, then normal state gate                                        |
+| Verify Email                 | Cancel confirmation / sign out           | Welcome                           | Replace                    | Clear pending confirmation or complete sign-out; no protected access                      |
 | Onboarding Overview          | Continue                                 | Practice Selection                | Push                       | Verified authenticated account                                                            |
 | Practice Selection           | Continue                                 | Bible Translation                 | Push                       | Exactly 2 selected                                                                        |
 | Bible Translation Onboarding | Continue                                 | Journey Confirmation              | Push                       | Valid translation selected                                                                |
@@ -2101,8 +2103,8 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | `/auth/welcome`                         | Welcome                    | `(auth)`        | None                                      | Signed-out only                  | V1        | Auth anchor                                                               | Existing — navigation scaffold |
 | `/auth/sign-in`                         | Sign In                    | `(auth)`        | Optional preserved destination internally | Signed-out only                  | V1        | Do not expose private data in redirect params                             | Existing — navigation scaffold |
 | `/auth/sign-up`                         | Sign Up                    | `(auth)`        | None                                      | Signed-out only                  | V1        | Email/password; success → Verify Email                                    | Existing — navigation scaffold |
-| `/auth/forgot-password`                 | Forgot Password            | `(auth)`        | None                                      | Signed-out only                  | V1        | Email/password reset is required V1                                       | Existing — navigation scaffold |
-| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Authenticated/unverified         | V1        | Required before onboarding/cloud personal writes                          | Planned — V1                   |
+| `/auth/forgot-password`                 | Forgot Password            | `(auth)`        | None                                      | Signed-out only                  | V1        | Email-code/new-password steps on this route                               | Existing — navigation scaffold |
+| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Confirming / unverified          | V1        | Required before onboarding/cloud personal writes                          | Planned — V1                   |
 | `/onboarding`                           | Onboarding Overview        | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Resume flow                                                               | Existing — navigation scaffold |
 | `/onboarding/practices`                 | Practice Selection         | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Exactly two optional practices                                            | Existing — navigation scaffold |
 | `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Available curated translation registry                                    | Existing — navigation scaffold |

@@ -3,6 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import '@/services/amplify';
 
 SplashScreen.preventAutoHideAsync();
 

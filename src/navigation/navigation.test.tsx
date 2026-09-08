@@ -8,6 +8,8 @@ jest.mock('@/components/animated-icon', () => ({
   AnimatedSplashOverlay: () => null,
 }));
 
+jest.mock('@/services/amplify', () => ({}));
+
 // Exercise the actual web tab implementation; native tab gestures need simulator/device checks.
 jest.mock('@/components/app-tabs', () => jest.requireActual('@/components/app-tabs.web'));
 

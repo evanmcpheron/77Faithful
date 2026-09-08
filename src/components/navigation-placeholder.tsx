@@ -1,19 +1,20 @@
 import { Link, type LinkProps } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet } from 'react-native';
 
+import { ScreenHeading } from './screen-heading';
+import { ScreenScrollView } from './screen-scroll-view';
+import { ScreenSection } from './screen-section';
 import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
 
-import { ControlSize, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { ControlSize, Spacing } from '@/constants/theme';
 
 type NavigationPlaceholderProps = {
   title: string;
   description: string;
   children?: ReactNode;
   headerless?: boolean;
+  bottomInsetHandled?: boolean;
 };
 
 export function NavigationPlaceholder({
@@ -21,35 +22,16 @@ export function NavigationPlaceholder({
   description,
   children,
   headerless = false,
+  bottomInsetHandled = false,
 }: NavigationPlaceholderProps) {
-  const theme = useTheme();
-  const insets = useSafeAreaInsets();
-
   return (
-    <ScrollView
-      style={[styles.screen, { backgroundColor: theme.background }]}
-      contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={[
-        styles.content,
-        {
-          paddingLeft: insets.left + Spacing.four,
-          paddingRight: insets.right + Spacing.four,
-          paddingTop: Spacing.four + (headerless && Platform.OS !== 'ios' ? insets.top : 0),
-          // iOS adjusts scroll content for navigation; native Android tabs consume their bottom inset.
-          paddingBottom: Spacing.four + (Platform.OS === 'ios' ? 0 : insets.bottom),
-        },
-      ]}>
-      <ThemedView style={styles.container}>
-        <ThemedText type="heading" accessibilityRole="header">
-          {title}
-        </ThemedText>
-        <ThemedText type="caption" themeColor="textSecondary">
-          Navigation scaffold
-        </ThemedText>
+    <ScreenScrollView headerless={headerless} bottomInsetHandled={bottomInsetHandled}>
+      <ScreenSection>
+        <ScreenHeading title={title} description="Navigation scaffold" />
         <ThemedText>{description}</ThemedText>
         {children}
-      </ThemedView>
-    </ScrollView>
+      </ScreenSection>
+    </ScreenScrollView>
   );
 }
 
@@ -72,14 +54,6 @@ export function PlaceholderLink({ children, ...props }: PlaceholderLinkProps) {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
-  content: { flexGrow: 1 },
-  container: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    alignSelf: 'center',
-    gap: Spacing.three,
-  },
   link: {
     minHeight: ControlSize.minTouchTarget,
     minWidth: ControlSize.minTouchTarget,

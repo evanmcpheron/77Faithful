@@ -64,7 +64,7 @@ Existing scaffold links/tabs retain their 0.95 pressed opacity; the Settings ico
 | `action`         | 16   | 24          | 600    | Button text                                                    |
 | `link`           | 16   | 24          | 500    | Underlined action/link text                                    |
 
-There is no oversized display role without an actual layout need. Starter `default`, `title`, `subtitle`, `small`, `smallBold`, `linkPrimary`, and unused `code` variants are removed. Callers migrate to semantic roles: the placeholder heading uses `heading`, its notice uses `caption`, and navigation links use `link`. New code should not introduce compatibility aliases or one-off size hierarchies.
+There is no oversized display role without an actual layout need. Starter `default`, `title`, `subtitle`, `small`, `smallBold`, `linkPrimary`, and unused `code` variants are removed. Callers migrate to semantic roles: the placeholder heading uses `heading`, its supporting notice uses `supporting`, and navigation links use `link`. New code should not introduce compatibility aliases or one-off size hierarchies.
 
 All roles explicitly use system sans-serif: `system-ui` on iOS, `sans-serif` on Android, and the system-only `--font-sans` stack in [src/global.css](../../src/global.css) on web. Unused serif/rounded/monospace definitions and Spline Sans/Inter fallbacks are removed. No fonts are downloaded, bundled, or installed.
 
@@ -104,13 +104,46 @@ The scaffold links, Settings action, web tabs, and collapsible consume the share
 
 Use colocated `StyleSheet.create` and style arrays for palette values, interaction states, and caller overrides. No styling framework or new theme provider is needed. The existing `NavigationPlaceholder` and `PlaceholderLink` remain temporary navigation scaffolds, not production screen or form components.
 
-The [navigation and UX contract](../APP_NAVIGATION_AND_UX.md) owns screen placement, entry points, CTA destinations, back behavior, gates, and day states. Visual primitives do not justify new screens. Existing scroll containers, safe-area padding, native stack headers/back behavior, and Today/Journey tabs remain in place. With Router 57.0.19, keep styles on a direct `Link asChild` Pressable static; pressed feedback belongs in its children render function because slot merging drops style callbacks.
+The [navigation and UX contract](../APP_NAVIGATION_AND_UX.md) owns screen placement, entry points, CTA destinations, back behavior, gates, and day states. Visual primitives do not justify new screens. Native stack headers/back behavior and Today/Journey tabs remain in place. With Router 57.0.19, keep styles on a direct `Link asChild` Pressable static; pressed feedback belongs in its children render function because slot merging drops style callbacks.
+
+### Shared screen layout inventory
+
+| Primitive                                                       | Responsibility                                                                                                                                                                                                           |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [ScreenScrollView](../../src/components/screen-scroll-view.tsx) | One vertical scroll view with a themed canvas, 24-point horizontal/vertical padding plus applicable measured insets, and centered content capped at `MaxContentWidth` (800). Direct children are separated by 32 points. |
+| [ScreenSection](../../src/components/screen-section.tsx)        | Groups related content with 16-point gaps. Optional `title` and its `description` use the shared section heading treatment. It has no scrolling, card background, fixed height, or grouped accessibility focus.          |
+| [ScreenHeading](../../src/components/screen-heading.tsx)        | Accessible heading with optional secondary supporting copy, separated by 8 points. `level="screen"` (default) uses `heading`; `level="section"` uses `section`. These are content headings, not navigation headers.      |
+
+Compose sections directly inside `ScreenScrollView`. Padding sits outside the capped content width, preserving up to 800 points of usable content on wide displays. Heading/supporting text wraps naturally and inherits unrestricted system font scaling. No non-scroll screen wrapper is introduced: there is no current consumer requiring one.
+
+`NavigationPlaceholder` now composes these primitives; its links and descriptions remain navigation scaffolding. Route migration is limited to marking Today/Journey's bottom inset as already handled. No forms, production formation content, or working saves are introduced.
+
+### Safe-area ownership
+
+Use `ScreenScrollView` as the screen's scroll root under the existing Router safe-area provider. It neither imports Router nor creates headers/tabs/providers. All screens add measured left/right insets to the standard margins; no fixed tab-height token is used.
+
+- **iOS:** the root scroll view uses automatic content inset adjustment for the actual safe area and navigation overlap. Do not add top/bottom safe-area padding again. The layout flags below affect manual padding on Android/web; iOS continues to measure its own overlap.
+- **Android/web pushed screens:** default `headerless={false}` assumes the ordinary nontransparent stack header already occupies the top area. Add the measured bottom safe-area inset to content padding.
+- **Headerless screens:** set `headerless` (as Welcome already does) to add the measured top inset on Android/web.
+- **Today/Journey roots:** set `bottomInsetHandled` because Android native tabs consume bottom space and the web tab list occupies layout space with its own bottom padding. This omits the additional bottom inset while retaining the standard 24-point content padding. Pushed daily/Settings screens use the default because they sit outside tabs.
+
+These rules follow [Expo SDK 57 safe-area context](https://docs.expo.dev/versions/v57.0.0/sdk/safe-area-context/) and [native-tab inset ownership](https://docs.expo.dev/versions/v57.0.0/sdk/router/native-tabs/#disableautomaticcontentinsets). Custom/transparent headers or overlay footers would need their actual overlap accounted for in the owning layout; they are not current consumers.
+
+### Forms, editors, and long content
+
+Keep reading text, prompts, fields, and actions in the same `ScreenScrollView`; never wrap it in another scroll view. Sections and headings add only ordinary views. A multiline editor that belongs to the page should grow with its content and use `scrollEnabled={false}` so page scrolling stays coherent. Avoid fixed-height text containers.
+
+The shared scroll view enables [React Native 0.86 keyboard inset adjustment](https://reactnative.dev/docs/0.86/scrollview#automaticallyadjustkeyboardinsets) on iOS. Android uses the existing [Expo default `resize` keyboard layout](https://docs.expo.dev/versions/v57.0.0/config/app/#softwarekeyboardlayoutmode) and native focused-child scrolling. Do not add a second keyboard adjustment mechanism by default. Taps on handled controls remain available with the keyboard open; drag dismissal defaults to interactive on iOS and on-drag elsewhere. Consumers may override the two keyboard interaction props.
+
+The native scroll `ref` and scroll/content-size callbacks are available for editor-specific focus handling on the same container. Fields, draft state, focus policy, validation, and save actions belong to the consumer. Actual focused-field visibility, multiline caret movement, reachable actions, and draft retention across keyboard dismissal must be verified on iOS/Android when forms are implemented; mocked layout tests do not establish keyboard safety on devices.
 
 Use simple recognizable platform icons with accessible names for icon-only actions; decorative icons stay hidden from assistive technology. Pair state color with text/icons and native accessibility state. Avoid animation-dependent meaning and honor reduced motion when introducing product transitions. Existing splash/logo keyframes and collapsible fade remain starter infrastructure, outside this foundation change.
 
 ## Verification and remaining work
 
 [Theme tests](../../src/constants/theme.test.ts) calculate contrast for the documented foreground/background pairs in both schemes. [Text tests](../../src/components/themed-text.test.tsx) check typography, palette selection, style/prop forwarding, and unrestricted scaling defaults; existing view, appearance, collapsible, and navigation tests cover their corresponding contracts. See [testing guidance](testing.md) for required checks and evidence limits.
+
+[Layout tests](../../src/components/screen-layout.test.tsx) cover measured inset changes, headerless/stack/tab padding across platform branches, centered width and section/heading rhythm, a single scroll container with synthetic editor/action content, heading semantics, and retaining input through appearance/inset updates. Existing navigation tests exercise the migrated scaffold's links and back behavior.
 
 Automated contrast calculations and static export do not prove native rendering. On iOS and Android, verify light/dark transitions, system font weights, largest accessibility text sizes, multiline controls, clipping/line spacing, keyboard focus indicators when controls are built, touch targets, safe areas, and screen-reader semantics. Native visual acceptance remains required before release.
 

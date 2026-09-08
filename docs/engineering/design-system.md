@@ -262,6 +262,21 @@ Errors use readable text as well as color. The internal FeedbackText exposes an 
 
 **Integration limit:** the repository has no durable personal-record persistence/sync queue. These components add presentation only; they do not establish offline editing, draft retention across relaunch, or backend-confirmed saves. Feature callers must implement and verify the [account-scoped persistence boundary](architecture-decisions.md#offline-persistence-and-account-boundaries) before supplying those outcomes. Existing scaffold routes remain unchanged.
 
+## Progress and day status
+
+[Shared progress components](../../src/components/progress.tsx) provide text-first inline presentation for the [Journey Overview](../APP_NAVIGATION_AND_UX.md#1012-journey-overview) and related daily context. Use them within existing screen layouts:
+
+- `DayProgress({ dayNumber })` shows calendar position as `Day N of 77`.
+- `PracticeProgress({ recordedCount })` shows `N of 5 recorded`; `RecordedPracticeCount` permits only 0–5.
+- `JourneyProgress({ period, fullyRecordedDays, partiallyRecordedDays, completeDayStreak })` stacks calendar context and participation counts, with the streak last in secondary supporting text. `period` is either `{ state: 'active', dayNumber }` or `{ state: 'ended' }`. Use this summary only on Journey; daily screens use the separate day/practice components.
+- `DayStatus({ dayNumber, state, recordedCount })` presents historical or today participation. Today remains explicit alongside its participation label. The `upcoming` state accepts no practice count and exposes visible Upcoming text, a day-specific accessible name, and disabled accessibility state. This is passive status text; row navigation and its accessible name belong to the consuming screen/control. Upcoming rows must remain non-navigable.
+
+These components accept known, validated presentation values. Callers own calendar/day validation, derived counts and streak recalculation, loading/error states, and access rules. Missing data must not become zero participation. The ended-period label makes no claim that every practice was completed. No routes or fixture records are added to the product scaffold.
+
+All labels use existing typography and readable theme colors without pills, scores, animations, or warning/error styling for participation. Text wraps naturally with no line limit, font-scaling cap, shrink-to-fit, or fixed container height. Summary entries stack vertically to preserve room at large text sizes. Screen owners retain scrolling and insets. Accessibility labels follow the [React Native 0.86 accessibility contract](https://reactnative.dev/docs/0.86/accessibility#accessibilitylabel); passive statuses do not impersonate completion checkboxes or announce routine summary changes.
+
+[Progress tests](../../src/components/progress.test.tsx) cover day boundaries, all recorded-practice counts, current/historical/upcoming labels and accessibility state, corrected supplied counts, ended-period context, both themes, and unrestricted text-scaling props. Native large-text rendering and VoiceOver/TalkBack delivery still require device verification.
+
 ## Verification and remaining work
 
 [Theme tests](../../src/constants/theme.test.ts) calculate contrast for the documented foreground/background pairs in both schemes. [Text tests](../../src/components/themed-text.test.tsx) check typography, palette selection, style/prop forwarding, and unrestricted scaling defaults; existing view, appearance, collapsible, and navigation tests cover their corresponding contracts. See [testing guidance](testing.md) for required checks and evidence limits.

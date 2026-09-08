@@ -26,6 +26,7 @@ it('launches at Welcome and keeps auth navigation in the auth stack', async () =
   expect(getStarted).toHaveStyle({ minWidth: 48, minHeight: 48 });
   await user.press(getStarted);
   expect(navigation.getPathname()).toBe('/auth/sign-up');
+  expect(screen.queryByRole('button', { name: 'Create Account' })).not.toBeOnTheScreen();
   await act(() => router.back());
   expect(navigation.getPathname()).toBe('/auth/welcome');
 
@@ -44,6 +45,17 @@ it('launches at Welcome and keeps auth navigation in the auth stack', async () =
   expect(navigation.getPathname()).toBe('/auth/sign-in');
   await act(() => router.back());
   expect(navigation.getPathname()).toBe('/auth/welcome');
+});
+
+it('exposes the Verify Email scaffold with only a deterministic cancellation path', async () => {
+  const navigation = renderRouter('./src/app', { initialUrl: '/auth/verify-email' });
+  await navigation;
+  const user = userEvent.setup();
+
+  expect(screen.getByRole('header', { name: 'Verify Email' })).toBeOnTheScreen();
+  await user.press(screen.getByRole('link', { name: 'Cancel and return to Welcome' }));
+  expect(navigation.getPathname()).toBe('/auth/welcome');
+  expect(router.canGoBack()).toBe(false);
 });
 
 it('previews onboarding in order and returns to earlier steps without duplicate history', async () => {
@@ -94,7 +106,6 @@ it.each(['/today', '/journey'])(
     expect(settingsAction).toHaveStyle({ minWidth: 48, minHeight: 48 });
     await user.press(settingsAction);
     expect(navigation.getPathname()).toBe('/settings');
-    expect(screen.queryByRole('link', { name: 'Notifications' })).not.toBeOnTheScreen();
     await user.press(screen.getByRole('link', { name: 'Account' }));
     await user.press(screen.getByRole('link', { name: 'Delete Account' }));
     expect(navigation.getPathname()).toBe('/settings/account/delete');
@@ -113,6 +124,7 @@ it.each(['/today', '/journey'])(
 it.each([
   { name: 'Optional Practices', path: '/settings/practices' },
   { name: 'Bible Translation', path: '/settings/bible-translation' },
+  { name: 'Notifications', path: '/settings/notifications' },
   { name: 'Privacy & Data', path: '/settings/privacy' },
   { name: 'About', path: '/settings/about' },
   { name: 'Help / Feedback', path: '/settings/help-feedback' },

@@ -131,7 +131,7 @@ Do not collect as product data: date of birth, gender, denomination, church, str
 
 V1 must expose Privacy Policy, Terms of Service, and a Help/Feedback contact path. Help/Feedback uses the configured support contact destination; do not build a support-ticket system. There is no marketing/newsletter/devotional-email program in V1; authentication/service emails only.
 
-The support email, website/domain, Privacy Policy URL, Terms URL, and legal entity/business name are external launch facts. Their current **TBD / product owner must supply** status is maintained with the other [external setup prerequisites](engineering/project-context.md#external-setup-and-release-prerequisites). Do not fabricate destinations or legal identities.
+The support email, website/domain, Privacy Policy URL, Terms URL, and legal entity/business name are external launch facts. Their current supplied/TBD status is maintained with the other [external setup prerequisites](engineering/project-context.md#external-setup-and-release-prerequisites). Do not fabricate destinations or legal identities.
 
 ## Community — intentional Future scope
 

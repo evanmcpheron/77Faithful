@@ -1,16 +1,30 @@
-import { NavigationPlaceholder, PlaceholderLink } from '@/components/navigation-placeholder';
+import { Link } from 'expo-router';
+
+import { EmptyState } from '@/components/empty-state';
+import { ScreenHeading } from '@/components/screen-heading';
+import { ScreenScrollView } from '@/components/screen-scroll-view';
+import { ScreenSection } from '@/components/screen-section';
+import { TextLink } from '@/components/text-link';
 
 export default function OnboardingConfirmScreen() {
   return (
-    <NavigationPlaceholder
-      title="Review your choices"
-      description="Journey confirmation will be implemented here. Start Day 1 will open Today only after the journey is successfully saved. Starting a journey is not available yet.">
-      <PlaceholderLink href="/onboarding/practices" dismissTo>
-        Review Practices
-      </PlaceholderLink>
-      <PlaceholderLink href="/onboarding/bible-translation" dismissTo>
-        Review Bible Translation
-      </PlaceholderLink>
-    </NavigationPlaceholder>
+    <ScreenScrollView>
+      <ScreenHeading
+        title="Review your choices"
+        description="Review your two optional practices and Bible translation before starting."
+      />
+      <EmptyState
+        title="Starting a journey is not available yet"
+        description="Saved choices and a journey are not available in this preview. Start Day 1 will become available when your choices can be saved and the journey can be created."
+      />
+      <ScreenSection>
+        <Link href="/onboarding/practices" dismissTo asChild>
+          <TextLink>Review Practices</TextLink>
+        </Link>
+        <Link href="/onboarding/bible-translation" dismissTo asChild>
+          <TextLink>Review Bible Translation</TextLink>
+        </Link>
+      </ScreenSection>
+    </ScreenScrollView>
   );
 }

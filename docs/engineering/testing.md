@@ -17,25 +17,25 @@ ESLint 9 is currently required by the peer range of `eslint-plugin-react` used b
 
 ## Commands
 
-| Command                                                          | Purpose                                                                                                        |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `npm run check`                                                  | Formatting, lint, app/backend TypeScript, synthesized Auth checks, tests, and Scripture audit                  |
-| `npm run typegen`                                                | `expo customize tsconfig.json`; regenerates ignored Expo environment/route declarations without starting Metro |
-| `npm run typecheck`                                              | Type generation followed by `tsc --noEmit`                                                                     |
-| `npm run backend:typecheck`                                      | Type-check the Gen 2 backend definition independently                                                          |
-| `npm run backend:verify`                                         | Synthesize locally and assert Cognito Lite/email/password/no-guest scope and absence of Data/Lambda/S3         |
-| `npm run sandbox`                                                | Start/watch the isolated `auth-foundation` AWS sandbox and write ignored v1.5 outputs                          |
-| `npm run sandbox:once`                                           | Deploy the isolated sandbox once, generate outputs, and exit; requires configured credentials                  |
-| `npm run sandbox:delete`                                         | Delete the isolated `auth-foundation` sandbox resources                                                        |
-| `npm run lint` / `npm run lint:fix`                              | Check the repository / apply available lint fixes                                                              |
-| `npm run format:check` / `npm run format`                        | Check formatting / format supported repository files                                                           |
-| `npm test` / `npm run test:watch`                                | Run tests once / watch tests                                                                                   |
-| `npm run test:ci`                                                | Run Jest once, serially, in CI mode                                                                            |
-| `npm test -- --runInBand src/components/ui/collapsible.test.tsx` | Target one suite                                                                                               |
-| `npm run test:coverage`                                          | Report coverage and write ignored output to `coverage/`                                                        |
-| `npm run export:web`                                             | Build the static web preview in ignored `dist/`                                                                |
-| `npm run ios` / `npm run android`                                | Generate the ignored native project when needed, compile, install, and launch a local development build        |
-| `git diff --check`                                               | Check diff whitespace only                                                                                     |
+| Command                                                           | Purpose                                                                                                        |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `npm run check`                                                   | Formatting, lint, app/backend TypeScript, synthesized Auth checks, tests, and Scripture audit                  |
+| `npm run typegen`                                                 | `expo customize tsconfig.json`; regenerates ignored Expo environment/route declarations without starting Metro |
+| `npm run typecheck`                                               | Type generation followed by `tsc --noEmit`                                                                     |
+| `npm run backend:typecheck`                                       | Type-check the Gen 2 backend definition independently                                                          |
+| `npm run backend:verify`                                          | Synthesize locally and assert Cognito Lite/email/password/no-guest scope and absence of Data/Lambda/S3         |
+| `npm run sandbox`                                                 | Start/watch the isolated `auth-foundation` AWS sandbox and write ignored v1.5 outputs                          |
+| `npm run sandbox:once`                                            | Deploy the isolated sandbox once, generate outputs, and exit; requires configured credentials                  |
+| `npm run sandbox:delete`                                          | Delete the isolated `auth-foundation` sandbox resources                                                        |
+| `npm run lint` / `npm run lint:fix`                               | Check the repository / apply available lint fixes                                                              |
+| `npm run format:check` / `npm run format`                         | Check formatting / format supported repository files                                                           |
+| `npm test` / `npm run test:watch`                                 | Run tests once / watch tests                                                                                   |
+| `npm run test:ci`                                                 | Run Jest once, serially, in CI mode                                                                            |
+| `npm test -- --runInBand src/components/action-controls.test.tsx` | Target one suite                                                                                               |
+| `npm run test:coverage`                                           | Report coverage and write ignored output to `coverage/`                                                        |
+| `npm run export:web`                                              | Build the static web preview in ignored `dist/`                                                                |
+| `npm run ios` / `npm run android`                                 | Generate the ignored native project when needed, compile, install, and launch a local development build        |
+| `git diff --check`                                                | Check diff whitespace only                                                                                     |
 
 The committed TypeScript configuration explicitly loads `expo/types`, so CSS imports type-check even before Expo's first run. The normal `typecheck` command also generates route-specific declarations, avoiding a misleading pass without route validation. Keep `.expo/` and `expo-env.d.ts` ignored and do not hand-edit them. [Expo typed routes](https://docs.expo.dev/router/reference/typed-routes/).
 
@@ -53,14 +53,14 @@ Root Jest currently discovers only `src/**/*.test.[jt]s?(x)`. `npm run check` se
 
 ## Regression coverage
 
-| Location                                 | Behavior covered                                                                                                                                                                                                         |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `src/components/themed-view.test.tsx`    | Light/dark overrides, unspecified-scheme fallback, palette fallback, and caller style precedence                                                                                                                         |
-| `src/components/themed-text.test.tsx`    | Theme-aware primary link colors and explicit palette overrides                                                                                                                                                           |
-| `src/components/ui/collapsible.test.tsx` | Accessible name/role, expanded/collapsed state, and content toggling through user presses                                                                                                                                |
-| `src/navigation/day-number.test.ts`      | Every valid day plus malformed, noncanonical, array, and out-of-range parameters                                                                                                                                         |
-| `src/navigation/navigation.test.tsx`     | Auth/onboarding push/back, two destinations and web current-page state, shared 48-point controls, Settings child/source returns, day boundaries/query collisions/invalid redirects, completion review, static parameters |
-| `src/hooks/use-color-scheme.test.tsx`    | Web appearance subscription, updates, and cleanup                                                                                                                                                                        |
+| Location                                  | Behavior covered                                                                                                                                                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/components/themed-view.test.tsx`     | Light/dark overrides, unspecified-scheme fallback, palette fallback, and caller style precedence                                                                                                                         |
+| `src/components/themed-text.test.tsx`     | Theme-aware primary link colors and explicit palette overrides                                                                                                                                                           |
+| `src/components/action-controls.test.tsx` | Shared action accessibility, disabled/pending interaction, and Router composition                                                                                                                                        |
+| `src/navigation/day-number.test.ts`       | Every valid day plus malformed, noncanonical, array, and out-of-range parameters                                                                                                                                         |
+| `src/navigation/navigation.test.tsx`      | Auth/onboarding push/back, two destinations and web current-page state, shared 48-point controls, Settings child/source returns, day boundaries/query collisions/invalid redirects, completion review, static parameters |
+| `src/hooks/use-color-scheme.test.tsx`     | Web appearance subscription, updates, and cleanup                                                                                                                                                                        |
 
 Historical validation during engineering setup on 2026-09-07: a clean `npm ci`, `npm run check` (including all ten tests without snapshots), and `npm run export:web` passed. The source no longer has the original missing-CSS type errors or ignored themed-view overrides. Browser startup failed in that automation connection, and no native-device checks or remote CI run were observed. These results describe that checkout and environment; they are not evidence for later changes or a reason to skip newly available runtime checks.
 

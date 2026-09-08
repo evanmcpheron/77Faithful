@@ -29,16 +29,16 @@ npm run check
 
 This runs formatting, ESLint, route generation and TypeScript, the regression tests, and Scripture dataset validation/audit. It works without starting Metro or supplying service credentials.
 
-| Command                                                          | Purpose                                                  |
-| ---------------------------------------------------------------- | -------------------------------------------------------- |
-| `npm run typecheck`                                              | Generate Expo route types, then run strict TypeScript    |
-| `npm run lint` / `npm run lint:fix`                              | Check code / apply available lint fixes                  |
-| `npm run format:check` / `npm run format`                        | Check formatting / format repository files               |
-| `npm test`                                                       | Run tests once                                           |
-| `npm run test:watch`                                             | Watch relevant tests during development                  |
-| `npm test -- --runInBand src/components/ui/collapsible.test.tsx` | Run one regression suite                                 |
-| `npm run test:coverage`                                          | Run tests and report coverage, including untested source |
-| `npm run export:web`                                             | Build the static web preview into `dist/`                |
+| Command                                                           | Purpose                                                  |
+| ----------------------------------------------------------------- | -------------------------------------------------------- |
+| `npm run typecheck`                                               | Generate Expo route types, then run strict TypeScript    |
+| `npm run lint` / `npm run lint:fix`                               | Check code / apply available lint fixes                  |
+| `npm run format:check` / `npm run format`                         | Check formatting / format repository files               |
+| `npm test`                                                        | Run tests once                                           |
+| `npm run test:watch`                                              | Watch relevant tests during development                  |
+| `npm test -- --runInBand src/components/action-controls.test.tsx` | Run one regression suite                                 |
+| `npm run test:coverage`                                           | Run tests and report coverage, including untested source |
+| `npm run export:web`                                              | Build the static web preview into `dist/`                |
 
 GitHub Actions runs `npm ci`, `npm run check`, and the web export for pull requests and pushes to `main`. Component tests are colocated as `*.test.tsx` outside the route directory. See [testing notes](docs/engineering/testing.md) for mocks and verification limits.
 

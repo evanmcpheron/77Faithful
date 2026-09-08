@@ -12,7 +12,7 @@ Prefer subtle borders and surface changes to shadows. Avoid glassmorphism, decor
 
 [BrandWordmark](../../src/components/brand-wordmark.tsx) is a small, text-only `77Faithful` signature shared by Welcome, the onboarding introduction, and Journey Completion. These introduction/end screens justify a consistent identity cue; subsequent onboarding steps and routine Today, Journey, Scripture, Reflection, and Settings screens do not need it. Current empty states continue to use [EmptyState](../../src/components/empty-state.tsx) without a logo: their explanation is sufficient, and a new journey still shows its actual day rows under the [empty-state contract](../APP_NAVIGATION_AND_UX.md#176-empty-states).
 
-The wordmark uses ThemedText's system `label` role and existing `link` blue for readable contrast in both themes. It is plain text, with no underline, link role, press action, fixed dimensions, line limit, or scaling cap. ScreenSection supplies spacing; the larger ScreenHeading remains primary. The scaffold's optional `leadingContent` slot places it above the heading without making branding a default. Existing actions, scrolling, and navigation remain with their current owners; these routes still present navigation scaffolds.
+The wordmark uses ThemedText's system `label` role and existing `link` blue for readable contrast in both themes. It is plain text, with no underline, link role, press action, fixed dimensions, line limit, or scaling cap. ScreenSection supplies spacing; the larger ScreenHeading remains primary. Each introduction/end route composes the wordmark above its heading in ScreenSection. Existing actions, scrolling, and navigation remain with their current owners; these routes still present navigation scaffolds.
 
 ### Separate artwork requirement
 
@@ -28,7 +28,7 @@ Before adding a graphical in-app BrandMark, obtain a separately approved export 
 | -------------------- | --------- | --------- | --------------------------------------------------------------------------------------------- |
 | `background`         | `#F7F8FA` | `#121820` | Screen and reading canvas                                                                     |
 | `surface`            | `#FFFFFF` | `#1A232E` | Cards, editors, and input interiors                                                           |
-| `backgroundElement`  | `#EEF1F5` | `#222E3C` | Subtle grouped content and secondary controls; existing tabs/collapsible                      |
+| `backgroundElement`  | `#EEF1F5` | `#222E3C` | Subtle grouped content and secondary controls; existing tabs                                  |
 | `backgroundSelected` | `#DFEAF7` | `#243C58` | Selected practices/translation and neutral pressed surfaces; existing web tab selection       |
 | `text`               | `#182330` | `#F0F3F7` | Reading text, headings, labels                                                                |
 | `textSecondary`      | `#526071` | `#B5C0CF` | Supporting explanations and metadata; never lower opacity to mute further                     |
@@ -59,24 +59,24 @@ Use semantic keys, not raw hex values in components. The existing background key
 - Disabled appearance requires actual disabled interaction and accessibility state. Explain a material reason nearby; do not gray out required reading content. Error, pending, saved, and recorded completion require honest text/icon/state semantics. Never use warning/error colors for missed participation.
 - Color tokens do not implement focus management, validation announcements, save confirmation, or completion behavior. Those belong to the consuming component and its product contract.
 
-Scaffold links and the Settings icon use shared actions. Web tabs use surface feedback on press and preserve their current-page semantics; native tabs retain platform rendering and their SF/Material icon names. The specialized collapsible retains its starter opacity/fade behavior. The root Router `ThemeProvider` still uses its built-in navigation palettes. Routes and navigation behavior are unchanged.
+Scaffold links and the Settings icon use shared actions. Web tabs use surface feedback on press and preserve their current-page semantics; native tabs retain platform rendering and their SF/Material icon names. The root Router `ThemeProvider` maps its navigation colors to the shared palette, retaining standard platform headers and Back behavior. Routes and navigation behavior are unchanged.
 
 ## Typography
 
 `Typography` exports ordinary React Native text styles; `TypographyRole` defines [ThemedText](../../src/components/themed-text.tsx)'s `type` values. Non-Text primitives such as future inputs can reuse `Fonts.sans` and `Typography.body` without copying size values.
 
-| Role             | Size | Line height | Weight | Use                                                            |
-| ---------------- | ---- | ----------- | ------ | -------------------------------------------------------------- |
-| `heading`        | 28   | 36          | 600    | Screen heading                                                 |
-| `section`        | 20   | 28          | 600    | Scripture/practice section heading                             |
-| `body` (default) | 17   | 26          | 400    | Reading text and main explanations                             |
-| `supporting`     | 15   | 22          | 400    | Short supporting descriptions; unselected web tabs             |
-| `label`          | 15   | 22          | 600    | Form/control labels; selected web tabs and collapsible trigger |
-| `caption`        | 14   | 20          | 400    | Brief metadata and scaffold notices, not long reading content  |
-| `action`         | 16   | 24          | 600    | Button text                                                    |
-| `link`           | 16   | 24          | 500    | Underlined action/link text                                    |
+| Role             | Size | Line height | Weight | Use                                                           |
+| ---------------- | ---- | ----------- | ------ | ------------------------------------------------------------- |
+| `heading`        | 28   | 36          | 600    | Screen heading                                                |
+| `section`        | 20   | 28          | 600    | Scripture/practice section heading                            |
+| `body` (default) | 17   | 26          | 400    | Reading text and main explanations                            |
+| `supporting`     | 15   | 22          | 400    | Short supporting descriptions; unselected web tabs            |
+| `label`          | 15   | 22          | 600    | Form/control labels; selected web tabs                        |
+| `caption`        | 14   | 20          | 400    | Brief metadata and scaffold notices, not long reading content |
+| `action`         | 16   | 24          | 600    | Button text                                                   |
+| `link`           | 16   | 24          | 500    | Underlined action/link text                                   |
 
-There is no oversized display role without an actual layout need. Starter `default`, `title`, `subtitle`, `small`, `smallBold`, `linkPrimary`, and unused `code` variants are removed. Callers migrate to semantic roles: the placeholder heading uses `heading`, its supporting notice uses `supporting`, and navigation links use `link`. New code should not introduce compatibility aliases or one-off size hierarchies.
+There is no oversized display role without an actual layout need. Starter `default`, `title`, `subtitle`, `small`, `smallBold`, `linkPrimary`, and unused `code` variants are removed. Callers migrate to semantic roles: screen headings use `heading`, supporting notices use `supporting`, and navigation links use `link`. New code should not introduce compatibility aliases or one-off size hierarchies.
 
 All roles explicitly use system sans-serif: `system-ui` on iOS, `sans-serif` on Android, and the system-only `--font-sans` stack in [src/global.css](../../src/global.css) on web. Unused serif/rounded/monospace definitions and Spline Sans/Inter fallbacks are removed. No fonts are downloaded, bundled, or installed.
 
@@ -100,21 +100,21 @@ The existing `Spacing` scale is unchanged; names are not multipliers.
 
 | Token                        | Value | Contract                                                                                          |
 | ---------------------------- | ----- | ------------------------------------------------------------------------------------------------- |
-| `Radius.control`             | 8     | Inputs, buttons, web tabs, small collapsible icon surface                                         |
-| `Radius.surface`             | 12    | Grouped content/cards; existing collapsible content                                               |
+| `Radius.control`             | 8     | Inputs, buttons, web tabs                                                                         |
+| `Radius.surface`             | 12    | Grouped content/cards                                                                             |
 | `ControlSize.minTouchTarget` | 48    | Minimum height and width of pressable controls; use minimums, never a fixed text container height |
 | `BorderWidth.default`        | 1     | Surface dividers and control outlines                                                             |
 | `BorderWidth.focus`          | 2     | Visible focus indicator; reserve space or use an outer indicator to avoid layout jumps            |
 
-The scaffold links, Settings action, web tabs, and collapsible consume the shared target size. Radius is independent of spacing. There is no pill, hero radius, or elevation token: no current V1 need justifies those styles. Let native navigation manage its own elevation.
+The scaffold links, Settings action, and web tabs consume the shared target size. Radius is independent of spacing. There is no pill, hero radius, or elevation token: no current V1 need justifies those styles. Let native navigation manage its own elevation.
 
-`MaxContentWidth` remains 800. `BottomTabInset` remains an unused starter token (iOS 50, Android 80, otherwise 0), not a measured inset or tab-bar height. Continue using real safe areas and normal native tab layout.
+`MaxContentWidth` remains 800. The unused starter `BottomTabInset` token has been removed. Continue using real safe areas and normal native tab layout.
 
 ## Primitives and layout
 
 [ThemedView](../../src/components/themed-view.tsx) selects its background with `type`, defaults to `background`, honors active-scheme `lightColor`/`darkColor` overrides, and applies caller style last. Its behavior is unchanged. Prefer palette tokens for normal product work.
 
-Use colocated `StyleSheet.create` and style arrays for palette values, interaction states, and caller overrides. No styling framework or new theme provider is needed. The existing `NavigationPlaceholder` and `PlaceholderLink` remain temporary navigation scaffolds, not production screen or form components.
+Use colocated `StyleSheet.create` and style arrays for palette values, interaction states, and caller overrides. No styling framework or new theme provider is needed. V1 routes directly compose the shared layout, state, and navigation primitives. The unused `NavigationPlaceholder`, `PlaceholderLink`, and starter collapsible have been removed.
 
 The [navigation and UX contract](../APP_NAVIGATION_AND_UX.md) owns screen placement, entry points, CTA destinations, back behavior, gates, and day states. Visual primitives do not justify new screens. Native stack headers/back behavior and Today/Journey tabs remain in place. With Router 57.0.19, keep styles on a direct `Link asChild` Pressable static; pressed feedback belongs in its children render function because slot merging drops style callbacks.
 
@@ -212,7 +212,7 @@ Use the existing [PracticeProgress](../../src/components/progress.tsx) directly 
 
 Compose sections directly inside `ScreenScrollView`. Padding sits outside the capped content width, preserving up to 800 points of usable content on wide displays. Heading/supporting text wraps naturally and inherits unrestricted system font scaling. No non-scroll screen wrapper is introduced: there is no current consumer requiring one.
 
-`NavigationPlaceholder` now composes these primitives; its links and descriptions remain navigation scaffolding. Route migration is limited to marking Today/Journey's bottom inset as already handled. No forms, production formation content, or working saves are introduced.
+Every V1 screen uses ScreenScrollView and ScreenHeading, with ScreenSection for related content. Welcome uses the shared primary Button; Settings uses grouped NavigationRows and Separators; unavailable integrations use EmptyState and InlineNotice. Today/Journey mark their bottom inset as already handled by the tabs. Navigation-only onboarding links retain explicit preview explanations and save nothing. No forms, production formation content, or working saves are introduced.
 
 ### Safe-area ownership
 
@@ -250,7 +250,7 @@ The shared scroll view enables [React Native 0.86 keyboard inset adjustment](htt
 
 The native scroll `ref` and scroll/content-size callbacks are available for editor-specific focus handling on the same container. Fields, draft state, focus policy, validation, and save actions belong to the consumer. Actual focused-field visibility, multiline caret movement, reachable actions, and draft retention across keyboard dismissal must be verified on iOS/Android when forms are implemented; mocked layout tests do not establish keyboard safety on devices.
 
-Use simple recognizable platform icons with accessible names for icon-only actions; decorative icons stay hidden from assistive technology. Pair state color with text/icons and native accessibility state. Avoid animation-dependent meaning and honor reduced motion when introducing product transitions. Existing splash/logo keyframes and collapsible fade remain starter infrastructure, outside this foundation change.
+Use simple recognizable platform icons with accessible names for icon-only actions; decorative icons stay hidden from assistive technology. Pair state color with text/icons and native accessibility state. Avoid animation-dependent meaning and honor reduced motion when introducing product transitions. Existing splash/logo keyframes remain referenced starter infrastructure, outside this integration pass.
 
 ## Application-state feedback
 
@@ -282,7 +282,7 @@ Scripture unavailability belongs beside the known reference and available conten
 
 Errors use readable text as well as color. The internal FeedbackText exposes an alert with a polite live region on Android/web and queues an explicit VoiceOver announcement on iOS when an error appears or its message changes. Routine saved/pending labels do not announce every update. The retry action remains a separate accessible Button; messages do not take focus, dismiss automatically, or impose a text-scaling cap. Keep messages specific, calm, and free of raw exceptions, credentials, or private draft content. Accessibility behavior follows the [React Native 0.86 live-region contract](https://reactnative.dev/docs/0.86/accessibility#accessibilityliveregion) and [announcement API](https://reactnative.dev/docs/0.86/accessibilityinfo#announceforaccessibilitywithoptions).
 
-**Integration limit:** the repository has no durable personal-record persistence/sync queue. These components add presentation only; they do not establish offline editing, draft retention across relaunch, or backend-confirmed saves. Feature callers must implement and verify the [account-scoped persistence boundary](architecture-decisions.md#offline-persistence-and-account-boundaries) before supplying those outcomes. Existing scaffold routes remain unchanged.
+**Integration limit:** the repository has no durable personal-record persistence/sync queue. These components add presentation only; they do not establish offline editing, draft retention across relaunch, or backend-confirmed saves. Feature callers must implement and verify the [account-scoped persistence boundary](architecture-decisions.md#offline-persistence-and-account-boundaries) before supplying those outcomes. Routes use the shared unavailable states until these integrations exist.
 
 ## Progress and day status
 
@@ -321,7 +321,7 @@ ReflectionEditor composes TextField, Button, CompletionControl, and SyncStatus. 
 
 ## Verification and remaining work
 
-[Theme tests](../../src/constants/theme.test.ts) calculate contrast for the documented foreground/background pairs in both schemes. [Text tests](../../src/components/themed-text.test.tsx) check typography, palette selection, style/prop forwarding, and unrestricted scaling defaults; existing view, appearance, collapsible, and navigation tests cover their corresponding contracts. See [testing guidance](testing.md) for required checks and evidence limits.
+[Theme tests](../../src/constants/theme.test.ts) calculate contrast for the documented foreground/background pairs in both schemes. [Text tests](../../src/components/themed-text.test.tsx) check typography, palette selection, style/prop forwarding, and unrestricted scaling defaults; existing view, appearance, and navigation tests cover their corresponding contracts. See [testing guidance](testing.md) for required checks and evidence limits.
 
 [Layout tests](../../src/components/screen-layout.test.tsx) cover measured inset changes, headerless/stack/tab padding across platform branches, centered width and section/heading rhythm, a single scroll container with synthetic editor/action content, heading semantics, and retaining input through appearance/inset updates. Existing navigation tests exercise the migrated scaffold's links and back behavior.
 
@@ -338,3 +338,9 @@ Automated contrast calculations and static export do not prove native rendering.
 [State-feedback tests](../../src/components/state-feedback.test.tsx) cover meaningful Retry availability and pending interaction, explicit save/sync/offline labels, confirmation-gated success and rejected-sync draft retention in a synthetic caller, independent actions and retained content during Scripture failure/refresh, error announcements across platform branches, both themes, loading semantics, and explanatory empty copy. These composition tests do not establish native storage, actual service integration, device layout, or VoiceOver/TalkBack delivery.
 
 Feature flows should consume these controls as their integrations are implemented. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.
+
+## V1 route integration limits
+
+All existing V1 routes now share the layout and state foundation, preserving their destinations, push/replace/dismiss behavior, and shared day validation. Auth, onboarding persistence, journey access/state, private writing, reminders, and deletion remain unimplemented at the screen boundary. About reads the configured preview version; approved legal and support destinations remain unavailable.
+
+Data-dependent components such as ScriptureReader, ReflectionEditor, PracticeCard, JourneyWeekSection, and selection/completion controls remain ready for future integration. Their required content, selected values, and completion records cannot be invented just to render them. In particular, the Scripture route has no assigned reference or persistence, and Journey has no records; shared unavailable states are appropriate until those dependencies exist. No fake retries, loading requests, zero progress, selected translations, saved responses, or successful actions are shown.

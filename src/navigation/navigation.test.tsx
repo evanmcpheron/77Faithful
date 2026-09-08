@@ -264,3 +264,46 @@ it('exports exactly the bounded public Day 1–77 parameter set', () => {
     expect(params).toContainEqual({ dayNumber: String(dayNumber) });
   }
 });
+
+it.each([
+  { path: '/auth/sign-in', unavailable: 'Sign-in is not available yet' },
+  { path: '/auth/sign-up', unavailable: 'Account creation is not available yet' },
+  { path: '/auth/forgot-password', unavailable: 'Password reset is not available yet' },
+  { path: '/auth/verify-email', unavailable: 'Email verification is not available yet' },
+  { path: '/onboarding/practices', unavailable: 'Practice selection is not available yet' },
+  { path: '/onboarding/bible-translation', unavailable: 'Translations are not available yet' },
+  { path: '/onboarding/confirm', unavailable: 'Starting a journey is not available yet' },
+  { path: '/today', unavailable: 'Your daily reading is not available yet' },
+  { path: '/journey', unavailable: 'Journey records are not available yet' },
+  { path: '/day/77', unavailable: 'Day records are not available yet' },
+  { path: '/day/77/scripture', unavailable: 'Scripture is not available for this day yet' },
+  { path: '/day/77/reflection', unavailable: 'Reflection is not available yet' },
+  { path: '/journey-complete', unavailable: 'Journey review is not available yet' },
+  { path: '/settings/practices', unavailable: 'Practice settings are not available yet' },
+  { path: '/settings/bible-translation', unavailable: 'Translations are not available yet' },
+  { path: '/settings/notifications', unavailable: 'Reminder settings are not available yet' },
+  { path: '/settings/privacy', unavailable: 'Privacy Policy is not available yet' },
+  { path: '/settings/account', unavailable: 'Account details are not available yet' },
+  { path: '/settings/account/delete', unavailable: 'Account deletion is not available yet' },
+  { path: '/settings/about', unavailable: 'Privacy Policy & Terms' },
+  { path: '/settings/help-feedback', unavailable: 'Support is not available yet' },
+])('keeps $path truthful while its integration is unavailable', async ({ path, unavailable }) => {
+  await renderRouter('./src/app', { initialUrl: path });
+
+  expect(screen.getByRole('header', { name: unavailable })).toBeOnTheScreen();
+  // No input collection, fabricated completion/selection, or fake pending request.
+  expect(screen.queryAllByRole('textbox')).toHaveLength(0);
+  expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
+  expect(screen.queryAllByRole('radio')).toHaveLength(0);
+  expect(screen.queryAllByRole('switch')).toHaveLength(0);
+  expect(screen.queryAllByRole('progressbar')).toHaveLength(0);
+  expect(screen.queryByText(/\d of (5 recorded|77)|Saved and synced|Saved locally/)).toBeNull();
+  expect(
+    screen.queryByRole('link', { name: /Community|Start another journey|Start Day 1/ }),
+  ).toBeNull();
+  expect(
+    screen.queryByRole('button', {
+      name: /Sign In|Create Account|Verify email|Send reset email|Save|complete|Sign Out|Delete my account|Retry/i,
+    }),
+  ).toBeNull();
+});

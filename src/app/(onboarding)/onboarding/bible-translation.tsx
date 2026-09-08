@@ -1,13 +1,29 @@
-import { NavigationPlaceholder, PlaceholderLink } from '@/components/navigation-placeholder';
+import { Link } from 'expo-router';
+
+import { EmptyState } from '@/components/empty-state';
+import { InlineNotice } from '@/components/inline-notice';
+import { ScreenHeading } from '@/components/screen-heading';
+import { ScreenScrollView } from '@/components/screen-scroll-view';
+import { ScreenSection } from '@/components/screen-section';
+import { TextLink } from '@/components/text-link';
 
 export default function OnboardingBibleTranslationScreen() {
   return (
-    <NavigationPlaceholder
-      title="Bible Translation"
-      description="Bible translations are not available yet. Continue only previews confirmation; no translation preference is saved.">
-      <PlaceholderLink href="/onboarding/confirm" push>
-        Continue to Confirmation
-      </PlaceholderLink>
-    </NavigationPlaceholder>
+    <ScreenScrollView>
+      <ScreenHeading
+        title="Bible Translation"
+        description="Choose the translation used to read the assigned passages."
+      />
+      <EmptyState
+        title="Translations are not available yet"
+        description="There are no available translations to confirm in this preview. No translation preference is saved."
+      />
+      <ScreenSection>
+        <InlineNotice message="Continue only previews journey confirmation; it does not confirm a translation." />
+        <Link href="/onboarding/confirm" push asChild>
+          <TextLink>Continue to Confirmation</TextLink>
+        </Link>
+      </ScreenSection>
+    </ScreenScrollView>
   );
 }

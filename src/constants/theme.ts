@@ -88,5 +88,4 @@ export const Radius = { control: 8, surface: 12 } as const;
 export const ControlSize = { minTouchTarget: 48 } as const;
 export const BorderWidth = { default: 1, focus: 2 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;

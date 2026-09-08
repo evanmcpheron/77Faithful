@@ -1,13 +1,27 @@
-import { NavigationPlaceholder, PlaceholderLink } from '@/components/navigation-placeholder';
+import { Link } from 'expo-router';
+
+import { EmptyState } from '@/components/empty-state';
+import { ScreenHeading } from '@/components/screen-heading';
+import { ScreenScrollView } from '@/components/screen-scroll-view';
+import { ScreenSection } from '@/components/screen-section';
+import { TextLink } from '@/components/text-link';
 
 export default function VerifyEmailScreen() {
   return (
-    <NavigationPlaceholder
-      title="Verify Email"
-      description="Email verification is not connected yet. No verification request was made, no email was sent, and this scaffold does not assume that an account exists or verification is complete.">
-      <PlaceholderLink href="/auth/welcome" dismissTo>
-        Cancel and return to Welcome
-      </PlaceholderLink>
-    </NavigationPlaceholder>
+    <ScreenScrollView>
+      <ScreenHeading
+        title="Verify Email"
+        description="Email verification comes before starting your journey."
+      />
+      <EmptyState
+        title="Email verification is not available yet"
+        description="No account or verification request has been loaded. This preview does not send a code or confirm verification."
+      />
+      <ScreenSection>
+        <Link href="/auth/welcome" dismissTo asChild>
+          <TextLink>Cancel and return to Welcome</TextLink>
+        </Link>
+      </ScreenSection>
+    </ScreenScrollView>
   );
 }

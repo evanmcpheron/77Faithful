@@ -1,10 +1,18 @@
-import { NavigationPlaceholder } from '@/components/navigation-placeholder';
+import { EmptyState } from '@/components/empty-state';
+import { ScreenHeading } from '@/components/screen-heading';
+import { ScreenScrollView } from '@/components/screen-scroll-view';
 
 export default function NotificationSettingsScreen() {
   return (
-    <NavigationPlaceholder
-      title="Notifications"
-      description="Notification settings are not connected yet. This scaffold does not request permission, enable a reminder, select a time, or schedule a notification."
-    />
+    <ScreenScrollView>
+      <ScreenHeading
+        title="Notifications"
+        description="An optional daily reminder, at a time you choose."
+      />
+      <EmptyState
+        title="Reminder settings are not available yet"
+        description="Reminder settings are not connected. This preview does not request permission, choose a time, enable a reminder, or schedule a notification."
+      />
+    </ScreenScrollView>
   );
 }

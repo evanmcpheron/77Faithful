@@ -1,16 +1,18 @@
 import { Link } from 'expo-router';
-import { View } from 'react-native';
 
-import { NavigationPlaceholder } from '@/components/navigation-placeholder';
+import { InlineNotice } from '@/components/inline-notice';
 import { NavigationRow } from '@/components/navigation-row';
+import { ScreenHeading } from '@/components/screen-heading';
+import { ScreenScrollView } from '@/components/screen-scroll-view';
+import { ScreenSection } from '@/components/screen-section';
 import { Separator } from '@/components/separator';
 
 export default function SettingsScreen() {
   return (
-    <NavigationPlaceholder
-      title="Settings"
-      description="Choose a destination to preview its screen. Preferences and account actions are not connected yet.">
-      <View>
+    <ScreenScrollView>
+      <ScreenHeading title="Settings" description="Preferences, privacy, account, and support." />
+      <InlineNotice message="Preferences and account actions are not connected yet. Open a screen to see what is available." />
+      <ScreenSection title="Your practices">
         <Link href="/settings/practices" push asChild>
           <NavigationRow label="Optional Practices" />
         </Link>
@@ -22,7 +24,8 @@ export default function SettingsScreen() {
         <Link href="/settings/notifications" push asChild>
           <NavigationRow label="Notifications" />
         </Link>
-        <Separator />
+      </ScreenSection>
+      <ScreenSection title="Privacy and account">
         <Link href="/settings/privacy" push asChild>
           <NavigationRow label="Privacy &amp; Data" />
         </Link>
@@ -30,7 +33,8 @@ export default function SettingsScreen() {
         <Link href="/settings/account" push asChild>
           <NavigationRow label="Account" />
         </Link>
-        <Separator />
+      </ScreenSection>
+      <ScreenSection title="About and support">
         <Link href="/settings/about" push asChild>
           <NavigationRow label="About" />
         </Link>
@@ -38,7 +42,7 @@ export default function SettingsScreen() {
         <Link href="/settings/help-feedback" push asChild>
           <NavigationRow label="Help / Feedback" />
         </Link>
-      </View>
-    </NavigationPlaceholder>
+      </ScreenSection>
+    </ScreenScrollView>
   );
 }

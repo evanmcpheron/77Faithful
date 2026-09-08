@@ -106,7 +106,7 @@ Amplify Gen 2 now defines Auth only: email/password, confirmation codes, email-o
 Concrete follow-up work, when relevant to an authorized task:
 
 - Device testing remains necessary for safe areas, text scaling, contrast, motion, and native startup. Historical verification and its limits are recorded in [testing.md](testing.md); recheck available runtimes when affected UI changes.
-- The visual system still has no dedicated radius/elevation scale or shared product buttons, inputs, and loading/empty/error states. Add them with the screens that need them.
+- The semantic visual foundation now includes light/dark action and state colors, system typography roles, shared radii, border widths, and minimum control sizing; see [design system](design-system.md). Product buttons, inputs, and loading/empty/error components remain to be built with their V1 flows. No elevation scale is needed yet.
 - The Auth definition has credential-free TypeScript, bootstrap-unit, and synthesized-template checks. A real sandbox, Cognito email delivery/auth lifecycle, native connection, navigation end-to-end, and native binary integration remain unverified; use synthetic accounts when AWS access is supplied.
 - Product branding is selected, but configured artwork and splash still use Expo assets; route screens now use restrained text placeholders. The tracked `assets/app-icon.png` is the 77/path/cross identity source; store-ready derivatives and replacement of starter art remain product work.
 - Store identifiers, signing, AWS account/backend environment setup, EAS profiles, translation source/distribution permissions, and legal/support destinations require actual external values; no such configuration is established in this checkout. See the prerequisite table below.

@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from './themed-text';
 
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { ControlSize, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function AppTabs() {
@@ -52,7 +52,7 @@ function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
         pressed && styles.pressed,
       ]}>
       <ThemedText
-        type={isFocused ? 'smallBold' : 'small'}
+        type={isFocused ? 'label' : 'supporting'}
         themeColor={isFocused ? 'text' : 'textSecondary'}>
         {children}
       </ThemedText>
@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     flex: 1,
-    minHeight: 48,
-    minWidth: 48,
+    minHeight: ControlSize.minTouchTarget,
+    minWidth: ControlSize.minTouchTarget,
     alignItems: 'center',
     justifyContent: 'center',
     padding: Spacing.two,
-    borderRadius: Spacing.three,
+    borderRadius: Radius.control,
   },
   pressed: { opacity: 0.95 },
 });

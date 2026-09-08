@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { ControlSize, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type NavigationPlaceholderProps = {
@@ -40,10 +40,10 @@ export function NavigationPlaceholder({
         },
       ]}>
       <ThemedView style={styles.container}>
-        <ThemedText type="subtitle" accessibilityRole="header">
+        <ThemedText type="heading" accessibilityRole="header">
           {title}
         </ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
+        <ThemedText type="caption" themeColor="textSecondary">
           Navigation scaffold
         </ThemedText>
         <ThemedText>{description}</ThemedText>
@@ -62,7 +62,7 @@ export function PlaceholderLink({ children, ...props }: PlaceholderLinkProps) {
     <Link {...props} asChild>
       <Pressable accessibilityRole="link" style={styles.link}>
         {({ pressed }) => (
-          <ThemedText themeColor="link" style={[styles.linkText, pressed && styles.pressed]}>
+          <ThemedText type="link" style={pressed && styles.pressed}>
             {children}
           </ThemedText>
         )}
@@ -81,11 +81,10 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   link: {
-    minHeight: 48,
-    minWidth: 48,
+    minHeight: ControlSize.minTouchTarget,
+    minWidth: ControlSize.minTouchTarget,
     justifyContent: 'center',
     paddingVertical: Spacing.two,
   },
-  linkText: { textDecorationLine: 'underline' },
   pressed: { opacity: 0.95 },
 });

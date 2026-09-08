@@ -2,6 +2,7 @@ import { Link } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, StyleSheet } from 'react-native';
 
+import { ControlSize } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export function SettingsHeaderAction() {
@@ -26,8 +27,8 @@ export function SettingsHeaderAction() {
 
 const styles = StyleSheet.create({
   button: {
-    minWidth: 48,
-    minHeight: 48,
+    minWidth: ControlSize.minTouchTarget,
+    minHeight: ControlSize.minTouchTarget,
     alignItems: 'center',
     justifyContent: 'center',
   },

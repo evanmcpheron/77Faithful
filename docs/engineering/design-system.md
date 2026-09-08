@@ -1,46 +1,80 @@
 # Design system
 
-Updated 2026-09-07. The repository has a small set of theme primitives with working color overrides and accessible collapsibles. The blue 77/path/cross identity direction is approved for product work; route screens now use minimal navigation placeholders; the splash and configured artwork still use starter assets. This document separates implemented tokens from the visual direction and remaining production assets.
+Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared primitives and navigation scaffolds consume it. Product buttons, inputs, cards, and loading/empty/error components remain later work; tokens do not establish working feature states or native visual acceptance.
+
+## Visual direction
+
+Use the blue 77/path/cross in [assets/app-icon.png](../../assets/app-icon.png) as the identity source. Quiet neutral surfaces, deep-blue actions, readable system text, generous spacing, and restrained corners should feel calm, modern, trustworthy, and welcoming across ages. Scripture should receive the primary reading space and hierarchy. Christian identity does not require decorative crosses on every surface.
+
+Prefer subtle borders and surface changes to shadows. Avoid glassmorphism, decorative gradients, excessive pills, dense dashboards, tiny type, streak flames, and competitive or achievement styling. Completion styling records participation; it never grades spiritual worth. [Product requirements](../PRODUCT_REQUIREMENTS.md) owns these product guardrails and release scope.
 
 ## Colors and theme selection
 
-[src/constants/theme.ts](../../src/constants/theme.ts) exports `Colors` with matching light/dark keys and a `ThemeColor` key type:
+`Colors.light` and `Colors.dark` share the `ThemeColor` contract, enforced by TypeScript. `useTheme` remains the palette access point. It uses the shared system `useColorScheme` hook and maps `unspecified` to light. Web uses `Appearance` subscriptions with a light server/hydration snapshot. App configuration retains automatic appearance; there is no manual switch, stored preference, or second theme mechanism.
 
-| Token                | Light     | Dark      |
-| -------------------- | --------- | --------- |
-| `text`               | `#000000` | `#ffffff` |
-| `background`         | `#ffffff` | `#000000` |
-| `backgroundElement`  | `#F0F0F3` | `#212225` |
-| `backgroundSelected` | `#E0E1E6` | `#2E3135` |
-| `textSecondary`      | `#60646C` | `#B0B4BA` |
-| `link`               | `#1B5FA7` | `#91C7FF` |
+| Token                | Light     | Dark      | Role / intended V1 consumer                                                                   |
+| -------------------- | --------- | --------- | --------------------------------------------------------------------------------------------- |
+| `background`         | `#F7F8FA` | `#121820` | Screen and reading canvas                                                                     |
+| `surface`            | `#FFFFFF` | `#1A232E` | Cards, editors, and input interiors                                                           |
+| `backgroundElement`  | `#EEF1F5` | `#222E3C` | Subtle grouped content and secondary controls; existing tabs/collapsible                      |
+| `backgroundSelected` | `#DFEAF7` | `#243C58` | Selected practices/translation and neutral pressed surfaces; existing web tab selection       |
+| `text`               | `#182330` | `#F0F3F7` | Reading text, headings, labels                                                                |
+| `textSecondary`      | `#526071` | `#B5C0CF` | Supporting explanations and metadata; never lower opacity to mute further                     |
+| `primary`            | `#164E87` | `#3274B3` | Filled primary actions such as Continue and Save; blue is lighter in dark mode for visibility |
+| `primaryPressed`     | `#103D6C` | `#28669F` | Pressed primary fill, retaining the same foreground                                           |
+| `onPrimary`          | `#FFFFFF` | `#FFFFFF` | Text and icons on either primary fill                                                         |
+| `link`               | `#1B5FA7` | `#91C7FF` | Inline links and navigation actions                                                           |
+| `border`             | `#D5DBE3` | `#3A4758` | Decorative dividers and surface separation                                                    |
+| `borderControl`      | `#7A8797` | `#8393A7` | Essential input/outlined-control boundaries                                                   |
+| `focus`              | `#1B5FA7` | `#91C7FF` | Visible keyboard/input focus indicator                                                        |
+| `disabled`           | `#E3E7ED` | `#2B3644` | Unavailable action fill                                                                       |
+| `onDisabled`         | `#586576` | `#A6B2C2` | Readable disabled labels/icons                                                                |
+| `error`              | `#A52A32` | `#FFADB3` | Validation/write errors and destructive text/outlined actions such as Delete Account          |
+| `errorSurface`       | `#FCEDEF` | `#3A242C` | Subtle error message/destructive confirmation background                                      |
+| `success`            | `#276345` | `#9DD5B4` | Explicitly recorded completion and confirmed saves                                            |
+| `successSurface`     | `#EAF4EE` | `#20372D` | Quiet completion/save status background                                                       |
+| `warning`            | `#805411` | `#EBC784` | Pending sync or a condition needing attention                                                 |
+| `warningSurface`     | `#FBF2DF` | `#383021` | Quiet pending/attention background                                                            |
 
-`useTheme` selects this palette using the shared `useColorScheme` hook and maps `unspecified` to light. On web, `useSyncExternalStore` reads `Appearance`, subscribes to changes, and uses light for the server and initial hydration snapshot. Layout, tabs, and navigation placeholders use the shared hooks. Router's `ThemeProvider` still uses its separate default light/dark navigation themes. There is no saved theme preference or custom navigation palette. V1 supports automatic system light/dark mode and requires no manual theme setting.
+Use semantic keys, not raw hex values in components. The existing background keys remain meaningful and retain their callers; `surface` adds a distinct input/card plane. There is no extra brand palette, tertiary text, ornamental tint scale, or shadow scale. Primary, state, border, and disabled pairs are ready for the required V1 controls; those controls are not fabricated in this foundation task.
 
-Colors outside the shared palette include the starter logo gradient (`#3C9FFE` to `#0274DF`), splash blue (`#208AEF`), and Android adaptive-icon background (`#E6F4FE`). These are remaining starter artwork values. Primary link colors now use the theme palette. There are no success, warning, or error color tokens.
+### Pairing and state contracts
+
+- Use `text`, `textSecondary`, and `link` on `background`, `surface`, `backgroundElement`, or `backgroundSelected`. Each pair meets at least 4.5:1 calculated contrast in both schemes.
+- Use `onPrimary` on `primary`/`primaryPressed`, `onDisabled` on `disabled`, and each state foreground on its matching `*Surface`. These pairs also meet 4.5:1. State foregrounds additionally meet that threshold on `background` and `surface`. Do not invert state pairs or assume white text works on a state foreground.
+- `borderControl` and `focus` meet 3:1 against the four neutral/selected surfaces. `border` is deliberately subtle and must not be the only cue identifying an input or interactive control. For focus around filled controls, leave a neutral gap so the focus indicator is assessed against the surrounding canvas, not blue against blue.
+- Future shared controls should use the pressed fill tokens rather than whole-control opacity. `backgroundSelected` can also provide neutral pressed feedback. Selection requires a check, text, weight, or accessible state; the fill alone is insufficient.
+- Disabled appearance requires actual disabled interaction and accessibility state. Explain a material reason nearby; do not gray out required reading content. Error, pending, saved, and recorded completion require honest text/icon/state semantics. Never use warning/error colors for missed participation.
+- Color tokens do not implement focus management, validation announcements, save confirmation, or completion behavior. Those belong to the consuming component and its product contract.
+
+Existing scaffold links/tabs retain their 0.95 pressed opacity; the Settings icon and collapsible retain starter 0.7 feedback. The root Router `ThemeProvider` still uses its built-in navigation palettes, and native navigation controls retain system rendering. This task changes no routes, navigation actions, or platform navigation behavior.
 
 ## Typography
 
-[ThemedText](../../src/components/themed-text.tsx) wraps React Native `Text`, forwards its props, and supports these variants. Sizes are the numeric style values in source; an unset value inherits platform/parent behavior.
+`Typography` exports ordinary React Native text styles; `TypographyRole` defines [ThemedText](../../src/components/themed-text.tsx)'s `type` values. Non-Text primitives such as future inputs can reuse `Fonts.sans` and `Typography.body` without copying size values.
 
-| `type`        | Font size | Line height | Weight                        |
-| ------------- | --------- | ----------- | ----------------------------- |
-| `default`     | 16        | 24          | 500                           |
-| `small`       | 14        | 20          | 500                           |
-| `smallBold`   | 14        | 20          | 700                           |
-| `title`       | 48        | 52          | 600                           |
-| `subtitle`    | 32        | 44          | 600                           |
-| `link`        | 14        | 30          | Unset                         |
-| `linkPrimary` | 14        | 30          | Unset                         |
-| `code`        | 12        | Unset       | 700 on Android; 500 otherwise |
+| Role             | Size | Line height | Weight | Use                                                            |
+| ---------------- | ---- | ----------- | ------ | -------------------------------------------------------------- |
+| `heading`        | 28   | 36          | 600    | Screen heading                                                 |
+| `section`        | 20   | 28          | 600    | Scripture/practice section heading                             |
+| `body` (default) | 17   | 26          | 400    | Reading text and main explanations                             |
+| `supporting`     | 15   | 22          | 400    | Short supporting descriptions; unselected web tabs             |
+| `label`          | 15   | 22          | 600    | Form/control labels; selected web tabs and collapsible trigger |
+| `caption`        | 14   | 20          | 400    | Brief metadata and scaffold notices, not long reading content  |
+| `action`         | 16   | 24          | 600    | Button text                                                    |
+| `link`           | 16   | 24          | 500    | Underlined action/link text                                    |
 
-Text defaults to the palette's `text` color; `linkPrimary` defaults to `link`. An explicit `themeColor` takes precedence over either default, and caller `style` comes last. Font sizes/weights are centralized in this component, not exported as standalone tokens.
+There is no oversized display role without an actual layout need. Starter `default`, `title`, `subtitle`, `small`, `smallBold`, `linkPrimary`, and unused `code` variants are removed. Callers migrate to semantic roles: the placeholder heading uses `heading`, its notice uses `caption`, and navigation links use `link`. New code should not introduce compatibility aliases or one-off size hierarchies.
 
-`Fonts` defines `sans`, `serif`, `rounded`, and `mono` families: iOS uses system design family names; the default branch uses `normal`, `serif`, `normal`, and `monospace`; web uses CSS variables from [src/global.css](../../src/global.css). The web sans stack starts with Spline Sans and Inter and falls back to system fonts, but there is no bundled font asset or custom font-loading code. Only `code` explicitly applies a `Fonts` family (`mono`) in `ThemedText`; other variants do not apply `Fonts.sans` automatically.
+All roles explicitly use system sans-serif: `system-ui` on iOS, `sans-serif` on Android, and the system-only `--font-sans` stack in [src/global.css](../../src/global.css) on web. Unused serif/rounded/monospace definitions and Spline Sans/Inter fallbacks are removed. No fonts are downloaded, bundled, or installed.
 
-## Spacing, radius, and sizing
+Text defaults to `text`; `link` defaults to the matching link color and underline. `themeColor` overrides the default color, and caller `style` comes last. The wrapper forwards native `TextProps`; a typography role does not itself make text interactive or assign a heading/link accessibility role. Consumers supply the correct semantics.
 
-The existing `Spacing` scale is intentionally recorded exactly; the key names are not multipliers.
+Keep platform font scaling enabled with no foundation-imposed maximum, shrink-to-fit behavior, or line limit. React Native's [Text contract](https://reactnative.dev/docs/0.86/text#allowfontscaling) enables scaling by default. Do not disable it in product callers. Preserve natural wrapping, Android font padding, and room for ascenders/descenders; controls use minimum dimensions and grow with text. The [React Native 0.86 font-family contract](https://reactnative.dev/docs/0.86/text-style-props#fontfamily) and [Expo SDK 57 automatic appearance configuration](https://docs.expo.dev/versions/v57.0.0/config/app/#userinterfacestyle) were consulted for this foundation.
+
+## Spacing, radius, borders, and sizing
+
+The existing `Spacing` scale is unchanged; names are not multipliers.
 
 | Key     | Value |
 | ------- | ----- |
@@ -52,48 +86,32 @@ The existing `Spacing` scale is intentionally recorded exactly; the key names ar
 | `five`  | 32    |
 | `six`   | 64    |
 
-`MaxContentWidth` is 800. `BottomTabInset` remains an unused starter token: iOS 50, Android 80, and 0 otherwise. Navigation placeholders do not use it. It is not a measured safe-area inset or live tab-bar height.
+| Token                        | Value | Contract                                                                                          |
+| ---------------------------- | ----- | ------------------------------------------------------------------------------------------------- |
+| `Radius.control`             | 8     | Inputs, buttons, web tabs, small collapsible icon surface                                         |
+| `Radius.surface`             | 12    | Grouped content/cards; existing collapsible content                                               |
+| `ControlSize.minTouchTarget` | 48    | Minimum height and width of pressable controls; use minimums, never a fixed text container height |
+| `BorderWidth.default`        | 1     | Surface dividers and control outlines                                                             |
+| `BorderWidth.focus`          | 2     | Visible focus indicator; reserve space or use an outer indicator to avoid layout jumps            |
 
-There are no dedicated radius tokens. Components reuse spacing values for radii: collapsible content and web tab buttons use 16. The collapsible icon box uses a literal radius of 12 and the logo uses 40. No shared elevation/shadow scale or control-height/touch-target sizing tokens exist; image and icon dimensions are mostly local values.
+The scaffold links, Settings action, web tabs, and collapsible consume the shared target size. Radius is independent of spacing. There is no pill, hero radius, or elevation token: no current V1 need justifies those styles. Let native navigation manage its own elevation.
 
-## Reusable primitives
+`MaxContentWidth` remains 800. `BottomTabInset` remains an unused starter token (iOS 50, Android 80, otherwise 0), not a measured inset or tab-bar height. Continue using real safe areas and normal native tab layout.
 
-| Component / hook                            | Existing responsibility and limits                                                                                  |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `ThemedText`                                | Shared text variants and palette selection; a link text style does not itself make text interactive                 |
-| `ThemedView`                                | Background-colored `View`, with `type` selecting a palette key; forwards native view props and allows caller styles |
-| `useTheme` / `useColorScheme`               | System palette selection with a web hydration fallback                                                              |
-| `ExternalLink`                              | Router link with native in-app browser behavior                                                                     |
-| `Collapsible`                               | Local open/closed state, chevron, press feedback, and animated content entry                                        |
-| `NavigationPlaceholder` / `PlaceholderLink` | Temporary scrollable scaffold and accessible typed link rows; not a final screen/form framework                     |
-| `SettingsHeaderAction`                      | Shared 48-point Settings link for the Today/Journey stack headers                                                   |
-| `AppTabs`                                   | Platform-specific native/web navigation; see [project context](project-context.md)                                  |
-| `AnimatedIcon`, `AnimatedSplashOverlay`     | Preserved starter branding/splash infrastructure; hint row and web badge removed                                    |
+## Primitives and layout
 
-`ThemedView` honors the active scheme's `lightColor`/`darkColor` override, falls back to the selected palette token when that override is absent, and applies caller `style` last. Prefer tokens for ordinary screen work; use overrides only when a specific surface needs them. There is no final product button, input, card, or loading/empty/error system. `NavigationPlaceholder` is a temporary screen treatment using the existing themed primitives; `PlaceholderLink` supplies underlined link rows with a minimum 48-point target and pressed feedback.
+[ThemedView](../../src/components/themed-view.tsx) selects its background with `type`, defaults to `background`, honors active-scheme `lightColor`/`darkColor` overrides, and applies caller style last. Its behavior is unchanged. Prefer palette tokens for normal product work.
 
-With Router 57.0.19, keep layout styles on a direct `Link asChild` Pressable child static: the slot merges style objects and drops style callbacks. Put pressed feedback in the Pressable's children render function so minimum target dimensions survive. Navigation text uses 0.95 pressed opacity to preserve small-text contrast in both palettes; the icon-only Settings action retains 0.7.
+Use colocated `StyleSheet.create` and style arrays for palette values, interaction states, and caller overrides. No styling framework or new theme provider is needed. The existing `NavigationPlaceholder` and `PlaceholderLink` remain temporary navigation scaffolds, not production screen or form components.
 
-## Layout and interaction conventions
+The [navigation and UX contract](../APP_NAVIGATION_AND_UX.md) owns screen placement, entry points, CTA destinations, back behavior, gates, and day states. Visual primitives do not justify new screens. Existing scroll containers, safe-area padding, native stack headers/back behavior, and Today/Journey tabs remain in place. With Router 57.0.19, keep styles on a direct `Link asChild` Pressable static; pressed feedback belongs in its children render function because slot merging drops style callbacks.
 
-This guide owns visual primitives and layout techniques. Before changing screen boundaries, navigating CTAs, tabs, headers/back behavior, editors, or modal/sheet flows, read [the navigation and UX contract](../APP_NAVIGATION_AND_UX.md). It owns screen relationships, flow states, and placement; visual consistency or component extraction alone does not justify new screens. An intentional material behavior change updates that contract in the same change; small visual adjustments do not.
+Use simple recognizable platform icons with accessible names for icon-only actions; decorative icons stay hidden from assistive technology. Pair state color with text/icons and native accessibility state. Avoid animation-dependent meaning and honor reduced motion when introducing product transitions. Existing splash/logo keyframes and collapsible fade remain starter infrastructure, outside this foundation change.
 
-Static styles are generally colocated `StyleSheet.create` objects. Style arrays layer dynamic palette values, platform adjustments, pressed state, and caller overrides. Web additionally uses a CSS module for the logo gradient and global CSS font variables imported through the theme module; there is no utility-class styling system.
+## Verification and remaining work
 
-- Navigation placeholders use one `ScrollView`, `contentInsetAdjustmentBehavior="automatic"` for iOS navigation insets, safe-area padding where needed, existing spacing, and centered content capped at 800. Welcome accounts for its headerless layout. There are no fixed tab-height offsets, final forms, or fixed-height text cards.
-- Native tabs retain system tab controls and inset handling. Web uses a flex layout with the tab bar beneath the content, keeping content clear of the bar without a hard-coded offset.
-- Each tab has a native stack header with a consistent labeled Settings action and no back control. Pushed screens use native stack headers/back behavior; the root theme provider remains in place.
-- Several pressable examples reduce opacity to 0.7 when pressed. `Collapsible` mounts content with a 200 ms fade-in. Its trigger exposes a button role, the title as its accessible label, and expanded state; it has a minimum 48-by-48 target, a decorative icon, and a wrapping title.
-- The logo examples use Reanimated keyframes (600 ms native, 300 ms web, plus a four-minute glow rotation). The native splash overlay is hidden after its animation; the web overlay returns `null`. There is no application-level reduced-motion policy demonstrated in source.
+[Theme tests](../../src/constants/theme.test.ts) calculate contrast for the documented foreground/background pairs in both schemes. [Text tests](../../src/components/themed-text.test.tsx) check typography, palette selection, style/prop forwarding, and unrestricted scaling defaults; existing view, appearance, collapsible, and navigation tests cover their corresponding contracts. See [testing guidance](testing.md) for required checks and evidence limits.
 
-Native visual/interaction checks were not recorded during engineering setup on 2026-09-07. The navigation foundation replaces Home/Explore layout limitations, but runtime safe areas, text scaling, contrast, touch targets, and motion still need platform evidence; use the reuse and accessibility criteria in `AGENTS.md` when adapting them.
+Automated contrast calculations and static export do not prove native rendering. On iOS and Android, verify light/dark transitions, system font weights, largest accessibility text sizes, multiline controls, clipping/line spacing, keyboard focus indicators when controls are built, touch targets, safe areas, and screen-reader semantics. Native visual acceptance remains required before release.
 
-## Selected visual direction and remaining work
-
-Use [assets/app-icon.png](../../assets/app-icon.png), which depicts a blue 77, path, and cross, as the identity source. Use the app name `77Faithful`, quiet neutral reading surfaces, deep-blue actions, and restrained illustration. Retain system sans-serif UI/body text and monospaced technical text; do not add web fonts or a font package by default. Readability, text scaling, and Scripture content take priority over decorative type or animation.
-
-The implemented blue link tokens support this direction. Keep spacing consistent with the existing scale. Introduce shared control sizes, radius, and elevation only with actual product primitives; the collapsible's minimum 48-point target is the current starting point for interactive controls. Prefer subtle state feedback and honor reduced-motion settings as product motion replaces the starter demonstrations.
-
-The source icon contains a baked rounded square and surrounding light margin; it is not yet a finished full-bleed iOS icon or Android adaptive foreground. Produce platform-specific derivatives and replace the configured Expo icon/splash assets during branding implementation. The existing binary artwork has not been modified or substituted in app config by this tooling task.
-
-Keep the product calm, focused, trustworthy, and welcoming. Avoid perfection scores, competitive visuals, or celebratory pressure. [Product requirements](../PRODUCT_REQUIREMENTS.md) owns release scope and product guardrails; [AGENTS.md](../../AGENTS.md) owns engineering/reuse rules and [architecture decisions](architecture-decisions.md) owns service boundaries.
+Product buttons, inputs, cards, and loading/empty/error components should consume this foundation as their actual V1 flows are implemented. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.

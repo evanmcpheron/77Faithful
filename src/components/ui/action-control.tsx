@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     outlineOffset: Spacing.half,
   },
   content: {
-    flexGrow: 1,
+    // Keep intrinsic height: flex growth here mis-sizes nested native scroll layouts.
     minHeight: ControlSize.minTouchTarget,
     minWidth: ControlSize.minTouchTarget,
     flexDirection: 'row',

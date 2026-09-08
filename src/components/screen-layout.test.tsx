@@ -1,12 +1,13 @@
 import { render, screen, userEvent } from '@testing-library/react-native';
 import { createRef } from 'react';
-import { Platform, Pressable, StyleSheet, TextInput, type ScrollView } from 'react-native';
+import { Platform, Pressable, StyleSheet, type ScrollView } from 'react-native';
 import { SafeAreaInsetsContext, type EdgeInsets } from 'react-native-safe-area-context';
 
 import { ScreenHeading } from './screen-heading';
 import { ScreenScrollView } from './screen-scroll-view';
 import { ScreenSection } from './screen-section';
 import { ThemedText } from './themed-text';
+import { TextField } from './text-field';
 
 import { Colors, MaxContentWidth } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -79,7 +80,7 @@ it('keeps headings, long content, an editor, and its action in one centered scro
         <ScreenHeading title="Layout fixture" description="Synthetic test content" />
         <ScreenSection title="Editor fixture" description="Optional supporting copy">
           <ThemedText>{'Synthetic long-form layout content. '.repeat(100)}</ThemedText>
-          <TextInput accessibilityLabel="Fixture draft" multiline scrollEnabled={false} />
+          <TextField label="Fixture draft" multiline />
           <Pressable accessibilityRole="button" onPress={onSave}>
             <ThemedText>Fixture action</ThemedText>
           </Pressable>

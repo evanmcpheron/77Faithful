@@ -1,6 +1,6 @@
 # Design system
 
-Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared action controls, layout primitives, and navigation scaffolds consume it. Inputs and screen-level loading/empty/error components remain later work; reusable controls do not establish working feature integrations or native visual acceptance.
+Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared action controls, text fields, layout primitives, and navigation scaffolds consume it. Screen-level loading/empty/error components remain later work; reusable controls do not establish working feature integrations or native visual acceptance.
 
 ## Visual direction
 
@@ -186,7 +186,24 @@ These rules follow [Expo SDK 57 safe-area context](https://docs.expo.dev/version
 
 ### Forms, editors, and long content
 
+Use [TextField](../../src/components/text-field.tsx) for single-line text and multiline intention/reflection editors. Its required visible `label` also supplies the default accessible name. `helperText` and a caller-provided `error` appear below the input; errors include an explicit `Error:` prefix, enter the input's accessibility hint, and are announced with a live region on Android/web or an explicit VoiceOver announcement on iOS. Web descriptions reference the visible helper/error text and expose invalid state. Keep errors actionable and free of entered passwords, codes, or private response text.
+
+The field owns label/input/message spacing, theme colors, focus outline, and disabled presentation. There is no separate field-wrapper, label, error, or textarea component because these consumers share the same structure. Native `TextInputProps` and `ref` pass through, including controlled `value`/`onChangeText`, `defaultValue`, blur/submit/selection/content-size events, and caller styles. `disabled`, `editable={false}`, or `readOnly` blocks editing and exposes disabled semantics. Text scaling remains enabled and uncapped by default; inputs have a 48-point minimum target with no fixed or maximum height or imposed content length.
+
+[PasswordField](../../src/components/password-field.tsx) composes TextField with secure entry and a shared text button below the field. It starts concealed, disables capitalization/correction/spell checking by default, and exposes `Show password` / `Hide password` actions named for the field. The button remains separate from the input's accessible node and has room to wrap at large text sizes. The caller selects the appropriate native autofill contract; the component holds only reveal state. Native `secureTextEntry` is also available directly on TextField when a toggle is unnecessary.
+
+Choose native input props in the feature that knows the content:
+
+- Sign In, Sign Up, and Forgot Password email: `keyboardType="email-address"`, `autoCapitalize="none"`, `autoCorrect={false}`, `autoComplete="email"`.
+- Sign In password: PasswordField with `autoComplete="current-password"`; Sign Up and password recovery use `autoComplete="new-password"`. Native `textContentType` and `passwordRules` remain available when required; avoid conflicting autofill hints.
+- Verify Email and recovery code: TextField with `autoComplete="one-time-code"`; choose keyboard and length constraints from the authentication service's verified code contract.
+- Reflection, morning intention, and applicable Settings text: TextField with `multiline` where needed. Private editors can pass `autoComplete="off"` and `importantForAutofill="no"`. Writing requirements, validation timing, completion, drafts, submission, truthful save/sync feedback, and navigation guards remain with the feature under the [navigation contract](../APP_NAVIGATION_AND_UX.md#20-accessibility-and-mobile-ux-requirements).
+
+These controls never persist drafts, log content, call AWS, infer a successful save, or navigate. Compose actual feature-owned status text with ThemedText and actions with Button. The existing Auth/Reflection routes remain honest navigation scaffolds until their feature integrations exist.
+
 Keep reading text, prompts, fields, and actions in the same `ScreenScrollView`; never wrap it in another scroll view. Sections and headings add only ordinary views. A multiline editor that belongs to the page should grow with its content and use `scrollEnabled={false}` so page scrolling stays coherent. Avoid fixed-height text containers.
+
+TextField defaults multiline inputs to `scrollEnabled={false}` and top-aligned text. Native inputs use their intrinsic content measurement. The internal [web input adapter](../../src/components/ui/form-text-input.web.tsx) measures the textarea on render, input, and layout changes, clearing the previous height first so deletion can shrink it. Browser measurement stays out of native modules. Caller-imposed fixed heights, line counts, or nested scrolling should not be used for intention/reflection content.
 
 The shared scroll view enables [React Native 0.86 keyboard inset adjustment](https://reactnative.dev/docs/0.86/scrollview#automaticallyadjustkeyboardinsets) on iOS. Android uses the existing [Expo default `resize` keyboard layout](https://docs.expo.dev/versions/v57.0.0/config/app/#softwarekeyboardlayoutmode) and native focused-child scrolling. Do not add a second keyboard adjustment mechanism by default. Taps on handled controls remain available with the keyboard open; drag dismissal defaults to interactive on iOS and on-drag elsewhere. Consumers may override the two keyboard interaction props.
 
@@ -200,6 +217,8 @@ Use simple recognizable platform icons with accessible names for icon-only actio
 
 [Layout tests](../../src/components/screen-layout.test.tsx) cover measured inset changes, headerless/stack/tab padding across platform branches, centered width and section/heading rhythm, a single scroll container with synthetic editor/action content, heading semantics, and retaining input through appearance/inset updates. Existing navigation tests exercise the migrated scaffold's links and back behavior.
 
+[Field tests](../../src/components/text-field.test.tsx) cover explicit labels, native input/submit props and refs, focus/blur, both palettes, disabled editing, error announcements and correction, long multiline content, and password reveal. The layout fixture now composes TextField in the existing screen scroll container. [Web adapter tests](../../src/components/ui/form-text-input.web.test.jsx) use the actual React Native Web DOM input with synthetic layout measurements to check prefilled/controlled text, growth, shrinkage, event forwarding, and refs. These do not establish browser layout or native keyboard/screen-reader behavior; the in-app browser connection failed before visual verification.
+
 [Surface tests](../../src/components/surfaces.test.tsx) cover passive content accessibility, row names/current values, hidden icons, both themes, row/card Router navigation and press feedback, disabled navigation, scaling/wrapping defaults, focus forwarding, and independent reversible completion in a composed surface. Native boundaries are mocked; these checks do not prove native large-text layout or screen-reader announcements.
 
 [Action tests](../../src/components/action-controls.test.tsx) cover caller activation, blocked disabled/pending actions, a failed asynchronous save and recovery, decorative glyph/spinner hiding, both palettes and pressed/disabled styling, wrapping/scaling props, focus/blur, real Router asChild composition/navigation, and external-link composition. Symbol rendering is mocked at the native boundary; these checks do not establish native icon appearance or assistive-technology announcements.
@@ -208,4 +227,4 @@ Shared-action verification on 2026-09-08 passed `npm run check` (222 tests) and 
 
 Automated contrast calculations and static export do not prove native rendering. On iOS and Android, verify light/dark transitions, system font weights, largest accessibility text sizes, multiline controls, clipping/line spacing, keyboard focus indicators, touch targets, safe areas, and screen-reader semantics. Native visual acceptance remains required before release.
 
-Feature flows should consume these controls as their integrations are implemented. Inputs and screen-level loading/empty/error components remain future work. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.
+Feature flows should consume these controls as their integrations are implemented. Screen-level loading/empty/error components remain future work. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.

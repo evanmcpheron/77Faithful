@@ -1,13 +1,11 @@
 import { Link, type LinkProps } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
 
 import { ScreenHeading } from './screen-heading';
 import { ScreenScrollView } from './screen-scroll-view';
 import { ScreenSection } from './screen-section';
 import { ThemedText } from './themed-text';
-
-import { ControlSize, Spacing } from '@/constants/theme';
+import { TextLink } from './text-link';
 
 type NavigationPlaceholderProps = {
   title: string;
@@ -42,23 +40,7 @@ type PlaceholderLinkProps = Pick<LinkProps, 'href' | 'push' | 'replace' | 'dismi
 export function PlaceholderLink({ children, ...props }: PlaceholderLinkProps) {
   return (
     <Link {...props} asChild>
-      <Pressable accessibilityRole="link" style={styles.link}>
-        {({ pressed }) => (
-          <ThemedText type="link" style={pressed && styles.pressed}>
-            {children}
-          </ThemedText>
-        )}
-      </Pressable>
+      <TextLink>{children}</TextLink>
     </Link>
   );
 }
-
-const styles = StyleSheet.create({
-  link: {
-    minHeight: ControlSize.minTouchTarget,
-    minWidth: ControlSize.minTouchTarget,
-    justifyContent: 'center',
-    paddingVertical: Spacing.two,
-  },
-  pressed: { opacity: 0.95 },
-});

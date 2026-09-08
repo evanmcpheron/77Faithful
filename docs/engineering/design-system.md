@@ -1,6 +1,6 @@
 # Design system
 
-Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared primitives and navigation scaffolds consume it. Product buttons, inputs, cards, and loading/empty/error components remain later work; tokens do not establish working feature states or native visual acceptance.
+Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared action controls, layout primitives, and navigation scaffolds consume it. Inputs, cards, and screen-level loading/empty/error components remain later work; reusable controls do not establish working feature integrations or native visual acceptance.
 
 ## Visual direction
 
@@ -36,18 +36,18 @@ Prefer subtle borders and surface changes to shadows. Avoid glassmorphism, decor
 | `warning`            | `#805411` | `#EBC784` | Pending sync or a condition needing attention                                                 |
 | `warningSurface`     | `#FBF2DF` | `#383021` | Quiet pending/attention background                                                            |
 
-Use semantic keys, not raw hex values in components. The existing background keys remain meaningful and retain their callers; `surface` adds a distinct input/card plane. There is no extra brand palette, tertiary text, ornamental tint scale, or shadow scale. Primary, state, border, and disabled pairs are ready for the required V1 controls; those controls are not fabricated in this foundation task.
+Use semantic keys, not raw hex values in components. The existing background keys remain meaningful and retain their callers; `surface` adds a distinct input/card plane. There is no extra brand palette, tertiary text, ornamental tint scale, or shadow scale. Shared actions use the existing primary, state, border, and disabled pairs.
 
 ### Pairing and state contracts
 
 - Use `text`, `textSecondary`, and `link` on `background`, `surface`, `backgroundElement`, or `backgroundSelected`. Each pair meets at least 4.5:1 calculated contrast in both schemes.
 - Use `onPrimary` on `primary`/`primaryPressed`, `onDisabled` on `disabled`, and each state foreground on its matching `*Surface`. These pairs also meet 4.5:1. State foregrounds additionally meet that threshold on `background` and `surface`. Do not invert state pairs or assume white text works on a state foreground.
 - `borderControl` and `focus` meet 3:1 against the four neutral/selected surfaces. `border` is deliberately subtle and must not be the only cue identifying an input or interactive control. For focus around filled controls, leave a neutral gap so the focus indicator is assessed against the surrounding canvas, not blue against blue.
-- Future shared controls should use the pressed fill tokens rather than whole-control opacity. `backgroundSelected` can also provide neutral pressed feedback. Selection requires a check, text, weight, or accessible state; the fill alone is insufficient.
+- Shared actions use pressed fill tokens rather than whole-control opacity. `backgroundSelected` also provides neutral pressed feedback. Selection requires a check, text, weight, or accessible state; the fill alone is insufficient.
 - Disabled appearance requires actual disabled interaction and accessibility state. Explain a material reason nearby; do not gray out required reading content. Error, pending, saved, and recorded completion require honest text/icon/state semantics. Never use warning/error colors for missed participation.
 - Color tokens do not implement focus management, validation announcements, save confirmation, or completion behavior. Those belong to the consuming component and its product contract.
 
-Existing scaffold links/tabs retain their 0.95 pressed opacity; the Settings icon and collapsible retain starter 0.7 feedback. The root Router `ThemeProvider` still uses its built-in navigation palettes, and native navigation controls retain system rendering. This task changes no routes, navigation actions, or platform navigation behavior.
+Scaffold links and the Settings icon use shared actions. Web tabs use surface feedback on press and preserve their current-page semantics; native tabs retain platform rendering and their SF/Material icon names. The specialized collapsible retains its starter opacity/fade behavior. The root Router `ThemeProvider` still uses its built-in navigation palettes. Routes and navigation behavior are unchanged.
 
 ## Typography
 
@@ -106,6 +106,43 @@ Use colocated `StyleSheet.create` and style arrays for palette values, interacti
 
 The [navigation and UX contract](../APP_NAVIGATION_AND_UX.md) owns screen placement, entry points, CTA destinations, back behavior, gates, and day states. Visual primitives do not justify new screens. Native stack headers/back behavior and Today/Journey tabs remain in place. With Router 57.0.19, keep styles on a direct `Link asChild` Pressable static; pressed feedback belongs in its children render function because slot merging drops style callbacks.
 
+### Shared actions
+
+| Primitive                                          | Use                                                                                                                                                                              |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Button](../../src/components/button.tsx)          | A visible string label and `variant="primary"` (default), `secondary`, `tertiary`, or `destructive`.                                                                             |
+| [IconButton](../../src/components/icon-button.tsx) | A quiet icon action, such as the Settings header control. Requires `icon` and `accessibilityLabel`; consequential actions should use visible text.                               |
+| [TextLink](../../src/components/text-link.tsx)     | An underlined, left-aligned textual navigation action with the same minimum target and interaction states. Use Button's tertiary variant for an in-place text action.            |
+| [AppIcon](../../src/components/app-icon.tsx)       | Decorative symbols with a small typed name map, `size`, `themeColor`, and optional layout/transform style. Accessible meaning belongs to adjacent text or the containing action. |
+
+Primary uses a calm blue fill with `onPrimary` text. Secondary uses a neutral fill and control outline. Tertiary uses text on a transparent surface. Destructive uses an error-colored outline, explicit action wording such as `Discard unsynced changes`, and an always-present warning symbol, including while pending or disabled. The wording and symbol distinguish consequence without relying on red. Follow the [CTA rules](../APP_NAVIGATION_AND_UX.md#15-cta-and-interaction-rules) for prominence and confirmation; the primitive never opens a confirmation or performs deletion itself.
+
+All three controls share the internal [ActionControl](../../src/components/ui/action-control.tsx) implementation: 48-point minimum width/height, token-based pressed feedback, an outer focus outline with a neutral gap, native Pressable interaction, and forwarded refs/events/accessibility hints. Labels use ThemedText, shrink within their row, wrap, and grow vertically without a line limit or font-scaling cap. Use layout `style` only to place controls; do not impose fixed heights, clipping, tiny widths, or disabled scaling. Keep bottom placement, safe areas, keyboard handling, and focus after navigation in the screen/layout owner.
+
+`disabled` blocks presses and exposes disabled state. `loading` is controlled by the caller and is true only while its real operation is running: it blocks repeated presses, exposes busy and disabled state, and shows a decorative progress indicator. Optional `loadingLabel` supplies specific pending wording; otherwise the accessible name and visible label remain. IconButton replaces its icon with the indicator while retaining an accessible name. A background sync backlog is a separate status, not an indefinitely loading button. Callers handle errors, retry, success announcements, and reset loading in cleanup; controls never infer success or invent a timer.
+
+Navigation stays with the caller. Compose Router links as follows, retaining the caller's `push`, `replace`, or `dismissTo` choice:
+
+```tsx
+<Link href="/settings" push asChild>
+  <IconButton icon="settings" accessibilityLabel="Settings" />
+</Link>
+
+<Link href="/settings/privacy" push asChild>
+  <TextLink>Privacy & Data</TextLink>
+</Link>
+
+<Button onPress={saveChanges} loading={isSaving} loadingLabel="Saving changes">
+  Save Changes
+</Button>
+```
+
+Router forwards the link role, destination, and activation to the control. A disabled/pending control also removes its forwarded web `href`. Keep direct `asChild` child styles flat and static: these controls accept a `ViewStyle` object, not a callback or array; use `StyleSheet.flatten` for composed caller styles. Their internal Pressable retains static geometry and applies pressed fills in its child render function, preserving Router 57's slot constraints. See the verified [Expo SDK 57 Link API](https://docs.expo.dev/versions/v57.0.0/sdk/router/link/).
+
+[ExternalLink](../../src/components/external-link.tsx) remains a navigation adapter with native in-app-browser/web-anchor behavior and no current screen consumer. Compose `<ExternalLink href="https://example.com" asChild><TextLink>External information</TextLink></ExternalLink>` to use the shared presentation. It is not a save/pending/error boundary; address browser-launch feedback when a real external-action flow is introduced. Native/web tabs remain specialized navigation controls rather than Button variants.
+
+AppIcon centralizes the current Settings, chevron, and destructive-warning mappings using the installed [Expo SDK 57 Symbols API](https://docs.expo.dev/versions/v57.0.0/sdk/symbols/). Add names only for actual consumers; no extra icon package is installed. Because Symbols 57's Android/web implementation does not forward accessibility props, the wrapper hides the entire glyph subtree with native and web accessibility attributes. Use separate visible text for standalone meaningful status icons. Native tab icons continue through NativeTabs' own icon API. AppIcon introduces no animation; pending state remains exposed independently of spinner motion.
+
 ### Shared screen layout inventory
 
 | Primitive                                                       | Responsibility                                                                                                                                                                                                           |
@@ -145,6 +182,10 @@ Use simple recognizable platform icons with accessible names for icon-only actio
 
 [Layout tests](../../src/components/screen-layout.test.tsx) cover measured inset changes, headerless/stack/tab padding across platform branches, centered width and section/heading rhythm, a single scroll container with synthetic editor/action content, heading semantics, and retaining input through appearance/inset updates. Existing navigation tests exercise the migrated scaffold's links and back behavior.
 
-Automated contrast calculations and static export do not prove native rendering. On iOS and Android, verify light/dark transitions, system font weights, largest accessibility text sizes, multiline controls, clipping/line spacing, keyboard focus indicators when controls are built, touch targets, safe areas, and screen-reader semantics. Native visual acceptance remains required before release.
+[Action tests](../../src/components/action-controls.test.tsx) cover caller activation, blocked disabled/pending actions, a failed asynchronous save and recovery, decorative glyph/spinner hiding, both palettes and pressed/disabled styling, wrapping/scaling props, focus/blur, real Router asChild composition/navigation, and external-link composition. Symbol rendering is mocked at the native boundary; these checks do not establish native icon appearance or assistive-technology announcements.
 
-Product buttons, inputs, cards, and loading/empty/error components should consume this foundation as their actual V1 flows are implemented. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.
+Shared-action verification on 2026-09-08 passed `npm run check` (222 tests) and `npm run export:web` (517 static routes). An isolated Chrome preview verified the migrated Settings icon and textual links in both themes at 320-pixel width: a 48×48 header target, pressed fill, visible keyboard focus, hidden decorative glyph subtree, Enter navigation, and wrapped links without horizontal overflow at 200% CSS zoom. These browser checks cover the migrated controls; they are not native text-scaling or VoiceOver/TalkBack acceptance.
+
+Automated contrast calculations and static export do not prove native rendering. On iOS and Android, verify light/dark transitions, system font weights, largest accessibility text sizes, multiline controls, clipping/line spacing, keyboard focus indicators, touch targets, safe areas, and screen-reader semantics. Native visual acceptance remains required before release.
+
+Feature flows should consume these controls as their integrations are implemented. Inputs, cards, and screen-level loading/empty/error components remain future work. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.

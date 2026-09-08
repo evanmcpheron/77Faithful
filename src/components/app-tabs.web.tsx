@@ -48,8 +48,13 @@ function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
       aria-current={isFocused ? 'page' : undefined}
       style={({ pressed }) => [
         styles.tabButton,
-        { backgroundColor: isFocused ? colors.backgroundSelected : colors.backgroundElement },
-        pressed && styles.pressed,
+        {
+          backgroundColor: pressed
+            ? colors.surface
+            : isFocused
+              ? colors.backgroundSelected
+              : colors.backgroundElement,
+        },
       ]}>
       <ThemedText
         type={isFocused ? 'label' : 'supporting'}
@@ -80,5 +85,4 @@ const styles = StyleSheet.create({
     padding: Spacing.two,
     borderRadius: Radius.control,
   },
-  pressed: { opacity: 0.95 },
 });

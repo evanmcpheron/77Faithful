@@ -184,6 +184,7 @@ async function main() {
           const variables = resource.Properties?.Environment?.Variables ?? {};
           return (
             resource.Properties?.Runtime === 'nodejs24.x' &&
+            !('DATA_INVARIANT_TEST_CATALOG' in variables) &&
             ['USER_PROFILE_TABLE_NAME', 'JOURNEY_TABLE_NAME', 'DAILY_ENTRY_TABLE_NAME'].every(
               (name) => name in variables,
             )

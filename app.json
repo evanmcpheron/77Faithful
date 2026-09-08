@@ -5,12 +5,14 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "77faithful",
+    "scheme": "faithful77",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.faithful77.app",
       "icon": "./assets/app-icon.png"
     },
     "android": {
+      "package": "com.faithful77.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -37,6 +39,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f026b26d-d643-4a80-8c54-8f4affe09b3b"
+      }
+    },
+    "owner": "emcpheron"
   }
 }

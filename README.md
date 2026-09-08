@@ -13,7 +13,9 @@ npm ci
 npm start
 ```
 
-`npm run ios`, `npm run android`, and `npm run web` launch the respective development targets. Native targets need an appropriate simulator, emulator, or device. The current navigation scaffold can use Expo Go; the planned Amplify React Native integration will require development builds when implemented. EAS remains the intended mobile build/signing/distribution path; see the [backend setup and environments](docs/engineering/architecture-decisions.md#setup-and-environments--planned). Web is a development preview target for the first release.
+`npm start` starts Metro for the installed development client. `npm run ios` and `npm run android` generate the applicable ignored native project when needed, compile it, and launch it on an available simulator, emulator, or device. Expo Go is no longer the primary native runtime. Native projects remain generated through Continuous Native Generation and must not be committed without a documented reason.
+
+EAS is linked to `@emcpheron/77Faithful`. The `development` profile builds installable development clients for physical devices and Android emulators; `development-simulator` targets the iOS Simulator. Run `npx eas-cli build --platform <ios|android> --profile <profile>` only from an authorized Expo account. `npm run web` remains the credential-free static-web development preview, and `npm run export:web` verifies its production bundle.
 
 Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) for engineering and verification guidance, including the versioned Expo documentation requirement. [Task prompts](prompts/README.md) provide focused implementation and review starting points.
 

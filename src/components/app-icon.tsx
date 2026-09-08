@@ -5,6 +5,7 @@ import { type ThemeColor } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 const symbols = {
+  check: { ios: 'checkmark', android: 'check', web: 'check' },
   settings: { ios: 'gearshape', android: 'settings', web: 'settings' },
   chevronRight: { ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' },
   warning: { ios: 'exclamationmark.triangle', android: 'warning', web: 'warning' },

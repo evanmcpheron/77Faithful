@@ -5,15 +5,19 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { Easing, Keyframe } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
+import { useColorScheme } from '@/hooks/use-color-scheme';
+
 const DURATION = 600;
 
 export function AnimatedSplashOverlay({ ready }: { ready: boolean }) {
+  const isDark = useColorScheme() === 'dark';
   const [animate, setAnimate] = useState(false);
   const [visible, setVisible] = useState(true);
   const [laidOut, setLaidOut] = useState(false);
+  const [imageSettled, setImageSettled] = useState(false);
 
   useEffect(() => {
-    if (!ready || !laidOut) return;
+    if (!ready || !laidOut || !imageSettled) return;
     let active = true;
     void SplashScreen.hideAsync().then(
       () => {
@@ -26,7 +30,7 @@ export function AnimatedSplashOverlay({ ready }: { ready: boolean }) {
     return () => {
       active = false;
     };
-  }, [ready, laidOut]);
+  }, [ready, laidOut, imageSettled]);
 
   if (!visible) return null;
 
@@ -49,7 +53,18 @@ export function AnimatedSplashOverlay({ ready }: { ready: boolean }) {
     },
   });
 
-  const image = <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />;
+  const overlayStyle = [styles.splashOverlay, { backgroundColor: isDark ? '#071529' : '#FFFFFF' }];
+  const image = (
+    <Image
+      testID="splash-artwork"
+      style={StyleSheet.absoluteFill}
+      source={isDark ? require('@/assets/splash-dark.png') : require('@/assets/splash-light.png')}
+      contentFit="cover"
+      onDisplay={() => setImageSettled(true)}
+      // A failed image must not trap the participant behind the native splash.
+      onError={() => setImageSettled(true)}
+    />
+  );
 
   return animate ? (
     <Animated.View
@@ -59,26 +74,19 @@ export function AnimatedSplashOverlay({ ready }: { ready: boolean }) {
           scheduleOnRN(setVisible, false);
         }
       })}
-      style={styles.splashOverlay}>
+      style={overlayStyle}>
       {image}
     </Animated.View>
   ) : (
-    <View onLayout={() => setLaidOut(true)} style={styles.splashOverlay}>
+    <View testID="splash-overlay" onLayout={() => setLaidOut(true)} style={overlayStyle}>
       {image}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  image: {
-    width: 76,
-    height: 71,
-  },
   splashOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: '#208AEF',
-    alignItems: 'center',
-    justifyContent: 'center',
     zIndex: 1000,
   },
 });

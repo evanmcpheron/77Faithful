@@ -6,7 +6,7 @@ This is the implementation inventory. [The navigation and UX contract](../APP_NA
 
 ## Observed: stack and dependencies
 
-The app contains a V1 navigation scaffold with Today/Journey tabs, auth/onboarding steps including Verify Email, focused day routes, Settings including Notifications, and journey completion. Auth screens submit through the native Cognito service. Data-dependent screens remain minimal, with no application records, notification permissions, or reminder state. The preserved splash and other configured assets still include starter artwork; iOS currently points to the product PNG icon.
+The app contains a V1 navigation scaffold with Today/Journey tabs, auth/onboarding steps including Verify Email, focused day routes, Settings including Notifications, and journey completion. Auth screens submit through the native Cognito service. Data-dependent screens remain minimal, with no application records, notification permissions, or reminder state. The native splash and startup overlay use the supplied light/dark product artwork; the web favicon still uses starter artwork. iOS currently points to the product PNG icon.
 
 Versions below are declarations from [package.json](../../package.json). [package-lock.json](../../package-lock.json) is an npm lockfile (version 3); its root dependency declarations match the manifest.
 

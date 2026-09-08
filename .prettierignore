@@ -1,9 +1,0 @@
-node_modules/
-.expo/
-dist/
-coverage/
-example/
-ios/
-android/
-package-lock.json
-assets/

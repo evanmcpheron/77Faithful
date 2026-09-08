@@ -4,16 +4,19 @@
     "slug": "77Faithful",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/app-icon.png",
-    "scheme": "faithful77",
+    "icon": "./assets/images/icon.png",
+    "scheme": "77faithful",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "com.faithful77.app",
-      "icon": "./assets/app-icon.png"
+      "icon": "./assets/expo.icon"
     },
     "android": {
-      "package": "com.faithful77.app",
-      "icon": "./assets/app-icon.png",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -25,31 +28,15 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#FFFFFF",
-          "image": "./assets/splash-light.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "dark": {
-            "image": "./assets/splash-dark.png",
-            "backgroundColor": "#071529"
-          },
-          "ios": {
-            "enableFullScreenImage_legacy": true,
-            "resizeMode": "cover"
-          }
+          "backgroundColor": "#208AEF",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "f026b26d-d643-4a80-8c54-8f4affe09b3b"
-      }
-    },
-    "owner": "emcpheron"
+    }
   }
 }

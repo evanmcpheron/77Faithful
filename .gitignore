@@ -31,12 +31,7 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*
-!.env.example
-
-# verification output
-coverage/
-.eslintcache
+.env*.local
 
 # typescript
 *.tsbuildinfo
@@ -46,8 +41,3 @@ example
 # generated native folders
 /ios
 /android
-
-# amplify
-.amplify
-amplify_outputs*
-amplifyconfiguration*

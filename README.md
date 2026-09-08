@@ -1,56 +1,56 @@
-# 77Faithful
+# Welcome to your Expo app 👋
 
-A free 77-day Christian spiritual formation app for iOS and Android, centered on Scripture, prayer, intentional action, and reflection. The repository currently contains an Expo 57 navigation scaffold and reusable shared UI with engineering checks; curated Scripture data access/validation and an Auth-only AWS Amplify Gen 2 foundation exist locally. The native Auth service, forms, restoration, and route guards are implemented and tested; the real Cognito/email lifecycle still needs verification. Data/persistence, approved Scripture content, and formation behavior remain pending.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Development
+## Get started
 
-Use Node 24 and npm 11. With nvm:
+1. Install dependencies
 
-```sh
-nvm install
-nvm use
-npm ci
-npm start
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+   npx expo start
+   ```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
+```bash
+npm run reset-project
 ```
 
-`npm start` starts Metro for the installed development client. `npm run ios` and `npm run android` generate the applicable ignored native project when needed, compile it, and launch it on an available simulator, emulator, or device. Expo Go is no longer the primary native runtime. Native projects remain generated through Continuous Native Generation and must not be committed without a documented reason.
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-EAS is linked to `@emcpheron/77Faithful`. The `development` profile builds installable development clients for physical devices and Android emulators; `development-simulator` targets the iOS Simulator. Run `npx eas-cli build --platform <ios|android> --profile <profile>` only from an authorized Expo account. `npm run web` remains the credential-free static-web development preview, and `npm run export:web` verifies its production bundle.
+### Other setup steps
 
-Routes and layouts live in `src/app/`. Shared UI is in `src/components/`, theme values are in `src/constants/theme.ts`, and hooks are in `src/hooks/`. Read [AGENTS.md](AGENTS.md) for engineering and verification guidance, including the versioned Expo documentation requirement. [Task prompts](prompts/README.md) provide focused implementation and review starting points.
+- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
+- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
+- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
 
-Read [product requirements](docs/PRODUCT_REQUIREMENTS.md) for settled product policy and release scope, and the [formation content specification](docs/FORMATION_CONTENT_SPEC.md) for curriculum structure, human approval, versions, and fixtures. Before screen, navigation, auth/onboarding, or journey-flow work, read [the navigation and UX contract](docs/APP_NAVIGATION_AND_UX.md). It owns intended routes, screen relationships, user flows, navigation states, and route-level release exposure. Material flow changes update it in the same change. Today/Journey have replaced Home/Explore as navigation scaffolding; Auth routes now use the native Cognito service; Notifications and Data-dependent product flows remain placeholders.
+## Learn more
 
-## Verification
+To learn more about developing your project with Expo, look at the following resources:
 
-```sh
-npm run check
-```
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-This runs formatting, ESLint, route generation and TypeScript, the regression tests, and Scripture dataset validation/audit. It works without starting Metro or supplying service credentials.
+## Join the community
 
-| Command                                                           | Purpose                                                  |
-| ----------------------------------------------------------------- | -------------------------------------------------------- |
-| `npm run typecheck`                                               | Generate Expo route types, then run strict TypeScript    |
-| `npm run lint` / `npm run lint:fix`                               | Check code / apply available lint fixes                  |
-| `npm run format:check` / `npm run format`                         | Check formatting / format repository files               |
-| `npm test`                                                        | Run tests once                                           |
-| `npm run test:watch`                                              | Watch relevant tests during development                  |
-| `npm test -- --runInBand src/components/action-controls.test.tsx` | Run one regression suite                                 |
-| `npm run test:coverage`                                           | Run tests and report coverage, including untested source |
-| `npm run export:web`                                              | Build the static web preview into `dist/`                |
+Join our community of developers creating universal apps.
 
-GitHub Actions runs `npm ci`, `npm run check`, and the web export for pull requests and pushes to `main`. Component tests are colocated as `*.test.tsx` outside the route directory. See [testing notes](docs/engineering/testing.md) for mocks and verification limits.
-
-## Engineering context
-
-- [Product requirements and release scope](docs/PRODUCT_REQUIREMENTS.md)
-- [Formation content structure and approval](docs/FORMATION_CONTENT_SPEC.md)
-- [Current implementation](docs/engineering/project-context.md)
-- [Authoritative navigation and UX flows](docs/APP_NAVIGATION_AND_UX.md)
-- [Architecture and integration decisions](docs/engineering/architecture-decisions.md)
-- [Design system and visual direction](docs/engineering/design-system.md)
-
-Scripture requires no service credentials or environment variables. The [curated Scripture architecture](docs/engineering/architecture-decisions.md#curated-scripture) separates reading plans, passages, translation metadata, and text. Run `npm run scripture:audit` to reproduce content validation and verse counts; `npm run scripture:audit -- --release` additionally checks publication and fallback readiness. The current draft has no assigned passages or imported text, so release readiness intentionally fails. Local `.env*` files are ignored except the non-secret [.env.example](.env.example). AWS Amplify Gen 2 dependencies, an Auth-only Cognito Lite definition, and validated native bootstrap exist locally; application Auth flows are implemented with automated coverage, while Amplify Data with AWS AppSync/Amazon DynamoDB remains Planned — V1. Amplify Storage/S3 and AWS Lambda are added only for concrete storage or trusted-logic requirements. The scaffold preview runs without deployed AWS resources or generated outputs; native development uses the installed Amplify dependencies. The Auth-only development sandbox, its Cognito configuration, and iOS development-client initialization are verified; Android initialization and the application Auth lifecycle remain unverified. See [current implementation](docs/engineering/project-context.md) for setup and evidence limits.
-
-The inherited `npm run reset-project` command moves `src/` and `scripts/` into `example/`, or deletes them if deletion is selected, before creating a blank `src/app/`. It is not a development setup step.
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

@@ -22,7 +22,26 @@ function findTemplateFiles(directory) {
 function readResources(templateFiles) {
   return templateFiles.flatMap((templateFile) => {
     const template = JSON.parse(readFileSync(templateFile, 'utf8'));
-    return Object.values(template.Resources ?? {});
+    return Object.entries(template.Resources ?? {}).map(([logicalId, resource]) => ({
+      logicalId,
+      ...resource,
+    }));
+  });
+}
+
+function findFiles(directory, fileName) {
+  if (!existsSync(directory)) {
+    return [];
+  }
+
+  return readdirSync(directory).flatMap((entry) => {
+    const path = join(directory, entry);
+
+    if (statSync(path).isDirectory()) {
+      return findFiles(path, fileName);
+    }
+
+    return entry === fileName ? [path] : [];
   });
 }
 
@@ -60,6 +79,53 @@ async function main() {
   const userPool = requireSingleResource(resources, 'AWS::Cognito::UserPool');
   const userPoolClient = requireSingleResource(resources, 'AWS::Cognito::UserPoolClient');
   const identityPool = requireSingleResource(resources, 'AWS::Cognito::IdentityPool');
+  const graphQlApi = requireSingleResource(resources, 'AWS::AppSync::GraphQLApi');
+  const dataTables = resources.filter(
+    (resource) => resource.Type === 'Custom::AmplifyDynamoDBTable',
+  );
+  const schemaFiles = findFiles(cloudAssemblyDirectory, 'model-schema.graphql');
+
+  if (schemaFiles.length !== 1) {
+    throw new Error(`Expected one generated model schema, found ${schemaFiles.length}.`);
+  }
+
+  const modelSchema = readFileSync(schemaFiles[0], 'utf8');
+  const applicationFunctions = resources.filter(
+    (resource) =>
+      resource.Type === 'AWS::Lambda::Function' &&
+      (JSON.stringify(resource.Properties?.Tags) ?? '').includes('faithful77-data-invariants'),
+  );
+  const applicationFunctionPolicies = resources.filter(
+    (resource) =>
+      resource.Type === 'AWS::IAM::Policy' &&
+      (JSON.stringify(resource.Properties?.PolicyDocument) ?? '').includes('dynamodb:GetItem') &&
+      (JSON.stringify(resource.Properties?.PolicyDocument) ?? '').includes('dynamodb:PutItem'),
+  );
+  const s3Buckets = resources.filter((resource) => resource.Type === 'AWS::S3::Bucket');
+
+  const generatedSchemaChecks = [
+    [
+      'type UserProfile @model(subscriptions:null,mutations:{create:null,delete:null},queries:{list:null})',
+      'UserProfile exposes only owner get/update operations',
+    ],
+    [
+      'type Journey @model(mutations:null,subscriptions:null)',
+      'Journey generated mutations and subscriptions are disabled',
+    ],
+    [
+      'type DailyEntry @model(subscriptions:null,mutations:{create:null,delete:null},queries:{list:null})',
+      'DailyEntry exposes only owner get/update/index operations',
+    ],
+    ['identityClaim: "sub"', 'model and protected-field ownership uses the Cognito sub claim'],
+    ['queryField: "listDailyEntriesByJourney"', 'DailyEntry has the Journey/day query index'],
+    ['@validate(type: gte, value: "1"', 'DailyEntry rejects day numbers below 1'],
+    ['@validate(type: lte, value: "77"', 'DailyEntry rejects day numbers above 77'],
+    ['ensureUserProfile: UserProfile', 'trusted ensureUserProfile mutation exists'],
+    ['startJourney(startDate: AWSDate!', 'trusted startJourney mutation uses a date-only start'],
+    ['ensureDailyEntry(journeyId: ID!, day: Int!)', 'trusted ensureDailyEntry mutation exists'],
+    ['morningIntention: String', 'private morning intention storage exists'],
+    ['reflectionText: String', 'private Reflection writing storage exists'],
+  ];
 
   const checks = [
     [userPool.Properties.UserPoolTier === 'LITE', 'Cognito tier is LITE'],
@@ -98,41 +164,73 @@ async function main() {
       identityPool.Properties.AllowUnauthenticatedIdentities === false,
       'guest identities are disabled',
     ],
+    [
+      graphQlApi.Properties.AuthenticationType === 'AMAZON_COGNITO_USER_POOLS',
+      'Cognito user pools are the default Data authorization mode',
+    ],
+    [
+      JSON.stringify(graphQlApi.Properties.AdditionalAuthenticationProviders) ===
+        JSON.stringify([{ AuthenticationType: 'AWS_IAM' }]),
+      'Data has only the framework-required IAM secondary mode and no public API key',
+    ],
+    [dataTables.length === 3, 'exactly three application model tables are synthesized'],
+    [
+      generatedSchemaChecks.every(([fragment]) => modelSchema.includes(fragment)),
+      'the generated schema preserves models, protected operations, indexes, and trusted mutations',
+    ],
+    [
+      applicationFunctions.length >= 1 &&
+        applicationFunctions.every((resource) => {
+          const variables = resource.Properties?.Environment?.Variables ?? {};
+          return (
+            resource.Properties?.Runtime === 'nodejs24.x' &&
+            ['USER_PROFILE_TABLE_NAME', 'JOURNEY_TABLE_NAME', 'DAILY_ENTRY_TABLE_NAME'].every(
+              (name) => name in variables,
+            )
+          );
+        }),
+      'the trusted Node 24 invariant handler receives only the three model table names',
+    ],
+    [
+      applicationFunctionPolicies.length >= 1 &&
+        applicationFunctionPolicies.every((resource) => {
+          const statements = resource.Properties.PolicyDocument.Statement ?? [];
+          return statements.every(
+            (statement) =>
+              statement.Effect === 'Allow' &&
+              JSON.stringify(statement.Action) ===
+                JSON.stringify(['dynamodb:GetItem', 'dynamodb:PutItem']),
+          );
+        }),
+      'the trusted handler has only DynamoDB GetItem and PutItem access',
+    ],
+    [
+      s3Buckets.length === 2 &&
+        s3Buckets.every((resource) =>
+          /(AmplifyCodegenAssets|modelIntrospectionSchemaBucket)/.test(resource.logicalId),
+        ),
+      'S3 is limited to Amplify-generated schema/codegen infrastructure (no app Storage)',
+    ],
   ];
-
-  const forbiddenResourceTypes = new Set([
-    'AWS::AppSync::GraphQLApi',
-    'AWS::DynamoDB::Table',
-    'AWS::Lambda::Function',
-    'AWS::S3::Bucket',
-  ]);
-  const forbiddenResources = resources.filter((resource) =>
-    forbiddenResourceTypes.has(resource.Type),
-  );
-
-  if (forbiddenResources.length > 0) {
-    throw new Error(
-      `Unexpected out-of-scope resources: ${forbiddenResources
-        .map((resource) => resource.Type)
-        .join(', ')}.`,
-    );
-  }
 
   const failedChecks = checks.filter(([passed]) => !passed);
 
   if (failedChecks.length > 0) {
     throw new Error(
-      `Amplify Auth verification failed:\n${failedChecks
+      `Amplify backend verification failed:\n${failedChecks
         .map(([, description]) => `- ${description}`)
         .join('\n')}`,
     );
   }
 
-  console.log('Amplify Auth template verification passed:');
+  console.log('Amplify Auth + Data template verification passed:');
   for (const [, description] of checks) {
     console.log(`- ${description}`);
   }
-  console.log('- no Data, DynamoDB, Lambda, or S3 resources are present');
+  for (const [, description] of generatedSchemaChecks) {
+    console.log(`- ${description}`);
+  }
+  console.log('- synthesis verifies structure, not deployed authorization enforcement');
 }
 
 main().catch((error) => {

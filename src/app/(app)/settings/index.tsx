@@ -11,6 +11,9 @@ export default function SettingsScreen() {
       <PlaceholderLink href="/settings/bible-translation" push>
         Bible Translation
       </PlaceholderLink>
+      <PlaceholderLink href="/settings/notifications" push>
+        Notifications
+      </PlaceholderLink>
       <PlaceholderLink href="/settings/privacy" push>
         Privacy &amp; Data
       </PlaceholderLink>

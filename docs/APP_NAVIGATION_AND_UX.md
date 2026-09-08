@@ -6,9 +6,9 @@
 **Product scope:** V1 personal 77-day journey, with future community architecture documented separately.
 
 > [!IMPORTANT]
-> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. AWS Amplify Gen 2, authentication, onboarding persistence, and journey state are not implemented. Curated Scripture data access and validation exist, with no approved assignments or translation text; reader/selection routes remain scaffolds.
+> **Repository verification status:** Source and configuration were inspected on 2026-09-08 after completing the V1 navigation scaffold. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. AWS Amplify Gen 2, authentication, onboarding persistence, and journey state are not implemented. Curated Scripture data access and validation exist, with no approved assignments or translation text; reader/selection routes remain scaffolds.
 >
-> The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications are **Planned — V1**, but their routes/features are absent. Community remains Future. Sections 28–29 record settled V1 decisions and intentionally deferred Future questions; section 30 separates specification coverage from implementation evidence.
+> The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications now exist as **Existing — navigation scaffold** routes; their authentication and reminder behavior remains **Planned — V1**. Community remains Future. Sections 28–29 record settled V1 decisions and intentionally deferred Future questions; section 30 separates specification coverage from implementation evidence.
 
 ---
 
@@ -75,12 +75,12 @@ Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-an
 
 [Product requirements](PRODUCT_REQUIREMENTS.md) owns the personal-journey V1 scope, practice catalog/semantics, audience, commercial/privacy principles, and exclusions. [Formation content](FORMATION_CONTENT_SPEC.md) owns the 11-week curriculum and approval/versioning rules. This contract translates those requirements into flows; backend and curated Scripture technical choices remain in [architecture decisions](engineering/architecture-decisions.md).
 
-### 3.2 Existing source and configuration — inspected 2026-09-07
+### 3.2 Existing source and configuration — inspected 2026-09-08
 
 | Area                       | Existing implementation and evidence                                                                                                                                                                                             | Relationship to this contract                                                                                                                           |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Stack                      | [package.json](../package.json), lockfile, installed Expo 57.0.20 / Expo Router 57.0.19 / React Native 0.86.3 / React 19.2.3                                                                                                     | Versions preserved; SDK 57 references and installed APIs checked                                                                                        |
-| Routes                     | [src/app/](../src/app/) contains the existing V1 route groups and placeholders, excluding planned Verify Email/Notifications; `/` redirects to `/auth/welcome`; `/explore` removed                                               | Screen Inventory and Route Registry distinguish scaffolding from feature behavior                                                                       |
+| Routes                     | [src/app/](../src/app/) contains the existing V1 route groups and placeholders, including Verify Email and Notifications; `/` redirects to `/auth/welcome`; `/explore` removed                                                   | Screen Inventory and Route Registry distinguish scaffolding from feature behavior                                                                       |
 | Root layout/startup        | [Root layout](../src/app/_layout.tsx) retains theme integration and `AnimatedSplashOverlay`, and hosts the bootstrap/auth/onboarding/app stack                                                                                   | Root group declarations are the future centralized `Stack.Protected` boundary; splash restoration gating remains deferred                               |
 | Native/web navigation      | [Native tabs](../src/components/app-tabs.tsx) and [web tabs](../src/components/app-tabs.web.tsx) expose exactly Today/Journey; each tab has a header stack and Settings action                                                   | Settings and focused routes push above tabs; ordinary history preserves the originating tab                                                             |
 | Auth and backend           | No Amplify dependency, Auth/Data definitions, authorization, Lambda handlers, or profile/onboarding persistence                                                                                                                  | No guards backed by fabricated state; direct scaffold routes are not protected                                                                          |
@@ -92,7 +92,7 @@ Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-an
 | State/privacy              | Local UI/theme state and a route-scoped validated day number only; no private data or persistence                                                                                                                                | No offline, sync, authentication, save, or deletion success is implied                                                                                  |
 | Shared UI and instructions | Existing theme primitives, reusable collapsible/external link, and splash infrastructure retained; obsolete tutorial hint/badge removed                                                                                          | [Design inventory](engineering/design-system.md) and [project context](engineering/project-context.md) record current limits; no Community entry points |
 
-The base route architecture exists; Verify Email/Notifications additions, integrations, and implementation of settled domain policies remain planned. The full implementation inventory remains in [project context](engineering/project-context.md).
+The base route architecture and Verify Email/Notifications navigation additions exist; integrations and implementation of settled domain policies remain planned. The full implementation inventory remains in [project context](engineering/project-context.md).
 
 ### 3.3 Keeping reconciliation current
 
@@ -254,7 +254,7 @@ Do not create separate daily Prayer or Practices routes unless later usability t
 
 ## 6. Expo Router Mapping
 
-Expo Router, the route groups/stacks, and most V1 paths below are **Existing — navigation scaffold**. Guards, data, and feature actions remain **Planned — V1**. Verify Email and Notifications are required V1 target entries but are not present in source. Native/web `AppTabs` variants are preserved. Additional tab layouts provide native headers, and the shared dynamic day layout owns validation and static parameters; these additions do not change URLs.
+Expo Router, the route groups/stacks, and the V1 paths below are **Existing — navigation scaffold**. Guards, data, and feature actions remain **Planned — V1**. Verify Email and Notifications now provide only their deterministic scaffold relationships. Native/web `AppTabs` variants are preserved. Additional tab layouts provide native headers, and the shared dynamic day layout owns validation and static parameters; these additions do not change URLs.
 
 ```text
 src/app/
@@ -268,7 +268,7 @@ src/app/
 │       ├── sign-in.tsx
 │       ├── sign-up.tsx
 │       ├── forgot-password.tsx
-│       └── verify-email.tsx          # Planned — V1; required before onboarding; absent
+│       └── verify-email.tsx          # Scaffold; verification behavior Planned — V1
 │
 ├── (onboarding)/
 │   ├── _layout.tsx
@@ -302,7 +302,7 @@ src/app/
     │   ├── index.tsx
     │   ├── practices.tsx
     │   ├── bible-translation.tsx
-    │   ├── notifications.tsx        # Planned — V1; local reminders; absent
+    │   ├── notifications.tsx        # Scaffold; local reminders Planned — V1
     │   ├── privacy.tsx
     │   ├── account.tsx
     │   ├── about.tsx
@@ -498,7 +498,7 @@ flowchart TD
 
 # 9. Complete Screen Inventory
 
-> **Implementation status note:** Most V1 routes exist as navigation scaffolding; Verify Email and Notifications remain Planned — V1 and absent. Screen purposes, data requirements, auth requirements, and successful submissions below describe the intended product, which remains planned. `/` currently performs only the signed-out launch redirect. Home and Explore have been removed; Future routes are absent. In the target policy, every onboarding/app screen requires verified email; the Yes auth cells below include that requirement, with onboarding completion additionally required for app screens.
+> **Implementation status note:** V1 routes exist as navigation scaffolding, including Verify Email and Notifications. Their screen purposes, data requirements, auth requirements, and successful submissions below describe intended product behavior, which remains planned. `/` currently performs only the signed-out launch redirect. Home and Explore have been removed; Future routes are absent. In the target policy, every onboarding/app screen requires verified email; the Yes auth cells below include that requirement, with onboarding completion additionally required for app screens.
 
 | Screen                       | Recommended route                       | Purpose                                                                | Entry points                                  | Primary exit / destination           | Auth               | Scope  | Status                         |
 | ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------ | ------------------ | ------ | ------------------------------ |
@@ -507,7 +507,7 @@ flowchart TD
 | Sign In                      | `/auth/sign-in`                         | Authenticate existing account                                          | Welcome, Verify Email, protected redirect     | Verify Email / Onboarding / Today    | No                 | V1     | Existing — navigation scaffold |
 | Sign Up                      | `/auth/sign-up`                         | Create account                                                         | Welcome                                       | Verify Email                         | No                 | V1     | Existing — navigation scaffold |
 | Forgot Password              | `/auth/forgot-password`                 | Request and complete password reset                                    | Sign In                                       | Sign In                              | No                 | V1     | Existing — navigation scaffold |
-| Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Sign In / Onboarding / Today         | Pending/unverified | V1     | Planned — V1                   |
+| Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Sign In / Onboarding / Today         | Pending/unverified | V1     | Existing — navigation scaffold |
 | Onboarding Overview          | `/onboarding`                           | Explain journey + 3 required practices                                 | Auth gate                                     | Practice Selection                   | Yes                | V1     | Existing — navigation scaffold |
 | Practice Selection           | `/onboarding/practices`                 | Choose exactly 2 optional practices                                    | Onboarding Overview                           | Bible Translation                    | Yes                | V1     | Existing — navigation scaffold |
 | Bible Translation Onboarding | `/onboarding/bible-translation`         | Select an available registry translation                               | Practice Selection                            | Journey Confirmation                 | Yes                | V1     | Existing — navigation scaffold |
@@ -521,7 +521,7 @@ flowchart TD
 | Settings                     | `/settings`                             | Preference/account hub                                                 | Header action from Today/Journey              | Settings subpage / Back              | Yes                | V1     | Existing — navigation scaffold |
 | Practice Settings            | `/settings/practices`                   | Change 2 optional practices                                            | Settings                                      | Save → Settings                      | Yes                | V1     | Existing — navigation scaffold |
 | Bible Translation Settings   | `/settings/bible-translation`           | Change Scripture translation                                           | Settings                                      | Save → Settings                      | Yes                | V1     | Existing — navigation scaffold |
-| Notification Settings        | `/settings/notifications`               | Configure optional reminders                                           | Settings                                      | Back → Settings                      | Yes                | V1     | Planned — V1                   |
+| Notification Settings        | `/settings/notifications`               | Configure optional reminders                                           | Settings                                      | Back → Settings                      | Yes                | V1     | Existing — navigation scaffold |
 | Privacy & Data               | `/settings/privacy`                     | Explain private data, policy links, data controls                      | Settings                                      | Back → Settings                      | Yes                | V1     | Existing — navigation scaffold |
 | Account                      | `/settings/account`                     | Account identity, sign out, deletion entry                             | Settings                                      | Back / Sign Out / Delete Account     | Yes                | V1     | Existing — navigation scaffold |
 | Delete Account               | `/settings/account/delete`              | Confirm destructive deletion                                           | Account                                       | Sign-out completion or Back          | Yes                | V1     | Existing — navigation scaffold |
@@ -662,7 +662,7 @@ Do not collect profile fields solely because future Community might need them.
 | Field                 | Specification                                                                                                                |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | **Purpose**           | Require verified email before onboarding and cloud personal-data writes.                                                     |
-| **Route**             | `/auth/verify-email` — not implemented yet.                                                                                  |
+| **Route**             | `/auth/verify-email` — navigation scaffold exists; verification behavior is not implemented.                                 |
 | **Context**           | Auth stack for pending account confirmation or an authenticated but unverified session.                                      |
 | **Entry points**      | Successful sign-up; sign-in or restored session with unverified email.                                                       |
 | **Primary action**    | `Verify email` submits the emailed code; verified users complete sign-in before the normal onboarding/journey gate.          |
@@ -1139,17 +1139,17 @@ Change applies immediately to current and historical Scripture Reader rendering 
 
 ## 10.20 Notification Settings — Planned — V1
 
-| Field                 | Specification                                                                       |
-| --------------------- | ----------------------------------------------------------------------------------- |
-| **Purpose**           | Configure one optional local-device daily reminder.                                 |
-| **Route**             | `/settings/notifications` — required V1 route, not implemented yet.                 |
-| **Context**           | Settings stack.                                                                     |
-| **Entry points**      | Notifications row in Settings, required for V1.                                     |
-| **Primary action**    | Explicitly enable/disable reminders and explicitly select the reminder time.        |
-| **Secondary actions** | Open OS Settings when permission is denied.                                         |
-| **Back behavior**     | Standard back to Settings; use one consistent save pattern for time/enable changes. |
-| **Required data**     | OS permission, device-local reminder preference/time, scheduling result.            |
-| **Persistence**       | Local-device reminder settings and scheduling; no backend push infrastructure.      |
+| Field                 | Specification                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------------- |
+| **Purpose**           | Configure one optional local-device daily reminder.                                           |
+| **Route**             | `/settings/notifications` — navigation scaffold exists; reminder behavior is not implemented. |
+| **Context**           | Settings stack.                                                                               |
+| **Entry points**      | Notifications row in Settings, required for V1.                                               |
+| **Primary action**    | Explicitly enable/disable reminders and explicitly select the reminder time.                  |
+| **Secondary actions** | Open OS Settings when permission is denied.                                                   |
+| **Back behavior**     | Standard back to Settings; use one consistent save pattern for time/enable changes.           |
+| **Required data**     | OS permission, device-local reminder preference/time, scheduling result.                      |
+| **Persistence**       | Local-device reminder settings and scheduling; no backend push infrastructure.                |
 
 ### Permission and reminder behavior
 
@@ -1259,7 +1259,7 @@ Keep this informational. Do not duplicate onboarding or create a marketing feed.
 | **Required data**     | Configured support destination.                                                             |
 | **Persistence**       | None; open the configured support contact destination, with no support-ticket system in V1. |
 
-Never prefill support diagnostics with private Scripture reflection, intention, prayer, or journal text. Support email, website/domain, policy URLs, and legal identity remain external launch prerequisites until supplied; see [project context](engineering/project-context.md#external-setup-and-release-prerequisites). Do not fabricate support/legal destinations.
+Never prefill support diagnostics with private Scripture reflection, intention, prayer, or journal text. External launch facts and their current supplied/TBD status are maintained in [project context](engineering/project-context.md#external-setup-and-release-prerequisites). Do not fabricate support/legal destinations or infer them from the supplied domain.
 
 ---
 
@@ -2004,7 +2004,7 @@ Platform-specific behavior should be limited to native navigation, keyboard, per
 
 # 22. Screen Relationship Matrix
 
-This matrix is the contract for meaningful interactive navigation. The existing scaffold wires only deterministic navigation: auth links, onboarding step links (explicitly without selection/persistence), tab switching, Settings pushes and returns, validated day-child links, and completion review. Successful submissions and all state-dependent conditions remain planned. Authenticated conditions for onboarding/app entries below include verified email; app entries also require completed onboarding. Verify Email and the Notifications route/row remain required V1 additions. See section 3.2 for the integration boundary.
+This matrix is the contract for meaningful interactive navigation. The existing scaffold wires only deterministic navigation: auth links and Verify Email cancellation, onboarding step links (explicitly without selection/persistence), tab switching, Settings pushes and returns including Notifications, validated day-child links, and completion review. Successful submissions and all state-dependent conditions remain planned. Authenticated conditions for onboarding/app entries below include verified email; app entries also require completed onboarding. See section 3.2 for the integration boundary.
 
 | From                         | Action                                   | Destination                       | Navigation type            | Conditions / result                                                                       |
 | ---------------------------- | ---------------------------------------- | --------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------- |
@@ -2021,7 +2021,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | Forgot Password              | Reset email sent                         | Code/new-password form            | Inline                     | Stay on this route; reset is not complete                                                 |
 | Forgot Password              | Password reset confirmed                 | Sign In                           | Back/CTA                   | User chooses return after successful code/new-password submission                         |
 | Verify Email                 | Verification confirmed                   | Sign In / Onboarding / Today      | Replace                    | Establish verified session, then normal state gate                                        |
-| Verify Email                 | Cancel confirmation / sign out           | Welcome                           | Replace                    | Clear pending confirmation or complete sign-out; no protected access                      |
+| Verify Email                 | Cancel confirmation / sign out           | Welcome                           | Replace                    | Scaffold returns to Welcome; future integration clears pending confirmation or signs out  |
 | Onboarding Overview          | Continue                                 | Practice Selection                | Push                       | Verified authenticated account                                                            |
 | Practice Selection           | Continue                                 | Bible Translation                 | Push                       | Exactly 2 selected                                                                        |
 | Bible Translation Onboarding | Continue                                 | Journey Confirmation              | Push                       | Valid translation selected                                                                |
@@ -2064,7 +2064,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | Journey Completion           | Back to Today                            | Today                             | Replace/Back               | Always                                                                                    |
 | Settings                     | Optional Practices                       | Practice Settings                 | Push                       | Authenticated                                                                             |
 | Settings                     | Bible Translation                        | Bible Translation Settings        | Push                       | Authenticated                                                                             |
-| Settings                     | Notifications                            | Notification Settings             | Push                       | Planned — V1; route/feature currently absent                                              |
+| Settings                     | Notifications                            | Notification Settings             | Push                       | Scaffold exists; reminder behavior remains Planned — V1                                   |
 | Settings                     | Privacy & Data                           | Privacy & Data                    | Push                       | Authenticated                                                                             |
 | Settings                     | Account                                  | Account                           | Push                       | Authenticated                                                                             |
 | Settings                     | About                                    | About                             | Push                       | Authenticated                                                                             |
@@ -2095,7 +2095,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 
 # 23. Route Registry
 
-> Most V1 paths are implemented as navigation scaffolding; Verify Email and Notifications remain Planned — V1 additions. The protection column specifies the target policy, not a working guard: auth/onboarding and journey state are absent. Only day-parameter validity is enforced today. Future paths remain absent. Yes in the protection column means verified account plus completed onboarding; no client gate replaces backend authorization.
+> V1 paths are implemented as navigation scaffolding, including Verify Email and Notifications. Their feature behavior remains Planned — V1. The protection column specifies the target policy, not a working guard: auth/onboarding and journey state are absent. Only day-parameter validity is enforced today. Future paths remain absent. Yes in the protection column means verified account plus completed onboarding; no client gate replaces backend authorization.
 
 | Route                                   | Screen                     | Route group     | Parameters                                | Protection required              | V1/Future | Notes                                                                     | Status                         |
 | --------------------------------------- | -------------------------- | --------------- | ----------------------------------------- | -------------------------------- | --------- | ------------------------------------------------------------------------- | ------------------------------ |
@@ -2104,7 +2104,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | `/auth/sign-in`                         | Sign In                    | `(auth)`        | Optional preserved destination internally | Signed-out only                  | V1        | Do not expose private data in redirect params                             | Existing — navigation scaffold |
 | `/auth/sign-up`                         | Sign Up                    | `(auth)`        | None                                      | Signed-out only                  | V1        | Email/password; success → Verify Email                                    | Existing — navigation scaffold |
 | `/auth/forgot-password`                 | Forgot Password            | `(auth)`        | None                                      | Signed-out only                  | V1        | Email-code/new-password steps on this route                               | Existing — navigation scaffold |
-| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Confirming / unverified          | V1        | Required before onboarding/cloud personal writes                          | Planned — V1                   |
+| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Confirming / unverified          | V1        | Scaffold cancels to Welcome; verification behavior remains planned        | Existing — navigation scaffold |
 | `/onboarding`                           | Onboarding Overview        | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Resume flow                                                               | Existing — navigation scaffold |
 | `/onboarding/practices`                 | Practice Selection         | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Exactly two optional practices                                            | Existing — navigation scaffold |
 | `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Available curated translation registry                                    | Existing — navigation scaffold |
@@ -2118,7 +2118,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | `/settings`                             | Settings                   | `(app)`         | None                                      | Yes                              | V1        | Open from tab headers                                                     | Existing — navigation scaffold |
 | `/settings/practices`                   | Practice Settings          | `(app)`         | None                                      | Yes                              | V1        | Effective next day                                                        | Existing — navigation scaffold |
 | `/settings/bible-translation`           | Bible Translation Settings | `(app)`         | None                                      | Yes                              | V1        | Immediate display preference                                              | Existing — navigation scaffold |
-| `/settings/notifications`               | Notification Settings      | `(app)`         | None                                      | Yes                              | V1        | One explicitly enabled local daily reminder                               | Planned — V1                   |
+| `/settings/notifications`               | Notification Settings      | `(app)`         | None                                      | Yes                              | V1        | Scaffold only; local reminder behavior remains planned                    | Existing — navigation scaffold |
 | `/settings/privacy`                     | Privacy & Data             | `(app)`         | None                                      | Yes                              | V1        | Do not overpromise behavior                                               | Existing — navigation scaffold |
 | `/settings/account`                     | Account                    | `(app)`         | None                                      | Yes                              | V1        | Sign out/delete                                                           | Existing — navigation scaffold |
 | `/settings/account/delete`              | Delete Account             | `(app)`         | None                                      | Yes                              | V1        | Destructive flow                                                          | Existing — navigation scaffold |
@@ -2424,7 +2424,7 @@ Expired, invalid, already-used, or unauthorized invitations should end in a clea
 
 # 27. Existing UX / Navigation Issues
 
-Source inspection after the navigation foundation on 2026-09-07 confirms that starter navigation has been replaced. The remaining gaps below are explicitly deferred product work, not working integrations.
+Source inspection after completing the navigation scaffold on 2026-09-08 confirms that starter navigation has been replaced. The remaining gaps below are explicitly deferred product work, not working integrations.
 
 | Observed state                                                                                          | Classification                               | Consequence / next scoped work                                                                |
 | ------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -2434,7 +2434,7 @@ Source inspection after the navigation foundation on 2026-09-07 confirms that st
 | Settings has pushed child routes and source-aware stack returns; no preference/account operations exist | Existing navigation; planned feature actions | Add persistence, unsaved-change behavior, and real account operations within these routes     |
 | URL scheme exists without protected destination preservation                                            | Planned product deep links                   | Preserve and validate destinations through real gates before publishing links                 |
 | Community is absent                                                                                     | Consistent with Future scope                 | Keep all Community routes and entry points absent in V1                                       |
-| Verify Email and Notifications are absent                                                               | Planned — V1; implementation gap             | Add their required routes and feature behavior in scoped work                                 |
+| Verify Email and Notifications routes exist without auth or reminder operations                         | Existing navigation; planned feature actions | Connect real verification and local reminder behavior in their later integration milestones   |
 
 Email-gate placement and ended-Day-77 access are settled under section 29.1; their implementation remains deferred. Native back/gesture verification is recorded separately in section 30.
 
@@ -2576,16 +2576,16 @@ The missing-journey recovery in section 7.2 now resolves onboarding state before
 - [x] Ended-journey Day 77 entry/guard is fully specified; see section 29.1 (specification only).
 - [x] V1 reminders and pending-write sign-out choices are specified; implementation remains planned.
 
-## 30.2 Navigation foundation inspection — 2026-09-07
+## 30.2 Navigation foundation inspection — 2026-09-08
 
-- [x] Route files/groups for the original scaffold scope are present; bootstrap replaces to Welcome. Verify Email and Notifications are additional required V1 routes and remain absent.
+- [x] Required V1 route files/groups are present; bootstrap replaces to Welcome, and Verify Email and Notifications remain navigation-only scaffolds.
 - [x] Today and Journey are the only permanent tabs on native and web.
 - [x] Tab header stacks and Settings/focused stacks retain ordinary push/pop history.
 - [x] Auth links and onboarding navigation-only steps are wired without fake submissions.
 - [x] Shared day validation rejects malformed/noncanonical values and values outside 1–77, replacing with Journey before content renders.
 - [x] Shared static parameters generate all 77 public day/detail/Scripture/Reflection paths without user data; Expo also emits its group aliases and dynamic fallback files.
 - [x] Home/Explore navigation and unused tutorial hint/badge components are removed; splash and theme integration are retained.
-- [x] Source has no Verify Email or Notifications routes (required V1 work remains); Community/invitation and separate Prayer/generic Practice routes are also absent as intended.
+- [x] Verify Email and Notifications routes exist without fake submissions, permissions, scheduling, or persistence; Community/invitation and separate Prayer/generic Practice routes remain absent as intended.
 - [x] Auth/onboarding guards, session-aware splash gating, and protected deep-link preservation are deferred at the root group boundary.
 - [x] Current/future-day guards, historical status, Day 77 completion, and ended-journey access are deferred at the shared day layout until journey state exists.
 - [x] No authentication, save, completion, sign-out, deletion, support submission, or provider response is fabricated.
@@ -2596,7 +2596,7 @@ Open a required path directly in the local preview to inspect its placeholder, i
 
 ### Verification results
 
-Targeted navigation tests passed: day parsing plus real Expo Router JavaScript navigation using the web tab component and mocked native boundaries. Tests cover auth links, onboarding navigation, tab selection, Settings → Account → Delete Account and return to each source tab, focused day returns, invalid day redirects, completion review, and the bounded static parameter set. `npm run export:web` passed with 231 concrete ungrouped day pages (77 × 3), plus the then-existing V1 scaffold routes and Router-generated files; Verify Email/Notifications are absent from that evidence. These are not native gesture or deployed authorization tests. Final full-check and runtime results are recorded in [testing guidance](engineering/testing.md).
+Targeted navigation tests passed for Verify Email cancellation and Settings → Notifications → Back, alongside the existing day parsing and real Expo Router JavaScript navigation coverage using the web tab component and mocked native boundaries. `npm run check` passed 131 tests across nine suites, and `npm run export:web` passed with 517 static routes, including `/auth/verify-email`, `/settings/notifications`, and all 231 concrete ungrouped day pages (77 × 3), plus Router-generated group aliases and dynamic fallback files. These are not native gesture, permission, notification-delivery, authentication, or deployed-authorization tests. Historical runtime evidence and its limits are recorded in [testing guidance](engineering/testing.md).
 
 ### Code verification completion rule
 

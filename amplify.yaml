@@ -5,7 +5,7 @@ frontend:
       commands:
         - nvm install 24
         - nvm use 24
-        - npm install --global npm@11
+        - npm install --global npm@11.16.0
         - node --version
         - npm --version
         - npm ci --cache .npm --prefer-offline

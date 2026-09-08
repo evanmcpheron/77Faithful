@@ -10,19 +10,19 @@ The app contains a V1 navigation scaffold with Today/Journey tabs, auth/onboardi
 
 Versions below are declarations from [package.json](../../package.json). [package-lock.json](../../package-lock.json) is an npm lockfile (version 3); its root dependency declarations match the manifest.
 
-| Area                      | Dependencies / configuration                                                                                                          |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Runtime                   | `expo ~57.0.20`, `react-native 0.86.3`, `react 19.2.3`                                                                                |
-| Routing                   | `expo-router ~57.0.19`; entry point `expo-router/entry`                                                                               |
-| Types                     | `typescript ~6.0.3`, `@types/react ~19.2.2`                                                                                           |
-| Web                       | `react-dom 19.2.3`, `react-native-web ~0.21.0`; static web output                                                                     |
-| Native development        | `expo-dev-client ~57.0.18`; local CNG builds and EAS development profiles                                                             |
-| Animation                 | `react-native-reanimated 4.5.1`, `react-native-worklets 0.10.1`; keyframe/splash animation                                            |
-| Layout/navigation support | `react-native-safe-area-context ~5.7.0`, `react-native-screens ~4.26.0`, `react-native-gesture-handler ~2.32.0`                       |
-| Images/icons              | `expo-image ~57.0.4`, `expo-symbols ~57.0.2`                                                                                          |
-| Startup/device/links      | `expo-splash-screen ~57.0.8`, `expo-device ~57.0.1`, `expo-web-browser ~57.0.2`                                                       |
-| Amplify client            | `aws-amplify ^6.20.0`, `@aws-amplify/react-native ^1.3.3`, SDK-57 AsyncStorage/NetInfo and required polyfills                         |
-| Amplify backend tooling   | `@aws-amplify/backend ^1.24.1`, CLI `^1.9.1`, AWS SDK DynamoDB `^3.1128.0`, CDK `^2.267.0`, constructs `^10.8.1`, `tsx` and `esbuild` |
+| Area                      | Dependencies / configuration                                                                                                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Runtime                   | `expo ~57.0.20`, `react-native 0.86.3`, `react 19.2.3`                                                                                                               |
+| Routing                   | `expo-router ~57.0.19`; entry point `expo-router/entry`                                                                                                              |
+| Types                     | `typescript ~6.0.3`, `@types/react ~19.2.2`                                                                                                                          |
+| Web                       | `react-dom 19.2.3`, `react-native-web ~0.21.0`; static web output                                                                                                    |
+| Native development        | `expo-dev-client ~57.0.18`; local CNG builds and EAS development profiles                                                                                            |
+| Animation                 | `react-native-reanimated 4.5.1`, `react-native-worklets 0.10.1`; keyframe/splash animation                                                                           |
+| Layout/navigation support | `react-native-safe-area-context ~5.7.0`, `react-native-screens ~4.26.0`, `react-native-gesture-handler ~2.32.0`                                                      |
+| Images/icons              | `expo-image ~57.0.4`, `expo-symbols ~57.0.2`                                                                                                                         |
+| Startup/device/links      | `expo-splash-screen ~57.0.8`, `expo-device ~57.0.1`, `expo-web-browser ~57.0.2`                                                                                      |
+| Amplify client            | `aws-amplify ^6.20.0`, `@aws-amplify/react-native ^1.3.3`, SDK-57 AsyncStorage/NetInfo and required polyfills                                                        |
+| Amplify backend tooling   | `@aws-amplify/backend ^1.24.1`, CLI `^1.9.1`, AWS SDK Cognito/DynamoDB `^3.1128.0` and Lambda `^3.1127.0`, CDK `^2.267.0`, constructs `^10.8.1`, `tsx` and `esbuild` |
 
 Other direct dependencies are `@expo/ui`, `expo-constants`, `expo-font`, `expo-glass-effect`, `expo-linking`, `expo-status-bar`, and `expo-system-ui`, all on SDK 57 version ranges. Only `expo-constants` has a direct import in `src/`, for the Amplify bootstrap; the remaining packages' presence does not establish a component library, custom font loader, or application integration.
 

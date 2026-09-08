@@ -175,7 +175,7 @@ They must not fabricate:
 - successful authentication,
 - successful account creation,
 - Firebase persistence,
-- API.Bible content,
+- approved Scripture text,
 - journey progress,
 - practice completion,
 - reflections,
@@ -225,7 +225,7 @@ Use component tests for meaningful navigation triggers and accessible controls w
 
 A mocked router call proves only that a trigger was issued. Do not claim it proves native stack behavior, protected-route behavior, hardware Back behavior, gestures, or end-to-end navigation.
 
-Do not create speculative tests for authentication, journey state, Firebase, API.Bible, Community, or notification behavior that is not implemented; route/link checks may cover their truthful scaffolds.
+Do not create speculative tests for authentication, journey state, Firebase, Scripture content, Community, or notification behavior that is not implemented; route/link checks may cover their truthful scaffolds.
 
 ## Verification
 

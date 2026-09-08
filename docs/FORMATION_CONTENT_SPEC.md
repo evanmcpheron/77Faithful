@@ -4,7 +4,7 @@ Settled by the product owner on 2026-09-07. This is the curriculum structure and
 
 ## Authority
 
-This document owns the 77-day curriculum, theme sequence, authored fields, production approval, versioning/publication, V1 content storage, development fixtures, future daily variants, and group curriculum consistency. [Product requirements](PRODUCT_REQUIREMENTS.md) owns practice semantics and theological/product guardrails. [Navigation and UX](APP_NAVIGATION_AND_UX.md) owns placement, screen flows, and day access; [architecture decisions](engineering/architecture-decisions.md) owns technical data and API.Bible boundaries. Do not create a second content specification in code comments or task prompts.
+This document owns the 77-day curriculum, theme sequence, authored fields, production approval, versioning/publication, V1 content storage, development fixtures, future daily variants, and group curriculum consistency. [Product requirements](PRODUCT_REQUIREMENTS.md) owns practice semantics and theological/product guardrails. [Navigation and UX](APP_NAVIGATION_AND_UX.md) owns placement, screen flows, and day access; [architecture decisions](engineering/architecture-decisions.md) owns technical data and Scripture storage boundaries. Do not create a second content specification in code comments or task prompts.
 
 ## V1 curriculum structure
 
@@ -30,14 +30,14 @@ Changing the sequence for actual production content requires an explicit product
 
 Each approved production day includes at minimum:
 
-| Field                            | Requirement                                                                                                                                                                          |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Day number                       | One unique integer from 1 through 77 within the published content version.                                                                                                           |
-| Week/theme identifier            | Stable reference to the appropriate theme in the sequence above.                                                                                                                     |
-| Scripture passage reference      | The assigned passage reference, not copied API.Bible licensed Scripture text. Verify the reference during review; translation/provider identifiers follow the architecture boundary. |
-| Focused prayer prompt            | Primarily a prompt guiding participant prayer, not a fully written prayer.                                                                                                           |
-| Reflection question              | Aligned with the day's Scripture and theme; writing remains optional under product practice semantics.                                                                               |
-| Short theme/application sentence | Optional; aligned with the passage when present.                                                                                                                                     |
+| Field                            | Requirement                                                                                                                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Day number                       | One unique integer from 1 through 77 within the published content version.                                                                                                                 |
+| Week/theme identifier            | Stable reference to the appropriate theme in the sequence above.                                                                                                                           |
+| Scripture passage reference      | A canonical passage identity and display reference, independent of translation. Verify the assigned range during review; translated text lives separately under the architecture boundary. |
+| Focused prayer prompt            | Primarily a prompt guiding participant prayer, not a fully written prayer.                                                                                                                 |
+| Reflection question              | Aligned with the day's Scripture and theme; writing remains optional under product practice semantics.                                                                                     |
+| Short theme/application sentence | Optional; aligned with the passage when present.                                                                                                                                           |
 
 Normal assigned reading should target roughly **5–15 minutes** where the passage naturally supports that range. This is an authoring target, not a participant timer/completion requirement. Do not enforce an arbitrary verse-count rule.
 
@@ -62,11 +62,21 @@ Human product ownership has final authority. AI drafting or AI review alone is n
 
 ## V1 storage and versioning
 
-Application-authored formation content is **version-controlled structured local content in the repository**. It contains themes, passage references, prayer prompts, reflection questions, practice definitions, and other app-authored formation copy. API.Bible supplies licensed Bible text dynamically through the selected integration; do not embed it in these local content files. No CMS in V1.
+Application-authored formation content is **version-controlled structured local content in the repository**. It contains themes, passage references, prayer prompts, reflection questions, practice definitions, and other app-authored formation copy. Translation-specific Scripture is stored separately from these authored fields, keyed by canonical passage and stable internal translation ID. The curated text may be bundled when verified rights permit; see the [Scripture architecture](engineering/architecture-decisions.md#curated-scripture). No CMS in V1.
 
 Each published content version identifies a complete, approved 77-day curriculum. Every journey stores/pins the version it started with. Published older versions remain available to render historical journeys correctly. Do not silently switch an active or historical journey to a newer version or replace a missing older version with the latest curriculum. Changes in the participant's reader translation do not change the authored passage reference or the pinned version.
 
 Structured content must be validated for unique Day 1–77 coverage, correct seven-day theme membership/order, required fields, and valid theme references when publication tooling/content is introduced. Human review still establishes theological approval; a passing schema check does not. The [testing guide](engineering/testing.md) owns verification methods, and [architecture decisions](engineering/architecture-decisions.md) owns how journey records reference immutable content versions.
+
+## Current curated Scripture content and audit
+
+The settled themes are represented in [`reading-plans.ts`](../src/content/scripture/reading-plans.ts). Its `v1-draft` has **zero passage assignments**. [`passages.ts`](../src/content/scripture/passages.ts) and [`texts.ts`](../src/content/scripture/texts.ts) are empty until reviewed content is supplied. These empty arrays are an explicit unpublished state, never a 77-day production plan or fallback text. Prayer/reflection production content remains unimplemented.
+
+Before publishing a plan, supply all 77 day/theme/passage assignments and canonical ranges, review passage/prompt alignment, and record human approval against the immutable version/change. Add only referenced books' verified chapter counts, with their source, for range and complete-book validation. Review display references and translation numbering/omissions against the source; structural tests do not establish those facts.
+
+Before enabling a translation, supply the exact authorized text for every unique required passage in every retained published plan. Record source edition/revision, verified distribution terms, and the exact required attribution centrally in the registry. Include only the required text; do not commit a full Bible or automatically generate missing verses. The source import review must verify authenticity as well as redistribution rights.
+
+`npm run scripture:audit` validates the dataset and reports reading days, unique passages, unique verse coverage (deduplicating repeated/overlapping ranges), and any complete books. `npm run scripture:audit -- --release` additionally requires a published plan and enabled fallback. The current final verse count and complete-book inclusion **cannot yet be calculated** because the 77 assignments are not finalized; the audit returns null for those fields. It must be rerun when the plan changes, with translation-specific differences reviewed for publisher permissions. No publisher verse limits are enforced in the app.
 
 ## Development fixtures before production approval
 

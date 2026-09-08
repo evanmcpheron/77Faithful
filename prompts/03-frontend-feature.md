@@ -20,7 +20,7 @@ Content, behavior, and acceptance criteria: `<REQUIREMENTS>`
 - Implement the states the flow can actually reach: loading, empty, error/recovery, and relevant pressed, disabled, submitting, and success feedback. Keep user input when recovery permits it.
 - For forms, provide labels, validation feedback, suitable keyboard/input settings, focus progression, and protection against duplicate submission where needed.
 - Account for scrolling, safe areas, actual navigation insets, keyboard overlap, both themes, text scaling, and accessible controls. Keep Scripture readable and central when the screen displays it.
-- In daily work, preserve the contract's Scripture-first flow, explicit completion, and access to unrelated practices during API.Bible failure. Keep reflection/prayer/intention content private and missed-day copy non-punitive. Do not expose Community entry points, badges, or placeholders in V1.
+- In daily work, preserve the contract's Scripture-first flow, explicit completion, and access to unrelated practices during unavailable Scripture text. Keep reflection/prayer/intention content private and missed-day copy non-punitive. Do not expose Community entry points, badges, or placeholders in V1.
 - Use service contracts that keep SDK and provider details out of UI components. If an integration prerequisite is missing, identify the incomplete contract and complete independent scoped UI work without fabricating successful saves or live data. Keep synthetic fixtures in tests and designated development previews/prototypes, including the selected web preview; they do not satisfy a required native integration.
 
 ## Verify and finish

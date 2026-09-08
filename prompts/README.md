@@ -21,7 +21,7 @@ Use the live files in this directory. `Archive.zip` is a historical snapshot con
 | [08 Firebase feature](08-backend-firebase-feature.md)            | Data access with authorization, rules, and tests                | Implement     |
 | [09 Firestore data model](09-firestore-data-model.md)            | Paths, access patterns, queries, and data lifecycle             | Design/review |
 | [10 Firebase security](10-firebase-security-review.md)           | Rules, handlers, and allow/deny boundaries                      | Review        |
-| [11 API.Bible](11-api-bible-integration.md)                      | Licensed Scripture access through the selected gateway          | Implement     |
+| [11 Scripture content](11-scripture-content.md)                  | Curated reading plans and verified translation text             | Implement     |
 | [12 Unit tests](12-unit-tests.md)                                | Meaningful service/domain/hook behavior                         | Tests only    |
 | [13 Component tests](13-component-tests.md)                      | Rendered states and user interactions                           | Tests only    |
 | [14 Bug investigation and fix](14-bug-investigation.md)          | Evidence-based diagnosis and focused repair                     | Diagnose/fix  |
@@ -39,6 +39,6 @@ Use the live files in this directory. `Archive.zip` is a historical snapshot con
 
 A small bug may need only 14. For a feature, use planning/research when uncertainty warrants it, choose the relevant implementation prompt, and review the completed scope. Add specialized reviews when their risks are involved; no review quota is expected.
 
-Screen prompt 04 was merged into 03; human maintainability prompt 24 was merged into 15. Remaining numbers are unchanged. Prompt 11 now focuses on implementation; for an API.Bible review, use 19 and include the provider contract checks from 11. Specify “investigate only” with 14 when you want diagnosis without a fix.
+Screen prompt 04 was merged into 03; human maintainability prompt 24 was merged into 15. Remaining numbers are unchanged. Prompt 11 now focuses on implementation; for a Scripture content review, use 19 and include the source/permission checks from 11. Specify “investigate only” with 14 when you want diagnosis without a fix.
 
 Consult the relevant [project context](../docs/engineering/project-context.md), [integration/architecture decisions](../docs/engineering/architecture-decisions.md), [design inventory](../docs/engineering/design-system.md), and [testing guide](../docs/engineering/testing.md) as needed. When maintaining this library, keep shared rules in `AGENTS.md`, link to the product/content authorities and navigation contract rather than copying their policies, curriculum, routes, or screen specifications, retain task-specific verification and stopping conditions, and check prompts against actual repository changes rather than duplicating a version inventory.

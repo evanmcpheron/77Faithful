@@ -4,7 +4,7 @@ export default function OnboardingBibleTranslationScreen() {
   return (
     <NavigationPlaceholder
       title="Bible Translation"
-      description="Supported translation selection will be implemented here. Continue previews confirmation without loading or saving a translation.">
+      description="Bible translations are not available yet. Continue only previews confirmation; no translation preference is saved.">
       <PlaceholderLink href="/onboarding/confirm" push>
         Continue to Confirmation
       </PlaceholderLink>

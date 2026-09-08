@@ -6,7 +6,7 @@
 **Product scope:** V1 personal 77-day journey, with future community architecture documented separately.
 
 > [!IMPORTANT]
-> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. Firebase, authentication, onboarding persistence, journey state, and API.Bible are not implemented.
+> **Repository verification status:** Source and configuration were inspected on 2026-09-07 after implementing the V1 navigation foundation. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. Firebase, authentication, onboarding persistence, and journey state are not implemented. Curated Scripture data access and validation exist, with no approved assignments or translation text; reader/selection routes remain scaffolds.
 >
 > The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications are **Planned — V1**, but their routes/features are absent. Community remains Future. Sections 28–29 record settled V1 decisions and intentionally deferred Future questions; section 30 separates specification coverage from implementation evidence.
 
@@ -73,7 +73,7 @@ Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-an
 
 ### 3.1 Settled product context
 
-[Product requirements](PRODUCT_REQUIREMENTS.md) owns the personal-journey V1 scope, practice catalog/semantics, audience, commercial/privacy principles, and exclusions. [Formation content](FORMATION_CONTENT_SPEC.md) owns the 11-week curriculum and approval/versioning rules. This contract translates those requirements into flows; Firebase and API.Bible technical choices remain in [architecture decisions](engineering/architecture-decisions.md).
+[Product requirements](PRODUCT_REQUIREMENTS.md) owns the personal-journey V1 scope, practice catalog/semantics, audience, commercial/privacy principles, and exclusions. [Formation content](FORMATION_CONTENT_SPEC.md) owns the 11-week curriculum and approval/versioning rules. This contract translates those requirements into flows; Firebase and curated Scripture technical choices remain in [architecture decisions](engineering/architecture-decisions.md).
 
 ### 3.2 Existing source and configuration — inspected 2026-09-07
 
@@ -86,7 +86,7 @@ Apply the [product trust principles](PRODUCT_REQUIREMENTS.md#identity-mission-an
 | Auth and backend           | No Firebase dependency, auth provider, rules, Functions, or profile/onboarding persistence                                                                                                                                       | No guards backed by fabricated state; direct scaffold routes are not protected                                                                          |
 | Formation state            | No journey records, dates, completion, practices, reflections, or intentions                                                                                                                                                     | Today/Journey show no sample day or history; implementation of settled current/future/ended-day policies remains deferred                               |
 | Dynamic days               | Shared `day/[dayNumber]/_layout.tsx` validates through [parseDayNumber](../src/navigation/day-number.ts), redirects invalid values to Journey, and provides the validated number to children                                     | One future journey-access boundary; `generateStaticParams` supplies exactly Day 1–77 to all three routes                                                |
-| Scripture                  | Reader and translation-setting routes exist as navigation placeholders; API.Bible is absent                                                                                                                                      | No provider text, invented translations, or completion actions                                                                                          |
+| Scripture                  | Reader and translation-setting routes remain navigation placeholders; curated content data access and validation exist                                                                                                           | No approved passage assignments, supplied translation text, saved preferences, or completion actions                                                    |
 | Navigation UI              | [NavigationPlaceholder](../src/components/navigation-placeholder.tsx) provides scrollable themed scaffolding and typed links; [SettingsHeaderAction](../src/components/settings-header-action.tsx) is shared by both tab headers | Direct Expo Router APIs; no route registry/store/service in application code                                                                            |
 | Deep links/platform        | [app.json](../app.json) retains the scheme, typed routes, static web output, and disabled predictive back                                                                                                                        | Protected destination preservation and published product links remain deferred; simulator evidence is separate from configuration                       |
 | State/privacy              | Local UI/theme state and a route-scoped validated day number only; no private data or persistence                                                                                                                                | No offline, sync, authentication, save, or deletion success is implied                                                                                  |
@@ -231,7 +231,7 @@ V1 should avoid splitting every practice into a separate screen.
 
 **Separate focused routes are justified for:**
 
-- Scripture Reader — focused reading, API state, translation context.
+- Scripture Reader — focused reading, content availability, translation context.
 - Reflection — text input, keyboard behavior, autosave, privacy.
 - Historical Day Detail — viewing/editing a previous day.
 - Settings subpages — clear preference management.
@@ -502,7 +502,7 @@ flowchart TD
 | Verify Email                 | `/auth/verify-email`                    | Verify email before onboarding                                         | Sign Up, Sign In, restored unverified session | Onboarding resume / Today through gate | Yes, unverified email | V1     | Planned — V1                   |
 | Onboarding Overview          | `/onboarding`                           | Explain journey + 3 required practices                                 | Auth gate                                     | Practice Selection                     | Yes                   | V1     | Existing — navigation scaffold |
 | Practice Selection           | `/onboarding/practices`                 | Choose exactly 2 optional practices                                    | Onboarding Overview                           | Bible Translation                      | Yes                   | V1     | Existing — navigation scaffold |
-| Bible Translation Onboarding | `/onboarding/bible-translation`         | Select supported API.Bible translation                                 | Practice Selection                            | Journey Confirmation                   | Yes                   | V1     | Existing — navigation scaffold |
+| Bible Translation Onboarding | `/onboarding/bible-translation`         | Select an available registry translation                               | Practice Selection                            | Journey Confirmation                   | Yes                   | V1     | Existing — navigation scaffold |
 | Journey Confirmation         | `/onboarding/confirm`                   | Review configuration and start Day 1                                   | Bible Translation                             | Today                                  | Yes                   | V1     | Existing — navigation scaffold |
 | Today                        | `/today`                                | Complete current day's journey                                         | Launch, Today tab, current-day Journey row    | Scripture / Reflection / Settings      | Yes                   | V1     | Existing — navigation scaffold |
 | Journey Overview             | `/journey`                              | Review all 77 days + weekly groupings                                  | Journey tab                                   | Historical Day / Today / Settings      | Yes                   | V1     | Existing — navigation scaffold |
@@ -722,24 +722,24 @@ Required practices are visible as context but cannot be deselected.
 
 | Field                 | Specification                                                       |
 | --------------------- | ------------------------------------------------------------------- |
-| **Purpose**           | Select a supported API.Bible translation before the journey begins. |
+| **Purpose**           | Select an available registry translation before the journey begins. |
 | **Route**             | `/onboarding/bible-translation`                                     |
 | **Context**           | Onboarding stack.                                                   |
 | **Entry points**      | Practice Selection; back from Confirmation.                         |
 | **Primary action**    | `Continue` → Journey Confirmation.                                  |
 | **Secondary actions** | Search/filter supported translations if the list is long.           |
 | **Back behavior**     | Back → Practice Selection.                                          |
-| **Required data**     | Supported/allowed API.Bible translation list.                       |
+| **Required data**     | Available translations from the centralized Scripture service.      |
 | **Persistence**       | Save selected translation preference.                               |
 
 **States**
 
-- **Loading:** skeleton/list placeholder; keep page structure stable.
-- **Error:** show retry; do not invent unsupported translations.
-- **No selection:** Continue disabled.
-- **Selection unavailable later:** reader should prompt for replacement translation without corrupting day progress.
+- **Available:** show only enabled translations with cleared, complete content from the service; the local list needs no loading spinner.
+- **None available:** explain that translations are not available yet; no broken choices or licensing implementation details. Production Continue is disabled.
+- **No selection:** production Continue is disabled until an available choice is confirmed.
+- **Selection unavailable later:** resolve to the configured available fallback and show its actual name, preserving day progress; if fallback is unavailable, retain the reference and own-Bible path.
 
-V1 translations are English and limited to the app account's enabled/allowed/licensed catalog. WEB may be preselected only when actually available; Continue confirms the participant's choice. Never guess a `bibleId` or hard-code availability in navigation code.
+V1 translations are English and controlled by the central registry. The configured fallback may be preselected only when available; Continue confirms the participant's choice. Store its stable internal translation ID. No translation arrays or availability policy belong in navigation code. The existing scaffold's `Continue to Confirmation` remains an explicitly labeled navigation preview and saves nothing.
 
 ---
 
@@ -943,17 +943,17 @@ Avoid:
 
 ## 10.14 Scripture Reader
 
-| Field                 | Specification                                                                                                                                            |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Purpose**           | Provide focused Scripture reading for the day's assigned passage.                                                                                        |
-| **Route**             | `/day/[dayNumber]/scripture`                                                                                                                             |
-| **Context**           | Pushed focused screen.                                                                                                                                   |
-| **Entry points**      | Today Scripture card; Historical Day Detail Scripture card.                                                                                              |
-| **Primary action**    | `Mark Scripture complete` / `Scripture complete` toggle.                                                                                                 |
-| **Secondary actions** | Back; translation context; `I read this passage elsewhere` manual completion path if API content is unavailable or the user uses a physical Bible.       |
-| **Back behavior**     | Standard back to source. Reading progress is not required to be saved unless implemented.                                                                |
-| **Required data**     | Valid unlocked day; passage reference; selected translation; API.Bible response or permitted session-memory cache under the selected integration policy. |
-| **Persistence**       | Scripture practice completion; selected translation is a separate user preference.                                                                       |
+| Field                 | Specification                                                                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Purpose**           | Provide focused Scripture reading for the day's assigned passage.                                                                                             |
+| **Route**             | `/day/[dayNumber]/scripture`                                                                                                                                  |
+| **Context**           | Pushed focused screen.                                                                                                                                        |
+| **Entry points**      | Today Scripture card; Historical Day Detail Scripture card.                                                                                                   |
+| **Primary action**    | `Mark Scripture complete` / `Scripture complete` toggle.                                                                                                      |
+| **Secondary actions** | Back; translation context; `I read this passage elsewhere` manual completion path if text is unavailable or the user uses a physical Bible.                   |
+| **Back behavior**     | Standard back to source. Reading progress is not required to be saved unless implemented.                                                                     |
+| **Required data**     | Valid unlocked day; passage reference; selected translation; verified text and attribution from the curated Scripture service for the pinned content version. |
+| **Persistence**       | Scripture practice completion; selected translation is a separate user preference.                                                                            |
 
 ### Completion behavior
 
@@ -963,23 +963,23 @@ The user may manually mark Scripture complete because:
 
 - they may read the same assigned passage in a physical Bible,
 - they may use another Bible app,
-- API.Bible may be temporarily unavailable.
+- the assigned text may be unavailable in the app.
 
 This manual path should still show the assigned passage reference so the practice remains tied to the day's Scripture.
 
-### API.Bible failure
+### Unavailable Scripture text
 
 If Scripture text cannot load:
 
 1. Keep the locally authored passage reference visible.
-2. Show a clear retry action.
+2. Explain unavailable text plainly; offer retry only for an actual recoverable loading failure.
 3. Keep the rest of the day's experience accessible.
 4. Do not auto-complete Scripture.
 5. Provide `I read this passage elsewhere` as an explicit manual completion action.
 
 ### Translation changes
 
-If the user changes translation in Settings, both current and historical Scripture Reader screens should render the selected translation for the same passage reference. Translation preference is a display preference, not part of historical completion state.
+If the user changes translation in Settings, both current and historical Scripture Reader screens should render the selected translation for the same passage reference. Translation preference is a display preference, not part of historical completion state. A missing/unavailable preference uses the configured available fallback and identifies the actual translation shown; a missing fallback leaves text unavailable. Display verified attribution supplied by the service with the passage and translation name. No copyright TODO or internal licensing status belongs in the reader.
 
 ---
 
@@ -1120,10 +1120,10 @@ The Save confirmation should state when the change begins. No additional confirm
 | **Primary action**    | Select translation and `Save` → Settings, or autosave with explicit selected state if existing settings patterns use autosave. |
 | **Secondary actions** | Search/filter supported translations.                                                                                          |
 | **Back behavior**     | If explicit Save is used and selection changed, confirm discard; otherwise standard back.                                      |
-| **Required data**     | Supported API.Bible translations; current selection.                                                                           |
+| **Required data**     | Available translations from the centralized Scripture service; current selection.                                              |
 | **Persistence**       | User translation preference.                                                                                                   |
 
-Change applies immediately to current and historical Scripture Reader rendering without altering completion states or the authored passage reference. Select only the app account's explicitly enabled/allowed/licensed English translations; never silently substitute a version.
+Change applies immediately to current and historical Scripture Reader rendering without altering completion states or the authored passage reference. The Scripture service supplies available English translations and stable IDs; never display unavailable registry entries as selectable options. Missing/unavailable saved preferences resolve to the configured available fallback, labeled with its actual name. If none is usable, show an unavailable state without a successful save or arbitrary substitution.
 
 ---
 
@@ -1721,15 +1721,15 @@ No core daily practice requires a modal route in the settled V1 architecture.
 - Avoid full-screen spinners after initial bootstrap when existing content can remain visible.
 - Prefer skeletons or retained stale content with a subtle refresh state.
 - Keep navigation chrome stable while content loads.
-- Do not disable the entire Today screen because one API-backed card is refreshing.
+- Do not disable the entire Today screen because Scripture text is unavailable or a remote operation is pending.
 
-## 17.2 Scripture API failure
+## 17.2 Unavailable Scripture text
 
-When API.Bible is unavailable:
+When Scripture text is unavailable:
 
 - keep day/theme/prayer/other practices available,
 - display the known Scripture reference,
-- show retry on the Scripture card/reader,
+- show retry only for a recoverable text-loading operation; bundled text has no artificial network loading state,
 - do not auto-complete Scripture,
 - allow explicit manual completion after reading the assigned passage in the participant's own Bible,
 - never substitute an unlicensed or guessed Bible text.
@@ -1762,17 +1762,17 @@ Do **not** claim full offline support unless code verification confirms it.
 
 Required native V1 behavior once relevant journey data has loaded:
 
-| Capability                                                                               | Offline requirement                                                              |
-| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Open loaded Today/Journey data                                                           | Available through native personal-record persistence.                            |
-| Completion toggles, intentions, reflection drafts                                        | Work offline through native persistence; sync when connectivity returns.         |
-| Application-authored local formation content and passage references                      | Available offline for unlocked days from the pinned content version.             |
-| Uncached API.Bible Scripture text                                                        | Not promised offline; keep passage reference and own-Bible completion available. |
-| Login, sign-up, verification, password reset, account deletion, initial journey creation | Require connectivity with clear unavailable/retry states.                        |
+| Capability                                                                               | Offline requirement                                                                                   |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Open loaded Today/Journey data                                                           | Available through native personal-record persistence.                                                 |
+| Completion toggles, intentions, reflection drafts                                        | Work offline through native persistence; sync when connectivity returns.                              |
+| Application-authored local formation content and passage references                      | Available offline for unlocked days from the pinned content version.                                  |
+| Enabled bundled Scripture text                                                           | Available without a network request once supplied; later remote-only text follows its verified terms. |
+| Login, sign-up, verification, password reset, account deletion, initial journey creation | Require connectivity with clear unavailable/retry states.                                             |
 
 Show saved / pending sync / failed when material without making status dominant. Sign-out with pending private writes follows section 10.22, including the online sync attempt, cancel-or-confirmed-discard choice, and subsequent-account isolation.
 
-[Architecture decisions](engineering/architecture-decisions.md#offline-persistence-and-account-boundaries) owns native persistence and cache account boundaries. API.Bible text stays within the session-memory-only licensing policy, separate from durable personal records. These requirements are **Planned — V1**, not implemented/tested offline support. An unavailable-write state is honest for a partial implementation but does not fulfill V1 or authorize an online-only release.
+[Architecture decisions](engineering/architecture-decisions.md#offline-persistence-and-account-boundaries) owns native persistence and cache account boundaries. [Curated Scripture storage](engineering/architecture-decisions.md#curated-scripture) is separate from personal records: bundle permitted text and apply verified terms to any future remote source. Personal-record offline requirements remain **Planned — V1**; the Scripture data boundary has no network dependency, but no production text is supplied yet. An unavailable-write state is honest for a partial implementation but does not fulfill V1 or authorize an online-only release.
 
 ## 17.6 Empty states
 
@@ -2038,7 +2038,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | Historical Day Detail        | Edit intention                           | Same screen editor/sheet          | In-place                   | Private                                                                                   |
 | Historical Day Detail        | Header back                              | Source                            | Pop                        | Usually Journey/Today                                                                     |
 | Scripture Reader             | Mark complete                            | Same screen then source           | In-place + Back optional   | User action only; never auto from scroll                                                  |
-| Scripture Reader             | Retry API                                | Same screen                       | In-place                   | API failed                                                                                |
+| Scripture Reader             | Retry text loading                       | Same screen                       | In-place                   | Recoverable remote loading failure, if remote content is introduced                       |
 | Scripture Reader             | Back                                     | Today/Historical Day              | Pop                        | Preserve completion state                                                                 |
 | Reflection                   | Save & mark complete                     | Source                            | Save + Back                | Valid response                                                                            |
 | Reflection                   | I reflected without writing              | Source                            | Save + Back                | Explicit action                                                                           |
@@ -2090,7 +2090,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Authenticated/unverified         | V1        | Required before onboarding/cloud personal writes                          | Planned — V1                   |
 | `/onboarding`                           | Onboarding Overview        | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Resume flow                                                               | Existing — navigation scaffold |
 | `/onboarding/practices`                 | Practice Selection         | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Exactly two optional practices                                            | Existing — navigation scaffold |
-| `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | API.Bible supported list                                                  | Existing — navigation scaffold |
+| `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Available curated translation registry                                    | Existing — navigation scaffold |
 | `/onboarding/confirm`                   | Journey Confirmation       | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Creates journey                                                           | Existing — navigation scaffold |
 | `/today`                                | Today                      | `(app)/(tabs)`  | None                                      | Yes                              | V1        | Canonical current-day screen                                              | Existing — navigation scaffold |
 | `/journey`                              | Journey Overview           | `(app)/(tabs)`  | None                                      | Yes                              | V1        | 77-day history/overview                                                   | Existing — navigation scaffold |
@@ -2160,9 +2160,14 @@ IF journey has started AND optional practices change
 IF selectedTranslation is supported
     USE it in Scripture Reader
 
-IF selectedTranslation becomes unavailable
-    KEEP day progress intact
-    REQUIRE user to select a supported replacement before API text can load
+IF selectedTranslation is missing, unknown, or unavailable
+    KEEP day progress and assigned passage intact
+    USE the configured fallback only when available
+    LABEL the actual translation displayed
+
+IF no available selection or fallback exists
+    SHOW text unavailable, the known reference, and the own-Bible completion path
+    NEVER substitute arbitrary or mislabeled text
 ```
 
 ## 24.4 Day access
@@ -2429,7 +2434,7 @@ The code inspection should specifically look for:
 - mismatched Android hardware-back behavior,
 - reflection/intention data exposed in logs or future sharing UI,
 - settings presented as inconsistent modals/pushes,
-- API.Bible errors blocking the entire day,
+- unavailable Scripture text blocking the entire day,
 - duplicate navigation helpers or route constants,
 - unfinished boilerplate routes visible to users.
 
@@ -2479,6 +2484,8 @@ The two prior cross-concern contradictions are now reconciled by explicit produc
 | Non-gating verification recommendation versus verified cloud personal-data writes | Verification precedes onboarding and any cloud personal-data writes, including resumed unverified sessions. Sign-up creates Auth identity only until verified. | Test unverified direct-route/writes denial, resend/refresh failures, verified authorization refresh, first-incomplete-step resume, and coherent successful persistence before redirects. |
 | Canonical current-day redirect versus historical Day 77 after journey end         | Current-day detail → Today applies only while active. Ended journeys open every historical Day 1–77 from Journey, including Day 77 and its focused routes.     | Test active Day 77 canonicalization, end-date transition, incomplete Day 77 summary copy, ended Day 77 editing/Back without redirects or lost access, and recomputed history statistics. |
 
+The owner's 2026-09-07 Scripture refactor also replaces dynamic provider delivery with curated, licensing-aware content and available-fallback preference resolution. The product, content, architecture, and affected screen/state specifications were updated together; routes, entry/back behavior, and journey/access rules are unchanged. Approved content and persistence remain implementation prerequisites.
+
 No known unresolved V1 product contradiction remains. Source scaffolding and diagrams do not establish native persistence, deployed authorization, or passing integrated flows.
 
 The missing-journey recovery in section 7.2 now resolves onboarding state before the guards in sections 7.1 and 24.1 and the route registry in section 23. This reconciles the recovery destination with guards that otherwise block onboarding for a completed account.
@@ -2497,9 +2504,9 @@ The missing-journey recovery in section 7.2 now resolves onboarding state before
 
 **Settled authority:** Reflection is a required practice, but written text is optional if the user explicitly confirms they reflected without writing.
 
-### C. Scripture centrality vs. API outage/external Bible use
+### C. Scripture centrality vs. unavailable text/external Bible use
 
-**Settled authority:** The assigned passage remains central, but API rendering is not the sole valid way to complete Scripture. Completion is manual and never inferred from reader activity.
+**Settled authority:** The assigned passage remains central, but in-app rendering is not the sole valid way to complete Scripture. Completion is manual and never inferred from reader activity.
 
 ### D. Adaptable optional practices vs. historical integrity
 
@@ -2518,7 +2525,7 @@ The missing-journey recovery in section 7.2 now resolves onboarding state before
 - [AGENTS.md](../AGENTS.md) and the prompt index previously directed journey behavior to the architecture record without a navigation owner. They now route screen/flow work here while retaining separate code, visual, and security responsibilities.
 - [Architecture decisions](engineering/architecture-decisions.md) previously described a chosen start date and a scheduled pre-start state. This contract's V1 Confirmation starts today; the duplicate journey specification was replaced with a reference here. A future start picker remains an explicit product change.
 - Earlier architecture/product-review wording emphasized independent checkmarks and no automatic completion from journaling. Section 10.15 now distinguishes `Save & mark reflection complete` from typing, autosaving, or a separate journal entry. The product review prompt follows that explicit-action distinction; writing remains optional.
-- Generic cache/offline wording in this contract now points to the selected session-memory-only Scripture policy and native personal-record persistence requirement. Missing offline implementation must not become permission to persist Bible text or silently drop the selected mobile requirement.
+- The owner selected curated Scripture on 2026-09-07: a fixed approved reading plan, central translation registry, permitted bundled text, and stable preference IDs. Missing/unavailable preferences now resolve to the configured available fallback with its actual label. Remote text, if later required, stays behind the content boundary; native personal-record persistence remains a separate V1 requirement.
 - The translation-flow diagram now describes future readers only after their day unlocks, and the generic Settings back rule now follows one level of the actual stack, including Delete Account → Account. These clarify the existing future-day and account specifications rather than add routes.
 
 ---
@@ -2542,7 +2549,7 @@ The missing-journey recovery in section 7.2 now resolves onboarding state before
 - [x] Settings changes have defined effect timing and return behavior.
 - [x] V1 navigation does not depend on Community.
 - [x] Reflection/intention privacy is represented in navigation behavior.
-- [x] API.Bible failure behavior is defined without falsely completing Scripture.
+- [x] Unavailable Scripture behavior is defined without falsely completing the practice.
 - [x] Offline behavior is not overclaimed.
 - [x] Email-verification placement is reconciled with verified cloud personal-data writes; see section 29.1 (specification only).
 - [x] Ended-journey Day 77 entry/guard is fully specified; see section 29.1 (specification only).
@@ -2598,7 +2605,7 @@ These checks establish source facts and absences, not native runtime behavior, w
 18. Do not mutate past-day optional-practice labels when the user changes Settings.
 19. Optional-practice changes during an active journey take effect the next calendar day unless this contract is explicitly revised.
 20. Do not infer Scripture completion from opening, scrolling, or time spent in the reader.
-21. Do not mark Scripture complete because API.Bible failed.
+21. Do not mark Scripture complete because text is unavailable.
 22. Do not require written journal text to prove Reflection; `I reflected without writing` is a settled V1 completion action.
 23. Keep intention outside the five-practice complete-day calculation.
 24. Do not expose private reflections, intentions, journal entries, or private prayer content by default.
@@ -2611,7 +2618,7 @@ These checks establish source facts and absences, not native runtime behavior, w
 31. Do not ship dead Settings rows. Navigation-only development scaffolds may expose planned routes honestly; required V1 rows/features, including Notifications, must work before launch.
 32. Validate dynamic `dayNumber` parameters before rendering day content.
 33. Never encode private user content in route/query parameters.
-34. Preserve the rest of the daily experience when API.Bible fails.
+34. Preserve the rest of the daily experience when Scripture text is unavailable.
 35. Do not claim full offline support unless the implemented persistence/sync architecture actually provides it.
 36. If code, product requirements, or documents conflict, identify the owning concern under section 1.1, record the conflict in **Architecture / Product Conflicts**, and resolve it explicitly. Inspect settled V1 decisions, deferred Future questions, and current code. Follow the concern owners in section 1.1 and record intentional policy changes explicitly without weakening security or privacy. Reviews report corrections without editing.
 37. Update **Screen Relationship Matrix** and **Route Registry** whenever navigation materially changes.
@@ -2634,7 +2641,7 @@ Source inspection for the navigation foundation is recorded in sections 3 and 30
 9. Search for all route-string constants/navigation helpers and compare them with the registry.
 10. Search for practice completion, streak, missed-day, reset, and day-progression logic.
 11. Verify whether past/future days can be opened and edited.
-12. Inspect API.Bible failure/loading behavior.
+12. Inspect curated Scripture availability, attribution, fallback labels, and actual loading behavior.
 13. Inspect Firebase failure/offline behavior and local persistence.
 14. Inspect notification permission and deep-link configuration.
 15. Inspect Settings/account deletion/sign-out behavior.

@@ -7,7 +7,7 @@ export default function ScriptureScreen() {
   return (
     <NavigationPlaceholder
       title={`Day ${dayNumber} · Scripture`}
-      description="Focused Scripture navigation scaffold. The assigned passage and translation will appear here when content is connected. No Scripture is loaded or marked complete."
+      description="Scripture is not available for this day yet. The assigned passage, translation, and text will appear here when the reading plan is ready. No practice is marked complete."
     />
   );
 }

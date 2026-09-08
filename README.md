@@ -1,6 +1,6 @@
 # 77Faithful
 
-A free 77-day Christian spiritual formation app for iOS and Android, centered on Scripture, prayer, intentional action, and reflection. The repository currently contains an Expo 57 navigation scaffold with engineering checks; formation behavior, Firebase, and API.Bible are not implemented yet.
+A free 77-day Christian spiritual formation app for iOS and Android, centered on Scripture, prayer, intentional action, and reflection. The repository currently contains an Expo 57 navigation scaffold with engineering checks; curated Scripture data access and validation exist, while approved Scripture content, formation behavior, and Firebase remain pending.
 
 ## Development
 
@@ -25,7 +25,7 @@ Read [product requirements](docs/PRODUCT_REQUIREMENTS.md) for settled product po
 npm run check
 ```
 
-This runs formatting, ESLint, route generation and TypeScript, and the regression tests. It works without starting Metro or supplying service credentials.
+This runs formatting, ESLint, route generation and TypeScript, the regression tests, and Scripture dataset validation/audit. It works without starting Metro or supplying service credentials.
 
 | Command                                                          | Purpose                                                  |
 | ---------------------------------------------------------------- | -------------------------------------------------------- |
@@ -49,6 +49,6 @@ GitHub Actions runs `npm ci`, `npm run check`, and the web export for pull reque
 - [Architecture and integration decisions](docs/engineering/architecture-decisions.md)
 - [Design system and visual direction](docs/engineering/design-system.md)
 
-No environment variables are required for the current navigation scaffold or its checks. Service credentials and cloud resources must be supplied when the selected integrations are built; API.Bible secrets belong only on the backend. Local `.env*` files are ignored, with `.env.example` reserved for non-secret examples.
+Scripture requires no service credentials or environment variables. The [curated Scripture architecture](docs/engineering/architecture-decisions.md#curated-scripture) separates reading plans, passages, translation metadata, and text. Run `npm run scripture:audit` to reproduce content validation and verse counts; `npm run scripture:audit -- --release` additionally checks publication and fallback readiness. The current draft has no assigned passages or imported text, so release readiness intentionally fails. Local `.env*` files are ignored except the non-secret [.env.example](.env.example). Firebase setup remains separate planned work.
 
 The inherited `npm run reset-project` command moves `src/` and `scripts/` into `example/`, or deletes them if deletion is selected, before creating a blank `src/app/`. It is not a development setup step.

@@ -58,7 +58,8 @@
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --runInBand",
     "test:coverage": "jest --coverage --runInBand",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test:ci",
+    "scripture:audit": "node scripts/audit-scripture.js",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test:ci && npm run scripture:audit",
     "export:web": "expo export --platform web"
   },
   "private": true,

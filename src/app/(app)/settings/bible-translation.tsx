@@ -4,7 +4,7 @@ export default function BibleTranslationSettingsScreen() {
   return (
     <NavigationPlaceholder
       title="Bible Translation"
-      description="Translation settings will be implemented here. No translations are loaded or preferences saved."
+      description="Bible translations are not available yet. No translation preference has been saved."
     />
   );
 }

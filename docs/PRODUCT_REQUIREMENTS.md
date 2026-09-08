@@ -8,7 +8,7 @@ This document owns product identity, audience, commercial principles, feature-le
 
 - [Navigation and UX contract](APP_NAVIGATION_AND_UX.md) owns screens/routes, entry and CTA destinations, redirects, back behavior, daily/journey flows, day access, and navigation states. It applies this product scope without redefining it.
 - [Formation content specification](FORMATION_CONTENT_SPEC.md) owns curriculum structure, authored fields, approval/publication, content versions/storage, fixtures, and future variant/group consistency.
-- [Architecture decisions](engineering/architecture-decisions.md) owns implementation architecture, Firebase/API.Bible, offline/security boundaries, runtime choices, and technical data ownership; this document does not prescribe schemas.
+- [Architecture decisions](engineering/architecture-decisions.md) owns implementation architecture, Firebase/curated Scripture, offline/security boundaries, runtime choices, and technical data ownership; this document does not prescribe schemas.
 - [Design system](engineering/design-system.md) owns visual primitives; [testing](engineering/testing.md) owns verification; [AGENTS.md](../AGENTS.md) owns agent workflow and engineering guidance.
 
 All known V1 product decisions below are settled. Missing implementation, human-approved production content, and external setup facts are delivery prerequisites, not unresolved V1 product policy. Future items remain excluded until explicitly scoped by the product owner.
@@ -57,7 +57,7 @@ Onboarding resumes at the first incomplete step after relaunch. The [navigation 
 
 Every day has exactly five practice completion states: **Scripture, Prayer, Optional practice A, Optional practice B, Reflection**. A complete day requires all five explicit states complete. Intention is not a sixth requirement. Completion is binary and reversible, including on historical days; passive activity never auto-completes any practice. Participants may complete practices in any order. Exact entry/completion actions and Continue behavior belong to the [daily flow contract](APP_NAVIGATION_AND_UX.md#11-core-daily-user-flow).
 
-- **Scripture:** engage the assigned passage; reading in the participant's own Bible is valid and may be manually recorded. Reader activity and API failures never imply completion.
+- **Scripture:** engage the assigned passage; reading in the participant's own Bible is valid and may be manually recorded. Reader activity and unavailable text never imply completion.
 - **Prayer:** the day's prayer prompt, participant prayer, and explicit manual completion. No timer, tracked duration, or required written prayer.
 - **Reflection:** intentionally reflect; writing is optional. The participant explicitly saves/marks a written reflection complete or chooses `I reflected without writing`. Typing/autosave alone never completes the practice.
 - **Morning intention:** optional, private, outside completion. Current/historical intention can be edited. Intention and reflection drafts autosave when persistence exists; missing persistence must not be represented as a successful save.
@@ -97,11 +97,13 @@ Future repeat journeys should offer a somewhat different experience through mult
 
 ## Bible translations
 
-V1 is English. Default to World English Bible (WEB) **only when actually available/enabled** for the application's API.Bible account. Never guess a `bibleId`. Participants choose only translations explicitly enabled, allowed, and licensed for 77Faithful. WEB may be preselected when available, but the participant confirms their choice during onboarding.
+The product owner selected a curated Scripture architecture on 2026-09-07. Each journey day has a predetermined, human-approved passage assignment, independent of translation. V1 is English and uses the controlled [translation registry](../src/content/scripture/translations.ts). Participants can select only explicitly enabled translations with legally cleared, complete text for the pinned reading plan.
 
-Changing translation affects current and historical reader rendering without changing completion or the authored passage reference. Unavailable text leaves the passage reference visible and allows reading in the participant's own Bible; an API failure never completes Scripture.
+The configured fallback is BSB, usable only after verified source text and the approved reading plan are supplied. If the saved preference is missing, unknown, or unavailable, use the configured fallback when available and identify the translation actually displayed. Do not select an arbitrary replacement if the fallback is unavailable. Onboarding still requires confirmation of an available translation.
 
-App-authored content stores passage references, not copied licensed text. Do not copy API.Bible Scripture into Firestore, journals, analytics, logs, application-authored bundles, or durable caches unless a future explicit licensing/architecture decision permits it. [Architecture decisions](engineering/architecture-decisions.md#apibible-and-scripture) owns gateway, account allowlist, attribution, and session-memory caching boundaries.
+Changing translation affects current and historical reader rendering without changing completion, assigned passage identity, or the journey's pinned content version. Unavailable text leaves a known passage reference visible and allows reading in the participant's own Bible; missing text never completes Scripture. Internal licensing details do not belong in normal selection/reader copy.
+
+Keep app-authored formation content separate from translation-specific text. Bundle only the curated text whose verified permissions permit redistribution. Remote storage is allowed only for a concrete licensing/product reason; Scripture must not depend on a third-party Bible API. Do not automatically copy text into journals, diagnostics, or analytics. [Architecture decisions](engineering/architecture-decisions.md#curated-scripture) owns storage, stable preference IDs, attribution, and the data-access boundary.
 
 ## Reminders and offline use
 
@@ -109,7 +111,7 @@ V1 includes one configurable daily **local-device** reminder, enabled only by ex
 
 Copy stays generic, for example `Your 77Faithful day is ready`. No reflection/intention/prayer text, missed-practice escalation, streak-loss warnings, or guilt/pressure messaging. No backend push-notification infrastructure in V1 unless a later explicit requirement changes scope. [Notification Settings](APP_NAVIGATION_AND_UX.md#1020-notification-settings--planned--v1) owns permission, configuration, and recovery UX.
 
-After relevant journey data has loaded, native completion toggles, intentions, and reflection drafts must work offline through the selected native persistence architecture. Local application-authored formation content works offline. Uncached API.Bible text is not promised offline; its passage reference remains available. Login, sign-up, verification, password reset, account deletion, and initial journey creation require connectivity.
+After relevant journey data has loaded, native completion toggles, intentions, and reflection drafts must work offline through the selected native persistence architecture. Local application-authored formation content works offline. Enabled bundled Scripture works offline without a network request. Any later remote-only translation follows its verified storage terms; its known passage reference remains available when text cannot load. Login, sign-up, verification, password reset, account deletion, and initial journey creation require connectivity.
 
 Saved / pending sync / failed should be distinguishable when material without dominating the UI. Direct multi-account switching is excluded from V1; fully sign out before another sign-in. Pending private writes must never be silently discarded, and a subsequent account must never see the prior account's cached private data. The [sign-out contract](APP_NAVIGATION_AND_UX.md#1022-account) owns the online sync attempt and explicit cancel-versus-confirmed-discard flow; [architecture decisions](engineering/architecture-decisions.md#offline-persistence-and-account-boundaries) owns implementation and testing dependencies. These are requirements, not a claim of working offline support.
 
@@ -145,7 +147,7 @@ Intentionally unresolved until Community work begins: exact member/admin roles, 
 
 The current blue **77 / path / cross** identity direction is approved. Platform-specific icon/splash derivatives are allowed. Use system typography and automatic system light/dark mode; no manual theme setting is required in V1. [Design-system guidance](engineering/design-system.md) owns tokens and production asset work.
 
-Production bundle/package identifiers, domain/organization identity, developer/store accounts, Firebase IDs, EAS ownership, and API.Bible account/key are external configuration facts, not values a coding agent may invent. Track them in [project context](engineering/project-context.md#external-setup-and-release-prerequisites).
+Production bundle/package identifiers, domain/organization identity, developer/store accounts, Firebase IDs, EAS ownership, and translation distribution permissions are external configuration facts, not values a coding agent may invent. Track them in [project context](engineering/project-context.md#external-setup-and-release-prerequisites).
 
 ## Explicit V1 exclusions
 

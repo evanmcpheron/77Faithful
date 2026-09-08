@@ -13,6 +13,8 @@ Updated 2026-09-08. The repository has an operational lint/format/type/test setu
 
 ESLint 9 is currently required by the peer range of `eslint-plugin-react` used by Expo's SDK 57 configuration. npm marks this ESLint major unsupported. Keep this constraint visible and move to a supported major when the Expo/plugin combination supports it; do not force incompatible peer dependencies. Jest 29 likewise follows this version of `jest-expo` rather than an independent latest-major upgrade.
 
+`@babel/generator` is a direct development dependency pinned to `7.29.8` because the Worklets 0.10.1 plugin imports it without declaring it. Otherwise, npm can place Amplify's GraphQL generator dependency (`7.0.0-beta.4`) at the project root, causing Worklets to fail on optional chaining with `unknown node of type "OptionalMemberExpression"`. Keep the modern generator available to Worklets while allowing Amplify's legacy tooling its own nested version. Revisit the pin when upgrading Worklets/Babel; verify with a clean `npm ci` and `npm run export:web -- --clear`, since Jest mocks do not exercise worklet compilation.
+
 ## Commands
 
 | Command                                                          | Purpose                                                                                                        |

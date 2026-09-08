@@ -1,5 +1,7 @@
 import { Link } from 'expo-router';
 
+import { SignOutAction } from '@/auth/sign-out-action';
+
 import { BrandWordmark } from '@/components/brand-wordmark';
 import { Button } from '@/components/button';
 import { InlineNotice } from '@/components/inline-notice';
@@ -38,6 +40,7 @@ export default function OnboardingScreen() {
           <Button>Continue to Practices</Button>
         </Link>
       </ScreenSection>
+      <SignOutAction />
     </ScreenScrollView>
   );
 }

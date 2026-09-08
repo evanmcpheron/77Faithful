@@ -6,9 +6,9 @@
 **Product scope:** V1 personal 77-day journey, with future community architecture documented separately.
 
 > [!IMPORTANT]
-> **Repository verification status:** Source and configuration were inspected on 2026-09-08 after completing the V1 navigation scaffold. The auth, onboarding, Today/Journey, day, Settings, and journey-completion routes listed as existing below are present as **Existing — navigation scaffold**. `/` replaces to `/auth/welcome`. Home/Explore starter navigation has been removed. An Auth-only AWS Amplify Gen 2 definition and client bootstrap exist; [project context](engineering/project-context.md#observed-state-data-backend-and-environment) records development deployment and runtime evidence. Application authentication, Amplify Data, onboarding persistence, and journey state are not implemented. Curated Scripture data access and validation exist, with no approved assignments or translation text; reader/selection routes remain scaffolds.
+> **Repository verification status:** The native Auth service, forms, pending-confirmation resume, session provider, splash gating, and protected routes are implemented with automated coverage. The real Cognito/email lifecycle remains unverified; [project context](engineering/project-context.md#observed-state-data-backend-and-environment) records deployed and native evidence. Verified accounts currently enter onboarding because no application Data can establish completion. The completed-onboarding route branch is tested through a test-only seam.
 >
-> The scaffold is deliberately accessible by direct route for development and contains no personal data. Authentication/onboarding protection, state-dependent day access, and successful submissions remain **Planned — V1**. Existing route status does not establish those features or backend authorization. Verify Email and Notifications now exist as **Existing — navigation scaffold** routes; their authentication and reminder behavior remains **Planned — V1**. Community remains Future. Sections 28–29 record settled V1 decisions and intentionally deferred Future questions; section 30 separates specification coverage from implementation evidence.
+> Onboarding persistence, journey state, notifications, account deletion, and private-data-aware sign-out remain planned. Web is a synthetic preview without real Auth; protected routes follow the same gates. Curated Scripture access/validation exist without approved assignments or translation text. Community remains Future. Existing client guards do not establish backend Data authorization. Historical scaffold evidence in section 30.2 predates the Auth implementation.
 
 ---
 
@@ -662,7 +662,7 @@ Do not collect profile fields solely because future Community might need them.
 | Field                 | Specification                                                                                                                |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | **Purpose**           | Require verified email before onboarding and cloud personal-data writes.                                                     |
-| **Route**             | `/auth/verify-email` — navigation scaffold exists; verification behavior is not implemented.                                 |
+| **Route**             | `/auth/verify-email` — both native verification modes implemented; real email evidence pending.                              |
 | **Context**           | Auth stack for pending account confirmation or an authenticated but unverified session.                                      |
 | **Entry points**      | Successful sign-up; sign-in or restored session with unverified email.                                                       |
 | **Primary action**    | `Verify email` submits the emailed code; verified users complete sign-in before the normal onboarding/journey gate.          |
@@ -2021,7 +2021,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | Forgot Password              | Reset email sent                         | Code/new-password form            | Inline                     | Stay on this route; reset is not complete                                                 |
 | Forgot Password              | Password reset confirmed                 | Sign In                           | Back/CTA                   | User chooses return after successful code/new-password submission                         |
 | Verify Email                 | Verification confirmed                   | Sign In / Onboarding / Today      | Replace                    | Establish verified session, then normal state gate                                        |
-| Verify Email                 | Cancel confirmation / sign out           | Welcome                           | Replace                    | Scaffold returns to Welcome; future integration clears pending confirmation or signs out  |
+| Verify Email                 | Cancel confirmation / sign out           | Welcome                           | Replace                    | Clears pending confirmation or signs out before the Auth guard returns to Welcome         |
 | Onboarding Overview          | Continue                                 | Practice Selection                | Push                       | Verified authenticated account                                                            |
 | Practice Selection           | Continue                                 | Bible Translation                 | Push                       | Exactly 2 selected                                                                        |
 | Bible Translation Onboarding | Continue                                 | Journey Confirmation              | Push                       | Valid translation selected                                                                |
@@ -2095,7 +2095,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 
 # 23. Route Registry
 
-> V1 paths are implemented as navigation scaffolding, including Verify Email and Notifications. Their feature behavior remains Planned — V1. The protection column specifies the target policy, not a working guard: auth/onboarding and journey state are absent. Only day-parameter validity is enforced today. Future paths remain absent. Yes in the protection column means verified account plus completed onboarding; no client gate replaces backend authorization.
+> Auth paths and Auth-owned protection are implemented with automated coverage; real lifecycle verification is pending. Data-dependent screens and Notifications remain scaffolds. Yes in the protection column requires verified Auth plus completed onboarding. Production currently routes verified accounts to onboarding until Data supplies completion. Day-parameter validity is enforced; journey-state access remains planned. Future paths remain absent, and client guards do not replace backend authorization.
 
 | Route                                   | Screen                     | Route group     | Parameters                                | Protection required              | V1/Future | Notes                                                                     | Status                         |
 | --------------------------------------- | -------------------------- | --------------- | ----------------------------------------- | -------------------------------- | --------- | ------------------------------------------------------------------------- | ------------------------------ |
@@ -2104,7 +2104,7 @@ This matrix is the contract for meaningful interactive navigation. The existing 
 | `/auth/sign-in`                         | Sign In                    | `(auth)`        | Optional preserved destination internally | Signed-out only                  | V1        | Do not expose private data in redirect params                             | Existing — navigation scaffold |
 | `/auth/sign-up`                         | Sign Up                    | `(auth)`        | None                                      | Signed-out only                  | V1        | Email/password; success → Verify Email                                    | Existing — navigation scaffold |
 | `/auth/forgot-password`                 | Forgot Password            | `(auth)`        | None                                      | Signed-out only                  | V1        | Email-code/new-password steps on this route                               | Existing — navigation scaffold |
-| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Confirming / unverified          | V1        | Scaffold cancels to Welcome; verification behavior remains planned        | Existing — navigation scaffold |
+| `/auth/verify-email`                    | Verify Email               | `(auth)`        | None                                      | Confirming / unverified          | V1        | Confirmation / authenticated attribute verification; cancel / sign out    | Existing — navigation scaffold |
 | `/onboarding`                           | Onboarding Overview        | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Resume flow                                                               | Existing — navigation scaffold |
 | `/onboarding/practices`                 | Practice Selection         | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Exactly two optional practices                                            | Existing — navigation scaffold |
 | `/onboarding/bible-translation`         | Bible Translation          | `(onboarding)`  | None                                      | Verified + onboarding incomplete | V1        | Available curated translation registry                                    | Existing — navigation scaffold |
@@ -2426,17 +2426,17 @@ Expired, invalid, already-used, or unauthorized invitations should end in a clea
 
 Source inspection after completing the navigation scaffold on 2026-09-08 confirms that starter navigation has been replaced. The remaining gaps below are explicitly deferred product work, not working integrations.
 
-| Observed state                                                                                          | Classification                               | Consequence / next scoped work                                                                |
-| ------------------------------------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Existing auth/onboarding/app route scaffold and Today/Journey tabs                                      | Existing — navigation scaffold               | Implement individual screens and their actual data/state contracts in place                   |
-| Root launch replaces to Welcome; auth/onboarding route groups have no guards yet                        | Planned integration                          | Connect real session restoration and onboarding state centrally before adding private content |
-| All day routes reject invalid parameters, but no current/future/ended journey state exists              | Existing validation; planned domain access   | Add shared journey access checks using the settled active/ended rules                         |
-| Settings has pushed child routes and source-aware stack returns; no preference/account operations exist | Existing navigation; planned feature actions | Add persistence, unsaved-change behavior, and real account operations within these routes     |
-| URL scheme exists without protected destination preservation                                            | Planned product deep links                   | Preserve and validate destinations through real gates before publishing links                 |
-| Community is absent                                                                                     | Consistent with Future scope                 | Keep all Community routes and entry points absent in V1                                       |
-| Verify Email and Notifications routes exist without auth or reminder operations                         | Existing navigation; planned feature actions | Connect real verification and local reminder behavior in their later integration milestones   |
+| Observed state                                                                                          | Classification                               | Consequence / next scoped work                                                            |
+| ------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Existing auth/onboarding/app route scaffold and Today/Journey tabs                                      | Existing — navigation scaffold               | Implement individual screens and their actual data/state contracts in place               |
+| Auth restoration selects Welcome, Verify Email, or onboarding; protected guards exist                   | Implemented; real lifecycle unverified       | Verify native Auth lifecycle; add authoritative onboarding Data later                     |
+| All day routes reject invalid parameters, but no current/future/ended journey state exists              | Existing validation; planned domain access   | Add shared journey access checks using the settled active/ended rules                     |
+| Settings has pushed child routes and source-aware stack returns; no preference/account operations exist | Existing navigation; planned feature actions | Add persistence, unsaved-change behavior, and real account operations within these routes |
+| URL scheme exists without protected destination preservation                                            | Planned product deep links                   | Preserve and validate destinations through real gates before publishing links             |
+| Community is absent                                                                                     | Consistent with Future scope                 | Keep all Community routes and entry points absent in V1                                   |
+| Verify Email has native Auth operations; Notifications remains a scaffold                               | Existing navigation; planned feature actions | Verify real email lifecycle; implement reminders in their dedicated milestone             |
 
-Email-gate placement and ended-Day-77 access are settled under section 29.1; their implementation remains deferred. Native back/gesture verification is recorded separately in section 30.
+Email-gate placement and ended-Day-77 access are settled under section 29.1. Auth gating is implemented; journey-state access remains deferred. Native back/gesture verification is recorded separately in section 30.
 
 ### Mandatory review targets
 
@@ -2577,6 +2577,8 @@ The missing-journey recovery in section 7.2 now resolves onboarding state before
 - [x] V1 reminders and pending-write sign-out choices are specified; implementation remains planned.
 
 ## 30.2 Navigation foundation inspection — 2026-09-08
+
+Historical evidence before the Auth milestone. The current implementation status at the top of this document and in project context supersedes the Auth-related scaffold statements below.
 
 - [x] Required V1 route files/groups are present; bootstrap replaces to Welcome, and Verify Email and Notifications remain navigation-only scaffolds.
 - [x] Today and Journey are the only permanent tabs on native and web.

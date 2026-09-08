@@ -1,5 +1,7 @@
 import { Link } from 'expo-router';
 
+import { authAvailable } from '@/services/auth';
+
 import { BrandWordmark } from '@/components/brand-wordmark';
 import { Button } from '@/components/button';
 import { EmptyState } from '@/components/empty-state';
@@ -27,7 +29,9 @@ export default function WelcomeScreen() {
           <TextLink>I already have an account</TextLink>
         </Link>
       </ScreenSection>
-      <InlineNotice message="Account forms are not connected yet. You can preview the screens, but cannot create an account or sign in." />
+      {!authAvailable ? (
+        <InlineNotice message="Authentication is available in the mobile app. This web preview does not create accounts or sign in." />
+      ) : null}
       <EmptyState
         title="Privacy Policy &amp; Terms"
         description="Privacy Policy and Terms of Service are not available in this preview."

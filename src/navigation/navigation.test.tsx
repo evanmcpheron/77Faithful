@@ -3,6 +3,26 @@ import { router } from 'expo-router';
 import { renderRouter } from 'expo-router/testing-library';
 
 import { generateStaticParams } from '@/app/(app)/day/[dayNumber]/_layout';
+import { getParticipantStage } from '@/auth/participant-stage';
+import { restoreAuth } from '@/services/auth';
+
+jest.mock('@/services/auth', () => ({
+  restoreAuth: jest.fn(),
+  authAvailable: true,
+  passwordRequirements: () => undefined,
+}));
+jest.mock('@/auth/participant-stage', () => ({
+  ...jest.requireActual('@/auth/participant-stage'),
+  getParticipantStage: jest.fn(),
+}));
+
+beforeEach(() => {
+  jest.mocked(restoreAuth).mockResolvedValue({
+    status: 'verified',
+    participant: { userId: 'fixture-sub', emailVerified: true },
+  });
+  jest.mocked(getParticipantStage).mockReturnValue({ status: 'complete' });
+});
 
 jest.mock('@/components/animated-icon', () => ({
   AnimatedSplashOverlay: () => null,
@@ -18,6 +38,7 @@ afterEach(() => {
 });
 
 it('launches at Welcome and keeps auth navigation in the auth stack', async () => {
+  jest.mocked(restoreAuth).mockResolvedValue({ status: 'signedOut' });
   const navigation = renderRouter('./src/app');
   await navigation;
   const user = userEvent.setup();
@@ -28,7 +49,7 @@ it('launches at Welcome and keeps auth navigation in the auth stack', async () =
   expect(getStarted).toHaveStyle({ minWidth: 48, minHeight: 48 });
   await user.press(getStarted);
   expect(navigation.getPathname()).toBe('/auth/sign-up');
-  expect(screen.queryByRole('button', { name: 'Create Account' })).not.toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Create Account' })).toBeOnTheScreen();
   await act(() => router.back());
   expect(navigation.getPathname()).toBe('/auth/welcome');
 
@@ -38,7 +59,7 @@ it('launches at Welcome and keeps auth navigation in the auth stack', async () =
   await act(() => router.back());
   expect(navigation.getPathname()).toBe('/auth/sign-in');
   await user.press(screen.getByRole('link', { name: 'Forgot password' }));
-  await user.press(screen.getByRole('link', { name: 'Return to Sign In' }));
+  await user.press(screen.getByRole('link', { name: 'Back to Sign In' }));
   expect(navigation.getPathname()).toBe('/auth/sign-in');
 
   await user.press(screen.getByRole('link', { name: 'Create account' }));
@@ -49,18 +70,21 @@ it('launches at Welcome and keeps auth navigation in the auth stack', async () =
   expect(navigation.getPathname()).toBe('/auth/welcome');
 });
 
-it('exposes the Verify Email scaffold with only a deterministic cancellation path', async () => {
+it('keeps pending confirmation at the Verify Email gate', async () => {
+  jest
+    .mocked(restoreAuth)
+    .mockResolvedValue({ status: 'confirmationPending', email: 'pending@example.test' });
   const navigation = renderRouter('./src/app', { initialUrl: '/auth/verify-email' });
   await navigation;
-  const user = userEvent.setup();
 
   expect(screen.getByRole('header', { name: 'Verify Email' })).toBeOnTheScreen();
-  await user.press(screen.getByRole('link', { name: 'Cancel and return to Welcome' }));
-  expect(navigation.getPathname()).toBe('/auth/welcome');
+  await act(() => router.replace('/today'));
+  expect(navigation.getPathname()).toBe('/auth/verify-email');
   expect(router.canGoBack()).toBe(false);
 });
 
 it('previews onboarding in order and returns to earlier steps without duplicate history', async () => {
+  jest.mocked(getParticipantStage).mockReturnValue({ status: 'incomplete' });
   const navigation = renderRouter('./src/app', { initialUrl: '/onboarding' });
   await navigation;
   const user = userEvent.setup();
@@ -266,10 +290,6 @@ it('exports exactly the bounded public Day 1–77 parameter set', () => {
 });
 
 it.each([
-  { path: '/auth/sign-in', unavailable: 'Sign-in is not available yet' },
-  { path: '/auth/sign-up', unavailable: 'Account creation is not available yet' },
-  { path: '/auth/forgot-password', unavailable: 'Password reset is not available yet' },
-  { path: '/auth/verify-email', unavailable: 'Email verification is not available yet' },
   { path: '/onboarding/practices', unavailable: 'Practice selection is not available yet' },
   { path: '/onboarding/bible-translation', unavailable: 'Translations are not available yet' },
   { path: '/onboarding/confirm', unavailable: 'Starting a journey is not available yet' },
@@ -283,11 +303,22 @@ it.each([
   { path: '/settings/bible-translation', unavailable: 'Translations are not available yet' },
   { path: '/settings/notifications', unavailable: 'Reminder settings are not available yet' },
   { path: '/settings/privacy', unavailable: 'Privacy Policy is not available yet' },
-  { path: '/settings/account', unavailable: 'Account details are not available yet' },
   { path: '/settings/account/delete', unavailable: 'Account deletion is not available yet' },
   { path: '/settings/about', unavailable: 'Privacy Policy & Terms' },
   { path: '/settings/help-feedback', unavailable: 'Support is not available yet' },
 ])('keeps $path truthful while its integration is unavailable', async ({ path, unavailable }) => {
+  if (path.startsWith('/auth/')) {
+    jest
+      .mocked(restoreAuth)
+      .mockResolvedValue(
+        path.endsWith('verify-email')
+          ? { status: 'confirmationPending', email: 'pending@example.test' }
+          : { status: 'signedOut' },
+      );
+  }
+  if (path.startsWith('/onboarding')) {
+    jest.mocked(getParticipantStage).mockReturnValue({ status: 'incomplete' });
+  }
   await renderRouter('./src/app', { initialUrl: path });
 
   expect(screen.getByRole('header', { name: unavailable })).toBeOnTheScreen();

@@ -8,6 +8,18 @@ Use the blue 77/path/cross in [assets/app-icon.png](../../assets/app-icon.png) a
 
 Prefer subtle borders and surface changes to shadows. Avoid glassmorphism, decorative gradients, excessive pills, dense dashboards, tiny type, streak flames, and competitive or achievement styling. Completion styling records participation; it never grades spiritual worth. [Product requirements](../PRODUCT_REQUIREMENTS.md) owns these product guardrails and release scope.
 
+## Restrained in-app branding
+
+[BrandWordmark](../../src/components/brand-wordmark.tsx) is a small, text-only `77Faithful` signature shared by Welcome, the onboarding introduction, and Journey Completion. These introduction/end screens justify a consistent identity cue; subsequent onboarding steps and routine Today, Journey, Scripture, Reflection, and Settings screens do not need it. Current empty states continue to use [EmptyState](../../src/components/empty-state.tsx) without a logo: their explanation is sufficient, and a new journey still shows its actual day rows under the [empty-state contract](../APP_NAVIGATION_AND_UX.md#176-empty-states).
+
+The wordmark uses ThemedText's system `label` role and existing `link` blue for readable contrast in both themes. It is plain text, with no underline, link role, press action, fixed dimensions, line limit, or scaling cap. ScreenSection supplies spacing; the larger ScreenHeading remains primary. The scaffold's optional `leadingContent` slot places it above the heading without making branding a default. Existing actions, scrolling, and navigation remain with their current owners; these routes still present navigation scaffolds.
+
+### Separate artwork requirement
+
+Inspection of [assets/app-icon.png](../../assets/app-icon.png) found the approved 77/path/cross artwork embedded in a shaded blue rounded tile, with outer margin and edge artifacts. It is an identity reference, not a clean standalone in-app symbol. The binary is unchanged and is not cropped, traced, recolored, or displayed by BrandWordmark. The text signature does not replace or reinterpret the approved symbol.
+
+Before adding a graphical in-app BrandMark, obtain a separately approved export of the original 77/path/cross artwork: transparent background, clean edges, intentional tight bounds, and legibility at a small supporting size on both light and dark neutral surfaces. Supply appropriate resolution exports or a vector source, with approved color treatments if needed. Keep this separate from launcher/splash derivatives. Do not reconstruct missing artwork in code or generate a substitute. No illustration system, decorative religious symbols, stock imagery, or background photography is needed.
+
 ## Colors and theme selection
 
 `Colors.light` and `Colors.dark` share the `ThemeColor` contract, enforced by TypeScript. `useTheme` remains the palette access point. It uses the shared system `useColorScheme` hook and maps `unspecified` to light. Web uses `Appearance` subscriptions with a light server/hydration snapshot. App configuration retains automatic appearance; there is no manual switch, stored preference, or second theme mechanism.

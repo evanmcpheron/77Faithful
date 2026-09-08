@@ -10,6 +10,7 @@ import { TextLink } from './text-link';
 type NavigationPlaceholderProps = {
   title: string;
   description: string;
+  leadingContent?: ReactNode;
   children?: ReactNode;
   headerless?: boolean;
   bottomInsetHandled?: boolean;
@@ -18,6 +19,7 @@ type NavigationPlaceholderProps = {
 export function NavigationPlaceholder({
   title,
   description,
+  leadingContent,
   children,
   headerless = false,
   bottomInsetHandled = false,
@@ -25,6 +27,7 @@ export function NavigationPlaceholder({
   return (
     <ScreenScrollView headerless={headerless} bottomInsetHandled={bottomInsetHandled}>
       <ScreenSection>
+        {leadingContent}
         <ScreenHeading title={title} description="Navigation scaffold" />
         <ThemedText>{description}</ThemedText>
         {children}

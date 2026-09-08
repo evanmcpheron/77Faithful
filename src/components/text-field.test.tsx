@@ -102,7 +102,7 @@ it.each([{ disabled: true }, { editable: false }, { readOnly: true }])(
 
 it('announces new iOS errors without repeating them on keystrokes or theme changes', async () => {
   jest.replaceProperty(Platform, 'OS', 'ios');
-  const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+  const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions');
   const field = (error?: string, value = '') => (
     <TextField
       label="Verification code"
@@ -116,6 +116,7 @@ it('announces new iOS errors without repeating them on keystrokes or theme chang
   await rerender(field('This code has expired. Request another code.'));
   expect(announce).toHaveBeenLastCalledWith(
     'Verification code. Error: This code has expired. Request another code.',
+    { queue: true },
   );
   expect(screen.getByLabelText('Verification code')).toHaveProp(
     'accessibilityHint',
@@ -130,11 +131,28 @@ it('announces new iOS errors without repeating them on keystrokes or theme chang
   expect(announce).toHaveBeenCalledTimes(2);
 });
 
+it('queues each field error when one submission reveals multiple iOS validation errors', async () => {
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions');
+  const form = (submitted: boolean) => (
+    <>
+      <TextField label="Email" error={submitted ? 'Enter your email.' : undefined} />
+      <PasswordField label="Password" error={submitted ? 'Enter your password.' : undefined} />
+    </>
+  );
+  const { rerender } = await render(form(false));
+  await rerender(form(true));
+  expect(announce.mock.calls).toEqual([
+    ['Email. Error: Enter your email.', { queue: true }],
+    ['Password. Error: Enter your password.', { queue: true }],
+  ]);
+});
+
 it.each(['android', 'web'] as const)(
   'uses an error live region on %s without a duplicate explicit announcement',
   async (platform) => {
     jest.replaceProperty(Platform, 'OS', platform);
-    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions');
     await render(
       <TextField
         label="Code"

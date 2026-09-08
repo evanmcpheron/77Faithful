@@ -109,7 +109,7 @@ export function ActionControl({
               },
             ]}>
             {actionIcon && !(appearance === 'icon' && loading) && (
-              <AppIcon name={actionIcon} themeColor={foreground} size={24} />
+              <AppIcon name={actionIcon} themeColor={foreground} />
             )}
             {loading && (
               <View

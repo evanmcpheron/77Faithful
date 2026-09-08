@@ -70,6 +70,7 @@ export function NavigationRow({
         <Container
           style={[
             styles.content,
+            appearance === 'card' && styles.card,
             {
               backgroundColor: disabled
                 ? theme.disabled
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
     outlineOffset: Spacing.half,
   },
   content: {
+    borderRadius: Radius.control,
     flexGrow: 1,
     minHeight: ControlSize.minTouchTarget,
     minWidth: ControlSize.minTouchTarget,

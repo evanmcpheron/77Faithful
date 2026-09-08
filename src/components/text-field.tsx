@@ -58,7 +58,9 @@ export function TextField({
   useEffect(() => {
     // Live regions announce changes on Android/web; VoiceOver needs an explicit announcement.
     if (Platform.OS === 'ios' && error) {
-      AccessibilityInfo.announceForAccessibility(`${label}. Error: ${error}`);
+      AccessibilityInfo.announceForAccessibilityWithOptions(`${label}. Error: ${error}`, {
+        queue: true,
+      });
     }
   }, [error, label]);
 

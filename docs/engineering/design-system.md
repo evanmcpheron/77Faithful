@@ -1,6 +1,6 @@
 # Design system
 
-Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared action, selection/completion, text-field, layout, and navigation primitives consume it. Screen-level loading/empty/error components remain later work; reusable controls do not establish working feature integrations or native visual acceptance.
+Updated 2026-09-08. The semantic color, typography, and geometry foundation is implemented in [src/constants/theme.ts](../../src/constants/theme.ts). Shared action, selection/completion, text-field, layout, navigation, and state-feedback primitives consume it. These components do not establish working feature integrations or native visual acceptance.
 
 ## Visual direction
 
@@ -218,7 +218,7 @@ Choose native input props in the feature that knows the content:
 - Verify Email and recovery code: TextField with `autoComplete="one-time-code"`; choose keyboard and length constraints from the authentication service's verified code contract.
 - Reflection, morning intention, and applicable Settings text: TextField with `multiline` where needed. Private editors can pass `autoComplete="off"` and `importantForAutofill="no"`. Writing requirements, validation timing, completion, drafts, submission, truthful save/sync feedback, and navigation guards remain with the feature under the [navigation contract](../APP_NAVIGATION_AND_UX.md#20-accessibility-and-mobile-ux-requirements).
 
-These controls never persist drafts, log content, call AWS, infer a successful save, or navigate. Compose actual feature-owned status text with ThemedText and actions with Button. The existing Auth/Reflection routes remain honest navigation scaffolds until their feature integrations exist.
+These controls never persist drafts, log content, call AWS, infer a successful save, or navigate. Compose actual feature-owned persistence outcomes with SyncStatus and actions with Button. The existing Auth/Reflection routes remain honest navigation scaffolds until their feature integrations exist.
 
 Keep reading text, prompts, fields, and actions in the same `ScreenScrollView`; never wrap it in another scroll view. Sections and headings add only ordinary views. A multiline editor that belongs to the page should grow with its content and use `scrollEnabled={false}` so page scrolling stays coherent. Avoid fixed-height text containers.
 
@@ -229,6 +229,38 @@ The shared scroll view enables [React Native 0.86 keyboard inset adjustment](htt
 The native scroll `ref` and scroll/content-size callbacks are available for editor-specific focus handling on the same container. Fields, draft state, focus policy, validation, and save actions belong to the consumer. Actual focused-field visibility, multiline caret movement, reachable actions, and draft retention across keyboard dismissal must be verified on iOS/Android when forms are implemented; mocked layout tests do not establish keyboard safety on devices.
 
 Use simple recognizable platform icons with accessible names for icon-only actions; decorative icons stay hidden from assistive technology. Pair state color with text/icons and native accessibility state. Avoid animation-dependent meaning and honor reduced motion when introducing product transitions. Existing splash/logo keyframes and collapsible fade remain starter infrastructure, outside this foundation change.
+
+## Application-state feedback
+
+[Navigation contract section 17](../APP_NAVIGATION_AND_UX.md#17-loading-error-offline-and-empty-states) owns loading, failure, offline, and empty-state behavior. The shared components below provide inline presentation inside the existing screen layout. They own no routes, overlays, requests, timers, persistence, or connectivity subscriptions. Keep headers/tabs mounted and place feedback beside the affected content.
+
+| Component                                                          | Use and API                                                                                                                                                                                                                                                                                                              |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [InlineNotice](../../src/components/inline-notice.tsx)             | Required `message`, with `tone="info"` by default or `tone="error"`. Uses a quiet Surface and supporting text. Error copy has a visible `Error:` prefix and an accessible announcement.                                                                                                                                  |
+| [ErrorState](../../src/components/error-state.tsx)                 | Required `message`; optional `onRetry` exposes a shared secondary Button. Caller-controlled `retrying` changes its label to `Retrying…` and blocks repeat activation. Omit the callback when no recoverable operation exists.                                                                                            |
+| [EmptyState](../../src/components/empty-state.tsx)                 | Required `title` and `description`, using the section heading primitive without a card, illustration, score, or invented action. Compose a sibling Button only for an existing meaningful action.                                                                                                                        |
+| [LoadingPlaceholder](../../src/components/loading-placeholder.tsx) | Required contextual `label`, such as `Loading journey…`. Default `presentation="skeleton"` supplies static decorative lines; `presentation="refresh"` shows only a quiet label beside retained content. Both expose named, indeterminate progress with busy semantics. No shimmer, animation, fake percentage, or delay. |
+| [SyncStatus](../../src/components/sync-status.tsx)                 | Required `status` selects the explicit outcomes below. Optional `offline` appends Offline when connectivity materially affects the operation. Supporting text stays on the surrounding canvas; normal status uses `textSecondary`, without a badge, success banner, or spinner.                                          |
+
+### Truthful save and sync labels
+
+| `status`      | Visible text                           | Required caller evidence                                                                                    |
+| ------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `synced`      | Saved and synced                       | Backend confirmation for the current revision; no newer unconfirmed edits.                                  |
+| `pending`     | Saved locally · Pending sync           | Durable local persistence succeeded; backend confirmation is still outstanding.                             |
+| `sync-failed` | Failed to sync · Saved locally         | The cloud write failed or was rejected, and the current revision remains durably stored locally.            |
+| `save-failed` | Failed to save · Changes are not saved | The current edits could not be saved locally; retain available in-memory input without claiming durability. |
+| `offline`     | Offline                                | Known, material connectivity loss; this status makes no claim about saving.                                 |
+
+`offline` can also accompany a saved/pending/failed status without replacing its persistence outcome. Render status only where useful, usually near the affected editor or practice. These props are presentation inputs, not a state machine: components cannot verify a save, infer connectivity, or promote pending work to synced. CompletionControl retains its own accessible pending description inside its checkbox; do not nest an announcing SyncStatus or a Retry button inside that press target. Place failure/recovery feedback beside it.
+
+Use ErrorState next to retained local content for a read failure. If required journey state has never loaded, use it in the content area with a real Retry operation, retaining navigation chrome. Do not invent a journey/day to fill the gap. During refresh, keep existing content and editors mounted and add the refresh presentation alongside them; use skeletons only for missing content. Feedback components do not disable siblings or auto-complete any practice.
+
+Scripture unavailability belongs beside the known reference and available content. Use Retry only for a real recoverable text load; absent bundled text has no network operation to retry or animate. Keep other practices available and follow the contract for explicit external-reading completion. EmptyState must not replace Journey's current/upcoming rows or introduce `No history yet`, a zero-score dashboard, or Future Community UI.
+
+Errors use readable text as well as color. The internal FeedbackText exposes an alert with a polite live region on Android/web and queues an explicit VoiceOver announcement on iOS when an error appears or its message changes. Routine saved/pending labels do not announce every update. The retry action remains a separate accessible Button; messages do not take focus, dismiss automatically, or impose a text-scaling cap. Keep messages specific, calm, and free of raw exceptions, credentials, or private draft content. Accessibility behavior follows the [React Native 0.86 live-region contract](https://reactnative.dev/docs/0.86/accessibility#accessibilityliveregion) and [announcement API](https://reactnative.dev/docs/0.86/accessibilityinfo#announceforaccessibilitywithoptions).
+
+**Integration limit:** the repository has no durable personal-record persistence/sync queue. These components add presentation only; they do not establish offline editing, draft retention across relaunch, or backend-confirmed saves. Feature callers must implement and verify the [account-scoped persistence boundary](architecture-decisions.md#offline-persistence-and-account-boundaries) before supplying those outcomes. Existing scaffold routes remain unchanged.
 
 ## Verification and remaining work
 
@@ -246,4 +278,6 @@ Shared-action verification on 2026-09-08 passed `npm run check` (222 tests) and 
 
 Automated contrast calculations and static export do not prove native rendering. On iOS and Android, verify light/dark transitions, system font weights, largest accessibility text sizes, multiline controls, clipping/line spacing, keyboard focus indicators, touch targets, safe areas, and screen-reader semantics. Native visual acceptance remains required before release.
 
-Feature flows should consume these controls as their integrations are implemented. Screen-level loading/empty/error components remain future work. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.
+[State-feedback tests](../../src/components/state-feedback.test.tsx) cover meaningful Retry availability and pending interaction, explicit save/sync/offline labels, confirmation-gated success and rejected-sync draft retention in a synthetic caller, independent actions and retained content during Scripture failure/refresh, error announcements across platform branches, both themes, loading semantics, and explanatory empty copy. These composition tests do not establish native storage, actual service integration, device layout, or VoiceOver/TalkBack delivery.
+
+Feature flows should consume these controls as their integrations are implemented. Configured iOS/Android icons point to the product PNG; platform-ready icon derivatives, the starter splash, web favicon, and animated logo still need separate branding work. No artwork or Expo configuration changes are included here.

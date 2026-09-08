@@ -3,9 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { ThemedText } from './themed-text';
 
 import { Spacing } from '@/constants/theme';
-import { JOURNEY_DAY_COUNT } from '@/content/scripture/reading-plans';
+import { JOURNEY_DAY_COUNT } from '@/journey/invariants';
+import type { RecordedPracticeCount } from '@/journey/participation';
 
-export type RecordedPracticeCount = 0 | 1 | 2 | 3 | 4 | 5;
+export type { RecordedPracticeCount } from '@/journey/participation';
 
 export type DayProgressProps = { dayNumber: number };
 

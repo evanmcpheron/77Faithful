@@ -1,5 +1,5 @@
 import { bibleBooks, scripturePassages } from '@/content/scripture/passages';
-import { JOURNEY_DAY_COUNT, readingPlans, weeklyThemes } from '@/content/scripture/reading-plans';
+import { readingPlans, weeklyThemes } from '@/content/scripture/reading-plans';
 import { scriptureTexts } from '@/content/scripture/texts';
 import {
   bibleTranslations,
@@ -7,6 +7,7 @@ import {
   type TranslationId,
 } from '@/content/scripture/translations';
 import type { BibleTranslation, ScriptureCatalog, ScriptureVerse } from '@/scripture/types';
+import { isJourneyDayNumber, JOURNEY_DAY_COUNT } from '@/journey/invariants';
 
 export const scriptureCatalog: ScriptureCatalog = {
   dayCount: JOURNEY_DAY_COUNT,
@@ -27,7 +28,7 @@ export type ReaderTranslation = {
 };
 
 export function getDailyReading(contentVersion: string, dayNumber: number) {
-  if (!Number.isInteger(dayNumber) || dayNumber < 1 || dayNumber > JOURNEY_DAY_COUNT) return null;
+  if (!isJourneyDayNumber(dayNumber)) return null;
   const plan = readingPlans.find(
     (plan) => plan.version === contentVersion && plan.publication.status === 'published',
   );

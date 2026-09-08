@@ -1,6 +1,6 @@
 import type { ReadingPlan, WeeklyTheme } from '@/scripture/types';
 
-export const JOURNEY_DAY_COUNT = 77;
+export { JOURNEY_DAY_COUNT } from '../../journey/invariants.ts';
 
 export const weeklyThemes: readonly WeeklyTheme[] = [
   { id: 'abiding-in-christ', name: 'Abiding in Christ' },

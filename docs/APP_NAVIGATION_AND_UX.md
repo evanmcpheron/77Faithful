@@ -1392,9 +1392,11 @@ Historical edits never change the current day number.
 
 ## 12.4 Streak behavior
 
-The V1 complete-day streak is derived from consecutive calendar days with all five practices complete.
+**Product-owner decision — 2026-09-08:** the V1 complete-day streak is the **current/trailing run** of consecutive Journey calendar days with all five practices complete.
 
-- An incomplete day breaks the derived streak.
+- While active, a complete current day extends the run through today. An incomplete current day preserves the run ending yesterday; it breaks that run only when its calendar date ends in the fixed Journey timezone.
+- An incomplete historical day breaks the run. Do not skip earlier incomplete days or display the longest run achieved elsewhere in the Journey.
+- Before start, the value is zero. After the Journey ends, evaluate the trailing run ending on Day 77, with no current-day grace period: incomplete Day 77 means zero; complete Day 77 retains the consecutive run ending there. No Day 78 is evaluated.
 - The journey continues regardless.
 - If the user later corrects a historical record, recompute the streak from recorded state.
 - Do not make streak loss the primary message on Today.

@@ -1,4 +1,10 @@
 import type { ScriptureCatalog, ScripturePassage } from './types';
+import {
+  JOURNEY_DAY_COUNT,
+  JOURNEY_WEEK_COUNT,
+  isJourneyDayNumber,
+  journeyWeekForDay,
+} from '../journey/invariants.ts';
 
 function hasText(value: string): boolean {
   return value.trim().length > 0;
@@ -34,8 +40,8 @@ export function validateScriptureCatalog(catalog: ScriptureCatalog): string[] {
     }
   }
 
-  check(dayCount === 77, 'The V1 plan must represent 77 journey days.');
-  check(themes.length === 11, 'The V1 plan must have 11 weekly themes.');
+  check(dayCount === JOURNEY_DAY_COUNT, 'The V1 plan must represent 77 journey days.');
+  check(themes.length === JOURNEY_WEEK_COUNT, 'The V1 plan must have 11 weekly themes.');
   checkIds(
     'Theme',
     themes.map(({ id }) => id),
@@ -113,13 +119,14 @@ export function validateScriptureCatalog(catalog: ScriptureCatalog): string[] {
     }
     for (const day of plan.days) {
       check(
-        isPositiveInteger(day.dayNumber) && day.dayNumber <= dayCount,
+        isJourneyDayNumber(day.dayNumber),
         `Plan ${plan.version}: invalid day ${day.dayNumber}.`,
       );
       check(!days.has(day.dayNumber), `Plan ${plan.version}: duplicate day ${day.dayNumber}.`);
       days.add(day.dayNumber);
       check(
-        day.themeId === themes[Math.floor((day.dayNumber - 1) / 7)]?.id,
+        isJourneyDayNumber(day.dayNumber) &&
+          day.themeId === themes[journeyWeekForDay(day.dayNumber) - 1]?.id,
         `Plan ${plan.version} day ${day.dayNumber}: incorrect weekly theme.`,
       );
       check(

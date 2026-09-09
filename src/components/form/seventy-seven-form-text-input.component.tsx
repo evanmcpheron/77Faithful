@@ -1,0 +1,164 @@
+import { SymbolView } from 'expo-symbols';
+import { useId, useState } from 'react';
+import { Button, Input, Label, TextArea, XStack, YStack } from 'tamagui';
+import type { InputProps } from 'tamagui';
+
+import { SeventySevenText } from '../core';
+import { Severity } from '@77/types';
+
+export const SeventySevenFormTextInputType = {
+  Text: 'Text',
+  Number: 'Number',
+  Password: 'Password',
+} as const;
+
+export type TSeventySevenFormTextInputType =
+  (typeof SeventySevenFormTextInputType)[keyof typeof SeventySevenFormTextInputType];
+
+interface ISeventySevenFormTextInputProps {
+  autoComplete?: InputProps['autoComplete'];
+  defaultValue?: string;
+  disabled?: boolean;
+  errorMessage?: string;
+  isLongForm?: boolean;
+  label?: string;
+  onBlur?: InputProps['onBlur'];
+  onChangeText?: (inputValue: string) => void;
+  placeholder?: string;
+  type?: TSeventySevenFormTextInputType;
+  value?: string;
+}
+
+export const SeventySevenFormTextInput = ({
+  autoComplete,
+  defaultValue,
+  disabled = false,
+  errorMessage,
+  isLongForm = false,
+  label,
+  onBlur,
+  onChangeText,
+  placeholder,
+  type = SeventySevenFormTextInputType.Text,
+  value,
+}: ISeventySevenFormTextInputProps) => {
+  const inputId = useId();
+  const labelId = `${inputId}-label`;
+  const errorId = `${inputId}-error`;
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const isPassword = type === SeventySevenFormTextInputType.Password && !isLongForm;
+  const isNumber = type === SeventySevenFormTextInputType.Number && !isLongForm;
+  const hasError = Boolean(errorMessage);
+
+  const handlePasswordVisibility = () => {
+    setIsPasswordVisible((currentVisibility) => !currentVisibility);
+  };
+
+  return (
+    <YStack gap="$2" width="100%" opacity={disabled ? 0.5 : 1}>
+      {label ? (
+        <Label
+          id={labelId}
+          htmlFor={inputId}
+          unstyled
+          cursor={disabled ? 'not-allowed' : 'default'}
+        >
+          <SeventySevenText bold>{label}</SeventySevenText>
+        </Label>
+      ) : null}
+
+      <XStack
+        items={isLongForm ? 'flex-start' : 'center'}
+        borderWidth={1}
+        borderColor={hasError ? '$red9' : '$borderColor'}
+        rounded="$4"
+        bg="$background"
+        overflow="hidden"
+        focusWithinStyle={{ borderColor: hasError ? '$red10' : '$blue9' }}
+      >
+        {isLongForm ? (
+          <TextArea
+            id={inputId}
+            flex={1}
+            minH={144}
+            borderWidth={0}
+            rounded={0}
+            bg="transparent"
+            px="$3.5"
+            py="$3"
+            fontSize="$4"
+            autoComplete={autoComplete}
+            defaultValue={defaultValue}
+            disabled={disabled}
+            placeholder={placeholder}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChangeText}
+            accessibilityLabel={label ?? placeholder}
+            accessibilityLabelledBy={label ? labelId : undefined}
+            accessibilityHint={hasError ? errorMessage : undefined}
+            aria-describedby={hasError ? errorId : undefined}
+            aria-invalid={hasError}
+          />
+        ) : (
+          <Input
+            id={inputId}
+            flex={1}
+            minH="$5"
+            borderWidth={0}
+            rounded={0}
+            bg="transparent"
+            px="$3.5"
+            pr={isPassword ? '$2' : '$3.5'}
+            fontSize="$4"
+            autoComplete={autoComplete}
+            defaultValue={defaultValue}
+            disabled={disabled}
+            keyboardType={isNumber ? 'number-pad' : 'default'}
+            inputMode={isNumber ? 'numeric' : 'text'}
+            secureTextEntry={isPassword && !isPasswordVisible}
+            type={isPassword && !isPasswordVisible ? 'password' : isNumber ? 'number' : 'text'}
+            placeholder={placeholder}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChangeText}
+            accessibilityLabel={label ?? placeholder}
+            accessibilityLabelledBy={label ? labelId : undefined}
+            accessibilityHint={hasError ? errorMessage : undefined}
+            aria-describedby={hasError ? errorId : undefined}
+            aria-invalid={hasError}
+          />
+        )}
+
+        {isPassword ? (
+          <Button
+            size="$5"
+            p={0}
+            chromeless
+            circular
+            disabled={disabled}
+            onPress={handlePasswordVisibility}
+            accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}
+            accessibilityRole="button"
+          >
+            <SymbolView
+              name={{
+                ios: isPasswordVisible ? 'eye.slash' : 'eye',
+                android: isPasswordVisible ? 'visibility_off' : 'visibility',
+                web: isPasswordVisible ? 'visibility_off' : 'visibility',
+              }}
+              size={21}
+              tintColor="#6b7280"
+            />
+          </Button>
+        ) : null}
+      </XStack>
+
+      {errorMessage ? (
+        <SeventySevenText id={errorId} nativeID={errorId} severity={Severity.Error} fontSize="$3">
+          {errorMessage}
+        </SeventySevenText>
+      ) : null}
+    </YStack>
+  );
+};

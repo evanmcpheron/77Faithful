@@ -1,5 +1,7 @@
 import { styled, Text } from 'tamagui';
 
+import { Severity } from '@77/types';
+
 export const SeventySevenTextSize = {
   HeadingLarge: 'HeadingLarge',
   Heading: 'Heading',
@@ -9,17 +11,6 @@ export const SeventySevenTextSize = {
 
 export type TSeventySevenTextSize =
   (typeof SeventySevenTextSize)[keyof typeof SeventySevenTextSize];
-
-export const SeventySevenTextSeverity = {
-  Default: 'Default',
-  Info: 'Info',
-  Success: 'Success',
-  Warning: 'Warning',
-  Error: 'Error',
-} as const;
-
-export type TSeventySevenTextSeverity =
-  (typeof SeventySevenTextSeverity)[keyof typeof SeventySevenTextSeverity];
 
 export const SeventySevenTextAlignment = {
   Left: 'Left',
@@ -100,7 +91,7 @@ export const SeventySevenText = styled(Text, {
   } as const,
   defaultVariants: {
     size: 'Paragraph',
-    severity: 'Default',
+    severity: Severity.Default,
     alignment: 'Left',
     bold: false,
     italic: false,

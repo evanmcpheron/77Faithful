@@ -1,4 +1,5 @@
-export { SeventySevenButton } from './seventy-seven-button.component';
+export { SeventySevenButton, SeventySevenButtonAppearance } from './seventy-seven-button.component';
+export type { TSeventySevenButtonAppearance } from './seventy-seven-button.component';
 export { SeventySevenScreenPlaceholder } from './seventy-seven-screen-placeholder.component';
 export {
   SeventySevenText,

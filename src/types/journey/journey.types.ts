@@ -1,5 +1,5 @@
 import type { IFormationCourseReference } from '../formation/formation-course.types';
-import type { TOptionalPracticePair } from '../formation/practice.types';
+import type { TOptionalPracticeSelection } from '../formation/practice.types';
 import type {
   IDocumentTimestamps,
   IPersistedTimestamp,
@@ -44,7 +44,7 @@ export interface IJourneyDocument extends IDocumentTimestamps {
   readonly course: IFormationCourseReference;
   readonly startDate: TCalendarDate;
   readonly timeZoneId: TIanaTimeZoneId;
-  readonly initialOptionalPracticeIds: TOptionalPracticePair;
+  readonly initialOptionalPracticeIds: TOptionalPracticeSelection;
   // Used with the separate change history to reject stale practice replacements.
   practiceScheduleRevision: number;
   state: TJourneyState;

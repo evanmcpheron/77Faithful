@@ -39,8 +39,12 @@ export const SeventySevenDropdown = ({
             px="$2"
             aria-label={`${isExpanded ? 'Hide' : 'Show'} ${label} details`}
           >
-            <SeventySevenText color="$textSecondary" aria-hidden>
-              {isExpanded ? '⌃' : '⌄'}
+            <SeventySevenText
+              color="$textSecondary"
+              rotate={isExpanded ? '0deg' : '180deg'}
+              aria-hidden
+            >
+              ⌃
             </SeventySevenText>
           </Button>
         </Collapsible.Trigger>

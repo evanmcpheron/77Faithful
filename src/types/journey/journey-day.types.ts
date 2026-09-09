@@ -32,13 +32,22 @@ export interface IAssignedOptionalPractice {
   completion: IPracticeCompletion;
 }
 
-/** Fixed slots make five practices explicit without a map accepting arbitrary practice keys. */
+export type TAssignedOptionalPractices =
+  | readonly [IAssignedOptionalPractice, IAssignedOptionalPractice]
+  | readonly [IAssignedOptionalPractice, IAssignedOptionalPractice, IAssignedOptionalPractice]
+  | readonly [
+      IAssignedOptionalPractice,
+      IAssignedOptionalPractice,
+      IAssignedOptionalPractice,
+      IAssignedOptionalPractice,
+    ];
+
+/** Foundational practices and two to four distinct Chosen Practices assigned to this day. */
 export interface IDailyPractices {
   readScripture: IPracticeCompletion;
   pray: IPracticeCompletion;
   reflect: IPracticeCompletion;
-  readonly firstOptional: IAssignedOptionalPractice;
-  readonly secondOptional: IAssignedOptionalPractice;
+  readonly optionalPractices: TAssignedOptionalPractices;
 }
 
 /** Private body keyed by dayNumber within a journey, not an element in a journey array. */

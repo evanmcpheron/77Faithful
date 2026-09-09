@@ -1,5 +1,5 @@
 import type { TBibleVersionId } from '../formation/bible-version.types';
-import type { TOptionalPracticeId, TOptionalPracticePair } from '../formation/practice.types';
+import type { TOptionalPracticeId, TOptionalPracticeSelection } from '../formation/practice.types';
 import type { IWritingHead } from '../journey/journey-writing.types';
 import type { IDocumentTimestamps, TDomainSchemaVersion } from '../shared/persistence.types';
 
@@ -9,6 +9,7 @@ export const JourneySetupStep = {
   BibleVersion: 'BibleVersion',
   Motivation: 'Motivation',
   Reminders: 'Reminders',
+  WeeklyThemes: 'WeeklyThemes',
   Review: 'Review',
 } as const;
 
@@ -23,7 +24,7 @@ export type TJourneySetupReadiness =
   (typeof JourneySetupReadiness)[keyof typeof JourneySetupReadiness];
 
 export type TSetupOptionalPracticeSelection =
-  readonly [] | readonly [TOptionalPracticeId] | TOptionalPracticePair;
+  readonly [] | readonly [TOptionalPracticeId] | TOptionalPracticeSelection;
 
 export interface IIncompleteJourneySetupChoices {
   readonly readiness: typeof JourneySetupReadiness.Incomplete;
@@ -34,7 +35,7 @@ export interface IIncompleteJourneySetupChoices {
 /** Readiness confirms choices only; email, content availability and active-journey checks remain. */
 export interface IReadyJourneySetupChoices {
   readonly readiness: typeof JourneySetupReadiness.ReadyForReview;
-  readonly optionalPracticeIds: TOptionalPracticePair;
+  readonly optionalPracticeIds: TOptionalPracticeSelection;
   readonly bibleVersionId: TBibleVersionId;
 }
 

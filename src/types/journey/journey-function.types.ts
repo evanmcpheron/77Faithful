@@ -3,7 +3,7 @@ import type {
   TCalendarDate,
   TIanaTimeZoneId,
 } from '../shared/persistence.types';
-import type { TOptionalPracticePair } from '../formation/practice.types';
+import type { TOptionalPracticeSelection } from '../formation/practice.types';
 import type { IEarlyEndedJourneyState, IJourneyDetails } from './journey.types';
 import type { IJourneyPracticeSelection } from './practice-change.types';
 
@@ -56,7 +56,7 @@ export interface IConfirmOptionalPracticeReplacementRequest {
   operationId: string;
   journeyId: string;
   expectedScheduleRevision: number;
-  optionalPracticeIds: TOptionalPracticePair;
+  optionalPracticeIds: TOptionalPracticeSelection;
   // Preconditions preserve the day/date the participant reviewed across midnight.
   reviewedEffectiveDayNumber: number;
   reviewedEffectiveDate: TCalendarDate;

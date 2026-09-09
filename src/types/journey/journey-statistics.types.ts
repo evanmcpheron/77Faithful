@@ -7,7 +7,7 @@ export interface IJourneyRecordedCounts {
   practicesMarkedComplete: number;
   longestCompleteDayStreak: number;
   writtenReflectionCount: number;
-  // reachedDayCount * 5; completed journeys have 385, early-ended journeys only reached days.
+  // Sum the five to seven practices assigned to each reached day, including practice changes.
   possiblePracticeMarkers: number;
 }
 

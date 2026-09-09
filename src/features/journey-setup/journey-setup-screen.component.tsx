@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView as NativeScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Separator, XStack, YStack } from 'tamagui';
+import { Button, Separator, Spinner, XStack, YStack } from 'tamagui';
 
 import { SeventySevenButton, SeventySevenText } from '@77/components/core';
 import {
@@ -19,10 +19,16 @@ import type { TBibleVersionId } from '@77/types/formation/bible-version.types';
 import type { TOptionalPracticeId } from '@77/types/formation/practice.types';
 
 import { setupPractices, weeklyThemes } from './journey-setup-content';
+import {
+  getReminderPreference,
+  getSetupChoices,
+  isValidReminderTime,
+} from './journey-setup-validation';
+import { useJourneySetupPersistence } from './use-journey-setup-persistence.hook';
+import type { TJourneySetupChanges } from './use-journey-setup-persistence.hook';
 import { ReminderTimePicker, formatReminderTime } from './reminder-time-picker.component';
 
-const SetupScreenStep = { ...JourneySetupStep, WeeklyThemes: 'WeeklyThemes' } as const;
-type TSetupScreenStep = (typeof SetupScreenStep)[keyof typeof SetupScreenStep];
+type TSetupScreenStep = (typeof JourneySetupStep)[keyof typeof JourneySetupStep];
 
 const setupSteps = [
   {
@@ -56,7 +62,7 @@ const setupSteps = [
       'Choose a time for Scripture and prayer, reflection, or both. Reminders are optional.',
   },
   {
-    id: SetupScreenStep.WeeklyThemes,
+    id: JourneySetupStep.WeeklyThemes,
     title: 'Eleven weeks of following Jesus',
     description:
       'Each week brings a new focus as you continue with Scripture, prayer, and your daily practices.',
@@ -67,8 +73,6 @@ const setupSteps = [
     description: 'Take a moment to review your practices and the dates before you begin.',
   },
 ];
-
-const isValidReminderTime = (time: string): boolean => /^([01]\d|2[0-3]):[0-5]\d$/.test(time);
 
 const formatJourneyDate = (date: Date): string =>
   new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
@@ -121,7 +125,16 @@ const ReminderChoice = ({
   </SeventySevenCard>
 );
 
-export const JourneySetupScreen = () => {
+interface IJourneySetupScreenProps {
+  userId: string;
+}
+
+export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
+  const [hasRestoredSetup, setHasRestoredSetup] = useState(false);
+  const [lastSavedChanges, setLastSavedChanges] = useState<string | null>(null);
+  const [validationMessage, setValidationMessage] = useState<string | null>(null);
+  const isNavigating = useRef(false);
+  const [isNavigatingStep, setIsNavigatingStep] = useState(false);
   const safeAreaInsets = useSafeAreaInsets();
   const scrollRef = useRef<NativeScrollView>(null);
   const [currentStep, setCurrentStep] = useState<TSetupScreenStep>(JourneySetupStep.Commitment);
@@ -133,9 +146,25 @@ export const JourneySetupScreen = () => {
   const [morningTime, setMorningTime] = useState('07:00');
   const [eveningTime, setEveningTime] = useState('20:00');
   const [isEditingReview, setIsEditingReview] = useState(false);
-  const [isPreviewComplete, setIsPreviewComplete] = useState(false);
+  const [isSetupSaved, setIsSetupSaved] = useState(false);
   const [reviewDate, setReviewDate] = useState(new Date());
   const [hasDateChanged, setHasDateChanged] = useState(false);
+
+  const persistence = useJourneySetupPersistence(userId, ({ draft, devicePreferences }) => {
+    setCurrentStep(draft?.currentStep ?? JourneySetupStep.Commitment);
+    setSelectedPractices(draft?.choices.optionalPracticeIds ?? []);
+    setBibleVersionId(draft?.choices.bibleVersionId ?? null);
+    setMotivation(draft?.startingMotivation?.text ?? '');
+    setHasMorningReminder(devicePreferences?.morningReminder.isEnabled ?? false);
+    setHasEveningReminder(devicePreferences?.eveningReflectionReminder.isEnabled ?? false);
+    setMorningTime(devicePreferences?.morningReminder.localTime ?? '07:00');
+    setEveningTime(devicePreferences?.eveningReflectionReminder.localTime ?? '20:00');
+    setIsEditingReview(false);
+    setIsSetupSaved(false);
+    setValidationMessage(null);
+    setLastSavedChanges(null);
+    setHasRestoredSetup(true);
+  });
 
   const stepIndex = setupSteps.findIndex((step) => step.id === currentStep);
   const step = setupSteps[stepIndex];
@@ -164,6 +193,8 @@ export const JourneySetupScreen = () => {
         .join('\n') || 'Off';
   const hasValidPractices = selectedPractices.length >= 2 && selectedPractices.length <= 4;
   const isContinueDisabled =
+    persistence.isSaving ||
+    persistence.hasConflict ||
     (currentStep === JourneySetupStep.Practices && !hasValidPractices) ||
     (currentStep === JourneySetupStep.BibleVersion && !bibleVersionId) ||
     (currentStep === JourneySetupStep.Reminders && !hasValidReminders) ||
@@ -176,7 +207,7 @@ export const JourneySetupScreen = () => {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
-  }, [currentStep, isPreviewComplete]);
+  }, [currentStep, isSetupSaved]);
 
   useEffect(() => {
     if (currentStep !== JourneySetupStep.Review) return;
@@ -213,40 +244,111 @@ export const JourneySetupScreen = () => {
     if (translation) setBibleVersionId(translation.bibleVersionId);
   };
 
-  const handleContinue = () => {
+  const getChanges = (nextStep = currentStep): TJourneySetupChanges => ({
+    currentStep: nextStep,
+    choices: getSetupChoices(selectedPractices, bibleVersionId),
+    motivation,
+    morningReminder: getReminderPreference(hasMorningReminder, morningTime),
+    eveningReflectionReminder: getReminderPreference(hasEveningReminder, eveningTime),
+  });
+
+  const saveChanges = async (changes: TJourneySetupChanges): Promise<boolean> => {
+    const didSave = await persistence.save(changes);
+    if (didSave) {
+      setLastSavedChanges(JSON.stringify(changes));
+      setValidationMessage(null);
+    }
+    return didSave;
+  };
+
+  let changes: TJourneySetupChanges | null = null;
+  let changesError: string | null = null;
+  try {
+    changes = getChanges();
+  } catch (error) {
+    changesError = error instanceof Error ? error.message : 'Review your choices before saving.';
+  }
+  const changesKey = changes ? JSON.stringify(changes) : null;
+  const hasUnsavedChanges = changesKey !== lastSavedChanges;
+
+  useEffect(() => {
+    if (
+      !hasRestoredSetup ||
+      persistence.isLoading ||
+      persistence.isSaving ||
+      persistence.errorMessage ||
+      !changes ||
+      !hasUnsavedChanges ||
+      isNavigating.current
+    )
+      return;
+
+    const timeoutId = setTimeout(() => {
+      void saveChanges(changes);
+    }, 700);
+    return () => clearTimeout(timeoutId);
+  });
+
+  const handleSave = async (nextStep: TSetupScreenStep, shouldSkip = false): Promise<boolean> => {
+    if (isNavigating.current || persistence.isSaving || persistence.hasConflict) return false;
+    isNavigating.current = true;
+    setIsNavigatingStep(true);
+    try {
+      const nextChanges = getChanges(nextStep);
+      if (shouldSkip && currentStep === JourneySetupStep.Motivation) nextChanges.motivation = '';
+      if (shouldSkip && currentStep === JourneySetupStep.Reminders) {
+        nextChanges.morningReminder = getReminderPreference(false, morningTime);
+        nextChanges.eveningReflectionReminder = getReminderPreference(false, eveningTime);
+      }
+      const didSave = await saveChanges(nextChanges);
+      if (!didSave) return false;
+      if (shouldSkip && currentStep === JourneySetupStep.Motivation) setMotivation('');
+      if (shouldSkip && currentStep === JourneySetupStep.Reminders) {
+        setHasMorningReminder(false);
+        setHasEveningReminder(false);
+      }
+      setCurrentStep(nextStep);
+      setIsEditingReview(false);
+      return true;
+    } catch (error) {
+      setValidationMessage(
+        error instanceof Error ? error.message : 'Review your choices before saving.',
+      );
+      return false;
+    } finally {
+      isNavigating.current = false;
+      setIsNavigatingStep(false);
+    }
+  };
+
+  const handleContinue = async () => {
     if (isContinueDisabled) return;
     if (currentStep === JourneySetupStep.Review) {
-      const now = new Date();
-      if (reviewDate.toDateString() !== now.toDateString()) {
-        setReviewDate(now);
-        setHasDateChanged(true);
-        return;
-      }
-      setIsPreviewComplete(true);
+      const didSave = await handleSave(currentStep);
+      if (didSave) setIsSetupSaved(true);
       return;
     }
-    setCurrentStep(isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex + 1].id);
-    setIsEditingReview(false);
+    await handleSave(isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex + 1].id);
   };
 
-  const handleBack = () => {
-    setCurrentStep(isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex - 1].id);
-    setIsEditingReview(false);
+  const handleBack = async () => {
+    await handleSave(isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex - 1].id);
   };
 
-  const handleSkip = () => {
-    if (currentStep === JourneySetupStep.Motivation) setMotivation('');
-    if (currentStep === JourneySetupStep.Reminders) {
-      setHasMorningReminder(false);
-      setHasEveningReminder(false);
-    }
-    setCurrentStep(isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex + 1].id);
-    setIsEditingReview(false);
+  const handleSkip = async () => {
+    await handleSave(
+      isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex + 1].id,
+      true,
+    );
   };
 
-  const handleEdit = (setupStep: TSetupScreenStep) => {
-    setIsEditingReview(true);
-    setCurrentStep(setupStep);
+  const handleEdit = async (setupStep: TSetupScreenStep) => {
+    const didSave = await handleSave(setupStep);
+    if (didSave) setIsEditingReview(true);
+  };
+
+  const handleRetry = async () => {
+    await handleSave(currentStep);
   };
 
   return (
@@ -272,298 +374,327 @@ export const JourneySetupScreen = () => {
               </SeventySevenText>
               <SeventySevenText color="$textSecondary">Journey setup</SeventySevenText>
             </XStack>
-            {isPreviewComplete ? (
+            {persistence.errorMessage || validationMessage || changesError ? (
+              <YStack gap="$2">
+                <SeventySevenText role="alert" color="$error">
+                  {persistence.errorMessage ?? validationMessage ?? changesError}
+                </SeventySevenText>
+                {persistence.hasConflict || !hasRestoredSetup ? (
+                  <SeventySevenButton onPress={persistence.reload} disabled={persistence.isLoading}>
+                    {persistence.hasConflict ? 'Load saved setup' : 'Try again'}
+                  </SeventySevenButton>
+                ) : persistence.errorMessage ? (
+                  <SeventySevenButton onPress={handleRetry} disabled={persistence.isSaving}>
+                    Try saving again
+                  </SeventySevenButton>
+                ) : null}
+              </YStack>
+            ) : null}
+            {persistence.isLoading ? (
+              <Spinner accessibilityLabel="Loading your setup" />
+            ) : !hasRestoredSetup ? null : isSetupSaved ? (
               <YStack gap="$4">
                 <SeventySevenText size="Heading" role="heading">
-                  Your setup preview is complete
+                  Your setup is saved
                 </SeventySevenText>
                 <SeventySevenText>
-                  You’ve reviewed your daily practices and your 77 days. This preview has not
-                  started Day 1 or saved choices to your account.
+                  Your practices, Bible translation, and starting motivation are saved to your
+                  account. Your reminder preferences are saved for this device. Day 1 hasn’t started
+                  yet.
                 </SeventySevenText>
-                <SeventySevenButton onPress={() => setIsPreviewComplete(false)}>
+                <SeventySevenButton onPress={() => setIsSetupSaved(false)}>
                   Return to review
                 </SeventySevenButton>
               </YStack>
             ) : (
-              <SeventySevenStepper
-                currentStep={stepIndex + 1}
-                totalSteps={setupSteps.length}
-                stepTitle={step.title}
-                stepDescription={step.description}
-                isOptional={isOptionalStep}
-                isContinueDisabled={isContinueDisabled}
-                onContinue={handleContinue}
-                onBack={stepIndex > 0 ? handleBack : undefined}
-                onSkip={isOptionalStep ? handleSkip : undefined}
-                primaryActionLabel={
-                  currentStep === JourneySetupStep.Review
-                    ? 'Start my journey'
-                    : isEditingReview
-                      ? 'Return to review'
-                      : 'Continue'
-                }
-              >
-                {currentStep === JourneySetupStep.Commitment ? (
-                  <YStack gap="$4">
-                    <SeventySevenCard gap="$3">
-                      <SeventySevenText size="HeadingSmall">
-                        Five to seven practices, each day
-                      </SeventySevenText>
-                      <SeventySevenText bold>Read Scripture · Pray · Reflect</SeventySevenText>
-                      <SeventySevenText>
-                        Engage with the assigned Bible passage, spend time with God in prayer, and
-                        reflect on your response to Him. Writing is optional.
-                      </SeventySevenText>
-                      <Separator />
-                      <SeventySevenText>
-                        You’ll choose two to four more practices that fit your circumstances.
-                      </SeventySevenText>
-                    </SeventySevenCard>
-                    <SeventySevenText>
-                      <SeventySevenText bold>
-                        77 calendar days, not 77 perfect days.
-                      </SeventySevenText>{' '}
-                      Missed days stay in your history. The calendar continues, and you do not need
-                      to restart.
-                    </SeventySevenText>
-                    <SeventySevenText>
-                      These practices do not earn God’s favor, but they help you spend time with Him
-                      and respond to His Word.
-                    </SeventySevenText>
-                    <SeventySevenText>
-                      Eleven weekly themes guide these 77 days, from abiding in Christ to
-                      persevering in faith.
-                    </SeventySevenText>
-                    <SeventySevenText color="$textSecondary">
-                      77Faithful is free and always will be. Your motivation and reflections are
-                      private.
-                    </SeventySevenText>
-                  </YStack>
-                ) : null}
-                {currentStep === JourneySetupStep.Practices ? (
-                  <YStack gap="$3">
-                    <SeventySevenCard gap="$2">
-                      <SeventySevenText bold>Foundational Practices</SeventySevenText>
-                      <SeventySevenText>Read Scripture · Pray · Reflect</SeventySevenText>
-                    </SeventySevenCard>
-                    <SeventySevenText bold role="status">
-                      {selectedPractices.length} selected · Choose 2–4
-                    </SeventySevenText>
-                    <SeventySevenText color="$textSecondary">
-                      {selectedPractices.length >= 4
-                        ? 'To choose a different practice, deselect one first.'
-                        : hasValidPractices
-                          ? 'You can continue or choose up to four practices.'
-                          : 'Choose at least two different practices to continue.'}
-                    </SeventySevenText>
-                    {setupPractices.map((practice) => {
-                      const isSelected = selectedPractices.some(
-                        (practiceId) => practiceId === practice.practiceId,
-                      );
-                      return (
-                        <SeventySevenDropdown
-                          key={practice.practiceId}
-                          label={practice.name}
-                          isSelected={isSelected}
-                          header={
-                            <SeventySevenFormCheckbox
-                              label={practice.name}
-                              checked={isSelected}
-                              disabled={!isSelected && selectedPractices.length >= 4}
-                              onCheckedChange={(isChecked) =>
-                                handlePracticeChange(practice.practiceId, isChecked)
-                              }
-                            />
-                          }
-                        >
-                          <SeventySevenText>{practice.purpose}</SeventySevenText>
-                          <SeventySevenText color="$textSecondary">
-                            {practice.examples.join(' ')}
-                          </SeventySevenText>
-                          <SeventySevenText color="$textSecondary" fontSize="$3">
-                            {practice.boundaries}
-                          </SeventySevenText>
-                        </SeventySevenDropdown>
-                      );
-                    })}
-                  </YStack>
-                ) : null}
-                {currentStep === JourneySetupStep.BibleVersion ? (
-                  <YStack gap="$3">
-                    <SeventySevenText color="$textSecondary">
-                      These are sample choices from the planned catalog for this preview. Reading
-                      availability has not yet been confirmed.
-                    </SeventySevenText>
-                    <SeventySevenFormRadioGroup
-                      label="Bible translation"
-                      value={bibleVersionId ?? ''}
-                      onValueChange={handleTranslationChange}
-                    >
-                      {Object.values(BibleVersion).map((translation) => (
-                        <SeventySevenCard
-                          key={translation.bibleVersionId}
-                          borderColor={
-                            bibleVersionId === translation.bibleVersionId
-                              ? '$primary'
-                              : '$borderColor'
-                          }
-                        >
-                          <SeventySevenFormRadioButton
-                            label={`${translation.name} (${translation.abbreviation})`}
-                            value={translation.bibleVersionId}
-                          />
-                        </SeventySevenCard>
-                      ))}
-                    </SeventySevenFormRadioGroup>
-                    {!bibleVersionId ? (
-                      <SeventySevenText color="$textSecondary">
-                        Choose a translation to continue.
-                      </SeventySevenText>
-                    ) : null}
-                  </YStack>
-                ) : null}
-                {currentStep === JourneySetupStep.Motivation ? (
-                  <YStack gap="$3">
-                    <SeventySevenFormTextInput
-                      label="Starting motivation (optional)"
-                      placeholder="What are you hoping to grow in as you spend time with Jesus?"
-                      isLongForm
-                      value={motivation}
-                      onChangeText={setMotivation}
-                    />
-                    <SeventySevenText color="$textSecondary">
-                      This is a private reflection, not a vow or a promise of a particular outcome.
-                      You can revisit, edit, or delete it later.
-                    </SeventySevenText>
-                  </YStack>
-                ) : null}
-                {currentStep === JourneySetupStep.Reminders ? (
-                  <YStack gap="$3">
-                    <ReminderChoice
-                      label="Morning reminder"
-                      description="Make time for Scripture and prayer."
-                      isEnabled={hasMorningReminder}
-                      time={morningTime}
-                      onEnabledChange={setHasMorningReminder}
-                      onTimeChange={setMorningTime}
-                    />
-                    <ReminderChoice
-                      label="Evening reflection reminder"
-                      description="Take a moment to reflect on your day."
-                      isEnabled={hasEveningReminder}
-                      time={eveningTime}
-                      onEnabledChange={setHasEveningReminder}
-                      onTimeChange={setEveningTime}
-                    />
-                    {hasCombinedReminder ? (
-                      <SeventySevenCard bg="$infoSurface">
+              <YStack gap="$3" pointerEvents={isNavigatingStep ? 'none' : 'auto'}>
+                <SeventySevenText role="status" color="$textSecondary">
+                  {persistence.isSaving
+                    ? 'Saving…'
+                    : hasUnsavedChanges
+                      ? 'Changes not yet saved'
+                      : 'Saved to your account'}
+                </SeventySevenText>
+                <SeventySevenStepper
+                  currentStep={stepIndex + 1}
+                  totalSteps={setupSteps.length}
+                  stepTitle={step.title}
+                  stepDescription={step.description}
+                  isOptional={isOptionalStep}
+                  isContinueDisabled={isContinueDisabled}
+                  onContinue={handleContinue}
+                  onBack={stepIndex > 0 ? handleBack : undefined}
+                  onSkip={isOptionalStep ? handleSkip : undefined}
+                  primaryActionLabel={
+                    currentStep === JourneySetupStep.Review
+                      ? 'Save my setup'
+                      : isEditingReview
+                        ? 'Return to review'
+                        : 'Continue'
+                  }
+                >
+                  {currentStep === JourneySetupStep.Commitment ? (
+                    <YStack gap="$4">
+                      <SeventySevenCard gap="$3">
+                        <SeventySevenText size="HeadingSmall">
+                          Five to seven practices, each day
+                        </SeventySevenText>
+                        <SeventySevenText bold>Read Scripture · Pray · Reflect</SeventySevenText>
                         <SeventySevenText>
-                          Both times match. One combined reminder would invite you to read, pray,
-                          and reflect.
+                          Engage with the assigned Bible passage, spend time with God in prayer, and
+                          reflect on your response to Him. Writing is optional.
+                        </SeventySevenText>
+                        <Separator />
+                        <SeventySevenText>
+                          You’ll choose two to four more practices that fit your circumstances.
                         </SeventySevenText>
                       </SeventySevenCard>
-                    ) : null}
-                    <SeventySevenText color="$textSecondary">
-                      Times follow this phone’s local clock, even when you travel. Choose times that
-                      suit your day; they are not deadlines. You can change them later in Settings.
-                    </SeventySevenText>
-                    <SeventySevenText color="$textSecondary">
-                      Reminders are not scheduled in this preview, and phone permission is not
-                      requested.
-                    </SeventySevenText>
-                  </YStack>
-                ) : null}
-                {currentStep === SetupScreenStep.WeeklyThemes ? (
-                  <YStack gap="$4">
-                    <SeventySevenCard gap="$3">
-                      <SeventySevenText size="HeadingSmall">
-                        Eleven weeks of following Jesus
-                      </SeventySevenText>
-                      {weeklyThemes.map((theme, index) => (
-                        <XStack key={theme} gap="$3">
-                          <SeventySevenText color="$textSecondary" minW={65}>
-                            Week {index + 1}
-                          </SeventySevenText>
-                          <SeventySevenText flex={1}>{theme}</SeventySevenText>
-                        </XStack>
-                      ))}
-                    </SeventySevenCard>
-                    <SeventySevenText>
-                      These themes guide your time with God; they do not measure your spiritual
-                      maturity. Keep returning to the practices as each new week begins.
-                    </SeventySevenText>
-                    <SeventySevenText color="$textSecondary">
-                      Day 77 is a time to reflect and give thanks. Following Jesus continues beyond
-                      these 77 days.
-                    </SeventySevenText>
-                  </YStack>
-                ) : null}
-                {currentStep === JourneySetupStep.Review ? (
-                  <YStack gap="$3">
-                    {hasDateChanged ? (
-                      <SeventySevenText role="status" color="$infoText">
-                        The date has changed. Review the updated dates before continuing.
-                      </SeventySevenText>
-                    ) : null}
-                    <SeventySevenCard gap="$2" bg="$infoSurface">
-                      <SeventySevenText bold>
-                        Day 1 · {formatJourneyDate(reviewDate)}
-                      </SeventySevenText>
-                      <SeventySevenText bold>
-                        Day 77 · {formatJourneyDate(finalDate)}
+                      <SeventySevenText>
+                        <SeventySevenText bold>
+                          77 calendar days, not 77 perfect days.
+                        </SeventySevenText>{' '}
+                        Missed days stay in your history. The calendar continues, and you do not
+                        need to restart.
                       </SeventySevenText>
                       <SeventySevenText>
-                        {timeZoneName} time · {timeZoneId}
+                        These practices do not earn God’s favor, but they help you spend time with
+                        Him and respond to His Word.
+                      </SeventySevenText>
+                      <SeventySevenText>
+                        Eleven weekly themes guide these 77 days, from abiding in Christ to
+                        persevering in faith.
                       </SeventySevenText>
                       <SeventySevenText color="$textSecondary">
-                        Starting fixes your journey to this time zone. Its dates will not shift when
-                        you travel.
+                        77Faithful is free and always will be. Your motivation and reflections are
+                        private.
                       </SeventySevenText>
-                    </SeventySevenCard>
-                    <SeventySevenCard>
-                      <ReviewRow
-                        label={`${selectedPractices.length + 3} daily practices`}
-                        value={['Read Scripture', 'Pray', 'Reflect', ...selectedPracticeNames].join(
-                          '\n',
-                        )}
-                        onChange={() => handleEdit(JourneySetupStep.Practices)}
-                      />
-                      <Separator />
-                      <ReviewRow
+                    </YStack>
+                  ) : null}
+                  {currentStep === JourneySetupStep.Practices ? (
+                    <YStack gap="$3">
+                      <SeventySevenCard gap="$2">
+                        <SeventySevenText bold>Foundational Practices</SeventySevenText>
+                        <SeventySevenText>Read Scripture · Pray · Reflect</SeventySevenText>
+                      </SeventySevenCard>
+                      <SeventySevenText bold role="status">
+                        {selectedPractices.length} selected · Choose 2–4
+                      </SeventySevenText>
+                      <SeventySevenText color="$textSecondary">
+                        {selectedPractices.length >= 4
+                          ? 'To choose a different practice, deselect one first.'
+                          : hasValidPractices
+                            ? 'You can continue or choose up to four practices.'
+                            : 'Choose at least two different practices to continue.'}
+                      </SeventySevenText>
+                      {setupPractices.map((practice) => {
+                        const isSelected = selectedPractices.some(
+                          (practiceId) => practiceId === practice.practiceId,
+                        );
+                        return (
+                          <SeventySevenDropdown
+                            key={practice.practiceId}
+                            label={practice.name}
+                            isSelected={isSelected}
+                            header={
+                              <SeventySevenFormCheckbox
+                                label={practice.name}
+                                checked={isSelected}
+                                disabled={!isSelected && selectedPractices.length >= 4}
+                                onCheckedChange={(isChecked) =>
+                                  handlePracticeChange(practice.practiceId, isChecked)
+                                }
+                              />
+                            }
+                          >
+                            <SeventySevenText>{practice.purpose}</SeventySevenText>
+                            <SeventySevenText color="$textSecondary">
+                              {practice.examples.join(' ')}
+                            </SeventySevenText>
+                            <SeventySevenText color="$textSecondary" fontSize="$3">
+                              {practice.boundaries}
+                            </SeventySevenText>
+                          </SeventySevenDropdown>
+                        );
+                      })}
+                    </YStack>
+                  ) : null}
+                  {currentStep === JourneySetupStep.BibleVersion ? (
+                    <YStack gap="$3">
+                      <SeventySevenFormRadioGroup
                         label="Bible translation"
-                        value={
-                          selectedTranslation
-                            ? `${selectedTranslation.name} (${selectedTranslation.abbreviation})`
-                            : 'Not selected'
-                        }
-                        onChange={() => handleEdit(JourneySetupStep.BibleVersion)}
+                        value={bibleVersionId ?? ''}
+                        onValueChange={handleTranslationChange}
+                      >
+                        {Object.values(BibleVersion).map((translation) => (
+                          <SeventySevenCard
+                            key={translation.bibleVersionId}
+                            borderColor={
+                              bibleVersionId === translation.bibleVersionId
+                                ? '$primary'
+                                : '$borderColor'
+                            }
+                          >
+                            <SeventySevenFormRadioButton
+                              label={`${translation.name} (${translation.abbreviation})`}
+                              value={translation.bibleVersionId}
+                            />
+                          </SeventySevenCard>
+                        ))}
+                      </SeventySevenFormRadioGroup>
+                      {!bibleVersionId ? (
+                        <SeventySevenText color="$textSecondary">
+                          Choose a translation to continue.
+                        </SeventySevenText>
+                      ) : null}
+                    </YStack>
+                  ) : null}
+                  {currentStep === JourneySetupStep.Motivation ? (
+                    <YStack gap="$3">
+                      <SeventySevenFormTextInput
+                        label="Starting motivation (optional)"
+                        placeholder="What are you hoping to grow in as you spend time with Jesus?"
+                        isLongForm
+                        maxLength={10000}
+                        value={motivation}
+                        onChangeText={setMotivation}
                       />
-                      <Separator />
-                      <ReviewRow
-                        label="Starting motivation"
-                        value={motivation.trim() || 'Not provided'}
-                        onChange={() => handleEdit(JourneySetupStep.Motivation)}
+                      <SeventySevenText color="$textSecondary">
+                        This is a private reflection, not a vow or a promise of a particular
+                        outcome. You can revisit, edit, or delete it later.
+                      </SeventySevenText>
+                    </YStack>
+                  ) : null}
+                  {currentStep === JourneySetupStep.Reminders ? (
+                    <YStack gap="$3">
+                      <ReminderChoice
+                        label="Morning reminder"
+                        description="Make time for Scripture and prayer."
+                        isEnabled={hasMorningReminder}
+                        time={morningTime}
+                        onEnabledChange={setHasMorningReminder}
+                        onTimeChange={setMorningTime}
                       />
-                      <Separator />
-                      <ReviewRow
-                        label="Reminder choices"
-                        value={reminderSummary}
-                        onChange={() => handleEdit(JourneySetupStep.Reminders)}
+                      <ReminderChoice
+                        label="Evening reflection reminder"
+                        description="Take a moment to reflect on your day."
+                        isEnabled={hasEveningReminder}
+                        time={eveningTime}
+                        onEnabledChange={setHasEveningReminder}
+                        onTimeChange={setEveningTime}
                       />
-                    </SeventySevenCard>
-                    <SeventySevenText>
-                      Days continue after an absence. Your earlier record remains, and you do not
-                      need to restart. You can change your Chosen Practices for the next journey
-                      day.
-                    </SeventySevenText>
-                    <SeventySevenText color="$textSecondary">
-                      In this preview, Start my journey only completes the walkthrough. No calendar
-                      begins.
-                    </SeventySevenText>
-                  </YStack>
-                ) : null}
-              </SeventySevenStepper>
+                      {hasCombinedReminder ? (
+                        <SeventySevenCard bg="$infoSurface">
+                          <SeventySevenText>
+                            Both times match. One combined reminder would invite you to read, pray,
+                            and reflect.
+                          </SeventySevenText>
+                        </SeventySevenCard>
+                      ) : null}
+                      <SeventySevenText color="$textSecondary">
+                        Times follow this phone’s local clock, even when you travel. Choose times
+                        that suit your day; they are not deadlines. You can change them later in
+                        Settings.
+                      </SeventySevenText>
+                      <SeventySevenText color="$textSecondary">
+                        Your preferences are saved for this device. Notifications are not scheduled
+                        yet.
+                      </SeventySevenText>
+                    </YStack>
+                  ) : null}
+                  {currentStep === JourneySetupStep.WeeklyThemes ? (
+                    <YStack gap="$4">
+                      <SeventySevenCard gap="$3">
+                        <SeventySevenText size="HeadingSmall">
+                          Eleven weeks of following Jesus
+                        </SeventySevenText>
+                        {weeklyThemes.map((theme, index) => (
+                          <XStack key={theme} gap="$3">
+                            <SeventySevenText color="$textSecondary" minW={65}>
+                              Week {index + 1}
+                            </SeventySevenText>
+                            <SeventySevenText flex={1}>{theme}</SeventySevenText>
+                          </XStack>
+                        ))}
+                      </SeventySevenCard>
+                      <SeventySevenText>
+                        These themes guide your time with God; they do not measure your spiritual
+                        maturity. Keep returning to the practices as each new week begins.
+                      </SeventySevenText>
+                      <SeventySevenText color="$textSecondary">
+                        Day 77 is a time to reflect and give thanks. Following Jesus continues
+                        beyond these 77 days.
+                      </SeventySevenText>
+                    </YStack>
+                  ) : null}
+                  {currentStep === JourneySetupStep.Review ? (
+                    <YStack gap="$3">
+                      {hasDateChanged ? (
+                        <SeventySevenText role="status" color="$infoText">
+                          The date has changed. Review the updated dates before continuing.
+                        </SeventySevenText>
+                      ) : null}
+                      <SeventySevenCard gap="$2" bg="$infoSurface">
+                        <SeventySevenText bold>
+                          Day 1 · {formatJourneyDate(reviewDate)}
+                        </SeventySevenText>
+                        <SeventySevenText bold>
+                          Day 77 · {formatJourneyDate(finalDate)}
+                        </SeventySevenText>
+                        <SeventySevenText>
+                          {timeZoneName} time · {timeZoneId}
+                        </SeventySevenText>
+                        <SeventySevenText color="$textSecondary">
+                          Starting fixes your journey to this time zone. Its dates will not shift
+                          when you travel.
+                        </SeventySevenText>
+                      </SeventySevenCard>
+                      <SeventySevenCard>
+                        <ReviewRow
+                          label={`${selectedPractices.length + 3} daily practices`}
+                          value={[
+                            'Read Scripture',
+                            'Pray',
+                            'Reflect',
+                            ...selectedPracticeNames,
+                          ].join('\n')}
+                          onChange={() => handleEdit(JourneySetupStep.Practices)}
+                        />
+                        <Separator />
+                        <ReviewRow
+                          label="Bible translation"
+                          value={
+                            selectedTranslation
+                              ? `${selectedTranslation.name} (${selectedTranslation.abbreviation})`
+                              : 'Not selected'
+                          }
+                          onChange={() => handleEdit(JourneySetupStep.BibleVersion)}
+                        />
+                        <Separator />
+                        <ReviewRow
+                          label="Starting motivation"
+                          value={motivation.trim() || 'Not provided'}
+                          onChange={() => handleEdit(JourneySetupStep.Motivation)}
+                        />
+                        <Separator />
+                        <ReviewRow
+                          label="Reminder choices"
+                          value={reminderSummary}
+                          onChange={() => handleEdit(JourneySetupStep.Reminders)}
+                        />
+                      </SeventySevenCard>
+                      <SeventySevenText>
+                        Days continue after an absence. Your earlier record remains, and you do not
+                        need to restart. You can change your Chosen Practices for the next journey
+                        day.
+                      </SeventySevenText>
+                      <SeventySevenText color="$textSecondary">
+                        Save your setup to return to these choices later. These dates are an example
+                        of starting today; saving does not begin Day 1 or reserve a start date.
+                      </SeventySevenText>
+                    </YStack>
+                  ) : null}
+                </SeventySevenStepper>
+              </YStack>
             )}
           </YStack>
         </YStack>

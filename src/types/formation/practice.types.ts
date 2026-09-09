@@ -23,15 +23,17 @@ export const OptionalPracticeId = {
 export type TOptionalPracticeId = (typeof OptionalPracticeId)[keyof typeof OptionalPracticeId];
 export type TPracticeId = TFoundationalPracticeId | TOptionalPracticeId;
 
-/** Both values must be distinct; validate this at selection and confirmation boundaries. */
-export type TOptionalPracticePair = readonly [TOptionalPracticeId, TOptionalPracticeId];
+/** Choose two to four distinct practices; validate uniqueness at save and confirmation boundaries. */
+export type TOptionalPracticeSelection =
+  | readonly [TOptionalPracticeId, TOptionalPracticeId]
+  | readonly [TOptionalPracticeId, TOptionalPracticeId, TOptionalPracticeId]
+  | readonly [TOptionalPracticeId, TOptionalPracticeId, TOptionalPracticeId, TOptionalPracticeId];
 
 export type TAssignedDailyPracticeIds = readonly [
   typeof FoundationalPracticeId.ReadScripture,
   typeof FoundationalPracticeId.Pray,
   typeof FoundationalPracticeId.Reflect,
-  TOptionalPracticeId,
-  TOptionalPracticeId,
+  ...TOptionalPracticeSelection,
 ];
 
 export interface IPracticeDefinition {

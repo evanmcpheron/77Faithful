@@ -1,4 +1,5 @@
 import { defaultConfig } from '@tamagui/config/v5';
+import { animations } from '@tamagui/config/v5-reanimated';
 import { createTamagui } from 'tamagui';
 
 import { colors } from './src/constants/colors';
@@ -99,6 +100,7 @@ const darkTheme = {
 
 export const tamaguiConfig = createTamagui({
   ...defaultConfig,
+  animations,
   themes: {
     light: lightTheme,
     dark: darkTheme,

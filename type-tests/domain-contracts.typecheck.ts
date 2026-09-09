@@ -21,14 +21,20 @@ import type {
   TBibleVersionId,
   TCommunityMembershipStatus,
   TJourneyStatus,
-  TOptionalPracticePair,
+  TOptionalPracticeSelection,
 } from '@77/types';
 
 // Compile-only contracts: never import this file into an application entry point.
 type TAssertAssignable<TExpected, TActual extends TExpected> = TActual;
 
-export type TExactlyFivePractices = TAssertAssignable<5, TAssignedDailyPracticeIds['length']>;
-export type TExactlyTwoOptionalPractices = TAssertAssignable<2, TOptionalPracticePair['length']>;
+export type TFiveToSevenPractices = TAssertAssignable<
+  5 | 6 | 7,
+  TAssignedDailyPracticeIds['length']
+>;
+export type TTwoToFourOptionalPractices = TAssertAssignable<
+  2 | 3 | 4,
+  TOptionalPracticeSelection['length']
+>;
 export type TScriptureIsFirst = TAssertAssignable<
   typeof FoundationalPracticeId.ReadScripture,
   TAssignedDailyPracticeIds[0]
@@ -42,10 +48,10 @@ export type TReflectionIsThird = TAssertAssignable<
   TAssignedDailyPracticeIds[2]
 >;
 
-// @ts-expect-error A sixth assigned practice must not exist.
-export type TRejectSixthPractice = TAssignedDailyPracticeIds[5];
-// @ts-expect-error A third optional choice must not exist.
-export type TRejectThirdOptionalPractice = TOptionalPracticePair[2];
+// @ts-expect-error An eighth assigned practice must not exist.
+export type TRejectEighthPractice = TAssignedDailyPracticeIds[7];
+// @ts-expect-error A fifth optional choice must not exist.
+export type TRejectFifthOptionalPractice = TOptionalPracticeSelection[4];
 export type TRejectOptionalFoundation = TAssertAssignable<
   TAssignedDailyPracticeIds[3],
   // @ts-expect-error A foundational practice cannot fill an optional slot.
@@ -71,7 +77,8 @@ practiceChange.effectiveDayNumber = practiceChange.effectiveDayNumber;
 // @ts-expect-error A historical day cannot replace its whole assigned-practice record.
 journeyDay.practices = journeyDay.practices;
 // @ts-expect-error A historical optional slot cannot change its practice identity.
-journeyDay.practices.firstOptional.practiceId = journeyDay.practices.firstOptional.practiceId;
+journeyDay.practices.optionalPractices[0].practiceId =
+  journeyDay.practices.optionalPractices[0].practiceId;
 
 // @ts-expect-error Ownership comes from authenticated server context.
 export type TRejectStartOwner = IStartJourneyRequest['userId'];

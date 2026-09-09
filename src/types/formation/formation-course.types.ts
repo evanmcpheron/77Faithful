@@ -8,7 +8,8 @@ export const FormationStructure = {
   DayCount: 77,
   WeekCount: 11,
   DaysPerWeek: 7,
-  PracticesPerDay: 5,
+  MinimumPracticesPerDay: 5,
+  MaximumPracticesPerDay: 7,
 } as const;
 
 export const FormationThemeId = {

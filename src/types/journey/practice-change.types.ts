@@ -1,4 +1,4 @@
-import type { TOptionalPracticePair } from '../formation/practice.types';
+import type { TOptionalPracticeSelection } from '../formation/practice.types';
 import type {
   IDocumentTimestamps,
   IPersistedTimestamp,
@@ -23,7 +23,7 @@ export type TPracticeChangeStatus =
 export interface IPracticeChangeDocument extends IDocumentTimestamps {
   readonly userId: string;
   readonly journeyId: string;
-  readonly optionalPracticeIds: TOptionalPracticePair;
+  readonly optionalPracticeIds: TOptionalPracticeSelection;
   /** Integer 2–77: the next journey day at confirmation, never a caller-selected date. */
   readonly effectiveDayNumber: number;
   readonly effectiveDate: TCalendarDate;
@@ -34,7 +34,7 @@ export interface IPracticeChangeDocument extends IDocumentTimestamps {
 
 export interface IPendingPracticeChange {
   practiceChangeId: string;
-  optionalPracticeIds: TOptionalPracticePair;
+  optionalPracticeIds: TOptionalPracticeSelection;
   effectiveDayNumber: number;
   effectiveDate: TCalendarDate;
 }
@@ -42,7 +42,7 @@ export interface IPendingPracticeChange {
 /** Derived from initial choices and effective change history in the fixed journey zone. */
 export interface IJourneyPracticeSelection {
   journeyId: string;
-  currentOptionalPracticeIds: TOptionalPracticePair;
+  currentOptionalPracticeIds: TOptionalPracticeSelection;
   scheduleRevision: number;
   pendingChange: IPendingPracticeChange | null;
 }

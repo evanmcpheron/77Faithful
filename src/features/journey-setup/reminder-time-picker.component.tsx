@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { Adapt, Label, Select, Sheet, XStack, YStack } from 'tamagui';
 
 import { SeventySevenText } from '@77/components/core';
@@ -16,6 +16,7 @@ interface ITimePartSelectProps {
 
 const TimePartSelect = ({ label, value, options, onValueChange }: ITimePartSelectProps) => {
   const selectId = useId();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleValueChange = (selectedValue: string) => {
     if (options.includes(selectedValue)) onValueChange(selectedValue);
@@ -26,21 +27,36 @@ const TimePartSelect = ({ label, value, options, onValueChange }: ITimePartSelec
       <Label htmlFor={selectId} unstyled>
         <SeventySevenText color="$textSecondary">{label}</SeventySevenText>
       </Label>
-      <Select value={value} onValueChange={handleValueChange}>
+      <Select
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        value={value}
+        onValueChange={handleValueChange}
+      >
         <Select.Trigger id={selectId} aria-label={label} minH={48} px="$2" bg="$surface">
           <Select.Value />
           <SeventySevenText aria-hidden>⌄</SeventySevenText>
         </Select.Trigger>
         <Adapt platform="touch">
-          <Sheet modal dismissOnSnapToBottom snapPoints={[50]}>
-            <Sheet.Overlay bg="$shadowColor" opacity={0.5} />
-            <Sheet.Frame bg="$surface" p="$4">
-              <Sheet.Handle />
-              <Sheet.ScrollView>
-                <Adapt.Contents />
-              </Sheet.ScrollView>
-            </Sheet.Frame>
-          </Sheet>
+          <>
+            {isOpen && (
+              <Sheet
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                modal
+                dismissOnSnapToBottom
+                snapPoints={[50]}
+              >
+                <Sheet.Overlay bg="$shadowColor" opacity={0.5} />
+                <Sheet.Frame bg="$surface" p="$4">
+                  <Sheet.Handle />
+                  <Sheet.ScrollView>
+                    <Adapt.Contents />
+                  </Sheet.ScrollView>
+                </Sheet.Frame>
+              </Sheet>
+            )}
+          </>
         </Adapt>
         <Select.Content>
           <Select.ScrollUpButton>

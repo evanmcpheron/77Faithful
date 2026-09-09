@@ -1,6 +1,6 @@
 import type { TBibleVersionId } from '../formation/bible-version.types';
 import type { IFormationCourseReference } from '../formation/formation-course.types';
-import type { TOptionalPracticePair } from '../formation/practice.types';
+import type { TOptionalPracticeSelection } from '../formation/practice.types';
 import type { IWritingHead } from '../journey/journey-writing.types';
 import type {
   DomainSchemaVersion,
@@ -107,7 +107,7 @@ export interface ICommunityJourneyEnrollmentDocument extends IDocumentTimestamps
   communityId: string;
   communityJourneyId: string;
   userId: string;
-  optionalPracticeIds: TOptionalPracticePair;
+  optionalPracticeIds: TOptionalPracticeSelection;
   bibleVersionId: TBibleVersionId;
   setupDraftId: string;
   setupRevision: number;

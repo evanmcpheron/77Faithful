@@ -27,5 +27,167 @@ service cloud.firestore {
       allow get: if isOwner(userId);
       allow create: if isOwner(userId) && isValidProfile(request.resource.data);
     }
+
+    match /users/{userId}/journeys/{journeyId} {
+      allow read: if isOwner(userId) && request.auth.token.email_verified == true;
+    }
+
+    // Private setup drafts and device preferences use schemaVersion, userId,
+    // revision, and createdAt/updatedAt. Drafts hold choices, step and writing head;
+    // devices hold morning/evening preferences. Writing revisions are immutable.
+    function canUseSetup(userId) {
+      return isOwner(userId)
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/users/$(userId));
+    }
+
+    function isValidRevision(document) {
+      return document.schemaVersion == 1
+        && document.revision is int && document.revision >= 0
+        && document.revision < 2147483647
+        && document.createdAt is timestamp
+        && document.updatedAt == request.time;
+    }
+
+    function isInitialRevision(document) {
+      return document.revision == 0 && document.createdAt == request.time;
+    }
+
+    function isNextRevision(document) {
+      return document.revision == resource.data.revision + 1
+        && document.createdAt == resource.data.createdAt;
+    }
+
+    function isValidChoices(choices) {
+      let practiceIds = choices.optionalPracticeIds;
+      let isReady = practiceIds.size() >= 2 && choices.bibleVersionId != null;
+      return choices is map
+        && choices.keys().hasAll(['readiness', 'optionalPracticeIds', 'bibleVersionId'])
+        && choices.keys().hasOnly(['readiness', 'optionalPracticeIds', 'bibleVersionId'])
+        && practiceIds is list && practiceIds.size() <= 4
+        && practiceIds.toSet().size() == practiceIds.size()
+        && practiceIds.hasOnly([
+          'Movement', 'ServeOrEncourage', 'ScriptureMemorization', 'Gratitude',
+          'ChristianReading', 'Worship', 'Generosity', 'FamilyOrHouseholdDevotion',
+          'IntentionalDiscipline', 'IntentionalWitness'
+        ])
+        && (choices.bibleVersionId == null || choices.bibleVersionId in [
+          'Nasb2020', 'Niv', 'Nlt', 'Esv', 'Msg', 'Kjv', 'Nkjv', 'Csb', 'Web'
+        ])
+        && choices.readiness == (isReady ? 'ReadyForReview' : 'Incomplete');
+    }
+
+    function isValidWritingHead(head) {
+      return head == null || (head is map
+        && head.keys().hasAll(['revisionId', 'text', 'updatedAt'])
+        && head.keys().hasOnly(['revisionId', 'text', 'updatedAt'])
+        && head.revisionId is string && head.revisionId.matches('^[a-zA-Z0-9]{20}$')
+        && (head.text == null || (head.text is string && head.text.size() <= 10000))
+        && head.updatedAt is timestamp);
+    }
+
+    function hasMatchingWritingRevision(userId, head, baseRevisionId) {
+      let revisionPath = /databases/$(database)/documents/users/$(userId)/journeySetupDrafts/current/writingRevisions/$(head.revisionId);
+      let revision = getAfter(revisionPath).data;
+      return !exists(revisionPath)
+        && head.updatedAt == request.time
+        && revision.text == head.text
+        && revision.savedAt == head.updatedAt
+        && revision.baseRevisionId == baseRevisionId;
+    }
+
+    function isValidSetup(draft, userId) {
+      return draft.keys().hasAll([
+          'schemaVersion', 'userId', 'revision', 'currentStep', 'choices',
+          'startingMotivation', 'createdAt', 'updatedAt'
+        ])
+        && draft.keys().hasOnly([
+          'schemaVersion', 'userId', 'revision', 'currentStep', 'choices',
+          'startingMotivation', 'createdAt', 'updatedAt'
+        ])
+        && draft.userId == userId && isValidRevision(draft)
+        && draft.currentStep in ['Commitment', 'Practices', 'BibleVersion', 'Motivation', 'Reminders', 'WeeklyThemes', 'Review']
+        && isValidChoices(draft.choices)
+        && isValidWritingHead(draft.startingMotivation);
+    }
+
+    match /users/{userId}/journeySetupDrafts/{draftId} {
+      allow get: if canUseSetup(userId) && draftId == 'current';
+      allow create: if canUseSetup(userId) && draftId == 'current'
+        && isValidSetup(request.resource.data, userId)
+        && isInitialRevision(request.resource.data)
+        && (request.resource.data.startingMotivation == null
+          || hasMatchingWritingRevision(userId, request.resource.data.startingMotivation, null));
+      allow update: if canUseSetup(userId) && draftId == 'current'
+        && isValidSetup(request.resource.data, userId)
+        && isNextRevision(request.resource.data)
+        && (request.resource.data.startingMotivation == resource.data.startingMotivation
+          || (request.resource.data.startingMotivation != null
+            && hasMatchingWritingRevision(userId, request.resource.data.startingMotivation,
+              resource.data.startingMotivation == null ? null : resource.data.startingMotivation.revisionId)));
+    }
+
+    function isValidReminder(preference) {
+      return preference is map
+        && preference.keys().hasAll(['isEnabled', 'localTime'])
+        && preference.keys().hasOnly(['isEnabled', 'localTime'])
+        && preference.isEnabled is bool
+        && ((!preference.isEnabled && preference.localTime == null)
+          || (preference.localTime is string
+            && preference.localTime.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$')));
+    }
+
+    function isValidDevicePreferences(preferences, userId) {
+      return preferences.keys().hasAll([
+          'schemaVersion', 'userId', 'revision', 'morningReminder',
+          'eveningReflectionReminder', 'createdAt', 'updatedAt'
+        ])
+        && preferences.keys().hasOnly([
+          'schemaVersion', 'userId', 'revision', 'morningReminder',
+          'eveningReflectionReminder', 'createdAt', 'updatedAt'
+        ])
+        && preferences.userId == userId && isValidRevision(preferences)
+        && isValidReminder(preferences.morningReminder)
+        && isValidReminder(preferences.eveningReflectionReminder);
+    }
+
+    match /users/{userId}/devicePreferences/{deviceId} {
+      allow get: if canUseSetup(userId) && deviceId.matches('^[a-zA-Z0-9]{20}$');
+      allow create: if canUseSetup(userId) && deviceId.matches('^[a-zA-Z0-9]{20}$')
+        && isValidDevicePreferences(request.resource.data, userId)
+        && isInitialRevision(request.resource.data);
+      allow update: if canUseSetup(userId) && deviceId.matches('^[a-zA-Z0-9]{20}$')
+        && isValidDevicePreferences(request.resource.data, userId)
+        && isNextRevision(request.resource.data);
+    }
+
+    function isValidWritingRevision(revision, userId, revisionId) {
+      let draftPath = /databases/$(database)/documents/users/$(userId)/journeySetupDrafts/current;
+      let nextDraft = getAfter(draftPath).data;
+      let baseRevisionId = !exists(draftPath) || get(draftPath).data.startingMotivation == null
+        ? null : get(draftPath).data.startingMotivation.revisionId;
+      return revision.keys().hasAll(['userId', 'target', 'baseRevisionId', 'text', 'origin', 'savedAt'])
+        && revision.keys().hasOnly(['userId', 'target', 'baseRevisionId', 'text', 'origin', 'savedAt'])
+        && revision.userId == userId
+        && revision.target == {'kind': 'SetupMotivation', 'setupDraftId': 'current'}
+        && revision.baseRevisionId == baseRevisionId
+        && (revision.text == null || (revision.text is string && revision.text.size() <= 10000))
+        && revision.origin is map
+        && revision.origin.keys().hasAll(['operationId', 'deviceId', 'recordedOnDeviceAt'])
+        && revision.origin.keys().hasOnly(['operationId', 'deviceId', 'recordedOnDeviceAt'])
+        && revision.origin.operationId == revisionId
+        && revision.origin.deviceId is string && revision.origin.deviceId.matches('^[a-zA-Z0-9]{20}$')
+        && revision.origin.recordedOnDeviceAt is timestamp
+        && revision.savedAt == request.time
+        && nextDraft.startingMotivation == {'revisionId': revisionId, 'text': revision.text, 'updatedAt': request.time}
+        && nextDraft.updatedAt == request.time;
+    }
+
+    match /users/{userId}/journeySetupDrafts/{draftId}/writingRevisions/{revisionId} {
+      allow get: if canUseSetup(userId) && draftId == 'current';
+      allow create: if canUseSetup(userId) && draftId == 'current'
+        && revisionId.matches('^[a-zA-Z0-9]{20}$')
+        && isValidWritingRevision(request.resource.data, userId, revisionId);
+    }
   }
 }

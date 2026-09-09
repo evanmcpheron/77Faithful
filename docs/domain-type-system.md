@@ -128,6 +128,10 @@ Keep this single source in `src/types` until business Functions justify a delibe
 
 Before delivering a change, run `npm run format`, `npm run lint`, and `npx tsc --noEmit`. If the future Functions integration changes that boundary, additionally run `npm --prefix functions run lint` and `npm --prefix functions run build`. Existing Functions lint has a baseline Google-style/Prettier disagreement in its untouched scaffold; resolve that deliberately with the integration work rather than modifying backend files as a side effect of these contracts.
 
-## Pending shared-contract alignment
+## Setup persistence and practice selections
 
-The setup preview and product requirements now allow two to four Chosen Practices. The protected files under `src/types/**` still encode the earlier two-choice contract: `TOptionalPracticePair`, setup choices, journey and replacement selections, community enrollment, the two optional daily slots, `FormationStructure.PracticesPerDay`, and the statistics denominator comment. These require an explicitly authorized update before persistence can support three or four choices. The corresponding compile-only assertions in `type-tests/domain-contracts.typecheck.ts` must change with those contracts.
+`TOptionalPracticeSelection` contains two to four distinct Chosen Practice IDs. Setup drafts also allow zero or one choice while incomplete. Journey selections, replacements, community enrollment, daily optional practice tuples, and compile-only assertions share these bounds. Statistics sum the assignments for each reached day instead of assuming five markers per day.
+
+Setup saves use one transaction for `users/{userId}/journeySetupDrafts/current` and `users/{userId}/devicePreferences/{deviceId}`. Missing documents represent a fresh setup. Ownership, confirmed email, and an existing profile are required even for these initial reads. New drafts and device preferences begin at revision zero; stale revisions are rejected without replacing current choices. The weekly overview is a persisted setup step.
+
+Motivation edits create immutable `writingRevisions` beneath the draft and update its head atomically. Other setup changes preserve that head. Reminder preferences belong to a persistent installation ID and start disabled on another device. The screen autosaves and waits for acknowledgment before advancing. Saving setup does not create a journey, fix dates, or schedule notifications.

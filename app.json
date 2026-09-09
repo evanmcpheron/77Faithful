@@ -4,16 +4,16 @@
     "slug": "77Faithful",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/app-icon.png",
+    "icon": "./assets/images/app-icon.png",
     "scheme": "77faithful",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/app-icon.png"
+      "icon": "./assets/images/app-icon.png"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#041B39",
-        "foregroundImage": "./assets/app-icon.png"
+        "foregroundImage": "./assets/images/app-icon.png"
       },
       "predictiveBackGestureEnabled": false
     },
@@ -27,7 +27,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#041B39",
-          "image": "./assets/splash-dark.png",
+          "image": "./assets/images/splash-dark.png",
           "imageWidth": 288,
           "resizeMode": "contain",
           "ios": {

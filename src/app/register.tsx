@@ -3,7 +3,7 @@ import { validatePassword } from 'firebase/auth';
 import { useRef, useState } from 'react';
 import { Spinner, YStack } from 'tamagui';
 
-import { SeventySevenButton, SeventySevenText } from '@77/components/core';
+import { SeventySevenButton, SeventySevenNotice, SeventySevenText } from '@77/components/core';
 import { SeventySevenFormTextInput, SeventySevenFormTextInputType } from '@77/components/form';
 import { getAccountErrorMessage } from '@77/features/account/account-error';
 import { ensureAccountProfile } from '@77/features/account/account-profile.service';
@@ -105,9 +105,9 @@ export const RegisterScreen = () => {
       description="Make room for Scripture, prayer, and faithful action. Create an account to save your 77 days."
     >
       {isLoading ? (
-        <Spinner accessibilityLabel="Loading account" />
+        <Spinner aria-label="Loading account" />
       ) : (
-        <YStack gap="$4">
+        <YStack gap="$fieldGroup">
           {user ? (
             <SeventySevenText>
               Continue with {user.email} to finish setting up your account.
@@ -160,17 +160,15 @@ export const RegisterScreen = () => {
             </>
           ) : null}
           {errorMessage ? (
-            <SeventySevenText severity={Severity.Error} role="alert">
-              {errorMessage}
-            </SeventySevenText>
+            <SeventySevenNotice severity={Severity.Error}>{errorMessage}</SeventySevenNotice>
           ) : null}
           <AccountLegalNotice action="creating an account" disabled={isSubmitting} />
           <SeventySevenButton
             onPress={handleRegister}
             disabled={isSubmitting}
-            accessibilityState={{ busy: isSubmitting }}
+            isLoading={isSubmitting}
           >
-            {isSubmitting ? 'Saving your account…' : user ? 'Continue' : 'Create account'}
+            {user ? 'Continue' : 'Create account'}
           </SeventySevenButton>
           <SeventySevenText color="$textSecondary" fontSize="$3">
             Creating an account doesn’t start Day 1. You’ll confirm your email before setting up

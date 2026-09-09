@@ -1,113 +1,105 @@
 import { defaultConfig } from '@tamagui/config/v5';
-import { animations } from '@tamagui/config/v5-reanimated';
-import { createTamagui } from 'tamagui';
+import { animations as webAnimations } from '@tamagui/config/v5-css';
+import { animations as nativeAnimations } from '@tamagui/config/v5-reanimated';
+import { Platform } from 'react-native';
+import { createFont, createTamagui } from 'tamagui';
 
 import { colors } from './src/constants/colors';
+import { designTokens } from './src/constants/design-tokens';
 
-const sharedColors = {
-  ...colors.status,
-  onPrimary: colors.brand.white,
-  onInfo: colors.brand.white,
-  onSuccess: colors.brand.white,
-  onWarning: colors.brand.faithfulNavy,
-  onError: colors.brand.white,
-  // Stronger status shades keep small text readable on pale surfaces and filled buttons.
-  successStrong: '#256957',
-  successPressed: '#1E5446',
-  warningStrong: '#875916',
-  warningPressed: '#C58B37',
-  errorPressed: '#9E3F46',
-  infoPressed: colors.brand.faithfulBlue,
+const createSanctuaryTheme = (appearance: 'light' | 'dark') => {
+  const palette = colors[appearance];
+
+  return {
+    ...defaultConfig.themes[appearance],
+    ...palette,
+    color: palette.textPrimary,
+    colorHover: palette.textPrimary,
+    colorPress: palette.textPrimary,
+    colorFocus: palette.textPrimary,
+    color1: palette.background,
+    color2: palette.surface,
+    color3: palette.surfaceElevated,
+    color4: palette.surfaceSubtle,
+    color5: palette.border,
+    color6: palette.accentSoft,
+    color7: palette.controlBorder,
+    color8: palette.focus,
+    color9: palette.primary,
+    color10: palette.link,
+    color11: palette.textSecondary,
+    color12: palette.textPrimary,
+    backgroundHover: palette.surfaceElevated,
+    backgroundPress: palette.surfaceSubtle,
+    backgroundFocus: palette.surfaceElevated,
+    backgroundActive: palette.accentSoft,
+    borderColor: palette.border,
+    borderColorHover: palette.controlBorder,
+    borderColorPress: palette.focus,
+    borderColorFocus: palette.focus,
+    outlineColor: palette.focus,
+    placeholderColor: palette.textSecondary,
+    accentBackground: palette.primary,
+    accentColor: palette.onPrimary,
+    // Existing callers retain these names while sharing the ordinary theme.
+    accent: palette.link,
+    borderStrong: palette.controlBorder,
+    borderSubtle: palette.border,
+    successStrong: palette.successText,
+    successSoft: palette.successSurface,
+    warningStrong: palette.warningText,
+    warningSoft: palette.warningSurface,
+    errorSoft: palette.errorSurface,
+  };
 };
 
-const lightTheme = {
-  ...defaultConfig.themes.light,
-  ...sharedColors,
-  ...colors.light,
-  borderSubtle: colors.light.surfaceSubtle,
-  color: colors.light.textPrimary,
-  colorHover: colors.light.textPrimary,
-  colorPress: colors.light.textPrimary,
-  colorFocus: colors.light.textPrimary,
-  color1: colors.light.surface,
-  color2: colors.light.background,
-  color3: colors.light.surfaceElevated,
-  color4: colors.light.surfaceSubtle,
-  color5: colors.light.border,
-  color6: colors.light.borderStrong,
-  color7: colors.brand.softSky,
-  color8: colors.brand.skyBlue,
-  color9: colors.light.primary,
-  color10: colors.light.textSecondary,
-  color11: colors.light.textSecondary,
-  color12: colors.light.textPrimary,
-  backgroundHover: colors.light.surfaceElevated,
-  backgroundPress: colors.light.surfaceSubtle,
-  backgroundFocus: colors.light.surfaceElevated,
-  backgroundActive: colors.light.primary,
-  borderColor: colors.light.border,
-  borderColorHover: colors.light.borderStrong,
-  borderColorPress: colors.light.primary,
-  borderColorFocus: colors.light.accent,
-  placeholderColor: colors.light.textSecondary,
-  accentBackground: colors.light.primary,
-  accentColor: colors.brand.white,
-  successText: sharedColors.successStrong,
-  warningText: sharedColors.warningStrong,
-  errorText: colors.status.error,
-  infoText: colors.light.link,
-  infoSurface: colors.light.accentSoft,
-};
+const bodyFont = createFont({
+  ...defaultConfig.fonts.body,
+  family: designTokens.fontFamily.interface,
+  size: {
+    ...defaultConfig.fonts.body.size,
+    true: designTokens.fontSize.body,
+    ...designTokens.fontSize,
+  },
+  lineHeight: {
+    ...defaultConfig.fonts.body.lineHeight,
+    true: designTokens.lineHeight.body,
+    ...designTokens.lineHeight,
+  },
+});
 
-const darkTheme = {
-  ...defaultConfig.themes.dark,
-  ...sharedColors,
-  ...colors.dark,
-  borderStrong: colors.dark.border,
-  color: colors.dark.textPrimary,
-  colorHover: colors.dark.textPrimary,
-  colorPress: colors.dark.textPrimary,
-  colorFocus: colors.dark.textPrimary,
-  color1: colors.dark.background,
-  color2: colors.dark.surface,
-  color3: colors.dark.surfaceSubtle,
-  color4: colors.dark.surfaceElevated,
-  color5: colors.dark.borderSubtle,
-  color6: colors.dark.border,
-  color7: colors.brand.faithfulBlue,
-  color8: colors.brand.journeyBlue,
-  color9: colors.dark.primary,
-  color10: colors.dark.textSecondary,
-  color11: colors.dark.textSecondary,
-  color12: colors.dark.textPrimary,
-  backgroundHover: colors.dark.surfaceElevated,
-  backgroundPress: colors.dark.surfaceSubtle,
-  backgroundFocus: colors.dark.surfaceElevated,
-  backgroundActive: colors.dark.primary,
-  borderColor: colors.dark.border,
-  borderColorHover: colors.dark.primary,
-  borderColorPress: colors.dark.accent,
-  borderColorFocus: colors.dark.accent,
-  placeholderColor: colors.dark.textSecondary,
-  accentBackground: colors.dark.primary,
-  accentColor: colors.brand.white,
-  successText: colors.status.successSoft,
-  warningText: colors.status.warningSoft,
-  errorText: colors.status.errorSoft,
-  infoText: colors.dark.link,
-  infoSurface: colors.dark.surfaceElevated,
-};
+const headingFont = createFont({
+  ...bodyFont,
+  family: designTokens.fontFamily.editorial,
+});
+
+const lightTheme = createSanctuaryTheme('light');
+const darkTheme = createSanctuaryTheme('dark');
 
 export const tamaguiConfig = createTamagui({
   ...defaultConfig,
-  animations,
+  animations: Platform.OS === 'web' ? webAnimations : nativeAnimations,
+  tokens: {
+    ...defaultConfig.tokens,
+    space: { ...defaultConfig.tokens.space, ...designTokens.space },
+    radius: { ...defaultConfig.tokens.radius, ...designTokens.radius },
+    size: { ...defaultConfig.tokens.size, ...designTokens.size },
+  },
+  fonts: {
+    ...defaultConfig.fonts,
+    body: bodyFont,
+    heading: headingFont,
+    formation: headingFont,
+  },
   themes: {
     light: lightTheme,
     dark: darkTheme,
+    light_formation: lightTheme,
+    dark_formation: darkTheme,
   },
   selectionStyles: (theme) => ({
     backgroundColor: theme.accentSoft,
-    color: colors.brand.faithfulNavy,
+    color: theme.textPrimary,
   }),
 });
 

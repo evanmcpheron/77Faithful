@@ -1,7 +1,8 @@
 import { Link } from 'expo-router';
 import type { Href } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Button, styled } from 'tamagui';
+import { Platform } from 'react-native';
+import { Button, Spinner, styled } from 'tamagui';
 import type { ButtonProps } from 'tamagui';
 
 import { Severity } from '@77/types';
@@ -12,124 +13,55 @@ import { SeventySevenText } from './seventy-seven-text.component';
 export const SeventySevenButtonAppearance = {
   Filled: 'Filled',
   Outlined: 'Outlined',
+  Text: 'Text',
 } as const;
 
 export type TSeventySevenButtonAppearance =
   (typeof SeventySevenButtonAppearance)[keyof typeof SeventySevenButtonAppearance];
 
+const buttonColors = {
+  Default: {
+    background: '$primary',
+    pressed: '$primaryPressed',
+    foreground: '$onPrimary',
+    text: '$link',
+  },
+  Info: { background: '$info', pressed: '$infoPressed', foreground: '$onInfo', text: '$infoText' },
+  Success: {
+    background: '$success',
+    pressed: '$successPressed',
+    foreground: '$onSuccess',
+    text: '$successText',
+  },
+  Warning: {
+    background: '$warning',
+    pressed: '$warningPressed',
+    foreground: '$onWarning',
+    text: '$warningText',
+  },
+  Error: {
+    background: '$error',
+    pressed: '$errorPressed',
+    foreground: '$onError',
+    text: '$errorText',
+  },
+} as const;
+
 const SeventySevenButtonFrame = styled(Button, {
   name: 'SeventySevenButtonFrame',
-  minH: 56,
+  height: 'auto',
+  minH: '$control',
+  minW: '$touchTarget',
   borderWidth: 1,
-  rounded: 999,
-  px: '$5',
+  rounded: '$button',
+  px: '$fieldGroup',
+  py: '$compact',
   cursor: 'pointer',
-  variants: {
-    severity: {
-      Default: {
-        bg: '$accent',
-        borderColor: '$accentSoft',
-        hoverStyle: { bg: '$primaryPressed' },
-        pressStyle: { bg: '$primaryPressed' },
-      },
-      Info: {
-        bg: '$info',
-        borderColor: '$info',
-        hoverStyle: { bg: '$infoPressed' },
-        pressStyle: { bg: '$infoPressed' },
-      },
-      Success: {
-        bg: '$successStrong',
-        borderColor: '$success',
-        hoverStyle: { bg: '$successPressed' },
-        pressStyle: { bg: '$successPressed' },
-      },
-      Warning: {
-        bg: '$warning',
-        borderColor: '$warningStrong',
-        hoverStyle: { bg: '$warningPressed' },
-        pressStyle: { bg: '$warningPressed' },
-      },
-      Error: {
-        bg: '$error',
-        borderColor: '$error',
-        hoverStyle: { bg: '$errorPressed' },
-        pressStyle: { bg: '$errorPressed' },
-      },
-    },
-    appearance: {
-      Filled: {
-        shadowColor: '$accent',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.34,
-        shadowRadius: 14,
-        elevation: 6,
-        hoverStyle: { scale: 1.01 },
-        pressStyle: { scale: 0.985 },
-      },
-      Outlined: {
-        bg: 'transparent',
-        borderColor: '$accentSoft',
-        shadowOpacity: 0,
-        elevation: 0,
-        hoverStyle: {
-          bg: '$surface',
-          borderColor: '$accent',
-        },
-        pressStyle: {
-          bg: '$surfaceElevated',
-          borderColor: '$accent',
-          scale: 0.985,
-        },
-      },
-    },
-    disabled: {
-      true: {
-        cursor: 'not-allowed',
-        opacity: 0.5,
-      },
-    },
-  } as const,
-  defaultVariants: {
-    severity: Severity.Default,
-    appearance: SeventySevenButtonAppearance.Filled,
-  },
-});
-
-const SeventySevenButtonText = styled(SeventySevenText, {
-  name: 'SeventySevenButtonText',
-  bold: true,
-  fontSize: '$5',
-  lineHeight: '$5',
-  letterSpacing: 0.2,
-  variants: {
-    severity: {
-      Default: {
-        color: '$onPrimary',
-      },
-      Info: {
-        color: '$onInfo',
-      },
-      Success: {
-        color: '$onSuccess',
-      },
-      Warning: {
-        color: '$onWarning',
-      },
-      Error: {
-        color: '$onError',
-      },
-    },
-    appearance: {
-      Filled: {},
-      Outlined: {
-        color: '$color',
-      },
-    },
-  } as const,
-  defaultVariants: {
-    severity: Severity.Default,
-    appearance: SeventySevenButtonAppearance.Filled,
+  focusVisibleStyle: {
+    outlineWidth: 2,
+    outlineStyle: 'solid',
+    outlineColor: '$focus',
+    outlineOffset: 3,
   },
 });
 
@@ -137,33 +69,62 @@ interface ISeventySevenButtonProps extends Omit<ButtonProps, 'children' | 'href'
   appearance?: TSeventySevenButtonAppearance;
   children: ReactNode;
   href?: Href;
+  isLoading?: boolean;
   severity?: TSeverity;
 }
 
 export const SeventySevenButton = ({
+  accessibilityState,
   appearance = SeventySevenButtonAppearance.Filled,
   children,
   disabled = false,
   href,
+  isLoading = false,
   severity = Severity.Default,
   ...buttonProps
 }: ISeventySevenButtonProps) => {
+  const palette = buttonColors[severity];
+  const isFilled = appearance === SeventySevenButtonAppearance.Filled;
+  const isText = appearance === SeventySevenButtonAppearance.Text;
+  const isDisabled = disabled || isLoading;
+  const foreground = isFilled ? palette.foreground : palette.text;
+  const borderColor = isText ? 'transparent' : isFilled ? palette.background : palette.text;
+
   const button = (
     <SeventySevenButtonFrame
+      bg={isFilled ? palette.background : 'transparent'}
+      borderColor={borderColor}
+      opacity={disabled && !isLoading ? 0.55 : 1}
+      hoverStyle={{ bg: isFilled ? palette.pressed : '$surfaceElevated', borderColor }}
+      pressStyle={{ bg: isFilled ? palette.pressed : '$surfaceSubtle', borderColor }}
       {...buttonProps}
-      appearance={appearance}
-      disabled={disabled}
-      severity={severity}
+      disabled={isDisabled}
+      aria-busy={isLoading || buttonProps['aria-busy'] || accessibilityState?.busy}
+      aria-disabled={isDisabled}
+      {...(Platform.OS !== 'web'
+        ? {
+            accessibilityState: {
+              ...accessibilityState,
+              disabled: isDisabled,
+              busy: isLoading || accessibilityState?.busy,
+            },
+          }
+        : {})}
     >
-      <SeventySevenButtonText appearance={appearance} severity={severity}>
+      <SeventySevenText
+        size="Button"
+        color={foreground}
+        alignment="Center"
+        shrink={1}
+        opacity={isLoading ? 0 : 1}
+      >
         {children}
-      </SeventySevenButtonText>
+      </SeventySevenText>
+      {isLoading ? <Spinner position="absolute" color={foreground} aria-hidden /> : null}
     </SeventySevenButtonFrame>
   );
 
-  if (!href || disabled) {
-    return button;
-  }
+  if (!href || isDisabled) return button;
 
   return (
     <Link href={href} asChild>

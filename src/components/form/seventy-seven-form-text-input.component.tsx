@@ -29,6 +29,7 @@ interface ISeventySevenFormTextInputProps {
   isLongForm?: boolean;
   label?: string;
   onBlur?: InputProps['onBlur'];
+  onFocus?: InputProps['onFocus'];
   onChangeText?: (inputValue: string) => void;
   placeholder?: string;
   type?: TSeventySevenFormTextInputType;
@@ -49,6 +50,7 @@ export const SeventySevenFormTextInput = ({
   isLongForm = false,
   label,
   onBlur,
+  onFocus,
   onChangeText,
   placeholder,
   type = SeventySevenFormTextInputType.Text,
@@ -58,6 +60,7 @@ export const SeventySevenFormTextInput = ({
   const theme = useTheme();
   const labelId = `${inputId}-label`;
   const errorId = `${inputId}-error`;
+  const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const isPassword = type === SeventySevenFormTextInputType.Password && !isLongForm;
   const isNumber = type === SeventySevenFormTextInputType.Number && !isLongForm;
@@ -67,8 +70,18 @@ export const SeventySevenFormTextInput = ({
     setIsPasswordVisible((currentVisibility) => !currentVisibility);
   };
 
+  const handleFocus: InputProps['onFocus'] = (event) => {
+    setIsFocused(true);
+    onFocus?.(event);
+  };
+
+  const handleBlur: InputProps['onBlur'] = (event) => {
+    setIsFocused(false);
+    onBlur?.(event);
+  };
+
   return (
-    <YStack gap="$2" width="100%" opacity={disabled ? 0.5 : 1}>
+    <YStack gap="$related" width="100%" opacity={disabled ? 0.5 : 1}>
       {label ? (
         <Label
           id={labelId}
@@ -76,30 +89,44 @@ export const SeventySevenFormTextInput = ({
           unstyled
           cursor={disabled ? 'not-allowed' : 'default'}
         >
-          <SeventySevenText bold>{label}</SeventySevenText>
+          <SeventySevenText size="Label">{label}</SeventySevenText>
         </Label>
       ) : null}
 
       <XStack
         items={isLongForm ? 'flex-start' : 'center'}
-        borderWidth={1}
-        borderColor={hasError ? '$error' : '$borderColor'}
-        rounded="$4"
+        borderWidth={2}
+        borderColor={hasError ? '$errorText' : isFocused ? '$focus' : '$controlBorder'}
+        rounded="$control"
         bg="$surface"
         overflow="hidden"
-        focusWithinStyle={{ borderColor: hasError ? '$error' : '$accent' }}
+        focusWithinStyle={{ borderColor: hasError ? '$errorText' : '$focus' }}
       >
         {isLongForm ? (
           <TextArea
             id={inputId}
             flex={1}
             minH={144}
+            height="auto"
+            multiline
+            textAlignVertical="top"
+            lineHeight="$body"
+            keyboardType={keyboardType}
+            returnKeyType={returnKeyType}
+            onSubmitEditing={onSubmitEditing}
             borderWidth={0}
             rounded={0}
             bg="transparent"
-            px="$3.5"
-            py="$3"
-            fontSize="$4"
+            px="$compact"
+            py="$inline"
+            fontFamily="$body"
+            fontSize="$body"
+            allowFontScaling
+            color="$textPrimary"
+            placeholderTextColor="$textSecondary"
+            selectionColor="$accentSoft"
+            cursorColor="$focus"
+            focusVisibleStyle={{ outlineWidth: 0 }}
             autoComplete={autoComplete}
             autoCapitalize={autoCapitalize ?? (isPassword ? 'none' : undefined)}
             autoCorrect={autoCorrect ?? (isPassword ? false : undefined)}
@@ -108,7 +135,8 @@ export const SeventySevenFormTextInput = ({
             disabled={disabled}
             placeholder={placeholder}
             value={value}
-            onBlur={onBlur}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             onChangeText={onChangeText}
             aria-label={label ?? placeholder}
             aria-labelledby={label ? labelId : undefined}
@@ -119,13 +147,22 @@ export const SeventySevenFormTextInput = ({
           <Input
             id={inputId}
             flex={1}
-            minH="$5"
+            minH="$control"
+            height="auto"
+            py="$inline"
             borderWidth={0}
             rounded={0}
             bg="transparent"
-            px="$3.5"
-            pr={isPassword ? '$2' : '$3.5'}
-            fontSize="$4"
+            px="$compact"
+            pr={isPassword ? '$related' : '$compact'}
+            fontFamily="$body"
+            fontSize="$body"
+            allowFontScaling
+            color="$textPrimary"
+            placeholderTextColor="$textSecondary"
+            selectionColor="$accentSoft"
+            cursorColor="$focus"
+            focusVisibleStyle={{ outlineWidth: 0 }}
             autoComplete={autoComplete}
             autoCapitalize={autoCapitalize ?? (isPassword ? 'none' : undefined)}
             autoCorrect={autoCorrect ?? (isPassword ? false : undefined)}
@@ -140,7 +177,8 @@ export const SeventySevenFormTextInput = ({
             type={isPassword && !isPasswordVisible ? 'password' : isNumber ? 'number' : 'text'}
             placeholder={placeholder}
             value={value}
-            onBlur={onBlur}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
             onChangeText={onChangeText}
             aria-label={label ?? placeholder}
             aria-labelledby={label ? labelId : undefined}
@@ -151,10 +189,17 @@ export const SeventySevenFormTextInput = ({
 
         {isPassword ? (
           <Button
-            size="$5"
+            minW="$touchTarget"
+            minH="$touchTarget"
             p={0}
             chromeless
-            circular
+            rounded="$control"
+            focusVisibleStyle={{
+              outlineColor: '$focus',
+              outlineWidth: 2,
+              outlineStyle: 'solid',
+              outlineOffset: -3,
+            }}
             disabled={disabled}
             onPress={handlePasswordVisibility}
             aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
@@ -174,7 +219,7 @@ export const SeventySevenFormTextInput = ({
       </XStack>
 
       {errorMessage ? (
-        <SeventySevenText id={errorId} severity={Severity.Error} fontSize="$3">
+        <SeventySevenText id={errorId} severity={Severity.Error} size="Support" role="alert">
           {errorMessage}
         </SeventySevenText>
       ) : null}

@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useId } from 'react';
-import { Checkbox, Label, useTheme, XStack } from 'tamagui';
+import { Checkbox, Label, useTheme, XStack, YStack } from 'tamagui';
 
 import { SeventySevenText } from '../core';
 
@@ -25,25 +25,52 @@ export const SeventySevenFormCheckbox = ({
   };
 
   return (
-    <XStack items="center" gap="$3" opacity={disabled ? 0.5 : 1}>
+    <XStack items="center" gap="$related" opacity={disabled ? 0.5 : 1}>
       <Checkbox
         id={checkboxId}
-        size="$5"
+        unstyled
+        borderWidth={0}
+        p={0}
+        width="$touchTarget"
+        height="$touchTarget"
+        items="center"
+        justify="center"
+        rounded="$control"
+        aria-label={label}
+        focusVisibleStyle={{ outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$focus' }}
         checked={checked}
         disabled={disabled}
         onCheckedChange={handleCheckedChange}
-        bg="$surface"
-        activeStyle={{ bg: '$primary', borderColor: '$primary' }}
+        bg="transparent"
       >
-        <Checkbox.Indicator>
-          <SymbolView
-            name={{ ios: 'checkmark', android: 'check', web: 'check' }}
-            size={18}
-            tintColor={theme.onPrimary.val}
-          />
-        </Checkbox.Indicator>
+        <YStack
+          pointerEvents="none"
+          width={24}
+          height={24}
+          items="center"
+          justify="center"
+          rounded={6}
+          borderWidth={2}
+          borderColor={checked ? '$link' : '$controlBorder'}
+          bg={checked ? '$primary' : '$surface'}
+        >
+          <Checkbox.Indicator disablePassStyles>
+            <SymbolView
+              name={{ ios: 'checkmark', android: 'check', web: 'check' }}
+              size={18}
+              tintColor={theme.onPrimary.val}
+            />
+          </Checkbox.Indicator>
+        </YStack>
       </Checkbox>
-      <Label htmlFor={checkboxId} unstyled flex={1} cursor={disabled ? 'not-allowed' : 'pointer'}>
+      <Label
+        htmlFor={disabled ? undefined : checkboxId}
+        unstyled
+        flex={1}
+        minH="$touchTarget"
+        py="$inline"
+        cursor={disabled ? 'not-allowed' : 'pointer'}
+      >
         <SeventySevenText>{label}</SeventySevenText>
       </Label>
     </XStack>

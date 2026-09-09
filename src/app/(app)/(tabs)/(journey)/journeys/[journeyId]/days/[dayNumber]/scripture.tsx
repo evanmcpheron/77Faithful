@@ -1,5 +1,5 @@
-import { SeventySevenScreenPlaceholder } from '@77/components/core';
+import { DayPracticeRoute } from '@77/features/journey/day-practice-screen.component';
 
-const ScriptureScreen = () => <SeventySevenScreenPlaceholder title="Scripture" />;
+const ScriptureScreen = () => <DayPracticeRoute practiceId="ReadScripture" />;
 
 export default ScriptureScreen;

@@ -7,6 +7,7 @@ import type { IJourneyDocument } from '@77/types/journey/journey.types';
 interface ILatestJourneyState {
   userId: string;
   journey: IJourneyDocument | null;
+  journeyId: string | null;
   hasError: boolean;
 }
 
@@ -29,12 +30,13 @@ export const useLatestJourney = (userId: string | null) => {
           userId,
           // Journeys are server-owned records using the shared contract.
           journey: snapshot.empty ? null : (snapshot.docs[0].data() as IJourneyDocument),
+          journeyId: snapshot.empty ? null : snapshot.docs[0].id,
           hasError: false,
         });
       },
       (error) => {
         console.warn('Could not load the journey.', { code: error.code });
-        setResult({ userId, journey: null, hasError: true });
+        setResult({ userId, journey: null, journeyId: null, hasError: true });
       },
     );
   }, [userId, retryCount]);
@@ -46,6 +48,7 @@ export const useLatestJourney = (userId: string | null) => {
 
   return {
     journey: result?.userId === userId ? result?.journey : null,
+    journeyId: result?.userId === userId ? result?.journeyId : null,
     isLoading: userId !== null && result?.userId !== userId,
     hasError: result?.userId === userId && result?.hasError === true,
     retry,

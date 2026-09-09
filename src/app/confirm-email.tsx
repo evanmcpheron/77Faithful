@@ -111,7 +111,7 @@ export const ConfirmEmailScreen = () => {
               </SeventySevenText>
             </YStack>
             {isLoading ? (
-              <Spinner accessibilityLabel="Loading account" />
+              <Spinner aria-label="Loading account" />
             ) : user ? (
               <>
                 <YStack bg="$surfaceElevated" rounded="$4" p="$4" gap="$2">
@@ -127,7 +127,7 @@ export const ConfirmEmailScreen = () => {
                     <YStack bg={hasError ? '$errorSoft' : '$infoSurface'} rounded="$3" p="$3">
                       <SeventySevenText
                         role={hasError ? 'alert' : 'status'}
-                        color={hasError ? '$error' : '$infoText'}
+                        color={hasError ? '$errorText' : '$infoText'}
                       >
                         {message}
                       </SeventySevenText>
@@ -135,14 +135,9 @@ export const ConfirmEmailScreen = () => {
                   ) : null}
                   <SeventySevenButton
                     onPress={() => handleConfirmation(false)}
-                    disabled={isSubmitting}
-                    rounded="$4"
-                    bg="$primary"
-                    borderColor="$primary"
-                    shadowOpacity={0}
-                    elevation={0}
+                    isLoading={isSubmitting}
                   >
-                    {isSubmitting ? 'Please wait…' : 'I’ve confirmed my email'}
+                    I’ve confirmed my email
                   </SeventySevenButton>
                 </YStack>
                 <Separator borderColor="$borderSubtle" />

@@ -8,6 +8,18 @@ Before starting any task, consult `/src/types/**` (relative to the repository ro
 
 All files under `/src/types/**` are read-only for all AI agents unless the user explicitly instructs otherwise. Do not create, modify, delete, rename, move, or reformat files in this directory without that explicit instruction, including through formatters, generators, or other tools. A general request to implement or fix a feature does not authorize changes to these files.
 
+## Visual design
+
+Before starting any UI work, read and follow `VISUAL_DESIGN_GUIDE.md` at the repository root. Treat it as the source of truth for visual design when creating, modifying, or reviewing UI.
+
+## Visual design and screen consistency
+
+Before creating, modifying, or reviewing UI, read `VISUAL_DESIGN_GUIDE.md` in full. Treat it as the source of truth for visual identity, typography, spacing, colors, surfaces, and component presentation. Inspect `docs/design/today-reference.png` when image inspection is available.
+
+Use the existing shared Tamagui components and semantic design tokens. Improve a shared component before introducing a screen-specific visual variation. Match the Quiet Sanctuary design language across account screens, onboarding, Today, Journey, Settings, and all interaction states.
+
+`STYLE_GUIDE.md` governs code structure. `VOICE_AND_LANGUAGE_GUIDE.md` governs copy. The relevant `/product` documents govern product behavior and scope. The reference image governs visual direction only; do not copy its example data, extra tabs, or unsupported actions. Preserve the read-only protection for `src/types/**` and the dependency-approval requirement.
+
 ## Reusable UI components
 
 Use Tamagui for all reusable UI components wherever reasonably possible. Before using another library or creating a custom component from scratch, verify that Tamagui does not provide a suitable component. When Tamagui does not provide what is needed, use the most appropriate alternative that remains consistent with `STYLE_GUIDE.md`.

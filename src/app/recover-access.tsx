@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { YStack } from 'tamagui';
 
-import { SeventySevenButton, SeventySevenText } from '@77/components/core';
+import { SeventySevenButton, SeventySevenNotice, SeventySevenText } from '@77/components/core';
 import { SeventySevenFormTextInput } from '@77/components/form';
 import { getAccountErrorMessage } from '@77/features/account/account-error';
 import { AccountScreen } from '@77/features/account/account-screen.component';
@@ -50,7 +50,7 @@ export const RecoverAccessScreen = () => {
       title="Reset your password"
       description="Enter your account email to request a password reset link."
     >
-      <YStack gap="$4">
+      <YStack gap="$fieldGroup">
         {hasSentRequest ? (
           <SeventySevenText role="status">
             If an account can use this email, you’ll receive a password reset link. Check your inbox
@@ -71,12 +71,10 @@ export const RecoverAccessScreen = () => {
               returnKeyType="send"
             />
             {errorMessage ? (
-              <SeventySevenText severity={Severity.Error} role="alert">
-                {errorMessage}
-              </SeventySevenText>
+              <SeventySevenNotice severity={Severity.Error}>{errorMessage}</SeventySevenNotice>
             ) : null}
-            <SeventySevenButton onPress={handleResetPassword} disabled={isSubmitting}>
-              {isSubmitting ? 'Sending request…' : 'Send reset link'}
+            <SeventySevenButton onPress={handleResetPassword} isLoading={isSubmitting}>
+              Send reset link
             </SeventySevenButton>
           </>
         )}

@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Spinner, YStack } from 'tamagui';
 
-import { SeventySevenButton, SeventySevenText } from '@77/components/core';
+import { SeventySevenButton, SeventySevenNotice, SeventySevenText } from '@77/components/core';
 import { SeventySevenFormTextInput, SeventySevenFormTextInputType } from '@77/components/form';
 import { getAccountErrorMessage } from '@77/features/account/account-error';
 import { ensureAccountProfile } from '@77/features/account/account-profile.service';
@@ -64,9 +64,9 @@ export const SignInScreen = () => {
       description="Return to Scripture, prayer, and your 77Faithful journey."
     >
       {isLoading ? (
-        <Spinner accessibilityLabel="Loading account" />
+        <Spinner aria-label="Loading account" />
       ) : (
-        <YStack gap="$4">
+        <YStack gap="$fieldGroup">
           {user ? (
             <SeventySevenText>Signed in as {user.email}</SeventySevenText>
           ) : (
@@ -94,13 +94,11 @@ export const SignInScreen = () => {
             </>
           )}
           {errorMessage ? (
-            <SeventySevenText severity={Severity.Error} role="alert">
-              {errorMessage}
-            </SeventySevenText>
+            <SeventySevenNotice severity={Severity.Error}>{errorMessage}</SeventySevenNotice>
           ) : null}
           <AccountLegalNotice action="signing in" disabled={isSubmitting} />
-          <SeventySevenButton onPress={handleSignIn} disabled={isSubmitting}>
-            {isSubmitting ? 'Please wait…' : user ? 'Continue' : 'Sign in'}
+          <SeventySevenButton onPress={handleSignIn} isLoading={isSubmitting}>
+            {user ? 'Continue' : 'Sign in'}
           </SeventySevenButton>
           {user ? (
             <SeventySevenButton

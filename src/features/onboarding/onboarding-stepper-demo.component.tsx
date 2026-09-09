@@ -105,7 +105,6 @@ export const OnboardingStepperDemo = () => {
   const startDate = new Date();
   const finalDate = new Date(startDate);
   finalDate.setDate(startDate.getDate() + 76);
-  const journeyTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const handleContinue = () => {
     if (currentStep === OnboardingStep.Review) {
@@ -372,8 +371,6 @@ export const OnboardingStepperDemo = () => {
               }
               onChange={() => setCurrentStep(OnboardingStep.Reminders)}
             />
-            <Separator />
-            <ReviewRow label="Journey time zone" value={journeyTimeZone} />
           </SeventySevenCard>
 
           <SeventySevenCard gap="$2" bg="$infoSurface" borderColor="$borderColor">
@@ -381,7 +378,7 @@ export const OnboardingStepperDemo = () => {
               {formatJourneyDate(startDate)} – {formatJourneyDate(finalDate)}
             </SeventySevenText>
             <SeventySevenText color="$link">
-              Day 1 begins when you start. Your journey uses this device's time zone, and the
+              Day 1 begins when you start. Each day follows your phone’s local date, and the
               calendar continues after an absence.
             </SeventySevenText>
           </SeventySevenCard>

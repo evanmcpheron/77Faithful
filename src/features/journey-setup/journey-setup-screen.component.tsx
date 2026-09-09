@@ -457,14 +457,14 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
         >
           <YStack width="100%" maxW={640} self="center" gap="$5">
             <XStack justify="space-between" items="center" gap="$3">
-              <SeventySevenText bold color="$primary">
+              <SeventySevenText bold color="$link">
                 77Faithful
               </SeventySevenText>
               <SeventySevenText color="$textSecondary">Journey setup</SeventySevenText>
             </XStack>
             {persistence.errorMessage || validationMessage || changesError ? (
               <YStack gap="$2">
-                <SeventySevenText role="alert" color="$error">
+                <SeventySevenText role="alert" color="$errorText">
                   {persistence.errorMessage ?? validationMessage ?? changesError}
                 </SeventySevenText>
                 {persistence.hasConflict || hasStartConflict || !hasRestoredSetup ? (
@@ -713,7 +713,7 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
                     <YStack gap="$3">
                       {hasDateChanged ? (
                         <SeventySevenText role="status" color="$infoText">
-                          Your local date or time zone changed. Review the dates before continuing.
+                          Your local date changed. Review the dates before continuing.
                         </SeventySevenText>
                       ) : null}
                       <SeventySevenCard gap="$2" bg="$infoSurface">

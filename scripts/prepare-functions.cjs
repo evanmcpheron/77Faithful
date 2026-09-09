@@ -10,3 +10,7 @@ cpSync(
   path.join(root, 'src/features/journey/journey-calendar.ts'),
   path.join(generated, 'features/journey/journey-calendar.ts'),
 );
+cpSync(
+  path.join(root, 'src/features/journey/journey-day-session.types.ts'),
+  path.join(generated, 'features/journey/journey-day-session.types.ts'),
+);

@@ -25,7 +25,7 @@ export const AccountRouteGuard = ({
   if (isLoading || journeyAccess.isLoading) {
     return (
       <YStack flex={1} items="center" justify="center">
-        <Spinner accessibilityLabel="Loading account" />
+        <Spinner aria-label="Loading account" />
       </YStack>
     );
   }

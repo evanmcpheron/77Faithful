@@ -1,40 +1,9 @@
-import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ImageBackground, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, styled, Text, XStack, YStack } from 'tamagui';
+import { Text, XStack, YStack } from 'tamagui';
 
-const WelcomeButton = styled(Button, {
-  name: 'WelcomeButton',
-  width: '100%',
-  height: 56,
-  minH: 56,
-  rounded: 999,
-  borderWidth: 1,
-  px: '$5',
-  cursor: 'pointer',
-  variants: {
-    appearance: {
-      Filled: {
-        bg: '#0788F8',
-        borderColor: '#62D4FF',
-        shadowColor: '#0788F8',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.45,
-        shadowRadius: 14,
-        elevation: 7,
-        hoverStyle: { bg: '#1197FF' },
-        pressStyle: { bg: '#0073E6', scale: 0.985 },
-      },
-      Outlined: {
-        bg: 'rgba(2, 22, 53, 0.2)',
-        borderColor: '#B8DBFF',
-        hoverStyle: { bg: 'rgba(20, 53, 100, 0.55)' },
-        pressStyle: { bg: 'rgba(20, 53, 100, 0.75)', scale: 0.985 },
-      },
-    },
-  } as const,
-});
+import { SeventySevenButton } from '@77/components/core';
 
 const WelcomeScreen = () => {
   const safeAreaInsets = useSafeAreaInsets();
@@ -100,47 +69,12 @@ const WelcomeScreen = () => {
         </YStack>
 
         <YStack position="absolute" t="68.1%" l="12%" width="76%" gap="$3">
-          <Link href="/register" asChild>
-            <WelcomeButton appearance="Filled">
-              <XStack width="100%" items="center" justify="center">
-                <Text
-                  color="#FFFFFF"
-                  fontSize={18}
-                  fontWeight="700"
-                  letterSpacing={0.3}
-                  maxFontSizeMultiplier={1.15}
-                >
-                  Begin your 77 days
-                </Text>
-                <Text
-                  position="absolute"
-                  r={1}
-                  color="#FFFFFF"
-                  fontSize={29}
-                  fontWeight="300"
-                  lineHeight={30}
-                  maxFontSizeMultiplier={1}
-                  aria-hidden
-                >
-                  →
-                </Text>
-              </XStack>
-            </WelcomeButton>
-          </Link>
-
-          <Link href="/sign-in" asChild>
-            <WelcomeButton appearance="Outlined">
-              <Text
-                color="#FFFFFF"
-                fontSize={18}
-                fontWeight="600"
-                letterSpacing={0.2}
-                maxFontSizeMultiplier={1.15}
-              >
-                Sign in
-              </Text>
-            </WelcomeButton>
-          </Link>
+          <SeventySevenButton href="/register" width="100%">
+            Begin your 77 days
+          </SeventySevenButton>
+          <SeventySevenButton href="/sign-in" appearance="Outlined" width="100%" bg="$surface">
+            Sign in
+          </SeventySevenButton>
         </YStack>
 
         <YStack position="absolute" b="10%" width="100%" items="center">

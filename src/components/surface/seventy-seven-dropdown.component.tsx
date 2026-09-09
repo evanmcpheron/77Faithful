@@ -1,8 +1,7 @@
+import { SymbolView } from 'expo-symbols';
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
-import { Button, Collapsible, XStack, YStack } from 'tamagui';
-
-import { SeventySevenText } from '@77/components/core';
+import { Button, Collapsible, useTheme, XStack, YStack } from 'tamagui';
 
 interface ISeventySevenDropdownProps {
   label: string;
@@ -17,6 +16,7 @@ export const SeventySevenDropdown = ({
   children,
   isSelected = false,
 }: ISeventySevenDropdownProps) => {
+  const theme = useTheme();
   const contentId = useId();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -26,31 +26,36 @@ export const SeventySevenDropdown = ({
       onOpenChange={setIsExpanded}
       bg="$surface"
       borderWidth={1}
-      borderColor={isSelected ? '$primary' : '$borderColor'}
-      rounded="$4"
+      borderColor={isSelected ? '$link' : '$border'}
+      rounded="$card"
     >
-      <XStack items="center" gap="$2" px="$4" py="$2">
+      <XStack items="center" gap="$related" px="$fieldGroup" py="$related">
         <YStack flex={1}>{header}</YStack>
         <Collapsible.Trigger asChild aria-controls={contentId}>
           <Button
             chromeless
-            minW={44}
-            minH={44}
-            px="$2"
+            minW="$touchTarget"
+            minH="$touchTarget"
+            px="$related"
+            rounded="$control"
+            focusVisibleStyle={{ outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$focus' }}
             aria-label={`${isExpanded ? 'Hide' : 'Show'} ${label} details`}
           >
-            <SeventySevenText
-              color="$textSecondary"
-              rotate={isExpanded ? '0deg' : '180deg'}
+            <SymbolView
+              name={{
+                ios: isExpanded ? 'chevron.up' : 'chevron.down',
+                android: isExpanded ? 'expand_less' : 'expand_more',
+                web: isExpanded ? 'expand_less' : 'expand_more',
+              }}
+              size={20}
+              tintColor={theme.textSecondary.val}
               aria-hidden
-            >
-              ⌃
-            </SeventySevenText>
+            />
           </Button>
         </Collapsible.Trigger>
       </XStack>
       <Collapsible.Content id={contentId}>
-        <YStack gap="$2" px="$4" pb="$4">
+        <YStack gap="$related" px="$fieldGroup" pb="$fieldGroup">
           {children}
         </YStack>
       </Collapsible.Content>

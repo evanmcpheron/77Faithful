@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button, Progress, XStack, YStack } from 'tamagui';
+import { Progress, XStack, YStack } from 'tamagui';
 
 import { SeventySevenButton, SeventySevenText, SeventySevenTextSize } from '@77/components/core';
 
@@ -34,20 +34,24 @@ export const SeventySevenStepper = ({
   const progressLabel = `Step ${currentStep} of ${totalSteps}`;
 
   return (
-    <YStack width="100%" gap="$6">
-      <YStack gap="$3">
-        <XStack items="center" justify="space-between" gap="$3">
-          <SeventySevenText color="$textSecondary" bold>
+    <YStack width="100%" gap="$section">
+      <YStack gap="$inline">
+        <XStack items="center" justify="space-between" flexWrap="wrap" gap="$inline">
+          <SeventySevenText color="$textSecondary" size="Metadata">
             {progressLabel}
           </SeventySevenText>
-          {isOptional ? <SeventySevenText color="$textSecondary">Optional</SeventySevenText> : null}
+          {isOptional ? (
+            <SeventySevenText color="$textSecondary" size="Metadata">
+              Optional
+            </SeventySevenText>
+          ) : null}
         </XStack>
 
         <Progress
           width="100%"
           value={progressValue}
           max={100}
-          height="$0.75"
+          height="$space.micro"
           bg="$surfaceSubtle"
           aria-label={progressLabel}
           role="progressbar"
@@ -55,11 +59,11 @@ export const SeventySevenStepper = ({
           aria-valuemax={totalSteps}
           aria-valuenow={currentStep}
         >
-          <Progress.Indicator bg="$primary" />
+          <Progress.Indicator bg="$link" />
         </Progress>
       </YStack>
 
-      <YStack gap="$2">
+      <YStack gap="$related">
         <SeventySevenText size={SeventySevenTextSize.Heading} role="heading" aria-level={1}>
           {stepTitle}
         </SeventySevenText>
@@ -70,7 +74,7 @@ export const SeventySevenStepper = ({
 
       {children}
 
-      <YStack gap="$2.5" pt="$2">
+      <YStack gap="$related" pt="$related">
         <SeventySevenButton
           width="100%"
           disabled={isContinueDisabled}
@@ -81,15 +85,15 @@ export const SeventySevenStepper = ({
         </SeventySevenButton>
 
         {isOptional && onSkip ? (
-          <Button chromeless minH="$5" onPress={onSkip} aria-label={`Skip ${stepTitle}`}>
-            <SeventySevenText bold>Skip for now</SeventySevenText>
-          </Button>
+          <SeventySevenButton appearance="Text" onPress={onSkip} aria-label={`Skip ${stepTitle}`}>
+            Skip for now
+          </SeventySevenButton>
         ) : null}
 
         {onBack ? (
-          <Button chromeless minH="$5" onPress={onBack} aria-label="Go to previous step">
-            <SeventySevenText color="$textSecondary">Back</SeventySevenText>
-          </Button>
+          <SeventySevenButton appearance="Text" onPress={onBack} aria-label="Go to previous step">
+            Back
+          </SeventySevenButton>
         ) : null}
       </YStack>
     </YStack>

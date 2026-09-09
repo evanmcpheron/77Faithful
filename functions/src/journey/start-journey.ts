@@ -57,7 +57,7 @@ export const parseStartJourneyRequest = (input: unknown): IStartJourneyRequest =
   } catch {
     throw new HttpsError(
       'invalid-argument',
-      'Check your phone’s date and time zone, then review your setup.',
+      'Check your phone’s date and time, then review your setup.',
     );
   }
   return {

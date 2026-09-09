@@ -20,4 +20,15 @@ The importer atomically creates 77 daily documents, 11 weekly overviews, 11 intr
 
 Content-derived version IDs make retries idempotent. Editing the manuscript produces a new version for future journeys; old versions remain intact. An unrelated configured course is never overwritten. No journey, account, preference, or participation record is changed by the import.
 
-Development builds display the local manuscript’s prayer prompt, written prayer, and reflection question on Today (including the setup preview) and the Pray and Reflect routes. They are explicitly labeled draft content for testing. Edits appear through the development server without starting a new journey or importing to Firestore. Production readers and practice-completion workflows remain separate work. No sample personal reflection or completion is saved to an account.
+Today and its Scripture, Pray, Reflect, and Chosen Practice screens load the day’s content from the journey’s saved course version. The Scripture reader uses the participant’s selected released translation, including the complete primary and supporting passages. An unavailable translation is explained without substituting another text. Preview navigation uses the local manuscript and WEB readings, with completion and writing kept only in that preview.
+
+The daily screens use the `getJourneyDay`, `setJourneyPracticeCompletion`, and `saveJourneyReflection` callable functions. Build and deploy these functions before using the connected daily experience:
+
+```sh
+npm --prefix functions run build
+firebase deploy --only functions:getJourneyDay,functions:setJourneyPracticeCompletion,functions:saveJourneyReflection
+```
+
+Daily account saves require a connection. Opening or reading a practice never completes it automatically; reflection writing and completion remain separate actions. Reflection drafts are also stored on the device, scoped to the account, journey, and day. Reopening an editor restores its draft and offers a comparison if the account version has changed.
+
+The Today header uses `assets/images/today-landscape-placeholder.jpg`, a temporary photo from [Lorem Picsum](https://picsum.photos/id/28/1600/900). Replace this file to change the header photo; no layout code needs to change.

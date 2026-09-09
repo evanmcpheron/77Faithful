@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, YStack } from 'tamagui';
 
 import { SeventySevenText } from '@77/components/core';
+import { designTokens } from '@77/constants/design-tokens';
 
 interface IAccountScreenProps {
   title: string;
@@ -27,13 +28,13 @@ export const AccountScreen = ({ title, description, children }: IAccountScreenPr
         <YStack
           flex={1}
           justify="center"
-          pt={safeAreaInsets.top + 32}
-          pb={safeAreaInsets.bottom + 32}
-          pl={safeAreaInsets.left + 24}
-          pr={safeAreaInsets.right + 24}
+          pt={safeAreaInsets.top + designTokens.space.generous}
+          pb={safeAreaInsets.bottom + designTokens.space.generous}
+          pl={safeAreaInsets.left + designTokens.space.section}
+          pr={safeAreaInsets.right + designTokens.space.section}
         >
-          <YStack width="100%" maxW={460} self="center" gap="$5">
-            <YStack gap="$3">
+          <YStack width="100%" maxW="$account" self="center" gap="$section">
+            <YStack gap="$related">
               <SeventySevenText size="Heading" role="heading" aria-level={1}>
                 {title}
               </SeventySevenText>

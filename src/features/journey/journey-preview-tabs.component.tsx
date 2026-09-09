@@ -39,11 +39,13 @@ export const JourneyPreviewTabs = ({
           screenLayout={({ children }) => <SeventySevenTabScreen>{children}</SeventySevenTabScreen>}
         >
           <PreviewTabs.Screen name="today" options={options.today}>
-            {() => (
+            {({ navigation }) => (
               <TodayScreen
                 userId={userId}
                 previewJourney={previewJourney}
                 onExitPreview={onExitPreview}
+                onOpenJourney={() => navigation.navigate('journey')}
+                onOpenSettings={() => navigation.navigate('settings')}
               />
             )}
           </PreviewTabs.Screen>

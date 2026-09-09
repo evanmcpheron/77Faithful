@@ -7,6 +7,13 @@ export const SeventySevenTextSize = {
   Heading: 'Heading',
   HeadingSmall: 'HeadingSmall',
   Paragraph: 'Paragraph',
+  CardTitle: 'CardTitle',
+  Support: 'Support',
+  Label: 'Label',
+  Metadata: 'Metadata',
+  Button: 'Button',
+  Scripture: 'Scripture',
+  Quotation: 'Quotation',
 } as const;
 
 export type TSeventySevenTextSize =
@@ -24,27 +31,75 @@ export type TSeventySevenTextAlignment =
 
 export const SeventySevenText = styled(Text, {
   name: 'SeventySevenText',
+  fontFamily: '$body',
+  allowFontScaling: true,
   variants: {
     size: {
       HeadingLarge: {
-        fontSize: '$10',
-        fontWeight: '700',
-        lineHeight: '$10',
+        fontFamily: '$heading',
+        fontSize: '$hero',
+        lineHeight: '$hero',
+        fontWeight: '400',
       },
       Heading: {
-        fontSize: '$8',
-        fontWeight: '700',
-        lineHeight: '$8',
+        fontFamily: '$heading',
+        fontSize: '$page',
+        lineHeight: '$page',
+        fontWeight: '400',
       },
       HeadingSmall: {
-        fontSize: '$6',
-        fontWeight: '700',
-        lineHeight: '$7',
+        fontFamily: '$heading',
+        fontSize: '$section',
+        lineHeight: '$section',
+        fontWeight: '500',
       },
       Paragraph: {
-        fontSize: '$4',
+        fontFamily: '$body',
+        fontSize: '$body',
+        lineHeight: '$body',
         fontWeight: '400',
-        lineHeight: '$5',
+      },
+      CardTitle: {
+        fontFamily: '$heading',
+        fontSize: '$card',
+        lineHeight: '$card',
+        fontWeight: '500',
+      },
+      Support: {
+        fontFamily: '$body',
+        fontSize: '$support',
+        lineHeight: '$support',
+        fontWeight: '400',
+      },
+      Label: {
+        fontFamily: '$body',
+        fontSize: '$label',
+        lineHeight: '$label',
+        fontWeight: '500',
+      },
+      Metadata: {
+        fontFamily: '$body',
+        fontSize: '$metadata',
+        lineHeight: '$metadata',
+        fontWeight: '400',
+      },
+      Button: {
+        fontFamily: '$body',
+        fontSize: '$button',
+        lineHeight: '$button',
+        fontWeight: '600',
+      },
+      Scripture: {
+        fontFamily: '$heading',
+        fontSize: '$scripture',
+        lineHeight: '$scripture',
+        fontWeight: '400',
+      },
+      Quotation: {
+        fontFamily: '$heading',
+        fontSize: '$quotation',
+        lineHeight: '$quotation',
+        fontWeight: '400',
       },
     },
     severity: {

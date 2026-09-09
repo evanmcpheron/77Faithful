@@ -1,71 +1,78 @@
 # 77Faithful screen route map
 
-**Delivered status: Title-only route scaffold — not functional V1**
+**Delivered status: Account entry, journey setup, Today, and shared main navigation; remaining V1 workflows are still in progress.**
 
-The product requirements in [product/README.md](../product/README.md) and its numbered documents remain authoritative for the eventual experience. This implementation phase provides 22 personal-product screen files, eight disabled future-community screen files, and one not-found screen: **31 screens and three layouts**. Dynamic routes are reusable screens, not individual journey, day, practice, community, or post records.
+The product requirements in [product/README.md](../product/README.md) and its numbered documents describe the eventual experience. Dynamic routes are reusable screens, not individual journey, day, practice, community, or post records.
 
 ## What exists now
 
-Every screen body renders exactly one literal title through `SeventySevenScreenPlaceholder`, exported from `src/components/core/index.ts`. The shared component uses Tamagui stacks, the existing `SeventySevenText` heading size, theme background/text tokens, horizontal padding, and all four safe-area insets. Text can scale and wrap; the title has a heading accessibility role. Expo Router's installed `ExpoRoot` supplies `SafeAreaProvider`, so the app adds no redundant provider.
+The authenticated area uses a shared bottom tab bar with **Today**, **Journey**, and **Settings**, with Today as the default. Each tab has an icon and visible label. Journey and Settings contain their own stacks, so child screens retain the bottom navigation and a back path. Route groups preserve existing URLs such as `/today`, `/journey`, `/reflections`, and `/settings`.
 
-The root layout retains the existing Tamagui configuration and phone-following light/dark selection. All three layouts use headerless stacks when their children are enabled. Only `src/app/index.tsx` owns `/`, which directly renders **Sign In**. There is no app-group index, Welcome screen, duplicate sign-in route, navigation bar, screen directory, or clickable prototype. The unreferenced onboarding demo remains outside the routes.
+Today displays the latest saved journey. Journey shows its dates, lifecycle state, and eleven weekly themes, with access to saved reflections. The saved-reflections screen currently displays the latest journey's starting motivation; daily reflection writing and history remain unimplemented. Settings displays account identity, device-following appearance, app version, and sign-out. These screens use Tamagui, the existing theme, and safe-area spacing. Remaining placeholder routes do not imply their workflows are functional.
 
-Public routes are inspectable without a session or data fixture. `(app)` is the authenticated area: its layout waits for Firebase's initial authentication state and redirects signed-out visitors to `/`. No forms, parameters, private data access, Scripture, notifications, business workflows, or navigation controls are implemented. Server-side data access still requires ownership checks and Firebase Security Rules; a client route guard or feature flag is not a security boundary.
+The root layout retains the existing Tamagui configuration and device-following light/dark selection. Account guards require sign-in, email confirmation, and a committed journey before entering `(app)`. Communities sits between Journey and Settings in the tab group. Its tab is hidden while `featureFlags.areCommunitiesEnabled` is false, and its layout redirects direct visits to Today. Enabling the flag exposes the existing community scaffold without changing its URLs. Server-side data access still requires ownership checks and Firebase Security Rules; a client route guard or feature flag is not a security boundary.
 
 ## Actual route tree
 
 ```text
 src/app/
 ├── _layout.tsx
-├── index.tsx
-├── register.tsx
-├── confirm-email.tsx
-├── recover-access.tsx
-├── about.tsx
-├── privacy.tsx
-├── scripture-acknowledgments.tsx
-├── themes.tsx
-├── onboarding.tsx
+├── (app)/
+│   ├── _layout.tsx
+│   └── (tabs)/
+│       ├── _layout.tsx
+│       ├── (journey)/
+│       │   ├── _layout.tsx
+│       │   ├── journey.tsx
+│       │   ├── journeys/
+│       │   │   └── [journeyId]/
+│       │   │       ├── days/
+│       │   │       │   └── [dayNumber]/
+│       │   │       │       ├── index.tsx
+│       │   │       │       ├── practices/
+│       │   │       │       │   └── [practiceId].tsx
+│       │   │       │       ├── prayer.tsx
+│       │   │       │       ├── reflection.tsx
+│       │   │       │       └── scripture.tsx
+│       │   │       └── summary.tsx
+│       │   └── reflections.tsx
+│       ├── communities/
+│       │   ├── _layout.tsx
+│       │   ├── [communityId]/
+│       │   │   ├── index.tsx
+│       │   │   ├── members.tsx
+│       │   │   ├── posts/
+│       │   │   │   ├── [postId].tsx
+│       │   │   │   └── compose.tsx
+│       │   │   └── settings.tsx
+│       │   ├── create.tsx
+│       │   ├── index.tsx
+│       │   └── join.tsx
+│       ├── settings/
+│       │   ├── _layout.tsx
+│       │   ├── account/
+│       │   │   ├── delete.tsx
+│       │   │   └── index.tsx
+│       │   ├── index.tsx
+│       │   └── practices.tsx
+│       └── today.tsx
 ├── +not-found.tsx
-└── (app)/
-    ├── _layout.tsx
-    ├── today.tsx
-    ├── journey.tsx
-    ├── reflections.tsx
-    ├── journeys/
-    │   └── [journeyId]/
-    │       ├── summary.tsx
-    │       └── days/
-    │           └── [dayNumber]/
-    │               ├── index.tsx
-    │               ├── scripture.tsx
-    │               ├── prayer.tsx
-    │               ├── reflection.tsx
-    │               └── practices/
-    │                   └── [practiceId].tsx
-    ├── settings/
-    │   ├── index.tsx
-    │   ├── practices.tsx
-    │   └── account/
-    │       ├── index.tsx
-    │       └── delete.tsx
-    └── communities/
-        ├── _layout.tsx
-        ├── index.tsx
-        ├── create.tsx
-        ├── join.tsx
-        └── [communityId]/
-            ├── index.tsx
-            ├── members.tsx
-            ├── settings.tsx
-            └── posts/
-                ├── compose.tsx
-                └── [postId].tsx
+├── about.tsx
+├── confirm-email.tsx
+├── index.tsx
+├── onboarding.tsx
+├── privacy.tsx
+├── recover-access.tsx
+├── register.tsx
+├── scripture-acknowledgments.tsx
+├── sign-in.tsx
+├── terms.tsx
+└── themes.tsx
 ```
 
 ## Exact personal-product titles and later responsibilities
 
-These responsibilities are planned, not rendered or functional.
+The table below records the original scaffold titles and planned responsibilities. Delivered behavior is described above; a reserved route does not mean its full workflow is implemented.
 
 | URL                                                             | Exact title               | Later responsibility                                                                                     |
 | --------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------- |

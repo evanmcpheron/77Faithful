@@ -12,7 +12,7 @@ Today reads the newest journey and shows its actual calendar day, current phone 
 
 ## Publishing prerequisites
 
-Starting is intentionally unavailable until a real complete course and the selected translation are published. No placeholder Scripture or production content is seeded by this implementation.
+Starting is intentionally unavailable until a real complete course and the selected translation are published. The [provisional course importer](../content/provisional-course/README.md) supplies 77 candidate readings with exact WEB text and working devotional content. It creates versioned content without changing existing journeys. Other translations require their own released text.
 
 The server expects the following admin-managed documents:
 

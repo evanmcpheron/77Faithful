@@ -3,7 +3,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { FirebaseError } from 'firebase/app';
 import { app, db } from '@77/lib/firebase';
 import { getJourneyCalendarDate } from '@77/features/journey/journey-calendar';
-import { TodayScreen } from '@77/features/journey/today-screen.component';
+import { JourneyPreviewTabs } from '@77/features/journey/journey-preview-tabs.component';
 import type { TTodayJourney } from '@77/features/journey/today-screen.component';
 import type {
   IStartJourneyRequest,
@@ -461,7 +461,7 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
 
   if (__DEV__ && previewJourney) {
     return (
-      <TodayScreen
+      <JourneyPreviewTabs
         userId={userId}
         previewJourney={previewJourney}
         onExitPreview={handleExitPreview}

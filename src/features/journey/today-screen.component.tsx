@@ -1,4 +1,3 @@
-import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { AppState, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,7 +5,6 @@ import { Spinner, YStack } from 'tamagui';
 
 import { SeventySevenButton, SeventySevenText } from '@77/components/core';
 import { setupPractices, weeklyThemes } from '@77/features/journey-setup/journey-setup-content';
-import { db } from '@77/lib/firebase';
 import { SeventySevenCard } from '@77/surface';
 import type { IJourneyDocument } from '@77/types/journey/journey.types';
 
@@ -15,6 +13,10 @@ import {
   getJourneyCalendarDate,
   getJourneyDayNumber,
 } from './journey-calendar';
+
+import { useLatestJourney } from './use-latest-journey.hook';
+import { DailyPrayerContent, DailyReflectionContent } from './daily-practice-content.component';
+import { getProvisionalDayContent } from './provisional-day-content';
 
 export type TTodayJourney = Pick<
   IJourneyDocument,
@@ -31,12 +33,14 @@ interface ITodayScreenProps {
 
 export const TodayScreen = ({ userId, previewJourney, onExitPreview }: ITodayScreenProps) => {
   const insets = useSafeAreaInsets();
-  const [savedJourney, setJourney] = useState<IJourneyDocument | null>(null);
-  const journey = (__DEV__ && previewJourney) || savedJourney;
   const isPreview = __DEV__ && Boolean(previewJourney);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
+  const {
+    journey: savedJourney,
+    isLoading,
+    hasError,
+    retry: handleRetry,
+  } = useLatestJourney(isPreview ? null : userId);
+  const journey = (__DEV__ && previewJourney) || savedJourney;
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -50,33 +54,6 @@ export const TodayScreen = ({ userId, previewJourney, onExitPreview }: ITodayScr
     };
   }, []);
 
-  useEffect(() => {
-    if (isPreview) return;
-
-    return onSnapshot(
-      query(collection(db, 'users', userId, 'journeys'), orderBy('createdAt', 'desc'), limit(1)),
-      { includeMetadataChanges: true },
-      (snapshot) => {
-        if (snapshot.empty && snapshot.metadata.fromCache) return;
-        // Journeys are server-owned records using the shared contract.
-        setJourney(snapshot.empty ? null : (snapshot.docs[0].data() as IJourneyDocument));
-        setHasError(false);
-        setIsLoading(false);
-      },
-      (error) => {
-        console.warn('Today could not load the journey.', { code: error.code });
-        setHasError(true);
-        setIsLoading(false);
-      },
-    );
-  }, [userId, retryCount, isPreview]);
-
-  const handleRetry = () => {
-    setIsLoading(true);
-    setHasError(false);
-    setRetryCount((count) => count + 1);
-  };
-
   const timeZoneId = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const calendarDate = journey ? getJourneyCalendarDate(now, timeZoneId) : null;
   const dayNumber =
@@ -85,6 +62,7 @@ export const TodayScreen = ({ userId, previewJourney, onExitPreview }: ITodayScr
   const hasCompleted =
     journey?.state.status === 'Completed' || (dayNumber !== null && dayNumber > 77);
   const isActiveDay = !hasEndedEarly && !hasCompleted && dayNumber !== null && dayNumber >= 1;
+  const draftContent = __DEV__ && isActiveDay ? getProvisionalDayContent(dayNumber) : null;
   const chosenPractices = journey
     ? setupPractices.filter((practice) =>
         journey.initialOptionalPracticeIds.some((practiceId) => practiceId === practice.practiceId),
@@ -92,12 +70,12 @@ export const TodayScreen = ({ userId, previewJourney, onExitPreview }: ITodayScr
     : [];
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView style={{ flex: 1, minHeight: 0 }} contentContainerStyle={{ flexGrow: 1 }}>
       <YStack
         flex={1}
         bg="$background"
         pt={insets.top + 24}
-        pb={insets.bottom + 32}
+        pb={32}
         pl={insets.left + 24}
         pr={insets.right + 24}
       >
@@ -173,8 +151,27 @@ export const TodayScreen = ({ userId, previewJourney, onExitPreview }: ITodayScr
                   </SeventySevenText>
                   <SeventySevenCard gap="$3">
                     <SeventySevenText bold>Read Scripture</SeventySevenText>
+                    {draftContent ? (
+                      <SeventySevenText>{draftContent.passage}</SeventySevenText>
+                    ) : null}
                     <SeventySevenText bold>Pray</SeventySevenText>
+                    {draftContent ? (
+                      <>
+                        <SeventySevenText color="$textSecondary">
+                          Draft content for testing · Day {draftContent.dayNumber}
+                        </SeventySevenText>
+                        <DailyPrayerContent
+                          prayerPrompt={draftContent.prayerPrompt}
+                          writtenPrayer={draftContent.writtenPrayer}
+                        />
+                      </>
+                    ) : null}
                     <SeventySevenText bold>Reflect</SeventySevenText>
+                    {draftContent ? (
+                      <DailyReflectionContent
+                        reflectionQuestion={draftContent.reflectionQuestion}
+                      />
+                    ) : null}
                   </SeventySevenCard>
                   <SeventySevenText size="HeadingSmall" role="heading">
                     Chosen Practices

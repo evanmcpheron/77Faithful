@@ -6,15 +6,15 @@
 
 ## Main navigation
 
-V1 has three primary destinations:
+V1 has three primary destinations in a shared bottom tab bar:
 
-| Destination     | Main purpose                                                                                  |
-| --------------- | --------------------------------------------------------------------------------------------- |
-| **Today**       | Engage with the current day's Scripture, prayer, reflection, and five to seven practices.     |
-| **Journey**     | Understand the current journey, inspect days and weekly themes, and review previous journeys. |
-| **Reflections** | Browse private written intentions and reflections across journeys.                            |
+| Destination  | Main purpose                                                                                                          |
+| ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| **Today**    | Engage with the current day's Scripture, prayer, reflection, and five to seven practices.                             |
+| **Journey**  | Understand the current journey, inspect days and weekly themes, review previous journeys, and open saved reflections. |
+| **Settings** | Access account information and app preferences.                                                                       |
 
-**Settings** is consistently easy to reach from all three destinations. It does not need to become a fourth primary destination. Access should be labeled clearly rather than relying on an unfamiliar symbol without explanation.
+**Reflections** is a child destination within Journey. The tab bar remains available across these sections and their child screens. Each tab has an icon and a visible label. Communities remains excluded from V1.
 
 Today is the default destination for a signed-in participant with an active journey. Opening a historical day does not redefine Today. A visible return to Today is available when the person is deep within history.
 

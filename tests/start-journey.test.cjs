@@ -439,3 +439,44 @@ test('starting motivation gets a journey revision and retains its source history
   assert.equal(documents.has(sourcePath), true);
   assert.equal(result.details.journey.startingMotivation.text, head.text);
 });
+
+test('the provisional course imports atomically and passes the real start content checks', async () => {
+  const {
+    seedProvisionalCourse,
+    courseId,
+    courseVersionId,
+  } = require('../scripts/provisional-course.cjs');
+  const { database, documents } = createDatabase();
+  documents.delete('formationConfiguration/current');
+  const timestamp = Timestamp.now();
+  const imported = await seedProvisionalCourse(database, timestamp);
+  assert.equal(imported.outcome, 'Imported');
+  const versionPath = `formationCourses/${courseId}/versions/${courseVersionId}`;
+  const firstDay = documents.get(`${versionPath}/days/1`);
+  const thirdDay = documents.get(`${versionPath}/days/3`);
+  assert.equal(
+    documents.get(`scriptureAssignments/${firstDay.scriptureAssignmentId}`).displayReference,
+    'John 15:1–11',
+  );
+  assert.equal(
+    documents.get(`scriptureAssignments/${thirdDay.scriptureAssignmentId}`).displayReference,
+    'Psalm 23',
+  );
+  const beforeRetry = [...documents];
+  assert.equal((await seedProvisionalCourse(database, Timestamp.now())).outcome, 'AlreadyImported');
+  assert.deepEqual([...documents], beforeRetry);
+  const result = await startJourneyForAccount('owner', request(), database);
+  assert.equal(result.outcome, 'Started');
+  assert.deepEqual(result.details.journey.course, { courseId, courseVersionId });
+});
+
+test('the provisional import preserves an unrelated configured course', async () => {
+  const { seedProvisionalCourse } = require('../scripts/provisional-course.cjs');
+  const { database, documents } = createDatabase();
+  const before = [...documents];
+  await assert.rejects(
+    seedProvisionalCourse(database, Timestamp.now()),
+    /Another course is configured/,
+  );
+  assert.deepEqual([...documents], before);
+});

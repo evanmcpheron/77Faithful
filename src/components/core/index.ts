@@ -1,3 +1,4 @@
+export { SeventySevenButton } from './seventy-seven-button.component';
 export {
   SeventySevenText,
   SeventySevenTextAlignment,

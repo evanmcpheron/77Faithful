@@ -13,6 +13,10 @@ const AppLayout = () => {
     return <Redirect href="/" />;
   }
 
+  if (!user.emailVerified) {
+    return <Redirect href="/confirm-email" />;
+  }
+
   return <Stack screenOptions={{ headerShown: false }} />;
 };
 

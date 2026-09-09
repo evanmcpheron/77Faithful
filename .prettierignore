@@ -10,3 +10,6 @@ ios/
 # Generated files
 expo-env.d.ts
 *.tsbuildinfo
+
+# Shared type contracts are read-only for automated formatting.
+src/types/

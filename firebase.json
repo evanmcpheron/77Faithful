@@ -21,6 +21,6 @@
     "rules": "database.rules.json"
   },
   "auth": {
-    "providers": {}
+    "providers": { "emailPassword": true }
   }
 }

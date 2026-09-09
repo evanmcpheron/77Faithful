@@ -17,6 +17,12 @@ export type TSeventySevenFormTextInputType =
 
 interface ISeventySevenFormTextInputProps {
   autoComplete?: InputProps['autoComplete'];
+  autoCapitalize?: InputProps['autoCapitalize'];
+  autoCorrect?: InputProps['autoCorrect'];
+  keyboardType?: InputProps['keyboardType'];
+  maxLength?: number;
+  onSubmitEditing?: InputProps['onSubmitEditing'];
+  returnKeyType?: InputProps['returnKeyType'];
   defaultValue?: string;
   disabled?: boolean;
   errorMessage?: string;
@@ -31,6 +37,12 @@ interface ISeventySevenFormTextInputProps {
 
 export const SeventySevenFormTextInput = ({
   autoComplete,
+  autoCapitalize,
+  autoCorrect,
+  keyboardType,
+  maxLength,
+  onSubmitEditing,
+  returnKeyType,
   defaultValue,
   disabled = false,
   errorMessage,
@@ -89,6 +101,9 @@ export const SeventySevenFormTextInput = ({
             py="$3"
             fontSize="$4"
             autoComplete={autoComplete}
+            autoCapitalize={autoCapitalize ?? (isPassword ? 'none' : undefined)}
+            autoCorrect={autoCorrect ?? (isPassword ? false : undefined)}
+            maxLength={maxLength}
             defaultValue={defaultValue}
             disabled={disabled}
             placeholder={placeholder}
@@ -113,10 +128,15 @@ export const SeventySevenFormTextInput = ({
             pr={isPassword ? '$2' : '$3.5'}
             fontSize="$4"
             autoComplete={autoComplete}
+            autoCapitalize={autoCapitalize ?? (isPassword ? 'none' : undefined)}
+            autoCorrect={autoCorrect ?? (isPassword ? false : undefined)}
+            maxLength={maxLength}
             defaultValue={defaultValue}
             disabled={disabled}
-            keyboardType={isNumber ? 'number-pad' : 'default'}
-            inputMode={isNumber ? 'numeric' : 'text'}
+            onSubmitEditing={onSubmitEditing}
+            returnKeyType={returnKeyType}
+            keyboardType={keyboardType ?? (isNumber ? 'number-pad' : 'default')}
+            inputMode={keyboardType === 'email-address' ? 'email' : isNumber ? 'numeric' : 'text'}
             secureTextEntry={isPassword && !isPasswordVisible}
             type={isPassword && !isPasswordVisible ? 'password' : isNumber ? 'number' : 'text'}
             placeholder={placeholder}

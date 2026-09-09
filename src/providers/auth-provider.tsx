@@ -1,7 +1,7 @@
 import {
   applyActionCode,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
+  onIdTokenChanged,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -22,6 +22,7 @@ interface IAuthContextValue {
   confirmEmail: (actionCode: string) => Promise<void>;
   resendEmailConfirmation: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  refreshUser: () => Promise<User | null>;
 }
 
 interface IAuthProviderProps {
@@ -63,11 +64,20 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    return onAuthStateChanged(auth, (authenticatedUser) => {
+    return onIdTokenChanged(auth, (authenticatedUser) => {
       setUser(authenticatedUser);
       setIsLoading(false);
     });
   }, []);
+
+  const refreshUser = async (): Promise<User | null> => {
+    const authenticatedUser = auth.currentUser;
+    if (!authenticatedUser) return null;
+    await authenticatedUser.reload();
+    await authenticatedUser.getIdToken(true);
+    setUser(auth.currentUser);
+    return auth.currentUser;
+  };
 
   return (
     <AuthContext.Provider
@@ -80,6 +90,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         confirmEmail,
         resendEmailConfirmation,
         resetPassword,
+        refreshUser,
       }}
     >
       {children}

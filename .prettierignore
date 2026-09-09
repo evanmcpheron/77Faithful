@@ -1,0 +1,12 @@
+# Dependencies and generated output
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+android/
+ios/
+
+# Generated files
+expo-env.d.ts
+*.tsbuildinfo

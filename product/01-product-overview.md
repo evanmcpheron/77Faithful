@@ -36,13 +36,13 @@ The spiritual invitation is broad. Independent account eligibility, particularly
 
 ## What a participant commits to
 
-| Daily practice | What it means in ordinary life |
-| --- | --- |
-| Read Scripture | Engage with the day's assigned Bible passage, in the app or in a personal Bible. Accessible ways of receiving the passage count. |
-| Pray | Intentionally speak to God and make room for attentiveness to Him, with a focused prompt available for guidance. |
-| Reflect | Consider what the passage and the day's experiences mean for one's response to God. Writing is available but not compulsory. |
-| First selected practice | Carry out one additional practice chosen from the catalog. |
-| Second selected practice | Carry out a different additional practice chosen from the same catalog. |
+| Daily practice           | What it means in ordinary life                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Read Scripture           | Engage with the day's assigned Bible passage, in the app or in a personal Bible. Accessible ways of receiving the passage count. |
+| Pray                     | Intentionally speak to God and make room for attentiveness to Him, with a focused prompt available for guidance.                 |
+| Reflect                  | Consider what the passage and the day's experiences mean for one's response to God. Writing is available but not compulsory.     |
+| First selected practice  | Carry out one additional practice chosen from the catalog.                                                                       |
+| Second selected practice | Carry out a different additional practice chosen from the same catalog.                                                          |
 
 There are no app-imposed minimum minutes, exercise distances, donation amounts, fasting durations, or word counts. Guidance should be concrete enough to help a person act without pretending the app can determine the quality of their spiritual engagement.
 

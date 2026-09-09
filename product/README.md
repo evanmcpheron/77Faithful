@@ -19,27 +19,27 @@ For a complete understanding, read the numbered documents in order. The later do
 
 ## Document guide
 
-| Document | What it explains | Primary audience |
-| --- | --- | --- |
-| [01 · Product overview](01-product-overview.md) | The mission, audience, overall experience, and meaning of the 77-day journey. | Everyone |
-| [02 · Principles and boundaries](02-principles-and-boundaries.md) | Biblical grounding, grace, privacy, free access, and what the product must never become. | Everyone making product decisions |
-| [03 · V1 scope](03-v1-scope.md) | What the first release includes, what comes later, and what is prohibited. | Product owner, designers, reviewers |
-| [04 · Journey and calendar](04-journey-and-calendar.md) | Starting, numbered days, travel, missed days, historical edits, ending early, completion, and repeat journeys. | Anyone defining behavior |
-| [05 · Daily practices](05-daily-practices.md) | The three foundational practices, the optional-practice catalog, completion, and changing selections. | Participants, content authors, designers |
-| [06 · Scripture and daily content](06-scripture-and-daily-content.md) | Assigned readings, translations, devotionals, prayer prompts, intentions, reflection, and content integrity. | Content authors, product owner |
-| [07 · Eleven-week formation plan](07-eleven-week-formation-plan.md) | The fixed theme progression and a complete 77-day editorial outline. | Content authors, reviewers |
-| [08 · Onboarding and account experience](08-onboarding-and-account-experience.md) | Understanding the app, setting up a journey, account access, and returning participants. | Designers, product owner |
-| [09 · Daily experience and workflows](09-daily-experience-and-workflows.md) | End-to-end examples from first use through Day 77 and beyond. | Everyone |
-| [10 · Progress, history, and reflections](10-progress-history-and-reflections.md) | Daily progress, streaks, historical journeys, private writing, and completion summaries. | Designers, reviewers |
-| [11 · Pages and navigation](11-pages-and-navigation.md) | Each page's purpose, information, actions, destinations, and important states. | Designers, product owner |
-| [12 · Reminders and reliable use](12-reminders-and-reliable-use.md) | Reminder behavior, use without internet, changing phones, interruptions, and trustworthy saving. | Designers, reviewers |
-| [13 · Privacy, safety, and accessibility](13-privacy-safety-and-accessibility.md) | Private information, deletion, participant safety, and an approachable experience. | Everyone making product decisions |
-| [14 · Communities and future vision](14-communities-and-future-vision.md) | Committed future community direction and optional later ideas. All are outside V1. | Product owner, future designers |
-| [15 · Language and content standards](15-language-and-content-standards.md) | Consistent terminology, writing voice, biblical editorial standards, and example messages. | Writers, designers, reviewers |
-| [16 · Product acceptance scenarios](16-product-acceptance-scenarios.md) | Observable examples of correct behavior and unacceptable outcomes. | Product owner, reviewers |
-| [17 · Decision register](17-decision-register.md) | Explicit owner commitments, adopted product defaults, and external release conditions. | Anyone changing the product |
-| [18 · An illustrative day](18-illustrative-day.md) | A concrete example of what the daily experience could contain and how someone uses it. | Everyone |
-| [19 · Editorial and launch checklist](19-editorial-and-launch-checklist.md) | Remaining content preparation, external permissions, release checks, and supporting source notes. | Product owner, content reviewers |
+| Document                                                                          | What it explains                                                                                               | Primary audience                         |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [01 · Product overview](01-product-overview.md)                                   | The mission, audience, overall experience, and meaning of the 77-day journey.                                  | Everyone                                 |
+| [02 · Principles and boundaries](02-principles-and-boundaries.md)                 | Biblical grounding, grace, privacy, free access, and what the product must never become.                       | Everyone making product decisions        |
+| [03 · V1 scope](03-v1-scope.md)                                                   | What the first release includes, what comes later, and what is prohibited.                                     | Product owner, designers, reviewers      |
+| [04 · Journey and calendar](04-journey-and-calendar.md)                           | Starting, numbered days, travel, missed days, historical edits, ending early, completion, and repeat journeys. | Anyone defining behavior                 |
+| [05 · Daily practices](05-daily-practices.md)                                     | The three foundational practices, the optional-practice catalog, completion, and changing selections.          | Participants, content authors, designers |
+| [06 · Scripture and daily content](06-scripture-and-daily-content.md)             | Assigned readings, translations, devotionals, prayer prompts, intentions, reflection, and content integrity.   | Content authors, product owner           |
+| [07 · Eleven-week formation plan](07-eleven-week-formation-plan.md)               | The fixed theme progression and a complete 77-day editorial outline.                                           | Content authors, reviewers               |
+| [08 · Onboarding and account experience](08-onboarding-and-account-experience.md) | Understanding the app, setting up a journey, account access, and returning participants.                       | Designers, product owner                 |
+| [09 · Daily experience and workflows](09-daily-experience-and-workflows.md)       | End-to-end examples from first use through Day 77 and beyond.                                                  | Everyone                                 |
+| [10 · Progress, history, and reflections](10-progress-history-and-reflections.md) | Daily progress, streaks, historical journeys, private writing, and completion summaries.                       | Designers, reviewers                     |
+| [11 · Pages and navigation](11-pages-and-navigation.md)                           | Each page's purpose, information, actions, destinations, and important states.                                 | Designers, product owner                 |
+| [12 · Reminders and reliable use](12-reminders-and-reliable-use.md)               | Reminder behavior, use without internet, changing phones, interruptions, and trustworthy saving.               | Designers, reviewers                     |
+| [13 · Privacy, safety, and accessibility](13-privacy-safety-and-accessibility.md) | Private information, deletion, participant safety, and an approachable experience.                             | Everyone making product decisions        |
+| [14 · Communities and future vision](14-communities-and-future-vision.md)         | Committed future community direction and optional later ideas. All are outside V1.                             | Product owner, future designers          |
+| [15 · Language and content standards](15-language-and-content-standards.md)       | Consistent terminology, writing voice, biblical editorial standards, and example messages.                     | Writers, designers, reviewers            |
+| [16 · Product acceptance scenarios](16-product-acceptance-scenarios.md)           | Observable examples of correct behavior and unacceptable outcomes.                                             | Product owner, reviewers                 |
+| [17 · Decision register](17-decision-register.md)                                 | Explicit owner commitments, adopted product defaults, and external release conditions.                         | Anyone changing the product              |
+| [18 · An illustrative day](18-illustrative-day.md)                                | A concrete example of what the daily experience could contain and how someone uses it.                         | Everyone                                 |
+| [19 · Editorial and launch checklist](19-editorial-and-launch-checklist.md)       | Remaining content preparation, external permissions, release checks, and supporting source notes.              | Product owner, content reviewers         |
 
 ## How to read requirement language
 
@@ -67,20 +67,20 @@ When a conflict is discovered, identify the exact statements, preserve the owner
 
 ## The product in one page
 
-| Question | Answer |
-| --- | --- |
-| What is it? | A guided, personal, 77-day journey of Christian spiritual formation. |
-| Who is it for? | Anyone seeking a stronger relationship with Jesus, including people beginning, returning to, or growing in faith. |
-| What does someone do every day? | Read the assigned Scripture, pray, reflect, and practice two selected additional commitments. |
-| What guides the content? | Eleven biblical themes, each lasting seven journey days. |
-| How does it begin? | The participant chooses two practices, selects an available Bible translation, reviews the commitment, and selects **Start my journey**. That date is Day 1. |
-| Must everything happen inside the app? | No. The app guides and records participation; Scripture may be read in a personal Bible and practices take place in everyday life. |
-| What happens after a missed day? | The calendar continues. Previous progress remains. The participant may return to earlier eligible days and update their record. |
-| What does completion mean? | The 77-day period has ended. This is distinct from completing all five practices on every day. |
-| Is the journal public? | No. Personal writing is private. There is no in-app sharing in V1. |
-| Is it free? | Yes, permanently. No advertisements, subscriptions, paid features, paid content, or paid community access. |
-| Are groups included? | Private communities are a definite future direction, explicitly not V1. |
-| What happens afterward? | The participant retains their history, can review what they wrote, and may begin another separate journey. |
+| Question                               | Answer                                                                                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| What is it?                            | A guided, personal, 77-day journey of Christian spiritual formation.                                                                                         |
+| Who is it for?                         | Anyone seeking a stronger relationship with Jesus, including people beginning, returning to, or growing in faith.                                            |
+| What does someone do every day?        | Read the assigned Scripture, pray, reflect, and practice two selected additional commitments.                                                                |
+| What guides the content?               | Eleven biblical themes, each lasting seven journey days.                                                                                                     |
+| How does it begin?                     | The participant chooses two practices, selects an available Bible translation, reviews the commitment, and selects **Start my journey**. That date is Day 1. |
+| Must everything happen inside the app? | No. The app guides and records participation; Scripture may be read in a personal Bible and practices take place in everyday life.                           |
+| What happens after a missed day?       | The calendar continues. Previous progress remains. The participant may return to earlier eligible days and update their record.                              |
+| What does completion mean?             | The 77-day period has ended. This is distinct from completing all five practices on every day.                                                               |
+| Is the journal public?                 | No. Personal writing is private. There is no in-app sharing in V1.                                                                                           |
+| Is it free?                            | Yes, permanently. No advertisements, subscriptions, paid features, paid content, or paid community access.                                                   |
+| Are groups included?                   | Private communities are a definite future direction, explicitly not V1.                                                                                      |
+| What happens afterward?                | The participant retains their history, can review what they wrote, and may begin another separate journey.                                                   |
 
 ## A few important distinctions
 

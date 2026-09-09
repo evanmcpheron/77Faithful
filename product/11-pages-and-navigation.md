@@ -8,11 +8,11 @@
 
 V1 has three primary destinations:
 
-| Destination | Main purpose |
-| --- | --- |
-| **Today** | Engage with the current day's Scripture, prayer, reflection, and five practices. |
-| **Journey** | Understand the current journey, inspect days and weekly themes, and review previous journeys. |
-| **Reflections** | Browse private written intentions and reflections across journeys. |
+| Destination     | Main purpose                                                                                  |
+| --------------- | --------------------------------------------------------------------------------------------- |
+| **Today**       | Engage with the current day's Scripture, prayer, reflection, and five practices.              |
+| **Journey**     | Understand the current journey, inspect days and weekly themes, and review previous journeys. |
+| **Reflections** | Browse private written intentions and reflections across journeys.                            |
 
 **Settings** is consistently easy to reach from all three destinations. It does not need to become a fourth primary destination. Access should be labeled clearly rather than relying on an unfamiliar symbol without explanation.
 

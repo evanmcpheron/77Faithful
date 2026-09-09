@@ -79,13 +79,13 @@ Saving the words and marking Reflect complete are separate actions.
 
 ## How the five practices might unfold
 
-| Practice | Example of participation | What the app records |
-| --- | --- | --- |
-| Read Scripture | The participant reads John 15:1–11 in a personal Bible. | One completion marker when they deliberately mark it. |
-| Pray | They pray using the prompt as a starting point. | One completion marker; no prayer transcript. |
-| Reflect | They consider the day's question and optionally save the example response. | The completion marker and any saved writing remain separate. |
-| Serve or Encourage | They send a thoughtful, appropriate message to someone who could use encouragement. | One completion marker; no recipient details or proof. |
-| Gratitude | They intentionally thank God for a specific gift or expression of care. | One completion marker; no required list or word count. |
+| Practice           | Example of participation                                                            | What the app records                                         |
+| ------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Read Scripture     | The participant reads John 15:1–11 in a personal Bible.                             | One completion marker when they deliberately mark it.        |
+| Pray               | They pray using the prompt as a starting point.                                     | One completion marker; no prayer transcript.                 |
+| Reflect            | They consider the day's question and optionally save the example response.          | The completion marker and any saved writing remain separate. |
+| Serve or Encourage | They send a thoughtful, appropriate message to someone who could use encouragement. | One completion marker; no recipient details or proof.        |
+| Gratitude          | They intentionally thank God for a specific gift or expression of care.             | One completion marker; no required list or word count.       |
 
 These examples are possibilities, not universal amounts or assignments. The participant is responsible for an honest declaration of their own engagement.
 

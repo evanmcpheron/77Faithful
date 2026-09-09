@@ -14,18 +14,18 @@ Any deliberate product change should be recorded in the owning document and reco
 
 ## 2. The full formation course is ready
 
-| Material | Required quantity and quality |
-| --- | --- |
-| Course structure | Eleven themes in the adopted order, seven days each, totaling 77 days. |
-| Assigned readings | A reviewed Scripture assignment for every day, with context and appropriate reading length. |
-| Scripture text | Accurate full assigned passages in every translation actually offered, from clearly identified approved editions. |
-| Devotionals | Seventy-seven original or appropriately authorized, reviewed daily devotionals. |
-| Prayer prompts | Seventy-seven focused prompts aligned with their readings and themes. |
-| Reflection questions | Seventy-seven primary questions, with each week's review integrated into its seventh day. |
-| Intention invitations | Seventy-seven optional invitations to a grounded daily response. |
-| Weekly introductions | Eleven reviewed introductions explaining the week's place in the course. |
-| Final-day content | A Day 77 reading and reflection that support continuing beyond the journey without spiritual grading. |
-| Help and practice descriptions | Accurate explanations of all ten optional practices, required practices, no-reset behavior, and privacy. |
+| Material                       | Required quantity and quality                                                                                     |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Course structure               | Eleven themes in the adopted order, seven days each, totaling 77 days.                                            |
+| Assigned readings              | A reviewed Scripture assignment for every day, with context and appropriate reading length.                       |
+| Scripture text                 | Accurate full assigned passages in every translation actually offered, from clearly identified approved editions. |
+| Devotionals                    | Seventy-seven original or appropriately authorized, reviewed daily devotionals.                                   |
+| Prayer prompts                 | Seventy-seven focused prompts aligned with their readings and themes.                                             |
+| Reflection questions           | Seventy-seven primary questions, with each week's review integrated into its seventh day.                         |
+| Intention invitations          | Seventy-seven optional invitations to a grounded daily response.                                                  |
+| Weekly introductions           | Eleven reviewed introductions explaining the week's place in the course.                                          |
+| Final-day content              | A Day 77 reading and reflection that support continuing beyond the journey without spiritual grading.             |
+| Help and practice descriptions | Accurate explanations of all ten optional practices, required practices, no-reset behavior, and privacy.          |
 
 Document 07 provides a 77-day editorial outline. Document 18 provides a sample. Neither fulfills the requirement for a complete approved course.
 
@@ -122,7 +122,11 @@ The World English Bible publisher describes the text as public domain while iden
 These notes are deliberately limited. They do not provide a complete rights analysis for every intended translation, determine eligibility in every territory, or replace permission from the relevant rights holder where needed. The other requested translations need their own appropriate review before being offered.
 
 [^lockman]: The Lockman Foundation, [Permission to Quote: NASB, Amplified, NBLA, & LBLA Bibles — Copyright & Trademark](https://www.lockman.org/permission-to-quote-copyright-trademark-information/).
+
 [^biblica]: Biblica, [Permissions](https://www.biblica.com/permissions/).
+
 [^tyndale]: Tyndale House Publishers, [Permissions](https://www.tyndale.com/permissions).
+
 [^crossway]: Crossway, [Permissions Requests](https://www.crossway.org/permissions/).
+
 [^web]: eBible.org, [World English Bible copyright and trademark statement](https://ebible.org/engwebp/copyright.htm).

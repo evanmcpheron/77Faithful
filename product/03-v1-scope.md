@@ -12,28 +12,28 @@ The scope below is a product commitment, not a statement of current implementati
 
 ## Required in V1
 
-| Area | Included experience | Detail |
-| --- | --- | --- |
-| Introduction | Explain the purpose, five practices, 77-calendar-day structure, privacy, and free access before commitment. | [08](08-onboarding-and-account-experience.md) |
-| Personal account | Create an account, establish access, sign in, recover access, sign out, and request permanent deletion. No guest journey. | [08](08-onboarding-and-account-experience.md), [13](13-privacy-safety-and-accessibility.md) |
-| Profile | Optional preferred name and management of account contact information. No public profile or profile photograph. | [08](08-onboarding-and-account-experience.md) |
-| Journey setup | Choose exactly two distinct optional practices, choose an available translation, optionally record a motivation, and review the commitment. | [05](05-daily-practices.md), [08](08-onboarding-and-account-experience.md) |
-| Immediate start | Start on the date the participant confirms **Start my journey**. No past or future start date. | [04](04-journey-and-calendar.md) |
-| Journey structure | One active journey, 77 calendar dates, a fixed journey time zone, and eleven seven-day themes. | [04](04-journey-and-calendar.md) |
-| Daily formation content | Assigned Scripture, in-app passage text, a short devotional, a prayer prompt, a reflection question, and an optional intention invitation for every day. | [06](06-scripture-and-daily-content.md) |
-| Weekly guidance | A full-course theme overview, a weekly introduction when that week begins, and a weekly review integrated into the seventh day's reflection. | [06](06-scripture-and-daily-content.md), [07](07-eleven-week-formation-plan.md) |
-| Daily completion | Mark or unmark each of five practices; show partial and full completion without automatic spiritual judgments. | [05](05-daily-practices.md) |
-| Practice changes | Replace one or both optional practices beginning on the next journey day; preserve earlier assignments. | [05](05-daily-practices.md) |
-| Written intention and reflection | Optional private writing associated with a journey day; review, edit, and delete it. | [10](10-progress-history-and-reflections.md) |
-| Progress | Day number, five-practice progress, a day grid with a readable list alternative, and modest personal statistics. | [10](10-progress-history-and-reflections.md) |
-| Historical days | Review and update eligible past days, including all 77 days of a completed journey. | [04](04-journey-and-calendar.md), [10](10-progress-history-and-reflections.md) |
-| Early ending | Explicit confirmation, retained history, accurate early-ended status, and no resumption of that journey. | [04](04-journey-and-calendar.md) |
-| Completion | Automatic recognition after the final calendar day, an honest summary, and an invitation to continue. | [04](04-journey-and-calendar.md), [10](10-progress-history-and-reflections.md) |
-| Repeat journeys | Start a separate new journey after the previous one has ended; retain earlier journeys. The same fixed course is used in V1. | [04](04-journey-and-calendar.md) |
-| Reminders | Optional morning and evening reminders with participant-selected times and simple controls. | [12](12-reminders-and-reliable-use.md) |
-| Reliable everyday use | Continue an established journey without internet on a prepared phone; protect recorded work across interruptions; clearly explain what is and is not safely available elsewhere. | [12](12-reminders-and-reliable-use.md) |
-| Readability | Light and dark appearance, readable text, larger-text support, accessible controls, and an approachable reading experience. | [13](13-privacy-safety-and-accessibility.md) |
-| Help and privacy | Explain the product, report a problem or content concern, view privacy information and Scripture acknowledgments, and manage personal information. | [11](11-pages-and-navigation.md), [13](13-privacy-safety-and-accessibility.md) |
+| Area                             | Included experience                                                                                                                                                              | Detail                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Introduction                     | Explain the purpose, five practices, 77-calendar-day structure, privacy, and free access before commitment.                                                                      | [08](08-onboarding-and-account-experience.md)                                               |
+| Personal account                 | Create an account, establish access, sign in, recover access, sign out, and request permanent deletion. No guest journey.                                                        | [08](08-onboarding-and-account-experience.md), [13](13-privacy-safety-and-accessibility.md) |
+| Profile                          | Optional preferred name and management of account contact information. No public profile or profile photograph.                                                                  | [08](08-onboarding-and-account-experience.md)                                               |
+| Journey setup                    | Choose exactly two distinct optional practices, choose an available translation, optionally record a motivation, and review the commitment.                                      | [05](05-daily-practices.md), [08](08-onboarding-and-account-experience.md)                  |
+| Immediate start                  | Start on the date the participant confirms **Start my journey**. No past or future start date.                                                                                   | [04](04-journey-and-calendar.md)                                                            |
+| Journey structure                | One active journey, 77 calendar dates, a fixed journey time zone, and eleven seven-day themes.                                                                                   | [04](04-journey-and-calendar.md)                                                            |
+| Daily formation content          | Assigned Scripture, in-app passage text, a short devotional, a prayer prompt, a reflection question, and an optional intention invitation for every day.                         | [06](06-scripture-and-daily-content.md)                                                     |
+| Weekly guidance                  | A full-course theme overview, a weekly introduction when that week begins, and a weekly review integrated into the seventh day's reflection.                                     | [06](06-scripture-and-daily-content.md), [07](07-eleven-week-formation-plan.md)             |
+| Daily completion                 | Mark or unmark each of five practices; show partial and full completion without automatic spiritual judgments.                                                                   | [05](05-daily-practices.md)                                                                 |
+| Practice changes                 | Replace one or both optional practices beginning on the next journey day; preserve earlier assignments.                                                                          | [05](05-daily-practices.md)                                                                 |
+| Written intention and reflection | Optional private writing associated with a journey day; review, edit, and delete it.                                                                                             | [10](10-progress-history-and-reflections.md)                                                |
+| Progress                         | Day number, five-practice progress, a day grid with a readable list alternative, and modest personal statistics.                                                                 | [10](10-progress-history-and-reflections.md)                                                |
+| Historical days                  | Review and update eligible past days, including all 77 days of a completed journey.                                                                                              | [04](04-journey-and-calendar.md), [10](10-progress-history-and-reflections.md)              |
+| Early ending                     | Explicit confirmation, retained history, accurate early-ended status, and no resumption of that journey.                                                                         | [04](04-journey-and-calendar.md)                                                            |
+| Completion                       | Automatic recognition after the final calendar day, an honest summary, and an invitation to continue.                                                                            | [04](04-journey-and-calendar.md), [10](10-progress-history-and-reflections.md)              |
+| Repeat journeys                  | Start a separate new journey after the previous one has ended; retain earlier journeys. The same fixed course is used in V1.                                                     | [04](04-journey-and-calendar.md)                                                            |
+| Reminders                        | Optional morning and evening reminders with participant-selected times and simple controls.                                                                                      | [12](12-reminders-and-reliable-use.md)                                                      |
+| Reliable everyday use            | Continue an established journey without internet on a prepared phone; protect recorded work across interruptions; clearly explain what is and is not safely available elsewhere. | [12](12-reminders-and-reliable-use.md)                                                      |
+| Readability                      | Light and dark appearance, readable text, larger-text support, accessible controls, and an approachable reading experience.                                                      | [13](13-privacy-safety-and-accessibility.md)                                                |
+| Help and privacy                 | Explain the product, report a problem or content concern, view privacy information and Scripture acknowledgments, and manage personal information.                               | [11](11-pages-and-navigation.md), [13](13-privacy-safety-and-accessibility.md)              |
 
 ## Scripture availability is a release condition, not a hidden scope substitution
 
@@ -45,23 +45,23 @@ The full daily content must be written and reviewed before release. An editorial
 
 ## Explicitly not V1
 
-| Capability | Status and boundary |
-| --- | --- |
-| Private communities | **Future — committed direction.** No community creation, invitations, group progress, shared prayer requests, or discussions in V1. |
-| Group-led journeys | **Future — committed direction.** A later shared schedule must preserve private personal records. |
-| Scheduled future start | **Future — possible.** V1 starts immediately when confirmed. |
-| Multiple content tracks or varied repeat journeys | **Future — possible.** V1 has one fixed course, not a daily reading marketplace or randomized selection. |
-| Donation button | **Future — possible.** Any support must be voluntary, unobtrusive, and unrelated to access or spiritual status. |
-| Journal text search | **Future — possible.** V1 has chronological browsing and a journey filter, not full-text search. |
-| Bookmarks and favorites | **Future — possible.** No separate saved-passages, favorite-days, or favorite-reflections collection in V1. |
-| Personal export or printable journey book | **Future — possible.** Personal writing remains viewable in V1; a dedicated download/export experience is not promised. |
-| Dedicated prayer journal | **Future — possible.** V1 provides a prayer prompt and completion marker, not a separate prayer-entry or answered-prayer system. |
+| Capability                                         | Status and boundary                                                                                                                                       |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Private communities                                | **Future — committed direction.** No community creation, invitations, group progress, shared prayer requests, or discussions in V1.                       |
+| Group-led journeys                                 | **Future — committed direction.** A later shared schedule must preserve private personal records.                                                         |
+| Scheduled future start                             | **Future — possible.** V1 starts immediately when confirmed.                                                                                              |
+| Multiple content tracks or varied repeat journeys  | **Future — possible.** V1 has one fixed course, not a daily reading marketplace or randomized selection.                                                  |
+| Donation button                                    | **Future — possible.** Any support must be voluntary, unobtrusive, and unrelated to access or spiritual status.                                           |
+| Journal text search                                | **Future — possible.** V1 has chronological browsing and a journey filter, not full-text search.                                                          |
+| Bookmarks and favorites                            | **Future — possible.** No separate saved-passages, favorite-days, or favorite-reflections collection in V1.                                               |
+| Personal export or printable journey book          | **Future — possible.** Personal writing remains viewable in V1; a dedicated download/export experience is not promised.                                   |
+| Dedicated prayer journal                           | **Future — possible.** V1 provides a prayer prompt and completion marker, not a separate prayer-entry or answered-prayer system.                          |
 | Audio recordings, full Bible browsing, study tools | **Future — possible.** Accessible reading is required; a built-in audio Bible, commentary library, passage search, highlighting, and note system are not. |
-| Translated app experiences | **Future — possible.** The initial content and interface are in English. A list of English Bible translations is not multilingual app support. |
-| Child profiles and parent-managed accounts | **Outside V1.** Families may participate alongside one another, but V1 does not manage children's independent journals under a parent account. |
-| Photo, video, or voice journal attachments | **Outside V1.** Private writing is text only. |
-| Profile pictures and detailed biographies | **Outside V1.** The personal experience does not require them. |
-| Standalone private messages or live chat | **Outside V1 and not a committed future requirement.** Future communities are not permission to add unrestricted messaging. |
+| Translated app experiences                         | **Future — possible.** The initial content and interface are in English. A list of English Bible translations is not multilingual app support.            |
+| Child profiles and parent-managed accounts         | **Outside V1.** Families may participate alongside one another, but V1 does not manage children's independent journals under a parent account.            |
+| Photo, video, or voice journal attachments         | **Outside V1.** Private writing is text only.                                                                                                             |
+| Profile pictures and detailed biographies          | **Outside V1.** The personal experience does not require them.                                                                                            |
+| Standalone private messages or live chat           | **Outside V1 and not a committed future requirement.** Future communities are not permission to add unrestricted messaging.                               |
 
 ## Prohibited in every version
 

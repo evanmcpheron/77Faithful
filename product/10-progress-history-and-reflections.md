@@ -28,13 +28,13 @@ A participant can inspect their own progress without being compared with anyone 
 
 V1 may show the following defined statistics in the journey's secondary progress area. In this baseline, these modest statistics are included; they do not create a separate analytics experience.
 
-| Statistic | Exact meaning | Required qualification |
-| --- | --- | --- |
-| Fully completed days | Number of eligible days with all five practices currently marked complete. | Does not mean those were the only spiritually meaningful days. |
-| Practices marked complete | Total completion markers across eligible days in this journey. | Counts declarations, not observed or evaluated spiritual acts. |
-| Current complete-day streak | Consecutive fully completed days at the current end of the record, using the rule below. Shown only for an active journey. | Based on recorded days, including later edits; not verified on-time completion. |
-| Longest complete-day streak | Longest consecutive run of fully completed days within this journey. | A personal historical fact, not an award or rank. |
-| Written reflections | Number of days with a saved, nonempty reflection. | Does not include an intention-only entry, a draft, or repeated edits; writing is optional. |
+| Statistic                   | Exact meaning                                                                                                              | Required qualification                                                                     |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Fully completed days        | Number of eligible days with all five practices currently marked complete.                                                 | Does not mean those were the only spiritually meaningful days.                             |
+| Practices marked complete   | Total completion markers across eligible days in this journey.                                                             | Counts declarations, not observed or evaluated spiritual acts.                             |
+| Current complete-day streak | Consecutive fully completed days at the current end of the record, using the rule below. Shown only for an active journey. | Based on recorded days, including later edits; not verified on-time completion.            |
+| Longest complete-day streak | Longest consecutive run of fully completed days within this journey.                                                       | A personal historical fact, not an award or rank.                                          |
+| Written reflections         | Number of days with a saved, nonempty reflection.                                                                          | Does not include an intention-only entry, a draft, or repeated edits; writing is optional. |
 
 V1 does not show a spiritual score, a weighted practice score, a completion percentage as a measure of faith, or a comparison percentile. No cross-journey lifetime streak is created.
 
@@ -54,28 +54,28 @@ After a journey completes or ends early, its summary may show its longest run bu
 
 ### Examples
 
-| Situation | Result |
-| --- | --- |
-| Days 1–4 are complete; Day 5 is still in progress. | The current streak remains 4 during Day 5. |
-| Day 5 becomes complete. | The current streak becomes 5. |
-| Day 5 stays incomplete and Day 6 begins. | The current streak becomes 0 until a new complete day begins a new run. |
-| Day 6 becomes complete while Day 5 remains incomplete. | The current streak is 1. |
-| The participant later completes Day 5's record and Days 1–6 are all complete. | The recorded current streak becomes 6, with the historical-update qualification. |
-| A complete-day marker is accidentally cleared and then restored. | Statistics reflect the current corrected record; no permanent penalty is imposed. |
+| Situation                                                                     | Result                                                                            |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Days 1–4 are complete; Day 5 is still in progress.                            | The current streak remains 4 during Day 5.                                        |
+| Day 5 becomes complete.                                                       | The current streak becomes 5.                                                     |
+| Day 5 stays incomplete and Day 6 begins.                                      | The current streak becomes 0 until a new complete day begins a new run.           |
+| Day 6 becomes complete while Day 5 remains incomplete.                        | The current streak is 1.                                                          |
+| The participant later completes Day 5's record and Days 1–6 are all complete. | The recorded current streak becomes 6, with the historical-update qualification.  |
+| A complete-day marker is accidentally cleared and then restored.              | Statistics reflect the current corrected record; no permanent penalty is imposed. |
 
 No alert says that the participant will lose God's favor, lose their entire journey, or disappoint a group by interrupting a streak.
 
 ## Day states in the overview
 
-| State | Suitable label | Interaction |
-| --- | --- | --- |
-| Current, no practices marked | Today · 0 of 5 | Open today's experience. |
-| Current or historical, partially complete | 3 of 5 practices complete | Open and continue or update the day. |
-| Current or historical, fully complete | All five practices complete | Open and review; corrections remain possible. |
-| Historical, no practices marked | No practices marked complete | Open and review or update without a failure label. |
-| Future within an active journey | Available on [date] | Explain the date; do not reveal detailed content. |
-| Beyond an early ending | Not reached · journey ended early | Explain that these days did not become part of the reached history. |
-| Temporarily unavailable on this phone | Connect to make this day available | Explain availability without calling it an empty or missing historical record. |
+| State                                     | Suitable label                     | Interaction                                                                    |
+| ----------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------ |
+| Current, no practices marked              | Today · 0 of 5                     | Open today's experience.                                                       |
+| Current or historical, partially complete | 3 of 5 practices complete          | Open and continue or update the day.                                           |
+| Current or historical, fully complete     | All five practices complete        | Open and review; corrections remain possible.                                  |
+| Historical, no practices marked           | No practices marked complete       | Open and review or update without a failure label.                             |
+| Future within an active journey           | Available on [date]                | Explain the date; do not reveal detailed content.                              |
+| Beyond an early ending                    | Not reached · journey ended early  | Explain that these days did not become part of the reached history.            |
+| Temporarily unavailable on this phone     | Connect to make this day available | Explain availability without calling it an empty or missing historical record. |
 
 Calendar color alone must never be the only way to understand these distinctions.
 

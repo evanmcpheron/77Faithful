@@ -14,15 +14,15 @@ V1 is a guided reading experience, not a full Bible-study application. It does n
 
 ## What every day contains
 
-| Content element | Purpose | Participant obligation |
-| --- | --- | --- |
-| Day number, title, and theme | Explain where the person is and what the day explores. | Information only. |
-| Assigned Scripture reference and text | Provide the primary biblical reading. | Engaging with the reading is one foundational practice. |
-| Short devotional | Give useful context and invite a grounded response. | Available to read; not a separate practice or required proof of Scripture completion. |
-| Focused prayer prompt | Help the person begin prayer connected to the passage. | Prayer is a foundational practice; using the exact prompt is optional. |
-| Primary reflection question | Encourage honest consideration of Scripture and daily life. | Reflection is a foundational practice; written answers are optional. |
-| Intention invitation | Help the person identify a concrete response for the day. | Optional; never a sixth practice. |
-| Five assigned practice controls | Record the person's declared participation. | Completion remains manual and individual to each practice. |
+| Content element                       | Purpose                                                     | Participant obligation                                                                |
+| ------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Day number, title, and theme          | Explain where the person is and what the day explores.      | Information only.                                                                     |
+| Assigned Scripture reference and text | Provide the primary biblical reading.                       | Engaging with the reading is one foundational practice.                               |
+| Short devotional                      | Give useful context and invite a grounded response.         | Available to read; not a separate practice or required proof of Scripture completion. |
+| Focused prayer prompt                 | Help the person begin prayer connected to the passage.      | Prayer is a foundational practice; using the exact prompt is optional.                |
+| Primary reflection question           | Encourage honest consideration of Scripture and daily life. | Reflection is a foundational practice; written answers are optional.                  |
+| Intention invitation                  | Help the person identify a concrete response for the day.   | Optional; never a sixth practice.                                                     |
+| Five assigned practice controls       | Record the person's declared participation.                 | Completion remains manual and individual to each practice.                            |
 
 ## Assigned readings
 
@@ -40,17 +40,17 @@ The participant chooses from the translations actually approved and available in
 
 ### Intended catalog
 
-| Translation | Status in this product baseline |
-| --- | --- |
-| New American Standard Bible 2020 — NASB 2020 | Explicitly requested by the owner; intended for V1, subject to approved use and availability. |
-| New International Version — NIV | Explicitly requested by the owner; intended for V1, subject to approved use and availability. |
-| New Living Translation — NLT | Explicitly requested by the owner; intended for V1, subject to approved use and availability. |
-| English Standard Version — ESV | Explicitly requested by the owner; intended for V1, subject to approved use and availability. |
-| The Message — MSG | Explicitly requested by the owner; intended for V1, subject to approved use and availability. |
-| King James Version — KJV | Explicitly requested by the owner; intended for V1, subject to appropriate text and use review. |
-| New King James Version — NKJV | Explicitly requested by the owner; intended for V1, subject to approved use and availability. |
-| Christian Standard Bible — CSB | Recommended addition adopted for the intended catalog, subject to approved use and availability. |
-| World English Bible — WEB | Recommended addition adopted for the intended catalog; exact edition and text must still be identified and reviewed. |
+| Translation                                  | Status in this product baseline                                                                                      |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| New American Standard Bible 2020 — NASB 2020 | Explicitly requested by the owner; intended for V1, subject to approved use and availability.                        |
+| New International Version — NIV              | Explicitly requested by the owner; intended for V1, subject to approved use and availability.                        |
+| New Living Translation — NLT                 | Explicitly requested by the owner; intended for V1, subject to approved use and availability.                        |
+| English Standard Version — ESV               | Explicitly requested by the owner; intended for V1, subject to approved use and availability.                        |
+| The Message — MSG                            | Explicitly requested by the owner; intended for V1, subject to approved use and availability.                        |
+| King James Version — KJV                     | Explicitly requested by the owner; intended for V1, subject to appropriate text and use review.                      |
+| New King James Version — NKJV                | Explicitly requested by the owner; intended for V1, subject to approved use and availability.                        |
+| Christian Standard Bible — CSB               | Recommended addition adopted for the intended catalog, subject to approved use and availability.                     |
+| World English Bible — WEB                    | Recommended addition adopted for the intended catalog; exact edition and text must still be identified and reviewed. |
 
 CSB and WEB are new recommendations in this baseline, not claims about unnamed translations selected in an earlier conversation. Other translations are not silently assumed to be included.
 

@@ -12,15 +12,15 @@ Private writing is not content for a social feed. The app must not assume that s
 
 ### Information and visibility in V1
 
-| Information | Why it exists | Who sees it in the participant experience |
-| --- | --- | --- |
-| Contact email | Account access and necessary account communication. | The account holder, not other participants. |
-| Optional preferred name | Personal address and account recognition. | The account holder; there is no public profile. |
-| Journey dates and status | Establish the person's course position and history. | The account holder only. |
-| Selected practices and their changes | Describe the five-part commitment for each day. | The account holder only. |
-| Practice completion | Maintain an honest personal participation record. | The account holder only. |
-| Starting motivation | Revisit the reason for beginning. | The account holder only. |
-| Daily intention and reflection | Retain optional personal writing. | The account holder only. |
+| Information                          | Why it exists                                          | Who sees it in the participant experience         |
+| ------------------------------------ | ------------------------------------------------------ | ------------------------------------------------- |
+| Contact email                        | Account access and necessary account communication.    | The account holder, not other participants.       |
+| Optional preferred name              | Personal address and account recognition.              | The account holder; there is no public profile.   |
+| Journey dates and status             | Establish the person's course position and history.    | The account holder only.                          |
+| Selected practices and their changes | Describe the five-part commitment for each day.        | The account holder only.                          |
+| Practice completion                  | Maintain an honest personal participation record.      | The account holder only.                          |
+| Starting motivation                  | Revisit the reason for beginning.                      | The account holder only.                          |
+| Daily intention and reflection       | Retain optional personal writing.                      | The account holder only.                          |
 | Translation and reminder preferences | Support the person's reading and notification choices. | The account holder through the relevant settings. |
 
 There is no in-app sharing in V1. A person can choose independently to discuss their experience or copy their own writing elsewhere, but that is not automatic app sharing or permission for the app to publish it.

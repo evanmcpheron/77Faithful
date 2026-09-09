@@ -14,48 +14,48 @@ The participant should feel welcome without being told that every choice is equa
 
 ## Preferred terminology
 
-| Term | Meaning and use |
-| --- | --- |
-| **77Faithful** | Exact product name. Do not shorten it to 75Faithful or describe it as a 75-day app. |
-| **Journey** | The complete 77-calendar-day experience. Preferred over challenge or program in participant-facing wording. |
-| **Participant** | Useful in documentation. Address the person as “you” in the app rather than continually calling them a user. |
-| **Daily practices** | The five commitments. “Spiritual disciplines” may be explained in teaching but is not necessary as the routine interface label. |
-| **Foundational practices** | Read Scripture, Pray, and Reflect. These are fixed. |
-| **Additional practices** | The two catalog choices. They are optional at selection, but the selected pair is part of the day's five-practice commitment. |
-| **Complete day** | A day with all five practices marked complete. |
-| **Completed journey** | A journey whose entire 77-day period has ended. It does not mean every practice was complete. |
-| **Ended early** | A journey the participant deliberately stopped before the period ended. |
-| **Past day / historical day** | A reached earlier day that remains available to review and update. |
-| **Future day** | A day not yet available in an active journey. |
-| **Not reached** | A day beyond the reached portion of an early-ended journey. |
-| **Complete-day streak** | A modest personal statistic based on recorded complete days, including later edits. |
-| **Intention** | An optional response the person hopes to practice that day; writing it is optional. |
-| **Reflection** | The foundational act of considering the passage and one's response. It is not synonymous with a written entry. |
-| **Written reflection** | Optional saved text. Use this term when counting writing rather than spiritual participation. |
-| **Devotional** | 77Faithful's short supporting commentary, clearly separate from Scripture. |
-| **Community** | A future private group for shared encouragement and prayer; not a V1 destination. |
+| Term                          | Meaning and use                                                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **77Faithful**                | Exact product name. Do not shorten it to 75Faithful or describe it as a 75-day app.                                             |
+| **Journey**                   | The complete 77-calendar-day experience. Preferred over challenge or program in participant-facing wording.                     |
+| **Participant**               | Useful in documentation. Address the person as “you” in the app rather than continually calling them a user.                    |
+| **Daily practices**           | The five commitments. “Spiritual disciplines” may be explained in teaching but is not necessary as the routine interface label. |
+| **Foundational practices**    | Read Scripture, Pray, and Reflect. These are fixed.                                                                             |
+| **Additional practices**      | The two catalog choices. They are optional at selection, but the selected pair is part of the day's five-practice commitment.   |
+| **Complete day**              | A day with all five practices marked complete.                                                                                  |
+| **Completed journey**         | A journey whose entire 77-day period has ended. It does not mean every practice was complete.                                   |
+| **Ended early**               | A journey the participant deliberately stopped before the period ended.                                                         |
+| **Past day / historical day** | A reached earlier day that remains available to review and update.                                                              |
+| **Future day**                | A day not yet available in an active journey.                                                                                   |
+| **Not reached**               | A day beyond the reached portion of an early-ended journey.                                                                     |
+| **Complete-day streak**       | A modest personal statistic based on recorded complete days, including later edits.                                             |
+| **Intention**                 | An optional response the person hopes to practice that day; writing it is optional.                                             |
+| **Reflection**                | The foundational act of considering the passage and one's response. It is not synonymous with a written entry.                  |
+| **Written reflection**        | Optional saved text. Use this term when counting writing rather than spiritual participation.                                   |
+| **Devotional**                | 77Faithful's short supporting commentary, clearly separate from Scripture.                                                      |
+| **Community**                 | A future private group for shared encouragement and prayer; not a V1 destination.                                               |
 
 Avoid using **restart** for a normal return after missed days. Starting another journey is a separate deliberate action after the previous one ends.
 
 ## Examples of suitable interface language
 
-| Situation | Suitable wording | Avoid |
-| --- | --- | --- |
-| Introducing the app | “A 77-day journey of Scripture, prayer, and faithful daily practice.” | Claims of guaranteed transformation or superior holiness. |
-| Explaining a missed day | “Your journey continues. Earlier days remain available to review.” | “You failed. Start over.” |
-| Partial completion | “3 of 5 practices complete.” | “You only achieved 60% faithfulness.” |
-| No recorded activity | “No practices marked complete.” | “You did nothing for God today.” |
-| All five complete | “All five practices complete.” | “God loves you more because you completed today.” |
-| Reflect without text | “You can reflect without writing here.” | “Write more to prove that you reflected.” |
-| Optional intention | “How might you respond to today's reading?” | “Complete this extra task to finish your day.” |
-| Returning after absence | “Continue with today's reading. Your earlier days are still available.” | “You abandoned your commitment.” |
-| Historical update | “Updated after this day.” | “Verified as completed on time.” |
-| Future day | “This day becomes available on [date].” | Unexplained disabling or a paid unlock offer. |
-| Changing practices | “Your new selections begin on Day [number], [date].” | “Your entire journey now uses these practices.” |
-| Completing the period | “Your 77-day journey has ended. Take time to look back and consider what to continue.” | “You have completed your spiritual growth.” |
-| Ending early | “Your records will remain available. This journey cannot be resumed.” | “Erase your failure and try again.” |
-| Save on one phone | “Saved on this phone. Waiting for a connection.” | “Saved everywhere” before that is true. |
-| Account deletion | “Delete your account and personal journey information?” | A vague “Reset” button with irreversible consequences. |
+| Situation               | Suitable wording                                                                       | Avoid                                                     |
+| ----------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Introducing the app     | “A 77-day journey of Scripture, prayer, and faithful daily practice.”                  | Claims of guaranteed transformation or superior holiness. |
+| Explaining a missed day | “Your journey continues. Earlier days remain available to review.”                     | “You failed. Start over.”                                 |
+| Partial completion      | “3 of 5 practices complete.”                                                           | “You only achieved 60% faithfulness.”                     |
+| No recorded activity    | “No practices marked complete.”                                                        | “You did nothing for God today.”                          |
+| All five complete       | “All five practices complete.”                                                         | “God loves you more because you completed today.”         |
+| Reflect without text    | “You can reflect without writing here.”                                                | “Write more to prove that you reflected.”                 |
+| Optional intention      | “How might you respond to today's reading?”                                            | “Complete this extra task to finish your day.”            |
+| Returning after absence | “Continue with today's reading. Your earlier days are still available.”                | “You abandoned your commitment.”                          |
+| Historical update       | “Updated after this day.”                                                              | “Verified as completed on time.”                          |
+| Future day              | “This day becomes available on [date].”                                                | Unexplained disabling or a paid unlock offer.             |
+| Changing practices      | “Your new selections begin on Day [number], [date].”                                   | “Your entire journey now uses these practices.”           |
+| Completing the period   | “Your 77-day journey has ended. Take time to look back and consider what to continue.” | “You have completed your spiritual growth.”               |
+| Ending early            | “Your records will remain available. This journey cannot be resumed.”                  | “Erase your failure and try again.”                       |
+| Save on one phone       | “Saved on this phone. Waiting for a connection.”                                       | “Saved everywhere” before that is true.                   |
+| Account deletion        | “Delete your account and personal journey information?”                                | A vague “Reset” button with irreversible consequences.    |
 
 Messages containing a date, day number, or count must use the person's actual record. Bracketed wording in this documentation is explanatory and must not appear as unfinished placeholder text in the released app.
 

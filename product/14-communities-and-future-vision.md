@@ -14,16 +14,16 @@ The first release remains a complete personal app. It must not include unfinishe
 
 ## Committed future capabilities
 
-| Capability | Intended participant benefit | Boundary |
-| --- | --- | --- |
-| Private community creation | Let an organizer create a space for known participants. | No payment, paid size tier, or public popularity requirement. |
-| Invitation-based membership | Let people deliberately join the appropriate community. | Do not make journals visible through an invitation or import a person's contacts automatically. |
-| Coordinated group journeys | Let participants follow the same day, theme, assigned passages, and devotional direction together. | Each participant still has a personal record and no more than one active journey. |
-| Shared prayer requests | Let members voluntarily ask their community for prayer. | Separate shared content from the person's private prayer or reflection. |
-| Encouragement and discussion | Support thoughtful responses to readings, weekly themes, and shared requests. | No competitive rankings or compulsory posting. |
-| Group progress | Give an encouraging view of shared participation. | Never expose detailed missed practices or private writing by default. |
-| Organizer announcements | Communicate group plans and relevant reminders. | No advertising, sponsored content, coercive spiritual supervision, or donation pressure. |
-| Member safety controls | Let people report content, control unwanted interactions, and leave a group. | Organizers do not receive unrestricted access to personal information. |
+| Capability                   | Intended participant benefit                                                                       | Boundary                                                                                        |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Private community creation   | Let an organizer create a space for known participants.                                            | No payment, paid size tier, or public popularity requirement.                                   |
+| Invitation-based membership  | Let people deliberately join the appropriate community.                                            | Do not make journals visible through an invitation or import a person's contacts automatically. |
+| Coordinated group journeys   | Let participants follow the same day, theme, assigned passages, and devotional direction together. | Each participant still has a personal record and no more than one active journey.               |
+| Shared prayer requests       | Let members voluntarily ask their community for prayer.                                            | Separate shared content from the person's private prayer or reflection.                         |
+| Encouragement and discussion | Support thoughtful responses to readings, weekly themes, and shared requests.                      | No competitive rankings or compulsory posting.                                                  |
+| Group progress               | Give an encouraging view of shared participation.                                                  | Never expose detailed missed practices or private writing by default.                           |
+| Organizer announcements      | Communicate group plans and relevant reminders.                                                    | No advertising, sponsored content, coercive spiritual supervision, or donation pressure.        |
+| Member safety controls       | Let people report content, control unwanted interactions, and leave a group.                       | Organizers do not receive unrestricted access to personal information.                          |
 
 These capabilities form a product direction. They do not imply that every possible social feature is needed in the first community release.
 
@@ -111,15 +111,15 @@ Future youth participation requires explicit safeguarding decisions before commu
 
 ## Possible later additions — not committed deliveries
 
-| Idea | What would need to remain true |
-| --- | --- |
-| Scheduled personal journey starts | Dates and pre-start behavior must be clear; V1 remains immediate-start only. |
-| Alternative courses or varied repeat journeys | Scripture remains central; a group on one shared journey follows the same selected course. |
-| Journal search or bookmarks | Privacy is preserved; these support review rather than spiritual scoring. |
-| Export or a personal journey keepsake | The participant controls the material included; Scripture reuse must respect the relevant permissions. |
-| Audio reading or additional languages | Accurate content, accessibility, and approved use remain prerequisites. |
-| Personal prayer journal | It stays distinct from shared community prayer requests. |
-| Family or youth account arrangements | Consent, safeguarding, and the child's own privacy are defined explicitly before inclusion. |
+| Idea                                          | What would need to remain true                                                                         |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Scheduled personal journey starts             | Dates and pre-start behavior must be clear; V1 remains immediate-start only.                           |
+| Alternative courses or varied repeat journeys | Scripture remains central; a group on one shared journey follows the same selected course.             |
+| Journal search or bookmarks                   | Privacy is preserved; these support review rather than spiritual scoring.                              |
+| Export or a personal journey keepsake         | The participant controls the material included; Scripture reuse must respect the relevant permissions. |
+| Audio reading or additional languages         | Accurate content, accessibility, and approved use remain prerequisites.                                |
+| Personal prayer journal                       | It stays distinct from shared community prayer requests.                                               |
+| Family or youth account arrangements          | Consent, safeguarding, and the child's own privacy are defined explicitly before inclusion.            |
 
 ## Optional support for 77Faithful
 

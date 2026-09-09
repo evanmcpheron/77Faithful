@@ -42,12 +42,12 @@ If the participant travels during that period, those dates remain attached to th
 
 ## 4. Journey states
 
-| State | What it means | What the participant can do |
-| --- | --- | --- |
-| Not started | The participant has no active journey and has not confirmed a new one. Setup may be partly complete. | Learn about the product, finish setup, review previous journeys, or start when ready. |
-| Active | Today falls within Day 1 through Day 77, and the participant has not ended the journey early. | Use today and eligible historical days, change future optional-practice selections, and review progress. |
-| Completed | The entire Day 77 calendar date has ended without the journey being ended early. | Review the summary, view and update all 77 historical days, and start a separate journey. |
-| Ended early | The participant explicitly stopped the journey before its scheduled period ended. | Review the accurate early-ended summary, update eligible historical days through the ending day, and start a separate journey. |
+| State       | What it means                                                                                        | What the participant can do                                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Not started | The participant has no active journey and has not confirmed a new one. Setup may be partly complete. | Learn about the product, finish setup, review previous journeys, or start when ready.                                          |
+| Active      | Today falls within Day 1 through Day 77, and the participant has not ended the journey early.        | Use today and eligible historical days, change future optional-practice selections, and review progress.                       |
+| Completed   | The entire Day 77 calendar date has ended without the journey being ended early.                     | Review the summary, view and update all 77 historical days, and start a separate journey.                                      |
+| Ended early | The participant explicitly stopped the journey before its scheduled period ended.                    | Review the accurate early-ended summary, update eligible historical days through the ending day, and start a separate journey. |
 
 V1 has no scheduled, paused, frozen, or suspended journey state. Leaving the app unused does not pause the calendar. Closing the app, signing out, or losing internet does not end a journey.
 

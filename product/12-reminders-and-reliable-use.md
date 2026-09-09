@@ -120,13 +120,13 @@ Once the deletion is known on a phone, the app must stop access to the deleted a
 
 ## Useful unavailable states
 
-| Situation | What the person should understand | What remains possible |
-| --- | --- | --- |
-| No connection during normal prepared use | The journey can continue; changes are currently saved on this phone. | Core daily reading, practice recording, and writing. |
-| No connection on a newly signed-in phone | This phone does not yet have the necessary journey material. | Clear explanation and retry when connected; no false empty history. |
-| Translation change cannot finish | The replacement is not yet ready. | Continue using the current available translation or a personal Bible. |
-| A save cannot be retained | The action did not safely complete. | Preserve the visible work, retry, or copy writing when possible. |
-| Start confirmation is uncertain | The app is checking whether the journey was created. | Avoid duplicate starts; present the confirmed existing journey when known. |
-| Work differs between phones | Both versions exist and need an intentional choice. | Review and retain the appropriate writing without silent loss. |
+| Situation                                | What the person should understand                                    | What remains possible                                                      |
+| ---------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| No connection during normal prepared use | The journey can continue; changes are currently saved on this phone. | Core daily reading, practice recording, and writing.                       |
+| No connection on a newly signed-in phone | This phone does not yet have the necessary journey material.         | Clear explanation and retry when connected; no false empty history.        |
+| Translation change cannot finish         | The replacement is not yet ready.                                    | Continue using the current available translation or a personal Bible.      |
+| A save cannot be retained                | The action did not safely complete.                                  | Preserve the visible work, retry, or copy writing when possible.           |
+| Start confirmation is uncertain          | The app is checking whether the journey was created.                 | Avoid duplicate starts; present the confirmed existing journey when known. |
+| Work differs between phones              | Both versions exist and need an intentional choice.                  | Review and retain the appropriate writing without silent loss.             |
 
 A participant should never need to understand the app's internal workings to decide what to do next.

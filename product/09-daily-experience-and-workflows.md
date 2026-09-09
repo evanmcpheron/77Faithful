@@ -8,7 +8,7 @@ This document follows people through the product in ordinary language. The speci
 
 **Starting situation:** The person has never used 77Faithful.
 
-They open Login, with account-entry choices and access to About & Help and Weekly Themes. Concise product context and the available introduction explain that the app is a free, biblically based, 77-day journey with five daily practices. They can understand the purpose and view the broad eleven-week progression before creating an account or committing; no separate Welcome destination is required.
+They open Sign In, with account-entry choices and access to About & Help and Weekly Themes. Concise product context and the available introduction explain that the app is a free, biblically based, 77-day journey with five daily practices. They can understand the purpose and view the broad eleven-week progression before creating an account or committing; no separate Welcome destination is required.
 
 They create or access a personal account and confirm their email. They learn the three foundational practices, choose two distinct additional practices, and select an available Bible translation. They may record why they are beginning and may choose reminder times, but neither writing nor reminders are required.
 
@@ -202,7 +202,7 @@ Settings explains how to enable reminders later. No notification is used to sham
 
 **Starting situation:** The participant is finished using a phone that someone else may use.
 
-They select Sign out. If all saved work is protected for the account, sign-out returns to Login with access to public product information and removes access to private pages on that phone.
+They select Sign out. If all saved work is protected for the account, sign-out returns to Sign In with access to public product information and removes access to private pages on that phone.
 
 If changes exist only on the phone, the app explains which work may be lost. The person may remain signed in to reconnect and protect it, or explicitly discard the unprotected changes and sign out.
 

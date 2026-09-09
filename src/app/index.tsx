@@ -128,7 +128,7 @@ const WelcomeScreen = () => {
             </WelcomeButton>
           </Link>
 
-          <Link href="/login" asChild>
+          <Link href="/sign-in" asChild>
             <WelcomeButton appearance="Outlined">
               <Text
                 color="#FFFFFF"

@@ -20,9 +20,9 @@ Today is the default destination for a signed-in participant with an active jour
 
 ## Overall flow
 
-**First visit:** Login with account-entry choices and access to product information → account access and confirmation → one guided journey setup containing introduction, practice selection, translation selection, optional motivation, optional reminders, and review and start → Today. Product introduction and the broad theme overview remain available before account creation and commitment.
+**First visit:** Sign In with account-entry choices and access to product information → account access and confirmation → one guided journey setup containing introduction, practice selection, translation selection, optional motivation, optional reminders, and review and start → Today. Product introduction and the broad theme overview remain available before account creation and commitment.
 
-**Sign-out:** Account → any necessary warning about unprotected work → Login with access to public product information. Completed account deletion also returns to this signed-out experience.
+**Sign-out:** Account → any necessary warning about unprotected work → Sign In with access to public product information. Completed account deletion also returns to this signed-out experience.
 
 **Ordinary use:** Today → Scripture, Prayer, Reflect, or optional-practice guidance → Today.
 
@@ -38,7 +38,7 @@ All journeys remain personal in V1. There is no Community destination, invitatio
 
 The numbers below identify product destinations and interactions for discussion. They are not addresses, files, or instructions for building the app. They may be implemented as guided steps, sections, focused selectors, or confirmations within a destination; the listed information, actions, and states must remain available.
 
-P01's introduction is available through login/account entry and product information, without a separate Welcome destination. P05–P10 form one guided setup flow. P07 also appears as a focused selector over Settings or Scripture; P08 remains an editable journey section accessible from the summary; P09 and P24 are Settings sections with the appropriate setup or reader controls. P17 includes previous journeys and secondary statistics. P18 combines the theme overview and eligible weekly introductions. P19 reuses the day's reflection editor, and P20 combines the summary states. P21 remains secondary, with My Practices and Account as its substantial child areas. P25 combines About and Help while retaining independently accessible Privacy and Scripture Acknowledgments. P26 is a confirmation in the selected journey; P27 retains a dedicated deletion destination. Local saving, deletion, sign-out, and competing-draft confirmations belong to their responsible experience.
+P01's introduction is available through sign-in/account entry and product information, without a separate Welcome destination. P05–P10 form one guided setup flow. P07 also appears as a focused selector over Settings or Scripture; P08 remains an editable journey section accessible from the summary; P09 and P24 are Settings sections with the appropriate setup or reader controls. P17 includes previous journeys and secondary statistics. P18 combines the theme overview and eligible weekly introductions. P19 reuses the day's reflection editor, and P20 combines the summary states. P21 remains secondary, with My Practices and Account as its substantial child areas. P25 combines About and Help while retaining independently accessible Privacy and Scripture Acknowledgments. P26 is a confirmation in the selected journey; P27 retains a dedicated deletion destination. Local saving, deletion, sign-out, and competing-draft confirmations belong to their responsible experience.
 
 ### P01 · Account entry and product introduction
 
@@ -46,15 +46,15 @@ P01's introduction is available through login/account entry and product informat
 
 **Shows:** Product name, concise mission, 77-day structure, five-practice explanation, permanent free access, privacy reassurance, and a way to inspect the broad theme overview.
 
-**Actions and destinations:** Create account or use login through the account-entry experience → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and About & Help → P25. The introduction is available from account entry and product information without requiring a standalone Welcome page.
+**Actions and destinations:** Create account or sign in through the account-entry experience → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and About & Help → P25. The introduction is available from account entry and product information without requiring a standalone Welcome page.
 
 **Important states:** First visit, signed-out return, and arrival after account deletion. Do not display another participant's private name, progress, or writing here.
 
-### P02 · Create account and login
+### P02 · Create account and sign in
 
 **Purpose:** Establish or regain access to the correct personal account.
 
-**Shows:** Clear choices for account creation and login, the information needed for the chosen account-access experience, and recovery help.
+**Shows:** Clear choices for account creation and sign-in, the information needed for the chosen account-access experience, and recovery help.
 
 **Actions and destinations:** Continue through confirmation → P03 when necessary. Recover access → P04. Return → P01. Successful returning access → the appropriate Today or unfinished setup state.
 

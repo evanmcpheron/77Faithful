@@ -1,23 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, YStack } from 'tamagui';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>welcome</Text>
-      <StatusBar style="light" />
-    </View>
+    <YStack flex={1} items="center" justify="center" bg="$background">
+      <Text color="$color">welcome</Text>
+      <StatusBar style="auto" />
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#000000',
-  },
-  text: {
-    color: '#ffffff',
-  },
-});

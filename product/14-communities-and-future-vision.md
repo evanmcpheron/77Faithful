@@ -41,7 +41,7 @@ Membership in several private communities may be allowed later, but it must not 
 
 A coordinated group journey uses one shared course, start date, journey time zone, day numbering, and weekly progression. Members may choose different available Bible translations while reading the same assigned references.
 
-Each person keeps the three foundational practices and chooses their own two additional practices. A group organizer cannot remove Scripture, prayer, or reflection or require the whole group to adopt an unsuitable physical or financial practice.
+Each person keeps the three foundational practices and chooses their own two to four additional practices. A group organizer cannot remove Scripture, prayer, or reflection or require the whole group to adopt an unsuitable physical or financial practice.
 
 Coordinating a future group may require agreeing on a start date beforehand. That is future group behavior, not a reason to add scheduled personal starts to V1.
 

@@ -6,7 +6,7 @@
 
 ## Before asking for a commitment
 
-Someone opening 77Faithful for the first time should understand what it is before being asked to start a journey. The introduction explains the mission, 77-day duration, five practices, eleven themes, and faithfulness-over-perfection approach in ordinary language.
+Someone opening 77Faithful for the first time should understand what it is before being asked to start a journey. The introduction explains the mission, 77-day duration, five to seven practices, eleven themes, and faithfulness-over-perfection approach in ordinary language.
 
 The signed-out experience begins at Sign In, with access to Create Account, Recover Access, About & Help, and Weekly Themes. Concise product context and access to the introduction remain available before account creation and journey commitment; a separate Welcome destination is not required.
 
@@ -44,7 +44,7 @@ Journey setup is one guided flow with internal steps, including review and delib
 
 ### Step 1 · Understand the commitment
 
-Explain the three foundational practices and that two additional practices will be chosen. State that the period lasts 77 calendar days, not 77 perfect days. Explain that missed days remain in the history and the calendar continues.
+Explain the three foundational practices and that two to four additional practices will be chosen. State that the period lasts 77 calendar days, not 77 perfect days. Explain that missed days remain in the history and the calendar continues.
 
 Show the eleven-week progression briefly. Do not turn this introduction into eleven compulsory lessons or require the person to read all future content.
 
@@ -54,11 +54,11 @@ Let the person create or access their account and confirm their email as needed.
 
 Account creation and email confirmation do not start Day 1. If the person leaves at this point, no journey days begin passing.
 
-### Step 3 · Choose two additional practices
+### Step 3 · Choose two to four additional practices
 
-Show the catalog with practical descriptions and suitability boundaries. Keep the three required practices visible so the person understands the complete five-part commitment.
+Show the catalog with practical descriptions and suitability boundaries. Keep the three required practices visible so the person understands the complete daily commitment.
 
-Exactly two distinct selections are required. The person can change their selections before starting. No written goal or reason is required.
+Two to four distinct selections are required. The person can change their selections before starting. No written goal or reason is required.
 
 ### Step 4 · Choose an available Bible translation
 
@@ -84,7 +84,7 @@ Reminders can also be configured later in Settings. They do not need to be enabl
 
 ### Step 7 · Review and start
 
-Show the five practices, selected translation, start date, final-day date, and fixed journey time zone. Include a concise statement that days continue after an absence and that the optional practices can be changed for later days.
+Show the daily practices, selected translation, start date, final-day date, and fixed journey time zone. Include a concise statement that days continue after an absence and that the optional practices can be changed for later days.
 
 The action is **Start my journey**. Until that action is confirmed, there is no active journey and no countdown.
 
@@ -94,7 +94,7 @@ If another active journey is discovered, the app takes the person to that journe
 
 ## Entering Day 1
 
-After confirmation, Today shows Day 1, the first week's theme, its introduction, the assigned Scripture, and the five practices. A brief orientation may point out the reading and optional intention, but the participant should be able to begin immediately.
+After confirmation, Today shows Day 1, the first week's theme, its introduction, the assigned Scripture, and the daily practices. A brief orientation may point out the reading and optional intention, but the participant should be able to begin immediately.
 
 The app explains when the journey is ready to read and record without internet. Starting the calendar and finishing preparation of the reading material are distinct statuses; the participant must not be misled about either.
 

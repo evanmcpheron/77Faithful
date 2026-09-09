@@ -10,7 +10,7 @@ V1 has three primary destinations:
 
 | Destination     | Main purpose                                                                                  |
 | --------------- | --------------------------------------------------------------------------------------------- |
-| **Today**       | Engage with the current day's Scripture, prayer, reflection, and five practices.              |
+| **Today**       | Engage with the current day's Scripture, prayer, reflection, and five to seven practices.     |
 | **Journey**     | Understand the current journey, inspect days and weekly themes, and review previous journeys. |
 | **Reflections** | Browse private written intentions and reflections across journeys.                            |
 
@@ -44,7 +44,7 @@ P01's introduction is available through sign-in/account entry and product inform
 
 **Purpose:** Explain the app before account creation or commitment.
 
-**Shows:** Product name, concise mission, 77-day structure, five-practice explanation, permanent free access, privacy reassurance, and a way to inspect the broad theme overview.
+**Shows:** Product name, concise mission, 77-day structure, daily-practice explanation, permanent free access, privacy reassurance, and a way to inspect the broad theme overview.
 
 **Actions and destinations:** Create account or sign in through the account-entry experience → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and About & Help → P25. The introduction is available from account entry and product information without requiring a standalone Welcome page.
 
@@ -92,11 +92,11 @@ P01's introduction is available through sign-in/account entry and product inform
 
 ### P06 · Choose additional practices
 
-**Purpose:** Select exactly two distinct catalog practices.
+**Purpose:** Select two to four distinct catalog practices.
 
 **Shows:** The fixed foundational three, the optional catalog, clear descriptions, current selections, and the count out of two.
 
-**Actions and destinations:** Read a practice description, select or deselect, continue → P07 when the pair is valid, or return to review earlier choices.
+**Actions and destinations:** Read a practice description, select or deselect, continue → P07 when the selection is valid, or return to review earlier choices.
 
 **Important states:** Zero, one, and two choices; an attempted duplicate or third choice; resumed setup. Explain what prevents continuing.
 
@@ -134,7 +134,7 @@ P01's introduction is available through sign-in/account entry and product inform
 
 **Purpose:** Make the commitment and dates explicit before Day 1 begins.
 
-**Shows:** All five practices, translation, start and final-day dates, fixed journey time zone, optional reminder state, and the no-reset explanation.
+**Shows:** All practices, translation, start and final-day dates, fixed journey time zone, optional reminder state, and the no-reset explanation.
 
 **Actions and destinations:** Edit setup choices; select **Start my journey** → P11 after confirmation; leave setup without starting.
 
@@ -144,7 +144,7 @@ P01's introduction is available through sign-in/account entry and product inform
 
 **Purpose:** Serve as the home for the actual current journey day.
 
-**Shows during an active journey:** Day X of 77, journey date, current weekly theme, assigned Scripture reference, five practices with individual states, X of 5 progress, optional intention, and relevant saved-work or reading-availability notices.
+**Shows during an active journey:** Day X of 77, journey date, current weekly theme, assigned Scripture reference, five to seven practices with individual states, X of N progress (N is that day’s assigned total), optional intention, and relevant saved-work or reading-availability notices.
 
 **Actions and destinations:** Read Scripture and devotional → P13. Pray → P14. Reflect or write an intention → P15. Read optional-practice guidance → P16. Inspect the theme → P18. Mark or unmark a practice directly with a separate completion control. Open Journey, Reflections, or Settings.
 
@@ -258,9 +258,9 @@ The intention field does not have a completion checkbox. Starting motivation is 
 
 **Purpose:** Review current optional selections and confirm a valid replacement beginning the next journey day.
 
-**Shows:** The foundational practices, current pair, any upcoming confirmed pair, proposed changes, and exact effective day/date.
+**Shows:** The foundational practices, current selection, any upcoming confirmed selection, proposed changes, and exact effective day/date.
 
-**Actions and destinations:** Choose one or two replacements, confirm, revise or cancel the upcoming pair, or return without changing anything.
+**Actions and destinations:** Choose two to four distinct practices, confirm, revise or cancel the upcoming selection, or return without changing anything.
 
 **Important states:** No change, awaiting confirmation, confirmed next-day change, unavailable connection, Day 77 with no later day, and no active journey. No historical practice reassignment is offered.
 

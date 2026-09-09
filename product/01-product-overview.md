@@ -6,7 +6,7 @@
 
 77Faithful is a free Christian spiritual formation app that helps people intentionally spend time with God and practice their faith through a structured 77-day journey. It is for anyone who wants to develop a stronger relationship with Jesus.
 
-Each day combines Scripture, prayer, reflection, and practical action. The participant always follows three foundational practices—**Read Scripture, Pray, and Reflect**—and chooses two additional practices that fit their circumstances and areas of growth. This creates five daily commitments without requiring everyone to live the same schedule or express their faith in identical ways.
+Each day combines Scripture, prayer, reflection, and practical action. The participant always follows three foundational practices—**Read Scripture, Pray, and Reflect**—and chooses two to four additional practices that fit their circumstances and areas of growth. This creates five to seven daily commitments without requiring everyone to live the same schedule or express their faith in identical ways.
 
 The content follows eleven weekly themes. Each theme builds on the previous themes, beginning with abiding in Christ and continuing through Scripture, prayer, renewal, identity, love, service, stewardship, Christian community, mission, and perseverance.
 
@@ -36,13 +36,12 @@ The spiritual invitation is broad. Independent account eligibility, particularly
 
 ## What a participant commits to
 
-| Daily practice           | What it means in ordinary life                                                                                                   |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| Read Scripture           | Engage with the day's assigned Bible passage, in the app or in a personal Bible. Accessible ways of receiving the passage count. |
-| Pray                     | Intentionally speak to God and make room for attentiveness to Him, with a focused prompt available for guidance.                 |
-| Reflect                  | Consider what the passage and the day's experiences mean for one's response to God. Writing is available but not compulsory.     |
-| First selected practice  | Carry out one additional practice chosen from the catalog.                                                                       |
-| Second selected practice | Carry out a different additional practice chosen from the same catalog.                                                          |
+| Daily practice   | What it means in ordinary life                                                                                                   |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Read Scripture   | Engage with the day's assigned Bible passage, in the app or in a personal Bible. Accessible ways of receiving the passage count. |
+| Pray             | Intentionally speak to God and make room for attentiveness to Him, with a focused prompt available for guidance.                 |
+| Reflect          | Consider what the passage and the day's experiences mean for one's response to God. Writing is available but not compulsory.     |
+| Chosen Practices | Carry out two to four distinct additional practices chosen from the catalog.                                                     |
 
 There are no app-imposed minimum minutes, exercise distances, donation amounts, fasting durations, or word counts. Guidance should be concrete enough to help a person act without pretending the app can determine the quality of their spiritual engagement.
 
@@ -50,7 +49,7 @@ The participant marks completion honestly. Opening a reading, leaving a page on 
 
 ## A typical day
 
-The participant opens **Today** and sees their current journey day, the week's theme, the day's reading, and the five practices. They may set a short intention for how they hope to respond to what they read.
+The participant opens **Today** and sees their current journey day, the week's theme, the day's reading, and the daily practices. They may set a short intention for how they hope to respond to what they read.
 
 They read the Scripture inside the app or use the reference to read in their own Bible. A short devotional offers context and application without replacing the passage. The prayer prompt offers a direction for prayer. The participant marks practices complete as they engage in them.
 
@@ -74,7 +73,7 @@ Scripture is the center of the daily experience, not decoration around a checkli
 
 The purpose of recording participation is accountability and recollection. A participant can look back and remember what they were learning and how they responded. The app does not attach spiritual value to accumulating points, protecting a streak, writing long entries, or spending more time on a screen.
 
-Customization is deliberate but limited. The two additional practices allow the journey to fit real circumstances, while the shared foundation keeps it recognizably the same formation experience.
+Customization is deliberate but limited. The two to four additional practices allow the journey to fit real circumstances, while the shared foundation keeps it recognizably the same formation experience.
 
 ## Why 77 days
 
@@ -84,7 +83,7 @@ The eleven themes provide an organized progression, not eleven ranks of Christia
 
 ## The first release and the longer-term vision
 
-V1 is a complete personal experience: account access, setup, a current journey, all 77 days of reviewed formation content, the five practices, private reflection, progress and history, optional reminders, account controls, and the reliable-use behavior described in this set.
+V1 is a complete personal experience: account access, setup, a current journey, all 77 days of reviewed formation content, the daily practices, private reflection, progress and history, optional reminders, account controls, and the reliable-use behavior described in this set.
 
 Private communities are a committed future direction. Families, friends, Bible studies, small groups, and churches will eventually be able to participate together with encouragement and prayer. That future must protect personal writing and reject competition.
 
@@ -97,3 +96,5 @@ The product is useful when people understand what to do, can participate within 
 Qualitative questions matter: Did the experience help the person engage Scripture? Did it support prayer and a concrete response in daily life? Did it encourage continuing beyond the program? Did the person understand that God's favor was not being earned through the app?
 
 Participation counts can describe use. They cannot establish salvation, holiness, answered prayer, or the depth of a relationship with Jesus.
+
+Numeric examples with a total of five assume two Chosen Practices. Actual daily totals reflect all assigned practices (5–7).

@@ -8,18 +8,18 @@ The scenarios summarize rules from the specialist documents. An example does not
 
 ## Introduction, accounts, and setup
 
-| ID  | Situation                                                             | Expected participant experience                                                                                                  |
-| --- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| A01 | A person opens the app for the first time.                            | They can understand the Christian purpose, 77-day structure, five practices, privacy, and permanent free access before starting. |
-| A02 | A person creates an account but leaves before starting.               | No journey begins and no numbered days pass for an unstarted journey.                                                            |
-| A03 | Email confirmation is incomplete.                                     | The person receives a clear path to finish, correct the address, or return. Start does not silently succeed.                     |
-| A04 | The person selects one optional practice.                             | The app explains that exactly two distinct selections are required.                                                              |
-| A05 | The person tries to select the same practice twice or add a third.    | The invalid pair is not accepted; the explanation is understandable.                                                             |
-| A06 | The person skips motivation and reminders.                            | They can still review and start once the required choices and account steps are complete.                                        |
-| A07 | The review stays open across midnight before Start is selected.       | The displayed actual starting date and final-day date are updated before confirmation.                                           |
-| A08 | Start is selected repeatedly or from two phones.                      | Only one active journey is confirmed, and the participant reaches that journey.                                                  |
-| A09 | A returning participant signs into an account with an active journey. | They reach the actual current day, not a blank account or duplicate setup.                                                       |
-| A10 | A person recovers access or changes their confirmed contact email.    | Their existing journey and private history remain associated with the same account.                                              |
+| ID  | Situation                                                             | Expected participant experience                                                                                                           |
+| --- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| A01 | A person opens the app for the first time.                            | They can understand the Christian purpose, 77-day structure, five to seven practices, privacy, and permanent free access before starting. |
+| A02 | A person creates an account but leaves before starting.               | No journey begins and no numbered days pass for an unstarted journey.                                                                     |
+| A03 | Email confirmation is incomplete.                                     | The person receives a clear path to finish, correct the address, or return. Start does not silently succeed.                              |
+| A04 | The person selects one optional practice.                             | The app explains that two to four distinct selections are required.                                                                       |
+| A05 | The person tries to select the same practice twice or add a fifth.    | The invalid selection is not accepted; the explanation is understandable.                                                                 |
+| A06 | The person skips motivation and reminders.                            | They can still review and start once the required choices and account steps are complete.                                                 |
+| A07 | The review stays open across midnight before Start is selected.       | The displayed actual starting date and final-day date are updated before confirmation.                                                    |
+| A08 | Start is selected repeatedly or from two phones.                      | Only one active journey is confirmed, and the participant reaches that journey.                                                           |
+| A09 | A returning participant signs into an account with an active journey. | They reach the actual current day, not a blank account or duplicate setup.                                                                |
+| A10 | A person recovers access or changes their confirmed contact email.    | Their existing journey and private history remain associated with the same account.                                                       |
 
 ## Calendar and journey behavior
 
@@ -41,7 +41,7 @@ The scenarios summarize rules from the specialist documents. An example does not
 
 | ID  | Situation                                                                             | Expected participant experience                                                                                                |
 | --- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| A22 | The person opens any reached day.                                                     | Exactly five practices appear: the foundational three and the pair assigned to that day.                                       |
+| A22 | The person opens any reached day.                                                     | Five to seven practices appear: the foundational three and the selection assigned to that day.                                 |
 | A23 | The person opens or scrolls through Scripture but does not mark it complete.          | Scripture remains unmarked.                                                                                                    |
 | A24 | The person reads the assigned passage in a printed Bible.                             | They can mark Scripture complete without an in-app reading session.                                                            |
 | A25 | The person reads only the devotional.                                                 | The app does not automatically count Scripture as complete or represent the devotional as the passage itself.                  |
@@ -49,7 +49,7 @@ The scenarios summarize rules from the specialist documents. An example does not
 | A27 | The person reflects without writing.                                                  | Reflect can be marked complete with empty writing fields.                                                                      |
 | A28 | The person saves a reflection but does not mark Reflect complete.                     | The writing is saved; the practice remains unmarked until explicitly changed.                                                  |
 | A29 | The person skips the intention or weekly introduction.                                | These do not add incomplete practices or prevent a complete day.                                                               |
-| A30 | The person completes all five and later clears one marker.                            | The day moves from complete to partial, with updated statistics and no punitive message.                                       |
+| A30 | The person completes all practices and later clears one marker.                       | The day moves from complete to partial, with updated statistics and no punitive message.                                       |
 | A31 | The participant changes translation on a historical day.                              | The displayed text and label change when ready; assigned references, completion, and private wording do not.                   |
 | A32 | A named intended translation is not cleared or not available.                         | It is not presented as a working option or a paid upgrade. A reduced release catalog requires the owner's documented decision. |
 | A33 | A devotional, prompt, or passage has not been finalized for a later day.              | The course is not declared ready for release. A draft title is not accepted as a complete day's formation content.             |
@@ -59,13 +59,13 @@ The scenarios summarize rules from the specialist documents. An example does not
 
 | ID  | Situation                                                              | Expected participant experience                                                                                                        |
 | --- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| A35 | A new optional pair is confirmed on Day 10.                            | It starts on Day 11; Day 10 and earlier days retain their assigned practices.                                                          |
-| A36 | Both optional practices are changed together.                          | The new pair contains two distinct choices, and all earlier days remain unchanged.                                                     |
-| A37 | The upcoming change is canceled before the next journey day.           | The existing pair continues; no extra practice or misleading future change remains.                                                    |
+| A35 | A new optional selection is confirmed on Day 10.                       | It starts on Day 11; Day 10 and earlier days retain their assigned practices.                                                          |
+| A36 | Optional practices are replaced, added, or removed together.           | The new selection contains two to four distinct choices, and all earlier days remain unchanged.                                        |
+| A37 | The upcoming change is canceled before the next journey day.           | The existing selection continues; no extra practice or misleading future change remains.                                               |
 | A38 | A practice becomes unsafe or inappropriate today.                      | The person can stop immediately and leave it incomplete without a reset; the next-day rule does not compel unsafe participation.       |
 | A39 | A participant tries to change practices on Day 77.                     | No replacement for a nonexistent Day 78 is offered. They can choose differently for another journey.                                   |
 | A40 | The participant updates a historical day.                              | Its original date and assigned practices remain; later-update information is shown, and only the relevant journey's statistics change. |
-| A41 | A new journey uses different optional practices from the previous one. | Old days display the previous assignments, not the new pair.                                                                           |
+| A41 | A new journey uses different optional practices from the previous one. | Old days display the previous assignments, not the new selection.                                                                      |
 
 ## Progress, writing, and endings
 
@@ -80,7 +80,7 @@ The scenarios summarize rules from the specialist documents. An example does not
 | A48 | An older reflection is edited.                                        | It stays associated with its original journey date and does not become falsely labeled as today's entry.             |
 | A49 | The participant ends on Day 20.                                       | The summary says Ended early, retains Days 1–20, and labels Days 21–77 as not reached rather than 57 failed days.    |
 | A50 | Real-world dates continue after an early ending.                      | The unreached remainder does not gradually unlock inside that ended journey.                                         |
-| A51 | All five practices are complete early on Day 77.                      | The day is complete, but the 77-day period remains active until that date ends.                                      |
+| A51 | All practices are complete early on Day 77.                           | The day is complete, but the 77-day period remains active until that date ends.                                      |
 | A52 | The full period ends with many incomplete days.                       | The journey becomes completed automatically, with accurate counts and no claim of 77 perfect days.                   |
 | A53 | The person returns after the entire period passed while absent.       | They see the completed period and actual record; the app does not extend or restart it.                              |
 | A54 | A participant reopens Day 77 in a completed journey.                  | The content and eligible editing remain available.                                                                   |
@@ -96,7 +96,7 @@ The scenarios summarize rules from the specialist documents. An example does not
 | A59 | Two phones contain incompatible versions of one reflection.        | Both versions are preserved and the participant can decide what to retain. No private version disappears silently.            |
 | A60 | Signing out would discard phone-only changes.                      | The risk is explained and an explicit choice is required. The next account never receives those changes.                      |
 | A61 | The participant declines reminder permission.                      | The full journey remains usable and the app does not repeatedly pressure them.                                                |
-| A62 | The phone already knows that all five practices are complete.      | It does not deliberately send an incomplete-day reminder for that day.                                                        |
+| A62 | The phone already knows that all assigned practices are complete.  | It does not deliberately send an incomplete-day reminder for that day.                                                        |
 | A63 | A reminder appears on a locked phone.                              | It contains no private journal text, intentions, or sensitive missed-practice details.                                        |
 | A64 | Account deletion is requested but has not completed.               | The displayed status is accurate. Once deletion is known, private access stops and older changes do not recreate the account. |
 | A65 | Another person uses the phone after sign-out.                      | They cannot see the former participant's name, writing, progress, private pages, or personal journey reminders.               |
@@ -113,3 +113,11 @@ When communities are introduced, joining must not expose past journals or start 
 A leader must not be able to purchase private visibility, delete a member's personal history by removing them, or require a donation to participate. Reporting and leaving a group must be available without public shaming.
 
 These are future release conditions, not permission to include incomplete social features in V1.
+
+### Practice selection range
+
+- Zero or one additional practice keeps Continue unavailable with a clear explanation.
+- Two, three, or four distinct additional practices allow Continue and appear in the final review, for totals of five, six, or seven daily practices.
+- A fifth selection is unavailable. Deselecting one of four preserves the other three and allows another choice.
+- Returning from review preserves every selection; reducing the selection to one prevents continuing.
+- Completion requires every practice assigned to that day. Historical totals and journey denominators retain each day’s original assignments after selection changes.

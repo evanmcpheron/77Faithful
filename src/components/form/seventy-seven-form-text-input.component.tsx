@@ -110,9 +110,8 @@ export const SeventySevenFormTextInput = ({
             value={value}
             onBlur={onBlur}
             onChangeText={onChangeText}
-            accessibilityLabel={label ?? placeholder}
-            accessibilityLabelledBy={label ? labelId : undefined}
-            accessibilityHint={hasError ? errorMessage : undefined}
+            aria-label={label ?? placeholder}
+            aria-labelledby={label ? labelId : undefined}
             aria-describedby={hasError ? errorId : undefined}
             aria-invalid={hasError}
           />
@@ -143,9 +142,8 @@ export const SeventySevenFormTextInput = ({
             value={value}
             onBlur={onBlur}
             onChangeText={onChangeText}
-            accessibilityLabel={label ?? placeholder}
-            accessibilityLabelledBy={label ? labelId : undefined}
-            accessibilityHint={hasError ? errorMessage : undefined}
+            aria-label={label ?? placeholder}
+            aria-labelledby={label ? labelId : undefined}
             aria-describedby={hasError ? errorId : undefined}
             aria-invalid={hasError}
           />
@@ -159,8 +157,8 @@ export const SeventySevenFormTextInput = ({
             circular
             disabled={disabled}
             onPress={handlePasswordVisibility}
-            accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}
-            accessibilityRole="button"
+            aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+            role="button"
           >
             <SymbolView
               name={{
@@ -176,7 +174,7 @@ export const SeventySevenFormTextInput = ({
       </XStack>
 
       {errorMessage ? (
-        <SeventySevenText id={errorId} nativeID={errorId} severity={Severity.Error} fontSize="$3">
+        <SeventySevenText id={errorId} severity={Severity.Error} fontSize="$3">
           {errorMessage}
         </SeventySevenText>
       ) : null}

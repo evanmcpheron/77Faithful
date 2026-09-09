@@ -5,7 +5,7 @@
 **Edition:** Initial product baseline · September 8, 2026  
 **Scope:** The complete personal V1 experience, permanent product principles, and clearly separated future community features.
 
-77Faithful is a completely free, biblically based Christian spiritual formation app for anyone who wants to develop a stronger relationship with Jesus. Each participant follows a 77-calendar-day journey with five daily practices: read Scripture, pray, reflect, and complete two additional practices chosen from a provided list. Eleven weekly themes guide the experience. Missing a practice or a day does not erase progress or restart the journey.
+77Faithful is a completely free, biblically based Christian spiritual formation app for anyone who wants to develop a stronger relationship with Jesus. Each participant follows a 77-calendar-day journey with five to seven daily practices: read Scripture, pray, reflect, and complete two to four additional practices chosen from a provided list. Eleven weekly themes guide the experience. Missing a practice or a day does not erase progress or restart the journey.
 
 ## Start here
 
@@ -65,24 +65,24 @@ When a conflict is discovered, identify the exact statements, preserve the owner
 
 ## The product in one page
 
-| Question                               | Answer                                                                                                                                                       |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| What is it?                            | A guided, personal, 77-day journey of Christian spiritual formation.                                                                                         |
-| Who is it for?                         | Anyone seeking a stronger relationship with Jesus, including people beginning, returning to, or growing in faith.                                            |
-| What does someone do every day?        | Read the assigned Scripture, pray, reflect, and practice two selected additional commitments.                                                                |
-| What guides the content?               | Eleven biblical themes, each lasting seven journey days.                                                                                                     |
-| How does it begin?                     | The participant chooses two practices, selects an available Bible translation, reviews the commitment, and selects **Start my journey**. That date is Day 1. |
-| Must everything happen inside the app? | No. The app guides and records participation; Scripture may be read in a personal Bible and practices take place in everyday life.                           |
-| What happens after a missed day?       | The calendar continues. Previous progress remains. The participant may return to earlier eligible days and update their record.                              |
-| What does completion mean?             | The 77-day period has ended. This is distinct from completing all five practices on every day.                                                               |
-| Is the journal public?                 | No. Personal writing is private. There is no in-app sharing in V1.                                                                                           |
-| Is it free?                            | Yes, permanently. No advertisements, subscriptions, paid features, paid content, or paid community access.                                                   |
-| Are groups included?                   | Private communities are a definite future direction, explicitly not V1.                                                                                      |
-| What happens afterward?                | The participant retains their history, can review what they wrote, and may begin another separate journey.                                                   |
+| Question                               | Answer                                                                                                                                                               |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| What is it?                            | A guided, personal, 77-day journey of Christian spiritual formation.                                                                                                 |
+| Who is it for?                         | Anyone seeking a stronger relationship with Jesus, including people beginning, returning to, or growing in faith.                                                    |
+| What does someone do every day?        | Read the assigned Scripture, pray, reflect, and practice two to four selected additional commitments.                                                                |
+| What guides the content?               | Eleven biblical themes, each lasting seven journey days.                                                                                                             |
+| How does it begin?                     | The participant chooses two to four practices, selects an available Bible translation, reviews the commitment, and selects **Start my journey**. That date is Day 1. |
+| Must everything happen inside the app? | No. The app guides and records participation; Scripture may be read in a personal Bible and practices take place in everyday life.                                   |
+| What happens after a missed day?       | The calendar continues. Previous progress remains. The participant may return to earlier eligible days and update their record.                                      |
+| What does completion mean?             | The 77-day period has ended. This is distinct from completing all assigned practices on every day.                                                                   |
+| Is the journal public?                 | No. Personal writing is private. There is no in-app sharing in V1.                                                                                                   |
+| Is it free?                            | Yes, permanently. No advertisements, subscriptions, paid features, paid content, or paid community access.                                                           |
+| Are groups included?                   | Private communities are a definite future direction, explicitly not V1.                                                                                              |
+| What happens afterward?                | The participant retains their history, can review what they wrote, and may begin another separate journey.                                                           |
 
 ## A few important distinctions
 
-A **complete day** means five practices have been marked complete. A **completed journey** means the full 77-day period has elapsed. Neither is a judgment of the person's spiritual maturity or God's favor.
+A **complete day** means every practice assigned to that day has been marked complete. A **completed journey** means the full 77-day period has elapsed. Neither is a judgment of the person's spiritual maturity or God's favor.
 
 The **Reflect practice is required**, but **writing in the app is optional**. The same distinction applies to daily intention: the app offers it, but it is not a sixth commitment.
 

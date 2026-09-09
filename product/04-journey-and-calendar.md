@@ -18,7 +18,7 @@ V1 starts on the date the participant confirms **Start my journey**. Finishing o
 
 There is no date picker for choosing a future or past start. A person who is not ready can leave setup and return later. Their saved setup choices do not reserve a start date.
 
-Before confirmation, the participant sees the five selected practices, selected available Bible translation, today's proposed start date, the projected Day 77 date, and the journey time zone. The review explains that the dates will not move after starting.
+Before confirmation, the participant sees all assigned practices, selected available Bible translation, today's proposed start date, the projected Day 77 date, and the journey time zone. The review explains that the dates will not move after starting.
 
 The journey time zone is the phone's current time zone when the journey starts, shown in a human-readable form such as **New York time**. No location-sharing permission is required as a product condition. A person traveling at setup should be able to understand that starting there fixes the journey to that time zone. V1 does not offer a separate journey-time-zone customization feature.
 
@@ -28,7 +28,7 @@ Starting must be confirmed while connected to the internet. Until the app confir
 
 Day 1 is the starting calendar date in the journey time zone. Day 2 is the following calendar date, and so on. The date for Day 77 is 76 calendar dates after Day 1.
 
-A journey day changes at midnight in the fixed journey time zone. It is not a rolling 24-hour period beginning when the person clicked Start. Starting late in the evening creates a shorter first day; the review should explain that Day 1 ends at midnight in the displayed journey time zone. There is no automatic move to tomorrow and no pressure to finish all five before midnight.
+A journey day changes at midnight in the fixed journey time zone. It is not a rolling 24-hour period beginning when the person clicked Start. Starting late in the evening creates a shorter first day; the review should explain that Day 1 ends at midnight in the displayed journey time zone. There is no automatic move to tomorrow and no pressure to finish all practices before midnight.
 
 Once a journey has started, neither its start date nor its time zone can be edited. Traveling, changing the phone's time zone, or a daylight-saving-time change must not add, remove, repeat, or renumber a journey day.
 
@@ -117,7 +117,7 @@ Ending on the Day 1 date is still an early-ended journey with one reached day. U
 
 ## 10. Reaching Day 77 and finishing the period
 
-Day 77 remains an active day until its date ends in the journey time zone. Completing all five practices early that day completes the day, not the calendar period.
+Day 77 remains an active day until its date ends in the journey time zone. Completing all assigned practices early that day completes the day, not the calendar period.
 
 The participant may read a final-day message and review a preliminary summary on Day 77. The wording should say **Your final day** rather than claim the full period has already elapsed.
 
@@ -140,3 +140,5 @@ The same fixed V1 course is used again. There is no promise of a different readi
 Ending early preserves history. Deleting a written entry removes that writing but does not end the journey. Signing out does not delete the account or its history. Account deletion is a separate, explicitly confirmed process described in Document 13.
 
 V1 does not include a separate delete-whole-journey feature. This avoids presenting accidental history removal as a routine alternative to ending or reviewing a journey. Permanent account deletion remains available.
+
+Numeric examples with a total of five assume two Chosen Practices. Actual daily totals reflect all assigned practices (5–7).

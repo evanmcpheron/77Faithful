@@ -30,7 +30,7 @@ export const SeventySevenFormRadioGroup = ({
   return (
     <YStack gap="$3" opacity={disabled ? 0.5 : 1}>
       {label ? (
-        <SeventySevenText id={groupLabelId} nativeID={groupLabelId} bold>
+        <SeventySevenText id={groupLabelId} bold>
           {label}
         </SeventySevenText>
       ) : null}

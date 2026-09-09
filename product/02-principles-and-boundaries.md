@@ -30,9 +30,9 @@ The product may communicate a real commitment and a clear expectation. Encourage
 
 No screen may imply that app participation earns salvation, blessing, answered prayer, financial prosperity, or greater standing before God.
 
-## 4. Five practices, not an expanding list of obligations
+## 4. Five to seven daily practices
 
-The daily commitment remains exactly five practices: three foundational practices and two selected additional practices.
+The daily commitment remains five to seven practices: three foundational practices and two to four selected additional practices.
 
 A devotional, intention, reminder, weekly introduction, optional written entry, or completion summary must not become a sixth required practice. The product must not quietly add extra requirements through progress calculations or a completion button.
 

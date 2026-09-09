@@ -128,16 +128,16 @@ Prefer grounded encouragement:
 
 Use these terms consistently unless a specific screen has a strong reason not to.
 
-| Concept                           | Preferred term                                                  |
-| --------------------------------- | --------------------------------------------------------------- |
-| A numbered date in the program    | **Day** — e.g. "Day 12"                                         |
-| The five daily items              | **Practices**                                                   |
-| Scripture, prayer, and reflection | **Foundational Practices**                                      |
-| The two user-selected items       | **Chosen Practices**                                            |
-| The full program                  | **77Faithful**, **77 days**, or occasionally **77-day journey** |
-| A finished practice               | **Complete** / **Completed**                                    |
-| A day with unfinished practices   | **Incomplete**                                                  |
-| Consecutive fully completed days  | **Complete-day streak** or **streak** when context is clear     |
+| Concept                             | Preferred term                                                  |
+| ----------------------------------- | --------------------------------------------------------------- |
+| A numbered date in the program      | **Day** — e.g. "Day 12"                                         |
+| The five to seven daily items       | **Practices**                                                   |
+| Scripture, prayer, and reflection   | **Foundational Practices**                                      |
+| The two to four user-selected items | **Chosen Practices**                                            |
+| The full program                    | **77Faithful**, **77 days**, or occasionally **77-day journey** |
+| A finished practice                 | **Complete** / **Completed**                                    |
+| A day with unfinished practices     | **Incomplete**                                                  |
+| Consecutive fully completed days    | **Complete-day streak** or **streak** when context is clear     |
 
 Avoid "failed," "failure," and "broke your streak" as standard product language.
 

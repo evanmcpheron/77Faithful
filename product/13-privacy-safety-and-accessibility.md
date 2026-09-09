@@ -17,7 +17,7 @@ Private writing is not content for a social feed. The app must not assume that r
 | Contact email                        | Account access and necessary account communication.    | The account holder, not other participants.       |
 | Optional preferred name              | Personal address and account recognition.              | The account holder; there is no public profile.   |
 | Journey dates and status             | Establish the person's course position and history.    | The account holder only.                          |
-| Selected practices and their changes | Describe the five-part commitment for each day.        | The account holder only.                          |
+| Selected practices and their changes | Describe the daily commitment for each day.            | The account holder only.                          |
 | Practice completion                  | Maintain an honest personal participation record.      | The account holder only.                          |
 | Starting motivation                  | Revisit the reason for beginning.                      | The account holder only.                          |
 | Daily intention and reflection       | Retain optional personal writing.                      | The account holder only.                          |

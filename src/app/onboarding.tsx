@@ -1,5 +1,3 @@
-import { SeventySevenScreenPlaceholder } from '@77/components/core';
+import { JourneySetupScreen } from '@77/features/journey-setup/journey-setup-screen.component';
 
-const OnboardingScreen = () => <SeventySevenScreenPlaceholder title="Set Up Your Journey" />;
-
-export default OnboardingScreen;
+export default JourneySetupScreen;

@@ -128,7 +128,7 @@ export const OnboardingStepperDemo = () => {
       return;
     }
 
-    if (selectedPractices.length >= 2) {
+    if (selectedPractices.length >= 4) {
       return;
     }
 
@@ -175,7 +175,7 @@ export const OnboardingStepperDemo = () => {
   const stepTitles = [
     'A faithful rhythm, one day at a time',
     'Keep your journey safe',
-    'Choose two practices',
+    'Choose 2–4 additional practices',
     'Choose your Bible translation',
     'What are you hoping to grow in?',
     'Would reminders help?',
@@ -184,7 +184,7 @@ export const OnboardingStepperDemo = () => {
   const stepDescriptions = [
     'Learn what the 77-day journey asks of you before you decide to begin.',
     'An account lets you return to your private journey and reflections.',
-    'These join Scripture, prayer, and reflection as your five daily practices.',
+    'These join Scripture, prayer, and reflection as your daily practices.',
     'You can change this later or read the same passage in your own Bible.',
     'This private note is for you to revisit at the end of the journey.',
     'Both reminders are optional and can be changed later in Settings.',
@@ -194,7 +194,8 @@ export const OnboardingStepperDemo = () => {
     currentStep === OnboardingStep.Motivation || currentStep === OnboardingStep.Reminders;
   const isContinueDisabled =
     (currentStep === OnboardingStep.Account && (!emailAddress || !password)) ||
-    (currentStep === OnboardingStep.Practices && selectedPractices.length !== 2) ||
+    (currentStep === OnboardingStep.Practices &&
+      (selectedPractices.length < 2 || selectedPractices.length > 4)) ||
     (currentStep === OnboardingStep.Translation && !selectedTranslation);
 
   return (
@@ -216,7 +217,7 @@ export const OnboardingStepperDemo = () => {
             <SeventySevenText bold>Your daily foundation</SeventySevenText>
             <SeventySevenText>Read Scripture · Pray · Reflect</SeventySevenText>
             <SeventySevenText color="$textSecondary">
-              You will choose two more practices that fit your life.
+              You will choose two to four more practices that fit your life.
             </SeventySevenText>
           </SeventySevenCard>
           <YStack gap="$3">
@@ -260,10 +261,10 @@ export const OnboardingStepperDemo = () => {
 
       {currentStep === OnboardingStep.Practices ? (
         <YStack gap="$3">
-          <SeventySevenText bold>{selectedPractices.length} of 2 selected</SeventySevenText>
+          <SeventySevenText bold>{selectedPractices.length} selected · Choose 2–4</SeventySevenText>
           {optionalPractices.map((practice) => {
             const isSelected = selectedPractices.includes(practice.id);
-            const isDisabled = !isSelected && selectedPractices.length === 2;
+            const isDisabled = !isSelected && selectedPractices.length >= 4;
 
             return (
               <SeventySevenCard key={practice.id} gap="$2" opacity={isDisabled ? 0.55 : 1}>
@@ -343,7 +344,7 @@ export const OnboardingStepperDemo = () => {
         <YStack gap="$3">
           <SeventySevenCard p="$4">
             <ReviewRow
-              label="Five daily practices"
+              label={`${selectedPractices.length + 3} daily practices`}
               value={`Read Scripture, Pray, Reflect, ${selectedPracticeNames.join(', ')}`}
               onChange={() => setCurrentStep(OnboardingStep.Practices)}
             />

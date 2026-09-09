@@ -10,30 +10,30 @@ The product should balance encouragement, reflection, practical accountability, 
 
 Use ordinary, respectful language. Explain what is happening and what the person can do next. Acknowledge an incomplete record without judging the person's faith. Invite a response without claiming to speak personally for God.
 
-The participant should feel welcome without being told that every choice is equally wise or that participation has no commitments. The app can state the five practices clearly while preserving the distinction between effort and perfection.
+The participant should feel welcome without being told that every choice is equally wise or that participation has no commitments. The app can state the daily practices clearly while preserving the distinction between effort and perfection.
 
 ## Preferred terminology
 
-| Term                          | Meaning and use                                                                                                                 |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| **77Faithful**                | Exact product name. Do not shorten it to 75Faithful or describe it as a 75-day app.                                             |
-| **Journey**                   | The complete 77-calendar-day experience. Preferred over challenge or program in participant-facing wording.                     |
-| **Participant**               | Useful in documentation. Address the person as “you” in the app rather than continually calling them a user.                    |
-| **Daily practices**           | The five commitments. “Spiritual disciplines” may be explained in teaching but is not necessary as the routine interface label. |
-| **Foundational practices**    | Read Scripture, Pray, and Reflect. These are fixed.                                                                             |
-| **Additional practices**      | The two catalog choices. They are optional at selection, but the selected pair is part of the day's five-practice commitment.   |
-| **Complete day**              | A day with all five practices marked complete.                                                                                  |
-| **Completed journey**         | A journey whose entire 77-day period has ended. It does not mean every practice was complete.                                   |
-| **Ended early**               | A journey the participant deliberately stopped before the period ended.                                                         |
-| **Past day / historical day** | A reached earlier day that remains available to review and update.                                                              |
-| **Future day**                | A day not yet available in an active journey.                                                                                   |
-| **Not reached**               | A day beyond the reached portion of an early-ended journey.                                                                     |
-| **Complete-day streak**       | A modest personal statistic based on recorded complete days, including later edits.                                             |
-| **Intention**                 | An optional response the person hopes to practice that day; writing it is optional.                                             |
-| **Reflection**                | The foundational act of considering the passage and one's response. It is not synonymous with a written entry.                  |
-| **Written reflection**        | Optional saved text. Use this term when counting writing rather than spiritual participation.                                   |
-| **Devotional**                | 77Faithful's short supporting commentary, clearly separate from Scripture.                                                      |
-| **Community**                 | A future private group for shared encouragement and prayer; not a V1 destination.                                               |
+| Term                          | Meaning and use                                                                                                                          |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **77Faithful**                | Exact product name. Do not shorten it to 75Faithful or describe it as a 75-day app.                                                      |
+| **Journey**                   | The complete 77-calendar-day experience. Preferred over challenge or program in participant-facing wording.                              |
+| **Participant**               | Useful in documentation. Address the person as “you” in the app rather than continually calling them a user.                             |
+| **Daily practices**           | The five to seven commitments. “Spiritual disciplines” may be explained in teaching but is not necessary as the routine interface label. |
+| **Foundational practices**    | Read Scripture, Pray, and Reflect. These are fixed.                                                                                      |
+| **Additional practices**      | The two to four catalog choices. Any catalog practice may be chosen, but every selected practice is part of the daily commitment.        |
+| **Complete day**              | A day with all assigned practices marked complete.                                                                                       |
+| **Completed journey**         | A journey whose entire 77-day period has ended. It does not mean every practice was complete.                                            |
+| **Ended early**               | A journey the participant deliberately stopped before the period ended.                                                                  |
+| **Past day / historical day** | A reached earlier day that remains available to review and update.                                                                       |
+| **Future day**                | A day not yet available in an active journey.                                                                                            |
+| **Not reached**               | A day beyond the reached portion of an early-ended journey.                                                                              |
+| **Complete-day streak**       | A modest personal statistic based on recorded complete days, including later edits.                                                      |
+| **Intention**                 | An optional response the person hopes to practice that day; writing it is optional.                                                      |
+| **Reflection**                | The foundational act of considering the passage and one's response. It is not synonymous with a written entry.                           |
+| **Written reflection**        | Optional saved text. Use this term when counting writing rather than spiritual participation.                                            |
+| **Devotional**                | 77Faithful's short supporting commentary, clearly separate from Scripture.                                                               |
+| **Community**                 | A future private group for shared encouragement and prayer; not a V1 destination.                                                        |
 
 Avoid using **restart** for a normal return after missed days. Starting another journey is a separate deliberate action after the previous one ends.
 
@@ -45,7 +45,7 @@ Avoid using **restart** for a normal return after missed days. Starting another 
 | Explaining a missed day | “Your journey continues. Earlier days remain available to review.”                     | “You failed. Start over.”                                 |
 | Partial completion      | “3 of 5 practices complete.”                                                           | “You only achieved 60% faithfulness.”                     |
 | No recorded activity    | “No practices marked complete.”                                                        | “You did nothing for God today.”                          |
-| All five complete       | “All five practices complete.”                                                         | “God loves you more because you completed today.”         |
+| All practices complete  | “All practices complete.”                                                              | “God loves you more because you completed today.”         |
 | Reflect without text    | “You can reflect without writing here.”                                                | “Write more to prove that you reflected.”                 |
 | Optional intention      | “How might you respond to today's reading?”                                            | “Complete this extra task to finish your day.”            |
 | Returning after absence | “Continue with today's reading. Your earlier days are still available.”                | “You abandoned your commitment.”                          |
@@ -92,3 +92,5 @@ Use sensitive language around grief, anxiety, fatigue, loneliness, and trauma. G
 A practice should have the same name in setup, Today, settings, history, reminders, and help. A completed journey should have the same definition in the summary and the calendar. A button that saves writing should not sometimes also mark a practice complete without saying so.
 
 Example copy is guidance, not a requirement to repeat an identical sentence everywhere. The meaning, theological boundaries, and factual accuracy are the requirements.
+
+Numeric examples with a total of five assume two Chosen Practices. Actual daily totals reflect all assigned practices (5–7).

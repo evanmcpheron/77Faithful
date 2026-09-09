@@ -6,7 +6,7 @@
 
 ## The participant's situation
 
-A fictional participant has just started Day 1 and selected **Serve or Encourage** and **Gratitude** as the two additional practices. Their foundational practices are Read Scripture, Pray, and Reflect.
+A fictional participant has just started Day 1 and selected **Serve or Encourage** and **Gratitude** as their two additional practices, within the allowed range of two to four. Their foundational practices are Read Scripture, Pray, and Reflect.
 
 Their preferred available Bible translation is selected during setup. The same Scripture reference is assigned regardless of that translation.
 

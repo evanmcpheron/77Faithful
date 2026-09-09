@@ -24,7 +24,7 @@ Reminders apply only to an active journey. They stop after an early ending or co
 
 ### Completion-aware behavior
 
-A morning reminder need not appear when the phone already knows that Scripture and prayer are both complete for the current journey day. An evening reflection reminder need not appear when Reflect is already complete. All reminders for the day can be suppressed when all five practices are complete.
+A morning reminder need not appear when the phone already knows that Scripture and prayer are both complete for the current journey day. An evening reflection reminder need not appear when Reflect is already complete. All reminders for the day can be suppressed when all assigned practices are complete.
 
 A disconnected phone may not yet know about a change made elsewhere. For that reason, reminder wording stays neutral and must not claim that the participant definitely failed to pray, read, or reflect.
 
@@ -58,7 +58,7 @@ The app clearly distinguishes **Journey started** from **Ready to use without in
 
 ### What requires a connection
 
-Creating or confirming an account, signing in on a new phone, recovering account access, confirming a new journey, confirming an early ending, changing the optional-practice pair, making a new unprepared translation available, changing account contact information, and permanent account deletion require a connection in V1.
+Creating or confirming an account, signing in on a new phone, recovering account access, confirming a new journey, confirming an early ending, changing the optional-practice selection, making a new unprepared translation available, changing account contact information, and permanent account deletion require a connection in V1.
 
 The app explains this before the participant believes an action succeeded. Existing daily participation is not blocked merely because one of these account-wide actions is temporarily unavailable.
 
@@ -98,7 +98,7 @@ Independent changes should remain independent. Marking Movement complete must no
 
 When incompatible edits to the same writing exist on different phones, the app must preserve both versions and let the participant choose which to retain or compose a combined version. It must not silently delete one version of intimate writing or combine sentences in a way that changes their meaning.
 
-A phone may also have older information about an optional-practice change confirmed elsewhere. When it learns the confirmed pair for an affected day, it must not silently transfer completion from a replaced practice to a different practice. Show the correct assignment, preserve the earlier recorded action for the participant to review, and let them correct the affected markers. Unrelated foundational practices and writing remain intact; the day still has exactly five assigned practices.
+A phone may also have older information about an optional-practice change confirmed elsewhere. When it learns the confirmed selection for an affected day, it must not silently transfer completion from a replaced practice to a different practice. Show the correct assignment, preserve the earlier recorded action for the participant to review, and let them correct the affected markers. Unrelated foundational practices and writing remain intact; the day still has five to seven assigned practices.
 
 If a journey was ended early on another phone, a disconnected phone may not know immediately. Once it learns the ending, it must show the correct ended state rather than extend or reactivate the journey. Any writing already saved on dates beyond the reached portion must be offered privately for recovery or copying, not silently discarded or presented as valid newly reached journey days. Confirmed account deletion is different: recovery must not recreate information the participant has deliberately asked to remove.
 

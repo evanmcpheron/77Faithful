@@ -8,13 +8,13 @@ This document follows people through the product in ordinary language. The speci
 
 **Starting situation:** The person has never used 77Faithful.
 
-They open Sign In, with account-entry choices and access to About & Help and Weekly Themes. Concise product context and the available introduction explain that the app is a free, biblically based, 77-day journey with five daily practices. They can understand the purpose and view the broad eleven-week progression before creating an account or committing; no separate Welcome destination is required.
+They open Sign In, with account-entry choices and access to About & Help and Weekly Themes. Concise product context and the available introduction explain that the app is a free, biblically based, 77-day journey with five to seven daily practices. They can understand the purpose and view the broad eleven-week progression before creating an account or committing; no separate Welcome destination is required.
 
-They create or access a personal account and confirm their email. They learn the three foundational practices, choose two distinct additional practices, and select an available Bible translation. They may record why they are beginning and may choose reminder times, but neither writing nor reminders are required.
+They create or access a personal account and confirm their email. They learn the three foundational practices, choose two to four distinct additional practices, and select an available Bible translation. They may record why they are beginning and may choose reminder times, but neither writing nor reminders are required.
 
-The final review shows their five practices, today's start date, the Day 77 date, and the journey time zone. Selecting **Start my journey** begins the period only after the start is confirmed.
+The final review shows their five to seven practices, today's start date, the Day 77 date, and the journey time zone. Selecting **Start my journey** begins the period only after the start is confirmed.
 
-Today then shows Day 1. They can read the first week's introduction, see the assigned passage, read the Scripture, and begin the five practices. Completing setup has not automatically marked any practice complete.
+Today then shows Day 1. They can read the first week's introduction, see the assigned passage, read the Scripture, and begin the daily practices. Completing setup has not automatically marked any practice complete.
 
 **Successful outcome:** The person knows what they are doing, why they are doing it, and that an imperfect day will not force a restart.
 
@@ -22,7 +22,7 @@ Today then shows Day 1. They can read the first week's introduction, see the ass
 
 **Starting situation:** The participant has an active journey.
 
-They open Today and immediately see **Day 18 of 77**, the current date in the journey time zone, the weekly theme, the assigned reading, and the five-practice status. The actual number and date come from their own journey.
+They open Today and immediately see **Day 18 of 77**, the current date in the journey time zone, the weekly theme, the assigned reading, and the daily-practice status. The actual number and date come from their own journey.
 
 An optional invitation asks how they might respond today. They can consider it without writing or save a short private intention. Skipping this invitation does not create an incomplete sixth item.
 
@@ -64,7 +64,7 @@ They open Reflect, read the day's question, and consider their response privatel
 
 They mark Reflect complete without entering text. The app accepts this normally. The Reflections collection does not invent a journal entry because a completion marker exists.
 
-If all five practices are marked complete, the day shows **All five practices complete**. There is no demand for an explanation, minimum word count, or extra final action.
+If all assigned practices are marked complete, the day shows **All practices complete**. There is no demand for an explanation, minimum word count, or extra final action.
 
 **Successful outcome:** Reflection is encouraged without equating it with typing.
 
@@ -120,11 +120,11 @@ Nothing about the current day's practices, course position, or start date change
 
 **Starting situation:** The participant wants to replace Movement with Gratitude on Day 24.
 
-They open My Practices from Settings or the day's practice guidance. They see their current selections and choose a new valid pair, retaining the other practice if desired.
+They open My Practices from Settings or the day's practice guidance. They see their current selections and choose a new valid selection, retaining other practices if desired.
 
-The review says the replacement begins on Day 25 and displays that date. Today's five practices do not change. They confirm while connected, or keep the existing pair if confirmation cannot be completed.
+The review says the replacement begins on Day 25 and displays that date. Today's five to seven practices do not change. They confirm while connected, or keep the existing selection if confirmation cannot be completed.
 
-Before Day 25 begins, they may revise or cancel the upcoming change. When the next journey day begins, the new pair appears. Historical days keep their earlier selections.
+Before Day 25 begins, they may revise or cancel the upcoming change. When the next journey day begins, the new selection appears. Historical days keep their earlier selections.
 
 A health or safety concern never requires the person to continue an unsuitable activity while waiting for tomorrow. They may leave it incomplete; their journey continues.
 
@@ -148,7 +148,7 @@ The participant can open the current day's assigned Scripture and guidance, see 
 
 A clear, unobtrusive status explains when changes are saved only on this phone and are not yet available on other signed-in phones. When the connection returns, the app makes those changes available to the account without requiring the person to reenter them.
 
-Starting or ending a journey, changing the optional pair, changing to unavailable reading material, and permanent account deletion require a connection. The app explains this distinction rather than failing silently.
+Starting or ending a journey, changing the optional selection, changing to unavailable reading material, and permanent account deletion require a connection. The app explains this distinction rather than failing silently.
 
 **Successful outcome:** An ordinary disconnected day does not prevent the core formation experience or mislead the participant about the safety of their record.
 
@@ -180,7 +180,7 @@ They can revisit the Day 77 reflection, review earlier entries, or consider what
 
 **Starting situation:** The participant has a completed or early-ended journey and no active one.
 
-They select **Start another journey**, review their two optional practices and translation, optionally record a new motivation, and confirm the new dates.
+They select **Start another journey**, review their two to four optional practices and translation, optionally record a new motivation, and confirm the new dates.
 
 The new journey starts at Day 1. The earlier journey remains in Journey and its writing remains in Reflections. A journey label accompanies each historical entry so that identical day numbers are not confused.
 
@@ -231,3 +231,5 @@ Each person maintains their own account and personal journey. They may agree out
 The app does not combine their records, grant one person access to the other's journal, or claim they are members of an in-app group. They may read and pray together in ordinary life while recording their own participation.
 
 **Successful outcome:** The personal V1 product supports real relationships without pretending future community functionality already exists.
+
+Numeric examples with a total of five assume two Chosen Practices. Actual daily totals reflect all assigned practices (5–7).

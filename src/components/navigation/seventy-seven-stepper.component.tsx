@@ -49,16 +49,18 @@ export const SeventySevenStepper = ({
           max={100}
           height="$0.75"
           bg="$surfaceSubtle"
-          accessibilityLabel={progressLabel}
-          accessibilityRole="progressbar"
-          accessibilityValue={{ min: 1, max: totalSteps, now: currentStep }}
+          aria-label={progressLabel}
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={totalSteps}
+          aria-valuenow={currentStep}
         >
           <Progress.Indicator bg="$primary" />
         </Progress>
       </YStack>
 
       <YStack gap="$2">
-        <SeventySevenText size={SeventySevenTextSize.Heading} accessibilityRole="header">
+        <SeventySevenText size={SeventySevenTextSize.Heading} role="heading" aria-level={1}>
           {stepTitle}
         </SeventySevenText>
         {stepDescription ? (
@@ -72,22 +74,20 @@ export const SeventySevenStepper = ({
         <SeventySevenButton
           width="100%"
           disabled={isContinueDisabled}
+          aria-disabled={isContinueDisabled}
           onPress={onContinue}
-          accessibilityHint={
-            currentStep < totalSteps ? `Moves to step ${currentStep + 1}` : undefined
-          }
         >
           {primaryActionLabel}
         </SeventySevenButton>
 
         {isOptional && onSkip ? (
-          <Button chromeless minH="$5" onPress={onSkip} accessibilityLabel={`Skip ${stepTitle}`}>
+          <Button chromeless minH="$5" onPress={onSkip} aria-label={`Skip ${stepTitle}`}>
             <SeventySevenText bold>Skip for now</SeventySevenText>
           </Button>
         ) : null}
 
         {onBack ? (
-          <Button chromeless minH="$5" onPress={onBack} accessibilityLabel="Go to previous step">
+          <Button chromeless minH="$5" onPress={onBack} aria-label="Go to previous step">
             <SeventySevenText color="$textSecondary">Back</SeventySevenText>
           </Button>
         ) : null}

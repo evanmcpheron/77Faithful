@@ -14,7 +14,7 @@ Progress does not answer how holy someone is, whether God is pleased with them, 
 
 ### Today
 
-The most prominent information is **Day X of 77**, the current theme, the assigned reading, and **X of 5 practices complete**. The participant should not have to find a statistics page to understand what to do next.
+The most prominent information is **Day X of 77**, the current theme, the assigned reading, and **X of N practices complete**, where N is the day’s assigned total (5–7). The participant should not have to find a statistics page to understand what to do next.
 
 Streaks are not the main Today headline. A participant returning after an absence should see the current reading and invitation to continue, not a dominant record of loss.
 
@@ -30,7 +30,7 @@ V1 may show the following defined statistics in the journey's secondary progress
 
 | Statistic                   | Exact meaning                                                                                                              | Required qualification                                                                     |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Fully completed days        | Number of eligible days with all five practices currently marked complete.                                                 | Does not mean those were the only spiritually meaningful days.                             |
+| Fully completed days        | Number of eligible days with all assigned practices currently marked complete.                                             | Does not mean those were the only spiritually meaningful days.                             |
 | Practices marked complete   | Total completion markers across eligible days in this journey.                                                             | Counts declarations, not observed or evaluated spiritual acts.                             |
 | Current complete-day streak | Consecutive fully completed days at the current end of the record, using the rule below. Shown only for an active journey. | Based on recorded days, including later edits; not verified on-time completion.            |
 | Longest complete-day streak | Longest consecutive run of fully completed days within this journey.                                                       | A personal historical fact, not an award or rank.                                          |
@@ -38,11 +38,11 @@ V1 may show the following defined statistics in the journey's secondary progress
 
 V1 does not show a spiritual score, a weighted practice score, a completion percentage as a measure of faith, or a comparison percentile. No cross-journey lifetime streak is created.
 
-A complete 77-day journey has 385 possible practice markers because each of 77 days has five practices. During an active journey, simple completed counts avoid implying that future days are already overdue. At an early ending, summary denominators include only reached days; unused days are not portrayed as missed opportunities the person had already passed through.
+A complete 77-day journey has 385–539 possible practice markers. Calculate the total by summing the assigned practice count for each day, including any selection changes; do not multiply by the current selection count. During an active journey, simple completed counts avoid implying that future days are already overdue. At an early ending, summary denominators include only reached days; unused days are not portrayed as missed opportunities the person had already passed through.
 
 ## Exact complete-day streak behavior
 
-If today's five practices are complete, the current streak counts consecutive complete days ending today.
+If today's five to seven practices are complete, the current streak counts consecutive complete days ending today.
 
 If today is not yet complete, an existing streak through yesterday remains visible while today is still open. An unfinished morning does not immediately break a streak. If yesterday was not complete, there is no continuing current streak to preserve.
 
@@ -71,7 +71,7 @@ No alert says that the participant will lose God's favor, lose their entire jour
 | ----------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------ |
 | Current, no practices marked              | Today · 0 of 5                     | Open today's experience.                                                       |
 | Current or historical, partially complete | 3 of 5 practices complete          | Open and continue or update the day.                                           |
-| Current or historical, fully complete     | All five practices complete        | Open and review; corrections remain possible.                                  |
+| Current or historical, fully complete     | All practices complete             | Open and review; corrections remain possible.                                  |
 | Historical, no practices marked           | No practices marked complete       | Open and review or update without a failure label.                             |
 | Future within an active journey           | Available on [date]                | Explain the date; do not reveal detailed content.                              |
 | Beyond an early ending                    | Not reached · journey ended early  | Explain that these days did not become part of the reached history.            |
@@ -131,7 +131,7 @@ The optional starting motivation belongs to the journey as a whole. It appears i
 
 Once the 77-day period ends, the summary should begin with **Your 77-day journey has ended** or a similarly accurate statement. It may acknowledge the participant's engagement without assuming they completed every practice or experienced a particular spiritual transformation.
 
-The summary includes the journey dates, the fact that the period completed, fully completed days out of 77, practices marked complete out of 385, the longest complete-day streak, and the number of written reflections. These are secondary to the invitation to look back and continue in faith.
+The summary includes the journey dates, the fact that the period completed, fully completed days out of 77, practices marked complete out of the sum of assigned practices across all 77 days, the longest complete-day streak, and the number of written reflections. These are secondary to the invitation to look back and continue in faith.
 
 The participant can revisit their starting motivation and Day 77 reflection, browse earlier entries, return to the full journey, and start another journey when ready. The summary may invite them to consider what practices and relationships to continue outside the app.
 
@@ -141,10 +141,12 @@ The summary updates when historical records change. It is a view of the current 
 
 ## Early-ended summary
 
-An early-ended summary begins with **Journey ended early** and states the actual end date and reached day count. It summarizes only the reached portion. For example, a journey ended on Day 20 may show fully completed days out of 20 and practices marked complete out of 100.
+An early-ended summary begins with **Journey ended early** and states the actual end date and reached day count. It summarizes only the reached portion. For example, a journey ended on Day 20 with five practices assigned to each reached day may show fully completed days out of 20 and practices marked complete out of 100.
 
 It retains private writing and provides access to the reached days. It does not present the unvisited remainder as 57 failed days. It offers a separate new journey without demanding that the participant justify the earlier ending.
 
 ## Progress privacy
 
 In V1, all progress is personal. None is visible to other participants, churches, groups, or contacts. The existence of a future community plan must not lead a designer to add a public comparison, share button, or leader view to these screens.
+
+Numeric examples with a total of five assume two Chosen Practices. Actual daily totals reflect all assigned practices (5–7).

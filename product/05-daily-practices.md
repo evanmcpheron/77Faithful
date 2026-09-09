@@ -4,19 +4,18 @@
 
 **Authority:** This document owns the daily commitment, optional-practice catalog, completion behavior, and changes to selected practices.
 
-## The five-part commitment
+## The daily commitment
 
-Every reached journey day contains exactly five distinct practices:
+Every reached journey day contains five to seven distinct practices:
 
 1. **Read Scripture** — foundational.
 2. **Pray** — foundational.
 3. **Reflect** — foundational.
-4. One selected additional practice.
-5. A different selected additional practice.
+4. Two to four distinct additional practices selected from the catalog.
 
-The three foundational practices cannot be removed or exchanged. The participant chooses exactly two additional practices from the catalog. They cannot choose the same optional practice twice, add a third, remove both after starting, or create a custom practice in V1.
+The three foundational practices cannot be removed or exchanged. The participant chooses two to four additional practices from the catalog. They cannot choose the same optional practice twice, select more than four, reduce the selection below two after starting, or create a custom practice in V1.
 
-All five count equally toward a complete day. Scripture, prayer, and reflection receive greater explanatory prominence because they form the shared foundation, but there are no weighted scores.
+All assigned practices count equally toward a complete day. Scripture, prayer, and reflection receive greater explanatory prominence because they form the shared foundation, but there are no weighted scores.
 
 ## Foundational practice: Read Scripture
 
@@ -75,7 +74,7 @@ Descriptions should encourage a deliberate expression of each practice rather th
 
 During setup, the participant sees the three fixed foundational practices separately from the optional catalog. Every optional choice has a concise explanation and examples before selection.
 
-A visible message shows **Choose 2 additional practices** and the selection count. The final review lists all five together. Starting is unavailable until exactly two distinct optional choices are selected, but the app explains why rather than leaving a button mysteriously inactive.
+A visible message shows **Choose 2–4 additional practices** and the selection count. The count shows **N selected · Choose 2–4**. Continue is available with two, three, or four selections. At four, unselected choices are disabled; selected choices remain available to deselect. Deselecting a practice preserves every other choice. The final review lists all assigned practices together. Starting is unavailable until two to four distinct optional choices are selected, but the app explains why rather than leaving a button mysteriously inactive.
 
 Selection does not require writing a personal goal, committing to a minimum amount, or assigning a reminder to each practice. The person can adapt the expression of an existing practice day by day without changing its category.
 
@@ -85,17 +84,17 @@ Changes are allowed. Real circumstances change, and the product should not requi
 
 **Adopted rule: replacements take effect on the next journey day, never retroactively and never halfway through today's recorded commitment.** The next day is determined by the fixed journey time zone, not simply the phone's local date.
 
-The participant may change one or both selections at once. The resulting pair must remain two distinct catalog practices. No explanation, approval, or written reflection is required.
+The participant may replace, add, or remove selections within the two-to-four range at once. The resulting selection must remain two to four distinct catalog practices. No explanation, approval, or written reflection is required.
 
-The review shows the current pair, the proposed pair, and the exact day/date on which the change begins. For example: **Starting Day 18, September 25, your practices will be Gratitude and Serve or Encourage. Today's practices stay unchanged.**
+The review shows the current selection, the proposed selection, and the exact day/date on which the change begins. For example: **Starting Day 18, September 25, your practices will be Gratitude and Serve or Encourage. Today's practices stay unchanged.**
 
-Before the change takes effect, the participant may revise or cancel the pending selection. Only one upcoming pair exists; V1 does not offer a calendar of multiple future practice changes.
+Before the change takes effect, the participant may revise or cancel the pending selection. Only one upcoming selection exists; V1 does not offer a calendar of multiple future practice changes.
 
-The app must not call a change confirmed while it is still waiting to be confirmed for the participant's account. Starting, ending, and changing the pair require a connection; existing daily practices and writing remain usable without one.
+The app must not call a change confirmed while it is still waiting to be confirmed for the participant's account. Starting, ending, and changing the selection require a connection; existing daily practices and writing remain usable without one.
 
 ### What remains unchanged
 
-Days before the effective date retain the practices assigned to them, including their completion markers. The effective date and later days use the new pair. The foundational three remain unchanged throughout.
+Days before the effective date retain the practices assigned to them, including their completion markers. The effective date and later days use the new selection. The foundational three remain unchanged throughout.
 
 A historical day cannot be rewritten to use an easier or newly selected optional practice. The participant may correct that day's completion markers, but not replace its original commitment.
 
@@ -111,9 +110,9 @@ A practice is complete only after the participant explicitly marks it complete. 
 
 The app makes the difference between opening guidance and changing completion clear. Pressing a practice's title opens its guidance; a distinctly labeled completion control changes its status. Accidentally opening a page must not record a completed practice.
 
-A completed day displays **5 of 5 practices complete** or **All five practices complete**. Partial progress stays visible. Unmarking one practice makes the day partial again without a scolding message.
+A completed day displays **All practices complete** or a count using that day’s assigned total, such as **5 of 5**, **6 of 6**, or **7 of 7 practices complete**. Partial progress stays visible. Unmarking one practice makes the day partial again without a scolding message.
 
-Extra reading, repeated prayer, or more activity does not create extra points or extra completion markers. There are still five practices for that day.
+Extra reading, repeated prayer, or more activity does not create extra points or extra completion markers. There are still five to seven practices for that day.
 
 ## What is not a practice requirement
 

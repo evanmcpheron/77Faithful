@@ -7,8 +7,6 @@
 
 77Faithful is a completely free, biblically based Christian spiritual formation app for anyone who wants to develop a stronger relationship with Jesus. Each participant follows a 77-calendar-day journey with five daily practices: read Scripture, pray, reflect, and complete two additional practices chosen from a provided list. Eleven weekly themes guide the experience. Missing a practice or a day does not erase progress or restart the journey.
 
-This directory explains the product without requiring knowledge of an earlier project, previous conversations, or how an app is built. These are requirements for the intended experience, **not claims that the experience has already been built or released**.
-
 ## Start here
 
 For a general understanding, read [Product overview](01-product-overview.md), [Principles and boundaries](02-principles-and-boundaries.md), and [V1 scope](03-v1-scope.md).

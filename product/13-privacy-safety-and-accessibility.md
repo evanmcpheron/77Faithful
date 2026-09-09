@@ -8,7 +8,7 @@
 
 77Faithful contains information about a person's faith, struggles, intentions, relationships, and private thoughts. The product must treat that information with care even when a person voluntarily entered it.
 
-Private writing is not content for a social feed. The app must not assume that signing up, choosing a practice, joining a future group, or receiving help from a church gives other people permission to read it.
+Private writing is not content for a social feed. The app must not assume that registering, choosing a practice, joining a future group, or receiving help from a church gives other people permission to read it.
 
 ### Information and visibility in V1
 

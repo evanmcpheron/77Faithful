@@ -8,7 +8,7 @@
 
 Someone opening 77Faithful for the first time should understand what it is before being asked to start a journey. The introduction explains the mission, 77-day duration, five practices, eleven themes, and faithfulness-over-perfection approach in ordinary language.
 
-The signed-out experience begins at Log In, with access to Create Account, Recover Access, About & Help, and Weekly Themes. Concise product context and access to the introduction remain available before account creation and journey commitment; a separate Welcome destination is not required.
+The signed-out experience begins at Login, with access to Create Account, Recover Access, About & Help, and Weekly Themes. Concise product context and access to the introduction remain available before account creation and journey commitment; a separate Welcome destination is not required.
 
 The person may read the overview of the course and the optional-practice descriptions without creating a journey. They should be told that the app is permanently free and that private reflections are not shared with other participants.
 
@@ -18,9 +18,9 @@ The introduction does not require a profession of faith, denominational selectio
 
 A personal account is required before starting and saving a journey. V1 does not include a guest journey that later needs to be converted or combined with another record.
 
-From the participant's standpoint, the account experience must support creating an account, confirming their email address, signing in, recovering lost access, changing account contact information, and signing out. The pages explain the steps in plain language and provide a clear way to return when an attempt fails.
+From the participant's standpoint, the account experience must support account creation, email confirmation, login, access recovery, account contact changes, and signing out. The pages explain the steps in plain language and provide a clear way to return when an attempt fails.
 
-The product does not specify the underlying method used to establish account access. Regardless of the chosen sign-in experience, someone must be able to understand which account they are using and recover access without losing or accidentally duplicating their journey.
+The product does not specify the underlying method used to establish account access. Regardless of the chosen login experience, someone must be able to understand which account they are using and recover access without losing or accidentally duplicating their journey.
 
 ### Information requested
 
@@ -32,7 +32,7 @@ Consent to unrelated marketing is not a condition of participation. The app does
 
 ### Unconfirmed and returning accounts
 
-A person who has not finished confirming their email sees how to complete that step, request another confirmation, correct an incorrectly entered address, or return to sign-in. The app does not start a journey that they cannot reliably return to.
+A person who has not finished confirming their email sees how to complete that step, request another confirmation, correct an incorrectly entered address, or return to login. The app does not start a journey that they cannot reliably return to.
 
 A returning participant with an active journey goes to Today. Someone with unfinished setup returns to the unfinished step. Someone with only ended journeys sees their history and a clear option to start another.
 
@@ -128,8 +128,8 @@ A canceled or unsuccessful account action leaves the previous working state inta
 
 Signing out ends access on that phone; it does not end the journey or delete the account. The next person using the app must not see the previous participant's writing, progress, name, or active private pages.
 
-After signing out, the participant returns to Log In with public product information still available.
+After signing out, the participant returns to Login with public product information still available.
 
-If changes exist only on the current phone, signing out explains the risk. The participant can remain signed in and reconnect to protect them, or explicitly choose to discard those not-yet-protected changes and sign out. The app must not silently delete them or describe them as safely available on another phone.
+If changes exist only on the current phone, signing out explains the risk. The participant can remain logged in and reconnect to protect them, or explicitly choose to discard those not-yet-protected changes and sign out. The app must not silently delete them or describe them as safely available on another phone.
 
 Detailed privacy and deletion requirements appear in Document 13. Reliable-use and interrupted-save behavior appear in Document 12.

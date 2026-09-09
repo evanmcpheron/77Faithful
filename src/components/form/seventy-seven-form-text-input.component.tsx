@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useId, useState } from 'react';
-import { Button, Input, Label, TextArea, XStack, YStack } from 'tamagui';
+import { Button, Input, Label, TextArea, useTheme, XStack, YStack } from 'tamagui';
 import type { InputProps } from 'tamagui';
 
 import { SeventySevenText } from '../core';
@@ -43,6 +43,7 @@ export const SeventySevenFormTextInput = ({
   value,
 }: ISeventySevenFormTextInputProps) => {
   const inputId = useId();
+  const theme = useTheme();
   const labelId = `${inputId}-label`;
   const errorId = `${inputId}-error`;
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -70,11 +71,11 @@ export const SeventySevenFormTextInput = ({
       <XStack
         items={isLongForm ? 'flex-start' : 'center'}
         borderWidth={1}
-        borderColor={hasError ? '$red9' : '$borderColor'}
+        borderColor={hasError ? '$error' : '$borderColor'}
         rounded="$4"
-        bg="$background"
+        bg="$surface"
         overflow="hidden"
-        focusWithinStyle={{ borderColor: hasError ? '$red10' : '$blue9' }}
+        focusWithinStyle={{ borderColor: hasError ? '$error' : '$accent' }}
       >
         {isLongForm ? (
           <TextArea
@@ -148,7 +149,7 @@ export const SeventySevenFormTextInput = ({
                 web: isPasswordVisible ? 'visibility_off' : 'visibility',
               }}
               size={21}
-              tintColor="#6b7280"
+              tintColor={theme.textSecondary.val}
             />
           </Button>
         ) : null}

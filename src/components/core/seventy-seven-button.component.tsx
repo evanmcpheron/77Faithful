@@ -19,29 +19,29 @@ const SeventySevenButtonFrame = styled(Button, {
   variants: {
     severity: {
       Default: {
-        bg: '$color9',
-        hoverStyle: { bg: '$color10' },
-        pressStyle: { bg: '$color11' },
+        bg: '$primary',
+        hoverStyle: { bg: '$primaryPressed' },
+        pressStyle: { bg: '$primaryPressed' },
       },
       Info: {
-        bg: '$blue9',
-        hoverStyle: { bg: '$blue10' },
-        pressStyle: { bg: '$blue11' },
+        bg: '$info',
+        hoverStyle: { bg: '$infoPressed' },
+        pressStyle: { bg: '$infoPressed' },
       },
       Success: {
-        bg: '$green9',
-        hoverStyle: { bg: '$green10' },
-        pressStyle: { bg: '$green11' },
+        bg: '$successStrong',
+        hoverStyle: { bg: '$successPressed' },
+        pressStyle: { bg: '$successPressed' },
       },
       Warning: {
-        bg: '$yellow9',
-        hoverStyle: { bg: '$yellow10' },
-        pressStyle: { bg: '$yellow11' },
+        bg: '$warning',
+        hoverStyle: { bg: '$warningPressed' },
+        pressStyle: { bg: '$warningPressed' },
       },
       Error: {
-        bg: '$red9',
-        hoverStyle: { bg: '$red10' },
-        pressStyle: { bg: '$red11' },
+        bg: '$error',
+        hoverStyle: { bg: '$errorPressed' },
+        pressStyle: { bg: '$errorPressed' },
       },
     },
     disabled: {
@@ -62,19 +62,19 @@ const SeventySevenButtonText = styled(SeventySevenText, {
   variants: {
     severity: {
       Default: {
-        color: '$color1',
+        color: '$onPrimary',
       },
       Info: {
-        color: '$blue1',
+        color: '$onInfo',
       },
       Success: {
-        color: '$green1',
+        color: '$onSuccess',
       },
       Warning: {
-        color: '$yellow1',
+        color: '$onWarning',
       },
       Error: {
-        color: '$red1',
+        color: '$onError',
       },
     },
   } as const,

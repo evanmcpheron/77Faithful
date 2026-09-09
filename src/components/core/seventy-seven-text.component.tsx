@@ -52,16 +52,16 @@ export const SeventySevenText = styled(Text, {
         color: '$color',
       },
       Info: {
-        color: '$blue11',
+        color: '$infoText',
       },
       Success: {
-        color: '$green11',
+        color: '$successText',
       },
       Warning: {
-        color: '$yellow11',
+        color: '$warningText',
       },
       Error: {
-        color: '$red11',
+        color: '$errorText',
       },
     },
     alignment: {

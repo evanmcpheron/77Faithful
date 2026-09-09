@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useId } from 'react';
-import { Checkbox, Label, XStack } from 'tamagui';
+import { Checkbox, Label, useTheme, XStack } from 'tamagui';
 
 import { SeventySevenText } from '../core';
 
@@ -18,6 +18,7 @@ export const SeventySevenFormCheckbox = ({
   onCheckedChange,
 }: ISeventySevenFormCheckboxProps) => {
   const checkboxId = useId();
+  const theme = useTheme();
 
   const handleCheckedChange = (nextChecked: boolean | 'indeterminate') => {
     onCheckedChange(nextChecked === true);
@@ -31,13 +32,14 @@ export const SeventySevenFormCheckbox = ({
         checked={checked}
         disabled={disabled}
         onCheckedChange={handleCheckedChange}
-        activeStyle={{ bg: '$blue9', borderColor: '$blue9' }}
+        bg="$surface"
+        activeStyle={{ bg: '$primary', borderColor: '$primary' }}
       >
         <Checkbox.Indicator>
           <SymbolView
             name={{ ios: 'checkmark', android: 'check', web: 'check' }}
             size={18}
-            tintColor="#ffffff"
+            tintColor={theme.onPrimary.val}
           />
         </Checkbox.Indicator>
       </Checkbox>

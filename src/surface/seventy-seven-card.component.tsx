@@ -2,7 +2,7 @@ import { Card, styled } from 'tamagui';
 
 export const SeventySevenCard = styled(Card, {
   name: 'SeventySevenCard',
-  bg: '$background',
+  bg: '$surface',
   borderColor: '$borderColor',
   borderWidth: 1,
   rounded: '$4',

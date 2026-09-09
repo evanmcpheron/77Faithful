@@ -37,7 +37,7 @@ const WelcomeScreen = () => {
             </SeventySevenText>
           </YStack>
           <YStack gap="$3">
-            <SeventySevenButton href="/login">Sign in</SeventySevenButton>
+            <SeventySevenButton href="/login">Login</SeventySevenButton>
             <SeventySevenButton href="/register">Register</SeventySevenButton>
           </YStack>
         </YStack>

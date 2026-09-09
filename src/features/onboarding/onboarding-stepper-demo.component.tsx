@@ -68,12 +68,12 @@ const ReviewRow = ({ label, onChange, value }: IReviewRowProps) => {
   return (
     <XStack items="flex-start" justify="space-between" gap="$4" py="$3">
       <YStack flex={1} gap="$1">
-        <SeventySevenText color="$color10">{label}</SeventySevenText>
+        <SeventySevenText color="$textSecondary">{label}</SeventySevenText>
         <SeventySevenText bold>{value}</SeventySevenText>
       </YStack>
       {onChange ? (
         <Button chromeless size="$3" onPress={onChange} accessibilityLabel={`Change ${label}`}>
-          <SeventySevenText color="$blue11" bold>
+          <SeventySevenText color="$link" bold>
             Change
           </SeventySevenText>
         </Button>
@@ -143,8 +143,15 @@ export const OnboardingStepperDemo = () => {
   if (hasStartedJourney) {
     return (
       <YStack gap="$6" items="center" py="$8">
-        <YStack width={72} height={72} rounded="$10" bg="$green4" items="center" justify="center">
-          <SeventySevenText size={SeventySevenTextSize.Heading} color="$green11">
+        <YStack
+          width={72}
+          height={72}
+          rounded="$10"
+          bg="$successSoft"
+          items="center"
+          justify="center"
+        >
+          <SeventySevenText size={SeventySevenTextSize.Heading} color="$successStrong">
             1
           </SeventySevenText>
         </YStack>
@@ -152,12 +159,12 @@ export const OnboardingStepperDemo = () => {
           <SeventySevenText size={SeventySevenTextSize.Heading} alignment="Center">
             Your journey begins today
           </SeventySevenText>
-          <SeventySevenText color="$color10" alignment="Center">
+          <SeventySevenText color="$textSecondary" alignment="Center">
             Day 1 is ready. Nothing has been marked complete for you.
           </SeventySevenText>
         </YStack>
         <Button chromeless onPress={handleRestartDemo}>
-          <SeventySevenText color="$blue11" bold>
+          <SeventySevenText color="$link" bold>
             View the setup again
           </SeventySevenText>
         </Button>
@@ -208,7 +215,7 @@ export const OnboardingStepperDemo = () => {
           <SeventySevenCard gap="$3">
             <SeventySevenText bold>Your daily foundation</SeventySevenText>
             <SeventySevenText>Read Scripture · Pray · Reflect</SeventySevenText>
-            <SeventySevenText color="$color10">
+            <SeventySevenText color="$textSecondary">
               You will choose two more practices that fit your life.
             </SeventySevenText>
           </SeventySevenCard>
@@ -244,7 +251,7 @@ export const OnboardingStepperDemo = () => {
             value={password}
             onChangeText={setPassword}
           />
-          <SeventySevenText color="$color10" fontSize="$3">
+          <SeventySevenText color="$textSecondary" fontSize="$3">
             Creating an account does not start Day 1. Confirmed email access will be required in the
             production flow.
           </SeventySevenText>
@@ -268,7 +275,7 @@ export const OnboardingStepperDemo = () => {
                     handlePracticeChange(practice.id, nextIsSelected)
                   }
                 />
-                <SeventySevenText color="$color10" pl="$8">
+                <SeventySevenText color="$textSecondary" pl="$8">
                   {practice.description}
                 </SeventySevenText>
               </SeventySevenCard>
@@ -312,7 +319,7 @@ export const OnboardingStepperDemo = () => {
               label="Morning Scripture reminder"
               onCheckedChange={setHasMorningReminder}
             />
-            <SeventySevenText color="$color10" pl="$8">
+            <SeventySevenText color="$textSecondary" pl="$8">
               Begin the day with the assigned reading.
             </SeventySevenText>
           </SeventySevenCard>
@@ -322,11 +329,11 @@ export const OnboardingStepperDemo = () => {
               label="Evening reflection reminder"
               onCheckedChange={setHasEveningReminder}
             />
-            <SeventySevenText color="$color10" pl="$8">
+            <SeventySevenText color="$textSecondary" pl="$8">
               Make space to reflect before the day closes.
             </SeventySevenText>
           </SeventySevenCard>
-          <SeventySevenText color="$color10" fontSize="$3">
+          <SeventySevenText color="$textSecondary" fontSize="$3">
             Phone permission should only be requested after a reminder is enabled.
           </SeventySevenText>
         </YStack>
@@ -368,11 +375,11 @@ export const OnboardingStepperDemo = () => {
             <ReviewRow label="Journey time zone" value={journeyTimeZone} />
           </SeventySevenCard>
 
-          <SeventySevenCard gap="$2" bg="$blue2" borderColor="$blue6">
+          <SeventySevenCard gap="$2" bg="$infoSurface" borderColor="$borderColor">
             <SeventySevenText bold>
               {formatJourneyDate(startDate)} – {formatJourneyDate(finalDate)}
             </SeventySevenText>
-            <SeventySevenText color="$blue11">
+            <SeventySevenText color="$link">
               Day 1 begins when you start. Your journey uses this device's time zone, and the
               calendar continues after an absence.
             </SeventySevenText>

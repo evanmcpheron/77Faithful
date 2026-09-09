@@ -37,10 +37,10 @@ export const SeventySevenStepper = ({
     <YStack width="100%" gap="$6">
       <YStack gap="$3">
         <XStack items="center" justify="space-between" gap="$3">
-          <SeventySevenText color="$color10" bold>
+          <SeventySevenText color="$textSecondary" bold>
             {progressLabel}
           </SeventySevenText>
-          {isOptional ? <SeventySevenText color="$color10">Optional</SeventySevenText> : null}
+          {isOptional ? <SeventySevenText color="$textSecondary">Optional</SeventySevenText> : null}
         </XStack>
 
         <Progress
@@ -48,12 +48,12 @@ export const SeventySevenStepper = ({
           value={progressValue}
           max={100}
           height="$0.75"
-          bg="$color4"
+          bg="$surfaceSubtle"
           accessibilityLabel={progressLabel}
           accessibilityRole="progressbar"
           accessibilityValue={{ min: 1, max: totalSteps, now: currentStep }}
         >
-          <Progress.Indicator bg="$blue9" />
+          <Progress.Indicator bg="$primary" />
         </Progress>
       </YStack>
 
@@ -62,7 +62,7 @@ export const SeventySevenStepper = ({
           {stepTitle}
         </SeventySevenText>
         {stepDescription ? (
-          <SeventySevenText color="$color10">{stepDescription}</SeventySevenText>
+          <SeventySevenText color="$textSecondary">{stepDescription}</SeventySevenText>
         ) : null}
       </YStack>
 
@@ -88,7 +88,7 @@ export const SeventySevenStepper = ({
 
         {onBack ? (
           <Button chromeless minH="$5" onPress={onBack} accessibilityLabel="Go to previous step">
-            <SeventySevenText color="$color10">Back</SeventySevenText>
+            <SeventySevenText color="$textSecondary">Back</SeventySevenText>
           </Button>
         ) : null}
       </YStack>

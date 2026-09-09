@@ -16,7 +16,7 @@ Reminders are off until the person deliberately enables them. The phone's permis
 
 Reminder times follow the local clock on the phone where they are enabled. Journey dates continue to follow the fixed journey time zone. Settings explains this distinction, especially for travel.
 
-Reminder settings apply to that phone. Another phone does not begin notifying the participant merely because they sign into the account there. They may enable reminders there explicitly. Signing out stops personal journey reminders on that phone.
+Reminder settings apply to that phone. Another phone does not begin notifying the participant merely because they complete login for the account there. They may enable reminders there explicitly. Signing out stops personal journey reminders on that phone.
 
 Within a day, the app should not deliberately send duplicate copies of the same reminder. If the participant chooses the same time for both types, the interface should explain the overlap and offer a single combined reminder rather than two simultaneous alerts.
 
@@ -58,7 +58,7 @@ The app clearly distinguishes **Journey started** from **Ready to use without in
 
 ### What requires a connection
 
-Creating or confirming an account, signing in on a new phone, recovering account access, confirming a new journey, confirming an early ending, changing the optional-practice pair, making a new unprepared translation available, changing account contact information, and permanent account deletion require a connection in V1.
+Creating or confirming an account, completing login on a new phone, recovering account access, confirming a new journey, confirming an early ending, changing the optional-practice pair, making a new unprepared translation available, changing account contact information, and permanent account deletion require a connection in V1.
 
 The app explains this before the participant believes an action succeeded. Existing daily participation is not blocked merely because one of these account-wide actions is temporarily unavailable.
 
@@ -92,7 +92,7 @@ A midnight change does not move the draft into the next day's entry. A translati
 
 ## Multiple phones and competing changes
 
-Signing into the same account on another phone should show the same account's journey and protected records once they are available. It must not create a duplicate journey or present a new empty account as the existing record.
+Completing login for the same account on another phone should show the same account's journey and protected records once they are available. It must not create a duplicate journey or present a new empty account as the existing record.
 
 Independent changes should remain independent. Marking Movement complete must not replace the participant's reflection. Editing an old day must not overwrite Today.
 

@@ -56,8 +56,8 @@ export const SeventySevenFormRadioButton = ({
 
   return (
     <XStack items="center" gap="$3" opacity={disabled ? 0.5 : 1}>
-      <RadioGroup.Item id={radioButtonId} size="$5" value={value} disabled={disabled}>
-        <RadioGroup.Indicator bg="$blue9" />
+      <RadioGroup.Item id={radioButtonId} size="$5" value={value} disabled={disabled} bg="$surface">
+        <RadioGroup.Indicator bg="$primary" />
       </RadioGroup.Item>
       <Label
         htmlFor={radioButtonId}

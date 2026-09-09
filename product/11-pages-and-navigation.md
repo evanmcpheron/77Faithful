@@ -20,9 +20,9 @@ Today is the default destination for a signed-in participant with an active jour
 
 ## Overall flow
 
-**First visit:** Log In with account-entry choices and access to product information → account access and confirmation → one guided journey setup containing introduction, practice selection, translation selection, optional motivation, optional reminders, and review and start → Today. Product introduction and the broad theme overview remain available before account creation and commitment.
+**First visit:** Login with account-entry choices and access to product information → account access and confirmation → one guided journey setup containing introduction, practice selection, translation selection, optional motivation, optional reminders, and review and start → Today. Product introduction and the broad theme overview remain available before account creation and commitment.
 
-**Sign-out:** Account → any necessary warning about unprotected work → Log In with access to public product information. Completed account deletion also returns to this signed-out experience.
+**Sign-out:** Account → any necessary warning about unprotected work → Login with access to public product information. Completed account deletion also returns to this signed-out experience.
 
 **Ordinary use:** Today → Scripture, Prayer, Reflect, or optional-practice guidance → Today.
 
@@ -46,15 +46,15 @@ P01's introduction is available through login/account entry and product informat
 
 **Shows:** Product name, concise mission, 77-day structure, five-practice explanation, permanent free access, privacy reassurance, and a way to inspect the broad theme overview.
 
-**Actions and destinations:** Create account or sign in through the account-entry experience → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and About & Help → P25. The introduction is available from account entry and product information without requiring a standalone Welcome page.
+**Actions and destinations:** Create account or use login through the account-entry experience → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and About & Help → P25. The introduction is available from account entry and product information without requiring a standalone Welcome page.
 
 **Important states:** First visit, signed-out return, and arrival after account deletion. Do not display another participant's private name, progress, or writing here.
 
-### P02 · Create account and sign in
+### P02 · Create account and login
 
 **Purpose:** Establish or regain access to the correct personal account.
 
-**Shows:** Clear choices for creating an account and signing in, the information needed for the chosen account-access experience, and recovery help.
+**Shows:** Clear choices for account creation and login, the information needed for the chosen account-access experience, and recovery help.
 
 **Actions and destinations:** Continue through confirmation → P03 when necessary. Recover access → P04. Return → P01. Successful returning access → the appropriate Today or unfinished setup state.
 

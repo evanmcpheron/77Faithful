@@ -6,6 +6,10 @@ Treat `STYLE_GUIDE.md` as the repository’s source of truth for code style. Fol
 
 Use Tamagui for all reusable UI components wherever reasonably possible. Before using another library or creating a custom component from scratch, verify that Tamagui does not provide a suitable component. When Tamagui does not provide what is needed, use the most appropriate alternative that remains consistent with `STYLE_GUIDE.md`.
 
+## UI text
+
+Before writing, modifying, or reviewing any user-facing UI text, read and follow `VOICE_AND_LANGUAGE_GUIDE.md` at the repository root. Treat it as the source of truth for all interface copy, including labels, buttons, instructions, validation messages, errors, empty states, and completion states.
+
 ## Dependency installation
 
 Never install a dependency without first receiving the user's explicit approval. If a new dependency appears necessary, explain why it is needed and provide supporting evidence, including why the existing dependencies or platform capabilities are insufficient, before asking for permission to install it.

@@ -8,6 +8,8 @@
 
 Someone opening 77Faithful for the first time should understand what it is before being asked to start a journey. The introduction explains the mission, 77-day duration, five practices, eleven themes, and faithfulness-over-perfection approach in ordinary language.
 
+The signed-out experience begins at Log In, with access to Create Account, Recover Access, About & Help, and Weekly Themes. Concise product context and access to the introduction remain available before account creation and journey commitment; a separate Welcome destination is not required.
+
 The person may read the overview of the course and the optional-practice descriptions without creating a journey. They should be told that the app is permanently free and that private reflections are not shared with other participants.
 
 The introduction does not require a profession of faith, denominational selection, church membership, financial information, or a promise to complete every practice perfectly.
@@ -37,6 +39,8 @@ A returning participant with an active journey goes to Today. Someone with unfin
 When the app is still determining whether an existing journey is present, it shows a neutral waiting state rather than pretending the account is empty and encouraging a duplicate start.
 
 ## Recommended setup sequence
+
+Journey setup is one guided flow with internal steps, including review and deliberate start. Account access and confirmation use the account experience when needed, rather than a duplicate account form within setup. The sequence below describes the participant's required understanding and choices, not separate destinations for every step.
 
 ### Step 1 · Understand the commitment
 
@@ -123,6 +127,8 @@ A canceled or unsuccessful account action leaves the previous working state inta
 ## Signing out
 
 Signing out ends access on that phone; it does not end the journey or delete the account. The next person using the app must not see the previous participant's writing, progress, name, or active private pages.
+
+After signing out, the participant returns to Log In with public product information still available.
 
 If changes exist only on the current phone, signing out explains the risk. The participant can remain signed in and reconnect to protect them, or explicitly choose to discard those not-yet-protected changes and sign out. The app must not silently delete them or describe them as safely available on another phone.
 

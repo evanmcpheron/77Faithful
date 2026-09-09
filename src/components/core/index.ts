@@ -1,4 +1,5 @@
 export { SeventySevenButton } from './seventy-seven-button.component';
+export { SeventySevenScreenPlaceholder } from './seventy-seven-screen-placeholder.component';
 export {
   SeventySevenText,
   SeventySevenTextAlignment,

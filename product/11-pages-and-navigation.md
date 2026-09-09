@@ -20,7 +20,9 @@ Today is the default destination for a signed-in participant with an active jour
 
 ## Overall flow
 
-**First visit:** Welcome → account access and confirmation → journey introduction → practice selection → translation selection → optional motivation → optional reminders → review and start → Today.
+**First visit:** Log In with account-entry choices and access to product information → account access and confirmation → one guided journey setup containing introduction, practice selection, translation selection, optional motivation, optional reminders, and review and start → Today. Product introduction and the broad theme overview remain available before account creation and commitment.
+
+**Sign-out:** Account → any necessary warning about unprotected work → Log In with access to public product information. Completed account deletion also returns to this signed-out experience.
 
 **Ordinary use:** Today → Scripture, Prayer, Reflect, or optional-practice guidance → Today.
 
@@ -34,15 +36,17 @@ All journeys remain personal in V1. There is no Community destination, invitatio
 
 ## Screen inventory
 
-The numbers below identify product destinations for discussion. They are not addresses, files, or instructions for building the app. Some closely related informational pages may share a consistent presentation, but the listed information and actions must remain available.
+The numbers below identify product destinations and interactions for discussion. They are not addresses, files, or instructions for building the app. They may be implemented as guided steps, sections, focused selectors, or confirmations within a destination; the listed information, actions, and states must remain available.
 
-### P01 · Welcome and product introduction
+P01's introduction is available through login/account entry and product information, without a separate Welcome destination. P05–P10 form one guided setup flow. P07 also appears as a focused selector over Settings or Scripture; P08 remains an editable journey section accessible from the summary; P09 and P24 are Settings sections with the appropriate setup or reader controls. P17 includes previous journeys and secondary statistics. P18 combines the theme overview and eligible weekly introductions. P19 reuses the day's reflection editor, and P20 combines the summary states. P21 remains secondary, with My Practices and Account as its substantial child areas. P25 combines About and Help while retaining independently accessible Privacy and Scripture Acknowledgments. P26 is a confirmation in the selected journey; P27 retains a dedicated deletion destination. Local saving, deletion, sign-out, and competing-draft confirmations belong to their responsible experience.
+
+### P01 · Account entry and product introduction
 
 **Purpose:** Explain the app before account creation or commitment.
 
 **Shows:** Product name, concise mission, 77-day structure, five-practice explanation, permanent free access, privacy reassurance, and a way to inspect the broad theme overview.
 
-**Actions and destinations:** Create account or sign in → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and help → P25.
+**Actions and destinations:** Create account or sign in through the account-entry experience → P02. Learn about the journey → P05 or the public overview of P18. Read privacy and About & Help → P25. The introduction is available from account entry and product information without requiring a standalone Welcome page.
 
 **Important states:** First visit, signed-out return, and arrival after account deletion. Do not display another participant's private name, progress, or writing here.
 
@@ -82,7 +86,7 @@ The numbers below identify product destinations for discussion. They are not add
 
 **Shows:** The three foundational practices, the two-choice structure, eleven-week progression, calendar-based days, the no-reset rule, and optional private writing.
 
-**Actions and destinations:** Continue → P06. Inspect weekly overview → P18. Return to Welcome or account setup as appropriate.
+**Actions and destinations:** Continue → P06. Inspect weekly overview → P18. Return to account entry or product information as appropriate.
 
 **Important states:** First-time introduction and a shorter returning-participant review. Reading an introduction is not a practice completion.
 
@@ -246,7 +250,7 @@ The intention field does not have a completion checkbox. Starting motivation is 
 
 **Shows:** My Practices, Bible translation, reminders, reading appearance, account information, privacy, Scripture acknowledgments, help, About, and Sign out. Journey details may be linked where relevant.
 
-**Actions and destinations:** Open the relevant settings page. Return to the primary destination that opened Settings.
+**Actions and destinations:** Open the relevant settings section, focused selector, or child destination. Return to the primary destination that opened Settings.
 
 **Important states:** Active journey, no active journey, and actions requiring a connection. There is no premium screen, advertisement preference, donation prompt, community administration, or public profile in V1.
 

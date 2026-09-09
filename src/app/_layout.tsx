@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 import { TamaguiProvider } from 'tamagui';
 
 import { colors } from '@77/constants/colors';
+import { AuthProvider } from '@77/providers/auth-provider';
 
 import { tamaguiConfig } from '../../tamagui.config';
 
@@ -13,13 +14,15 @@ const RootLayout = () => {
 
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={defaultTheme}>
-      <StatusBar style={defaultTheme === 'dark' ? 'light' : 'dark'} />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors[defaultTheme].background },
-        }}
-      />
+      <AuthProvider>
+        <StatusBar style={defaultTheme === 'dark' ? 'light' : 'dark'} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors[defaultTheme].background },
+          }}
+        />
+      </AuthProvider>
     </TamaguiProvider>
   );
 };

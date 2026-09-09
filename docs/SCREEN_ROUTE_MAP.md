@@ -10,7 +10,7 @@ Every screen body renders exactly one literal title through `SeventySevenScreenP
 
 The root layout retains the existing Tamagui configuration and phone-following light/dark selection. All three layouts use headerless stacks when their children are enabled. Only `src/app/index.tsx` owns `/`, which directly renders **Sign In**. There is no app-group index, Welcome screen, duplicate sign-in route, navigation bar, screen directory, or clickable prototype. The unreferenced onboarding demo remains outside the routes.
 
-Personal and public routes are inspectable without a session or data fixture. `(app)` marks the future authenticated area; it does not authenticate anyone. No forms, session simulation, parameters, data access, Scripture, persistence, notifications, business workflows, or navigation controls are implemented. Before private data is added, real session, ownership, and access checks are required. A feature flag is not a security boundary.
+Public routes are inspectable without a session or data fixture. `(app)` is the authenticated area: its layout waits for Firebase's initial authentication state and redirects signed-out visitors to `/`. No forms, parameters, private data access, Scripture, notifications, business workflows, or navigation controls are implemented. Server-side data access still requires ownership checks and Firebase Security Rules; a client route guard or feature flag is not a security boundary.
 
 ## Actual route tree
 
@@ -25,10 +25,10 @@ src/app/
 ├── privacy.tsx
 ├── scripture-acknowledgments.tsx
 ├── themes.tsx
+├── onboarding.tsx
 ├── +not-found.tsx
 └── (app)/
     ├── _layout.tsx
-    ├── onboarding.tsx
     ├── today.tsx
     ├── journey.tsx
     ├── reflections.tsx

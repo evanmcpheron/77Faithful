@@ -1,3 +1,3 @@
 export const featureFlags = {
-  areCommunitiesEnabled: false,
+  areCommunitiesEnabled: true,
 };

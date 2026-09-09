@@ -3,8 +3,6 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { FirebaseError } from 'firebase/app';
 import { app, db } from '@77/lib/firebase';
 import { getJourneyCalendarDate } from '@77/features/journey/journey-calendar';
-import { JourneyPreviewTabs } from '@77/features/journey/journey-preview-tabs.component';
-import type { TTodayJourney } from '@77/features/journey/today-screen.component';
 import type {
   IStartJourneyRequest,
   TStartJourneyResult,
@@ -160,7 +158,6 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
   const [isStarting, setIsStarting] = useState(false);
   const [isAwaitingJourney, setIsAwaitingJourney] = useState(false);
   const [hasStartConflict, setHasStartConflict] = useState(false);
-  const [previewJourney, setPreviewJourney] = useState<TTodayJourney | null>(null);
   const startOperationId = useRef<string | null>(null);
   const isStartPending = useRef(false);
   const [reviewDate, setReviewDate] = useState(new Date());
@@ -399,19 +396,6 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
           'reason' in error.details
             ? error.details.reason
             : null;
-        // Temporarily allow Today design work without creating an unprepared journey.
-        if (__DEV__ && reason === 'ContentUnavailable') {
-          const choices = getSetupChoices(selectedPractices, bibleVersionId);
-          if (choices.readiness === 'ReadyForReview') {
-            setPreviewJourney({
-              startDate: getJourneyCalendarDate(new Date(), timeZoneId),
-              state: { status: 'Active' },
-              initialOptionalPracticeIds: choices.optionalPracticeIds,
-              startingMotivation: motivation.trim() ? { text: motivation.trim() } : null,
-            });
-            return;
-          }
-        }
         setHasStartConflict(reason === 'SetupChanged');
         setValidationMessage(
           reason === 'ContentUnavailable'
@@ -454,20 +438,6 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
   const handleRetry = async () => {
     await handleSave(currentStep);
   };
-
-  const handleExitPreview = () => {
-    setPreviewJourney(null);
-  };
-
-  if (__DEV__ && previewJourney) {
-    return (
-      <JourneyPreviewTabs
-        userId={userId}
-        previewJourney={previewJourney}
-        onExitPreview={handleExitPreview}
-      />
-    );
-  }
 
   return (
     <KeyboardAvoidingView

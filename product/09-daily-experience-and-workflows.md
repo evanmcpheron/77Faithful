@@ -134,11 +134,11 @@ A health or safety concern never requires the person to continue an unsuitable a
 
 **Starting situation:** A journey began in New York time and the participant travels elsewhere.
 
-The current journey day continues to follow New York time. When the local phone date differs, Today displays an unobtrusive explanation and the journey's date.
+The current journey day follows the phone's current local date. Today refreshes when the app resumes after travel.
 
-The person can still read, pray, record, and reflect normally. Reminder times follow the phone's local clock as described in Document 12, but reminders open the actual current journey day. Changing reminder behavior does not change the journey dates.
+The person can still read, pray, record, and reflect normally. Reminder times follow the phone's local clock as described in Document 12, and reminders open the current local journey day. Each numbered day keeps its assigned calendar date.
 
-**Successful outcome:** Travel does not duplicate days, erase participation, or make the course move backward.
+**Successful outcome:** Travel may move Today forward or backward with the local date, while preserving each day’s saved participation.
 
 ## Workflow 12 · Continue without internet
 

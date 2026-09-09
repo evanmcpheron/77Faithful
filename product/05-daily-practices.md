@@ -82,7 +82,7 @@ Selection does not require writing a personal goal, committing to a minimum amou
 
 Changes are allowed. Real circumstances change, and the product should not require a person to keep an unsuitable practice for 77 days.
 
-**Adopted rule: replacements take effect on the next journey day, never retroactively and never halfway through today's recorded commitment.** The next day is determined by the fixed journey time zone, not simply the phone's local date.
+**Adopted rule: replacements take effect on the next journey day, never retroactively and never halfway through today's recorded commitment.** The next day is determined by the phone's local date in its current time zone.
 
 The participant may replace, add, or remove selections within the two-to-four range at once. The resulting selection must remain two to four distinct catalog practices. No explanation, approval, or written reflection is required.
 

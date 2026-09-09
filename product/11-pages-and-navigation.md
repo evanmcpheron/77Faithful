@@ -134,7 +134,7 @@ P01's introduction is available through sign-in/account entry and product inform
 
 **Purpose:** Make the commitment and dates explicit before Day 1 begins.
 
-**Shows:** All practices, translation, start and final-day dates, fixed journey time zone, optional reminder state, and the no-reset explanation.
+**Shows:** All practices, translation, start and final-day dates, phone's current time zone, optional reminder state, and the no-reset explanation.
 
 **Actions and destinations:** Edit setup choices; select **Start my journey** → P11 after confirmation; leave setup without starting.
 

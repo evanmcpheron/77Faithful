@@ -146,7 +146,7 @@ Signed-out entry begins at Sign In, with Create Account, Recover Access, About &
 
 After real account access exists, incomplete confirmation goes to Confirm Email; unfinished setup resumes its saved step; an active-journey participant goes to Today. Ended history remains accessible without forcing another start. Successful access and recovery must not create another journey. The underlying sign-in method is not settled by Firebase's presence.
 
-Onboarding is one internal stepper. Repeat participants reuse it with a shorter introduction and review their selections. Only explicit, connected confirmation of **Start my journey** creates a journey; that action is not implemented here.
+Onboarding is one internal stepper. Repeat participants reuse it with a shorter introduction and review their selections. Only explicit, connected confirmation of **Start my journey** creates a journey; that action is implemented by the `startJourney` callable and opens Today after server confirmation; see [journey start](journey-start.md).
 
 V1's primary destinations are **Today, Journey, and Reflections**, with consistent labeled Settings access. No navigation bar, buttons, links, or tabs render now. A future released community feature can add Communities as a conditional fourth destination. Changing the local flag alone does not authorize launching communities or satisfy their release prerequisites.
 
@@ -172,7 +172,7 @@ The title-only components do not read or validate parameters, infer a default jo
 
 ## Essential boundaries for later implementation
 
-Future and not-reached days remain unavailable; Today never becomes Day 78. Historical screens remain attached to their original journey/day across midnight and later journey starts. Optional-practice guidance before a journey exists stays inline in setup rather than inventing an identifier for a historical route. The calendar, fixed time zone, reached-day rules, next-day practice replacement, and one-active-journey requirement remain unchanged.
+Future and not-reached days remain unavailable; Today never becomes Day 78. Historical screens remain attached to their original journey/day across midnight and later journey starts. Optional-practice guidance before a journey exists stays inline in setup rather than inventing an identifier for a historical route. The calendar follows the phone’s current time zone. Reached-day rules, next-day practice replacement, and the one-active-journey requirement remain unchanged.
 
 Public Themes shows only the permitted broad overview. Full introductions require an eligible journey context with authentication and ownership checked before private loading; arbitrary query parameters grant no access.
 

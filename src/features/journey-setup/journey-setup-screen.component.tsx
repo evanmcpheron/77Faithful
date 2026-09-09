@@ -1,3 +1,14 @@
+import { collection, doc } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { FirebaseError } from 'firebase/app';
+import { app, db } from '@77/lib/firebase';
+import { getJourneyCalendarDate } from '@77/features/journey/journey-calendar';
+import { TodayScreen } from '@77/features/journey/today-screen.component';
+import type { TTodayJourney } from '@77/features/journey/today-screen.component';
+import type {
+  IStartJourneyRequest,
+  TStartJourneyResult,
+} from '@77/types/journey/journey-function.types';
 import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView as NativeScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -146,7 +157,12 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
   const [morningTime, setMorningTime] = useState('07:00');
   const [eveningTime, setEveningTime] = useState('20:00');
   const [isEditingReview, setIsEditingReview] = useState(false);
-  const [isSetupSaved, setIsSetupSaved] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+  const [isAwaitingJourney, setIsAwaitingJourney] = useState(false);
+  const [hasStartConflict, setHasStartConflict] = useState(false);
+  const [previewJourney, setPreviewJourney] = useState<TTodayJourney | null>(null);
+  const startOperationId = useRef<string | null>(null);
+  const isStartPending = useRef(false);
   const [reviewDate, setReviewDate] = useState(new Date());
   const [hasDateChanged, setHasDateChanged] = useState(false);
 
@@ -160,7 +176,8 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
     setMorningTime(devicePreferences?.morningReminder.localTime ?? '07:00');
     setEveningTime(devicePreferences?.eveningReflectionReminder.localTime ?? '20:00');
     setIsEditingReview(false);
-    setIsSetupSaved(false);
+    startOperationId.current = null;
+    setHasStartConflict(false);
     setValidationMessage(null);
     setLastSavedChanges(null);
     setHasRestoredSetup(true);
@@ -193,6 +210,9 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
         .join('\n') || 'Off';
   const hasValidPractices = selectedPractices.length >= 2 && selectedPractices.length <= 4;
   const isContinueDisabled =
+    isStarting ||
+    isAwaitingJourney ||
+    hasStartConflict ||
     persistence.isSaving ||
     persistence.hasConflict ||
     (currentStep === JourneySetupStep.Practices && !hasValidPractices) ||
@@ -202,26 +222,33 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
       (!hasValidPractices || !bibleVersionId || !hasValidReminders));
   const finalDate = new Date(reviewDate);
   finalDate.setDate(reviewDate.getDate() + 76);
-  const timeZoneId = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const timeZoneName = timeZoneId.split('/').pop()?.replaceAll('_', ' ') ?? timeZoneId;
+  const [timeZoneId, setTimeZoneId] = useState(
+    () => Intl.DateTimeFormat().resolvedOptions().timeZone,
+  );
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
-  }, [currentStep, isSetupSaved]);
+  }, [currentStep]);
 
   useEffect(() => {
     if (currentStep !== JourneySetupStep.Review) return;
     const refreshDate = () => {
       const now = new Date();
-      if (reviewDate.toDateString() !== now.toDateString()) {
+      const currentTimeZoneId = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (
+        timeZoneId !== currentTimeZoneId ||
+        getJourneyCalendarDate(reviewDate, timeZoneId) !==
+          getJourneyCalendarDate(now, currentTimeZoneId)
+      ) {
         setHasDateChanged(true);
+        setTimeZoneId(currentTimeZoneId);
         setReviewDate(now);
       }
     };
     refreshDate();
     const intervalId = setInterval(refreshDate, 1000);
     return () => clearInterval(intervalId);
-  }, [currentStep, reviewDate]);
+  }, [currentStep, reviewDate, timeZoneId]);
 
   const handlePracticeChange = (practiceId: TOptionalPracticeId, isSelected: boolean) => {
     setSelectedPractices((previousSelection) => {
@@ -273,6 +300,9 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
 
   useEffect(() => {
     if (
+      isStarting ||
+      isAwaitingJourney ||
+      hasStartConflict ||
       !hasRestoredSetup ||
       persistence.isLoading ||
       persistence.isSaving ||
@@ -324,8 +354,82 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
   const handleContinue = async () => {
     if (isContinueDisabled) return;
     if (currentStep === JourneySetupStep.Review) {
-      const didSave = await handleSave(currentStep);
-      if (didSave) setIsSetupSaved(true);
+      if (isStartPending.current) return;
+      isStartPending.current = true;
+      setIsStarting(true);
+      setValidationMessage(null);
+      try {
+        const reviewedStartDate = getJourneyCalendarDate(reviewDate, timeZoneId);
+        const didSave = await handleSave(currentStep);
+        if (!didSave) return;
+        const expectedSetupRevision = persistence.getDraftRevision();
+        if (expectedSetupRevision === null) return;
+        startOperationId.current ??= doc(
+          collection(db, 'users', userId, 'journeyStartOperations'),
+        ).id;
+        const startJourney = httpsCallable<IStartJourneyRequest, TStartJourneyResult>(
+          getFunctions(app),
+          'startJourney',
+        );
+        const { data: result } = await startJourney({
+          operationId: startOperationId.current,
+          setupDraftId: 'current',
+          expectedSetupRevision,
+          review: { observedPhoneTimeZoneId: timeZoneId, reviewedStartDate },
+        });
+        if (result.outcome === 'ReviewChanged') {
+          setReviewDate(new Date(`${result.review.reviewedStartDate}T12:00:00`));
+          setHasDateChanged(true);
+          setValidationMessage(
+            'The date has changed. Review the updated dates, then select Start my journey.',
+          );
+          startOperationId.current = null;
+          return;
+        }
+        // The account guard follows the journey subscription to Today after server confirmation.
+        setIsAwaitingJourney(true);
+      } catch (error) {
+        const errorCode = error instanceof FirebaseError ? error.code : 'unknown';
+        console.warn('Journey start could not be confirmed.', { errorCode });
+        const reason =
+          error instanceof FirebaseError &&
+          'details' in error &&
+          typeof error.details === 'object' &&
+          error.details !== null &&
+          'reason' in error.details
+            ? error.details.reason
+            : null;
+        // Temporarily allow Today design work without creating an unprepared journey.
+        if (__DEV__ && reason === 'ContentUnavailable') {
+          const choices = getSetupChoices(selectedPractices, bibleVersionId);
+          if (choices.readiness === 'ReadyForReview') {
+            setPreviewJourney({
+              startDate: getJourneyCalendarDate(new Date(), timeZoneId),
+              state: { status: 'Active' },
+              initialOptionalPracticeIds: choices.optionalPracticeIds,
+              startingMotivation: motivation.trim() ? { text: motivation.trim() } : null,
+            });
+            return;
+          }
+        }
+        setHasStartConflict(reason === 'SetupChanged');
+        setValidationMessage(
+          reason === 'ContentUnavailable'
+            ? 'The daily readings for your selected translation aren’t ready yet. Your setup is saved. Please try again later.'
+            : reason === 'SetupChanged'
+              ? 'Your setup changed in another session. Copy any writing you want to keep, then load the saved setup and review it before starting.'
+              : errorCode === 'functions/unauthenticated'
+                ? 'Your session needs to be refreshed. Your setup is saved. Sign out and sign in again before starting.'
+                : errorCode === 'functions/permission-denied'
+                  ? 'We couldn’t confirm access to start your journey. Your setup is saved. Confirm your email, then sign in again.'
+                  : errorCode === 'functions/not-found' || errorCode === 'functions/internal'
+                    ? 'Starting your journey is temporarily unavailable. Your setup is saved. Please try again later.'
+                    : 'We couldn’t confirm that your journey started. Your setup is saved. Please try Start my journey again shortly.',
+        );
+      } finally {
+        isStartPending.current = false;
+        setIsStarting(false);
+      }
       return;
     }
     await handleSave(isEditingReview ? JourneySetupStep.Review : setupSteps[stepIndex + 1].id);
@@ -350,6 +454,20 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
   const handleRetry = async () => {
     await handleSave(currentStep);
   };
+
+  const handleExitPreview = () => {
+    setPreviewJourney(null);
+  };
+
+  if (__DEV__ && previewJourney) {
+    return (
+      <TodayScreen
+        userId={userId}
+        previewJourney={previewJourney}
+        onExitPreview={handleExitPreview}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -379,9 +497,9 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
                 <SeventySevenText role="alert" color="$error">
                   {persistence.errorMessage ?? validationMessage ?? changesError}
                 </SeventySevenText>
-                {persistence.hasConflict || !hasRestoredSetup ? (
+                {persistence.hasConflict || hasStartConflict || !hasRestoredSetup ? (
                   <SeventySevenButton onPress={persistence.reload} disabled={persistence.isLoading}>
-                    {persistence.hasConflict ? 'Load saved setup' : 'Try again'}
+                    {persistence.hasConflict || hasStartConflict ? 'Load saved setup' : 'Try again'}
                   </SeventySevenButton>
                 ) : persistence.errorMessage ? (
                   <SeventySevenButton onPress={handleRetry} disabled={persistence.isSaving}>
@@ -392,22 +510,13 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
             ) : null}
             {persistence.isLoading ? (
               <Spinner accessibilityLabel="Loading your setup" />
-            ) : !hasRestoredSetup ? null : isSetupSaved ? (
-              <YStack gap="$4">
-                <SeventySevenText size="Heading" role="heading">
-                  Your setup is saved
-                </SeventySevenText>
-                <SeventySevenText>
-                  Your practices, Bible translation, and starting motivation are saved to your
-                  account. Your reminder preferences are saved for this device. Day 1 hasn’t started
-                  yet.
-                </SeventySevenText>
-                <SeventySevenButton onPress={() => setIsSetupSaved(false)}>
-                  Return to review
-                </SeventySevenButton>
-              </YStack>
-            ) : (
-              <YStack gap="$3" pointerEvents={isNavigatingStep ? 'none' : 'auto'}>
+            ) : !hasRestoredSetup ? null : (
+              <YStack
+                gap="$3"
+                pointerEvents={
+                  isNavigatingStep || isStarting || isAwaitingJourney ? 'none' : 'auto'
+                }
+              >
                 <SeventySevenText role="status" color="$textSecondary">
                   {persistence.isSaving
                     ? 'Saving…'
@@ -427,7 +536,11 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
                   onSkip={isOptionalStep ? handleSkip : undefined}
                   primaryActionLabel={
                     currentStep === JourneySetupStep.Review
-                      ? 'Save my setup'
+                      ? isAwaitingJourney
+                        ? 'Opening today…'
+                        : isStarting
+                          ? 'Starting…'
+                          : 'Start my journey'
                       : isEditingReview
                         ? 'Return to review'
                         : 'Continue'
@@ -630,7 +743,7 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
                     <YStack gap="$3">
                       {hasDateChanged ? (
                         <SeventySevenText role="status" color="$infoText">
-                          The date has changed. Review the updated dates before continuing.
+                          Your local date or time zone changed. Review the dates before continuing.
                         </SeventySevenText>
                       ) : null}
                       <SeventySevenCard gap="$2" bg="$infoSurface">
@@ -639,13 +752,6 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
                         </SeventySevenText>
                         <SeventySevenText bold>
                           Day 77 · {formatJourneyDate(finalDate)}
-                        </SeventySevenText>
-                        <SeventySevenText>
-                          {timeZoneName} time · {timeZoneId}
-                        </SeventySevenText>
-                        <SeventySevenText color="$textSecondary">
-                          Starting fixes your journey to this time zone. Its dates will not shift
-                          when you travel.
                         </SeventySevenText>
                       </SeventySevenCard>
                       <SeventySevenCard>
@@ -688,8 +794,8 @@ export const JourneySetupScreen = ({ userId }: IJourneySetupScreenProps) => {
                         day.
                       </SeventySevenText>
                       <SeventySevenText color="$textSecondary">
-                        Save your setup to return to these choices later. These dates are an example
-                        of starting today; saving does not begin Day 1 or reserve a start date.
+                        Your choices are saved. Select Start my journey to begin Day 1 today. Your
+                        77 days begin once the start is confirmed.
                       </SeventySevenText>
                     </YStack>
                   ) : null}

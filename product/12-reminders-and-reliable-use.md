@@ -14,7 +14,7 @@ Reminders are off until the person deliberately enables them. The phone's permis
 
 ### Scheduling and scope
 
-Reminder times follow the local clock on the phone where they are enabled. Journey dates continue to follow the fixed journey time zone. Settings explains this distinction, especially for travel.
+Reminder times follow the local clock on the phone where they are enabled. Journey days also follow the phone's current time zone. An 8:30 reminder stays at 8:30 wherever the participant travels.
 
 Reminder settings apply to that phone. Another phone does not begin notifying the participant merely because they sign in to the account there. They may enable reminders there explicitly. Signing out stops personal journey reminders on that phone.
 

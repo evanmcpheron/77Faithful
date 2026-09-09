@@ -125,5 +125,13 @@ export const useJourneySetupPersistence = (
     setLoadAttempt((previousAttempt) => previousAttempt + 1);
   };
 
-  return { isLoading, isSaving, errorMessage, hasConflict, save, reload };
+  return {
+    isLoading,
+    isSaving,
+    errorMessage,
+    hasConflict,
+    save,
+    reload,
+    getDraftRevision: () => session.current?.draftRevision ?? null,
+  };
 };

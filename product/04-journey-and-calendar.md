@@ -6,7 +6,7 @@
 
 ## 1. The unit of participation
 
-A journey is one person's separate 77-calendar-day experience. It has a fixed starting date, a fixed journey time zone, a specific formation course, a history of the optional practices assigned to its days, and the person's own participation and writing.
+A journey is one person's separate 77-calendar-day experience. It has a fixed starting date, a specific formation course, a history of the optional practices assigned to its days, and the person's own participation and writing.
 
 The days are labeled **Day 1** through **Day 77**. There is no Day 0 or Day 78 within a journey. The app may display a calendar date alongside a numbered day so that historical records remain understandable.
 
@@ -18,27 +18,27 @@ V1 starts on the date the participant confirms **Start my journey**. Finishing o
 
 There is no date picker for choosing a future or past start. A person who is not ready can leave setup and return later. Their saved setup choices do not reserve a start date.
 
-Before confirmation, the participant sees all assigned practices, selected available Bible translation, today's proposed start date, the projected Day 77 date, and the journey time zone. The review explains that the dates will not move after starting.
+Before confirmation, the participant sees all assigned practices, selected available Bible translation, today's proposed start date, the projected Day 77 date, and an explanation that days follow the phone's current time zone. The start date and the date assigned to each numbered day remain fixed.
 
-The journey time zone is the phone's current time zone when the journey starts, shown in a human-readable form such as **New York time**. No location-sharing permission is required as a product condition. A person traveling at setup should be able to understand that starting there fixes the journey to that time zone. V1 does not offer a separate journey-time-zone customization feature.
+The journey follows the phone's current time zone, including when traveling. The starting phone zone is retained only as context. No location-sharing permission or separate time-zone setting is required.
 
 Starting must be confirmed while connected to the internet. Until the app confirms the start, it must not tell the participant that a journey definitely exists. When a start is confirmed but the phone is still preparing the reading content for use without internet, that separate status must remain visible.
 
 ## 3. Calendar rules
 
-Day 1 is the starting calendar date in the journey time zone. Day 2 is the following calendar date, and so on. The date for Day 77 is 76 calendar dates after Day 1.
+Day 1 is the starting calendar date in the phone's current time zone. Day 2 is the following calendar date, and so on. The date for Day 77 is 76 calendar dates after Day 1.
 
-A journey day changes at midnight in the fixed journey time zone. It is not a rolling 24-hour period beginning when the person clicked Start. Starting late in the evening creates a shorter first day; the review should explain that Day 1 ends at midnight in the displayed journey time zone. There is no automatic move to tomorrow and no pressure to finish all practices before midnight.
+A journey day changes at midnight in the phone's current time zone. It is not a rolling 24-hour period beginning when the person clicked Start. Starting late in the evening creates a shorter first day; the review should explain that Day 1 ends at midnight in the phone's current time zone. There is no automatic move to tomorrow and no pressure to finish all practices before midnight.
 
-Once a journey has started, neither its start date nor its time zone can be edited. Traveling, changing the phone's time zone, or a daylight-saving-time change must not add, remove, repeat, or renumber a journey day.
+Once a journey has started, its start date cannot be edited. Each numbered day keeps its assigned calendar date. Travel can move Today forward or backward as the phone's local date changes; it never duplicates or erases participation records. Daylight-saving changes do not alter the date-to-day mapping.
 
-The participant can see the journey's time zone from the journey details. When the phone is using a different time zone, Today should explain the difference unobtrusively. The app must not present an apparently incorrect day without explanation.
+Today uses the phone's current date and time zone and refreshes when the app resumes.
 
 ### Concrete example
 
-A journey starting on **September 8, 2026** has Day 1 on September 8 and Day 77 on **November 23, 2026**, in its fixed journey time zone. It becomes a completed journey when November 24 begins in that time zone.
+A journey starting on **September 8, 2026** has Day 1 on September 8 and Day 77 on **November 23, 2026**, in the phone's current time zone. It becomes a completed journey when November 24 begins in that zone. Once completion is confirmed, it remains terminal even if the participant later travels west.
 
-If the participant travels during that period, those dates remain attached to the same numbered days. If the phone's local date differs from the journey date, the journey date determines Today.
+If the participant travels during that period, those dates remain attached to the same numbered days. The phone's local date determines Today.
 
 ## 4. Journey states
 
@@ -55,7 +55,7 @@ A temporary inability to display account information is not the same as having n
 
 ## 5. Current, historical, and future days
 
-**Current day:** The numbered day assigned to the current date in the journey time zone while the journey is active.
+**Current day:** The numbered day assigned to the current date in the phone's current time zone while the journey is active.
 
 **Historical day:** A day that has already occurred within the part of the journey the participant actually reached. Historical days remain available for reading, reflection, and changes to participation records.
 
@@ -117,7 +117,7 @@ Ending on the Day 1 date is still an early-ended journey with one reached day. U
 
 ## 10. Reaching Day 77 and finishing the period
 
-Day 77 remains an active day until its date ends in the journey time zone. Completing all assigned practices early that day completes the day, not the calendar period.
+Day 77 remains an active day until its date ends in the phone's current time zone. Completing all assigned practices early that day completes the day, not the calendar period.
 
 The participant may read a final-day message and review a preliminary summary on Day 77. The wording should say **Your final day** rather than claim the full period has already elapsed.
 

@@ -39,7 +39,7 @@ export interface IPendingPracticeChange {
   effectiveDate: TCalendarDate;
 }
 
-/** Derived from initial choices and effective change history in the fixed journey zone. */
+/** Derived from initial choices and effective change history in the phone's current time zone. */
 export interface IJourneyPracticeSelection {
   journeyId: string;
   currentOptionalPracticeIds: TOptionalPracticeSelection;

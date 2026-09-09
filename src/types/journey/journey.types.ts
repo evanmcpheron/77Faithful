@@ -23,7 +23,7 @@ export interface IActiveJourneyState {
 
 export interface ICompletedJourneyState {
   status: typeof JourneyStatus.Completed;
-  // The instant after Day 77 ends, even when the server recognizes it much later.
+  // The instant after Day 77 ends in the phone zone used when completion is confirmed.
   completedAt: IPersistedTimestamp;
 }
 
@@ -43,6 +43,7 @@ export interface IJourneyDocument extends IDocumentTimestamps {
   readonly userId: string;
   readonly course: IFormationCourseReference;
   readonly startDate: TCalendarDate;
+  /** Phone zone at start, retained as context; current days follow the phone's current zone. */
   readonly timeZoneId: TIanaTimeZoneId;
   readonly initialOptionalPracticeIds: TOptionalPracticeSelection;
   // Used with the separate change history to reject stale practice replacements.
@@ -82,6 +83,6 @@ export interface IEarlyEndedJourneyPosition {
   lastReachedDayNumber: number;
 }
 
-/** Derived using the fixed journey zone and current instant, not the phone's current date. */
+/** Derived using the phone's current time zone and current instant. */
 export type TJourneyPosition =
   IActiveJourneyPosition | ICompletedJourneyPosition | IEarlyEndedJourneyPosition;

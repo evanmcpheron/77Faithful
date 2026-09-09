@@ -84,7 +84,7 @@ Reminders can also be configured later in Settings. They do not need to be enabl
 
 ### Step 7 · Review and start
 
-Show the daily practices, selected translation, start date, final-day date, and fixed journey time zone. Include a concise statement that days continue after an absence and that the optional practices can be changed for later days.
+Show the daily practices, selected translation, start date, final-day date, and phone's current time zone. Include a concise statement that days continue after an absence and that the optional practices can be changed for later days.
 
 The action is **Start my journey**. Until that action is confirmed, there is no active journey and no countdown.
 

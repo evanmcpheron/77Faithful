@@ -25,11 +25,11 @@ The scenarios summarize rules from the specialist documents. An example does not
 
 | ID  | Situation                                                                   | Expected participant experience                                                                                                    |
 | --- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| A11 | A journey starts September 8, 2026.                                         | Day 1 is September 8, Day 77 is November 23, and the period ends when November 24 begins in the fixed journey time zone.           |
+| A11 | A journey starts September 8, 2026.                                         | Day 1 is September 8, Day 77 is November 23, and the period ends when November 24 begins in the phone's current time zone.         |
 | A12 | Someone starts shortly before midnight.                                     | Day 1 is still the current date; the review explains when it ends. There is no hidden 24-hour extension or automatic future start. |
 | A13 | The participant misses one entire day.                                      | The calendar advances normally and earlier records remain. There is no restart.                                                    |
 | A14 | The participant returns five days after their last visit.                   | Today reflects the actual journey date, not the count of visits. Catch-up is optional.                                             |
-| A15 | The participant changes phone time zones while traveling.                   | The journey's day numbers, dates, and assigned practices remain tied to its original time zone.                                    |
+| A15 | The participant changes phone time zones while traveling.                   | Today follows the phone's current local date; each numbered day retains its assigned date, practices, and saved participation.     |
 | A16 | A daylight-saving-time boundary occurs.                                     | No numbered day is lost, repeated, shortened out of existence, or added.                                                           |
 | A17 | A participant selects a future day.                                         | They see when it becomes available without gaining access to its full daily reading or completion controls.                        |
 | A18 | A participant reviews the course overview before starting.                  | All eleven theme names and brief descriptions are visible, but not the future daily content.                                       |

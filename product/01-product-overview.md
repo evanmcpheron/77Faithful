@@ -59,7 +59,7 @@ The day shows honest progress, such as **3 of 5 practices complete**. There is n
 
 ## How the journey progresses
 
-The day the participant selects **Start my journey** is Day 1. The journey then follows 77 consecutive calendar dates in the journey's fixed time zone. It is not a count of 77 perfect days or 77 visits to the app.
+The day the participant selects **Start my journey** is Day 1. The journey then follows 77 consecutive calendar dates in the phone's current time zone. It is not a count of 77 perfect days or 77 visits to the app.
 
 When a day is missed, the following date still becomes the next numbered day. Previous days remain available to review and update. The participant can catch up voluntarily, but catching up is never a condition for accessing today's content.
 

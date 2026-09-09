@@ -36,7 +36,7 @@ let connector = DataConnect.moviesConnector
 
 // For local development with emulator
 // Defaults to 127.0.0.1:9399
-connector.useEmulator() 
+connector.useEmulator()
 // Or specify a non-default port:
 // connector.useEmulator(port: 9999)
 ```
@@ -93,8 +93,8 @@ scenarios, enable realtime support for queries.
 ```yaml
 generate:
   swiftSdk:
-    outputDir: "../ios"
-    package: "FirebaseDataConnectGenerated"
+    outputDir: '../ios'
+    package: 'FirebaseDataConnectGenerated'
     clientCache:
       maxAge: 5s
       storage: persistent # Default for iOS is persistent

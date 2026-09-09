@@ -99,8 +99,8 @@ scenarios.
 ```yaml
 generate:
   kotlinSdk:
-    outputDir: "../android"
-    package: "com.google.firebase.dataconnect.generated"
+    outputDir: '../android'
+    package: 'com.google.firebase.dataconnect.generated'
     clientCache:
       maxAge: 5s
       storage: persistent # Default for Android is persistent

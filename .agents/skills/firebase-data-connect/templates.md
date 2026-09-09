@@ -2,7 +2,7 @@
 
 Ready-to-use templates for common Firebase SQL Connect patterns.
 
-______________________________________________________________________
+---
 
 ## Basic CRUD Schema
 
@@ -21,12 +21,21 @@ type Item @table {
 # queries.gql
 query ListItems @auth(level: PUBLIC) {
   items(orderBy: [{ createdAt: DESC }]) {
-    id name description createdAt
+    id
+    name
+    description
+    createdAt
   }
 }
 
 query GetItem($id: UUID!) @auth(level: PUBLIC) {
-  item(id: $id) { id name description createdAt updatedAt }
+  item(id: $id) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+  }
 }
 ```
 
@@ -37,11 +46,10 @@ mutation CreateItem($name: String!, $description: String) @auth(level: USER) {
 }
 
 mutation UpdateItem($id: UUID!, $name: String, $description: String) @auth(level: USER) {
-  item_update(id: $id, data: {
-    name: $name,
-    description: $description,
-    updatedAt_expr: "request.time"
-  })
+  item_update(
+    id: $id
+    data: { name: $name, description: $description, updatedAt_expr: "request.time" }
+  )
 }
 
 mutation DeleteItem($id: UUID!) @auth(level: USER) {
@@ -49,7 +57,7 @@ mutation DeleteItem($id: UUID!) @auth(level: USER) {
 }
 ```
 
-______________________________________________________________________
+---
 
 ## User-Owned Resources
 
@@ -73,47 +81,42 @@ type Note @table {
 ```graphql
 # queries.gql
 query MyNotes @auth(level: USER) {
-  notes(
-    where: { owner: { uid: { eq_expr: "auth.uid" }}},
-    orderBy: [{ createdAt: DESC }]
-  ) { id title content createdAt }
+  notes(where: { owner: { uid: { eq_expr: "auth.uid" } } }, orderBy: [{ createdAt: DESC }]) {
+    id
+    title
+    content
+    createdAt
+  }
 }
 
 query GetMyNote($id: UUID!) @auth(level: USER) {
-  note(
-    first: { where: {
-      id: { eq: $id },
-      owner: { uid: { eq_expr: "auth.uid" }}
-    }}
-  ) { id title content }
+  note(first: { where: { id: { eq: $id }, owner: { uid: { eq_expr: "auth.uid" } } } }) {
+    id
+    title
+    content
+  }
 }
 ```
 
 ```graphql
 # mutations.gql
 mutation CreateNote($title: String!, $content: String) @auth(level: USER) {
-  note_insert(data: {
-    owner: { uid_expr: "auth.uid" },
-    title: $title,
-    content: $content
-  })
+  note_insert(data: { owner: { uid_expr: "auth.uid" }, title: $title, content: $content })
 }
 
 mutation UpdateNote($id: UUID!, $title: String, $content: String) @auth(level: USER) {
   note_update(
-    first: { where: { id: { eq: $id }, owner: { uid: { eq_expr: "auth.uid" }}}},
+    first: { where: { id: { eq: $id }, owner: { uid: { eq_expr: "auth.uid" } } } }
     data: { title: $title, content: $content }
   )
 }
 
 mutation DeleteNote($id: UUID!) @auth(level: USER) {
-  note_delete(
-    first: { where: { id: { eq: $id }, owner: { uid: { eq_expr: "auth.uid" }}}}
-  )
+  note_delete(first: { where: { id: { eq: $id }, owner: { uid: { eq_expr: "auth.uid" } } } })
 }
 ```
 
-______________________________________________________________________
+---
 
 ## Many-to-Many Relationship
 
@@ -139,18 +142,24 @@ type ArticleTag @table(key: ["article", "tag"]) {
 ```graphql
 # queries.gql
 query ArticlesByTag($tagName: String!) @auth(level: PUBLIC) {
-  articles(where: {
-    articleTags_on_article: { tag: { name: { eq: $tagName }}}
-  }) {
-    id title
-    tags: tags_via_ArticleTag { name }
+  articles(where: { articleTags_on_article: { tag: { name: { eq: $tagName } } } }) {
+    id
+    title
+    tags: tags_via_ArticleTag {
+      name
+    }
   }
 }
 
 query ArticleWithTags($id: UUID!) @auth(level: PUBLIC) {
   article(id: $id) {
-    id title content
-    tags: tags_via_ArticleTag { id name }
+    id
+    title
+    content
+    tags: tags_via_ArticleTag {
+      id
+      name
+    }
   }
 }
 ```
@@ -158,10 +167,7 @@ query ArticleWithTags($id: UUID!) @auth(level: PUBLIC) {
 ```graphql
 # mutations.gql
 mutation AddTagToArticle($articleId: UUID!, $tagId: UUID!) @auth(level: USER) {
-  articleTag_insert(data: {
-    article: { id: $articleId },
-    tag: { id: $tagId }
-  })
+  articleTag_insert(data: { article: { id: $articleId }, tag: { id: $tagId } })
 }
 
 mutation RemoveTagFromArticle($articleId: UUID!, $tagId: UUID!) @auth(level: USER) {
@@ -169,45 +175,45 @@ mutation RemoveTagFromArticle($articleId: UUID!, $tagId: UUID!) @auth(level: USE
 }
 ```
 
-______________________________________________________________________
+---
 
 ## dataconnect.yaml Template
 
 ```yaml
-specVersion: "v1"
-serviceId: "my-service"
-location: "us-central1"
+specVersion: 'v1'
+serviceId: 'my-service'
+location: 'us-central1'
 schema:
-  source: "./schema"
+  source: './schema'
   datasource:
     postgresql:
-      database: "fdcdb"
+      database: 'fdcdb'
       cloudSql:
-        instanceId: "my-instance"
-connectorDirs: ["./connector"]
+        instanceId: 'my-instance'
+connectorDirs: ['./connector']
 ```
 
-______________________________________________________________________
+---
 
 ## connector.yaml Template
 
 ```yaml
-connectorId: "default"
+connectorId: 'default'
 generate:
   javascriptSdk:
-    outputDir: "../web/src/lib/dataconnect"
-    package: "@myapp/dataconnect"
+    outputDir: '../web/src/lib/dataconnect'
+    package: '@myapp/dataconnect'
   kotlinSdk:
-    outputDir: "../android/app/src/main/kotlin/com/myapp/dataconnect"
-    package: "com.myapp.dataconnect"
+    outputDir: '../android/app/src/main/kotlin/com/myapp/dataconnect'
+    package: 'com.myapp.dataconnect'
   swiftSdk:
-    outputDir: "../ios/MyApp/DataConnect"
+    outputDir: '../ios/MyApp/DataConnect'
   dartSdk:
-    outputDir: "../flutter/lib/dataconnect"
+    outputDir: '../flutter/lib/dataconnect'
     package: myapp_dataconnect
 ```
 
-______________________________________________________________________
+---
 
 ## Firebase Init Commands
 
@@ -229,7 +235,7 @@ npx -y firebase-tools@latest dataconnect:sdk:generate
 npx -y firebase-tools@latest deploy --only dataconnect
 ```
 
-______________________________________________________________________
+---
 
 ## SDK Initialization (Web)
 
@@ -241,9 +247,9 @@ import { getDataConnect, connectDataConnectEmulator } from 'firebase/data-connec
 import { connectorConfig } from '@myapp/dataconnect';
 
 const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "...",
-  projectId: "...",
+  apiKey: '...',
+  authDomain: '...',
+  projectId: '...',
 };
 
 export const app = initializeApp(firebaseConfig);
@@ -268,18 +274,18 @@ console.log(data.items);
 await createItem({ name: 'New Item', description: 'Description' });
 ```
 
-______________________________________________________________________
+---
 
 ## Realtime Query Templates
 
 ### Time-Based Polling
 
 ```graphql
-query LiveDashboard
-  @auth(level: PUBLIC)
-  @refresh(every: { seconds: 30 }) {
+query LiveDashboard @auth(level: PUBLIC) @refresh(every: { seconds: 30 }) {
   items(orderBy: [{ updatedAt: DESC }], limit: 20) {
-    id name updatedAt
+    id
+    name
+    updatedAt
   }
 }
 ```
@@ -288,13 +294,17 @@ query LiveDashboard
 
 ```graphql
 query ItemList($categoryId: UUID!)
-  @auth(level: PUBLIC)
-  @refresh(onMutationExecuted: {
-    operation: "CreateItem",
+@auth(level: PUBLIC)
+@refresh(
+  onMutationExecuted: {
+    operation: "CreateItem"
     condition: "request.variables.categoryId == mutation.variables.categoryId"
-  }) {
-  items(where: { category: { id: { eq: $categoryId }}}) {
-    id name createdAt
+  }
+) {
+  items(where: { category: { id: { eq: $categoryId } } }) {
+    id
+    name
+    createdAt
   }
 }
 ```
@@ -310,7 +320,7 @@ const unsubscribe = subscribe(liveDashboardRef(), {
     // Called immediately with current data, then on each refresh
     renderDashboard(result.data.items);
   },
-  onError: (error) => console.error('Subscription error:', error)
+  onError: (error) => console.error('Subscription error:', error),
 });
 
 // Cleanup when done

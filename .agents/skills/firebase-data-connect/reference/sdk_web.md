@@ -56,7 +56,7 @@ console.log(data.movies);
 ```typescript
 import { listMovies } from '@dataconnect/generated';
 
-listMovies().then(data => showInUI(data));
+listMovies().then((data) => showInUI(data));
 ```
 
 ### Resilient Enum Handling
@@ -71,14 +71,14 @@ const queryResult = await getOldestMovie();
 if (queryResult.data) {
   const oldestMovieAspectRatio = queryResult.data.originalAspectRatio;
   switch (oldestMovieAspectRatio) {
-      case AspectRatio.ACADEMY:
-      case AspectRatio.WIDESCREEN:
-        console.log('Filmed in Academy or Widescreen!');
-        break;
-      default:
-        // The default case will catch FULLSCREEN, etc.
-        console.log('Not filmed in Academy or Widescreen.');
-        break;
+    case AspectRatio.ACADEMY:
+    case AspectRatio.WIDESCREEN:
+      console.log('Filmed in Academy or Widescreen!');
+      break;
+    default:
+      // The default case will catch FULLSCREEN, etc.
+      console.log('Not filmed in Academy or Widescreen.');
+      break;
   }
 }
 ```
@@ -91,7 +91,7 @@ Enable caching in `connector.yaml`:
 generate:
   javascriptSdk:
     outputDir: ../web/
-    package: "@dataconnect/generated"
+    package: '@dataconnect/generated'
     clientCache:
       maxAge: 5s
       storage: memory # Only memory is supported on Web
@@ -114,10 +114,10 @@ Use `subscribe()` to receive live updates.
 import { subscribe } from 'firebase/data-connect';
 import { getMovieByIdRef } from '@dataconnect/generated';
 
-const queryRef = getMovieByIdRef({ id: "<MOVIE_ID>" });
+const queryRef = getMovieByIdRef({ id: '<MOVIE_ID>' });
 
 const unsubscribe = subscribe(queryRef, (result) => {
-  console.log("Updated result:", result);
+  console.log('Updated result:', result);
 });
 ```
 
@@ -128,7 +128,7 @@ To use React hooks, re-run `firebase init dataconnect:sdk` after adding React.
 #### Usage
 
 ```typescript
-import { useListAllMovies } from "@dataconnect/generated/react";
+import { useListAllMovies } from '@dataconnect/generated/react';
 
 function MyComponent() {
   const { isLoading, data, error } = useListAllMovies();

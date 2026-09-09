@@ -3,7 +3,7 @@
 Use this reference to handle database events in SQL Connect by triggering Cloud
 Functions in response to mutation executions.
 
-______________________________________________________________________
+---
 
 ## Core Trigger Configuration
 
@@ -31,23 +31,23 @@ location.** You **must** explicitly configure the `region` parameter (e.g.,
 `dataconnect.yaml`.
 
 ```typescript
-import { onMutationExecuted } from "firebase-functions/dataconnect";
-import { logger } from "firebase-functions";
+import { onMutationExecuted } from 'firebase-functions/dataconnect';
+import { logger } from 'firebase-functions';
 
 export const logMutation = onMutationExecuted(
   {
-    region: "europe-west1" // Must match the SQL Connect service location
+    region: 'europe-west1', // Must match the SQL Connect service location
   },
   (event) => {
-    logger.info("A mutation was executed!", {
+    logger.info('A mutation was executed!', {
       eventId: event.id,
-      type: event.type
+      type: event.type,
     });
-  }
+  },
 );
 ```
 
-______________________________________________________________________
+---
 
 ## Event Filtering
 
@@ -63,36 +63,36 @@ To prevent unnecessary function invocations and infinite execution loops,
 ### Comprehensive Example
 
 ```typescript
-import { onMutationExecuted } from "firebase-functions/dataconnect";
-import { logger } from "firebase-functions";
+import { onMutationExecuted } from 'firebase-functions/dataconnect';
+import { logger } from 'firebase-functions';
 
 // Triggers for "CreateUser" mutation in "myAppService" service.
 // 'connector' is omitted (optional), meaning it matches "CreateUser" in any connector.
 export const onUserCreate = onMutationExecuted(
   {
-    service: "myAppService",
-    operation: "CreateUser",
+    service: 'myAppService',
+    operation: 'CreateUser',
     // region: "us-central1" // Optional: defaults to us-central1, change if database is elsewhere
   },
   (event) => {
-    logger.info("A new user was created!");
-  }
+    logger.info('A new user was created!');
+  },
 );
 
 // Advanced: Trigger using wildcards or capture variables
 export const onMutationCaptures = onMutationExecuted(
   {
-    service: "myAppService",
-    operation: "{operation}", // Captures matching operation name dynamically
+    service: 'myAppService',
+    operation: '{operation}', // Captures matching operation name dynamically
   },
   (event) => {
     const triggeredOp = event.params.operation;
     logger.info(`Captured operation execution: ${triggeredOp}`);
-  }
+  },
 );
 ```
 
-______________________________________________________________________
+---
 
 ## Accessing User Authentication Context
 
@@ -113,18 +113,18 @@ Extract security credentials about the caller who executed the mutation using
 
 ```typescript
 export const processSensitiveMutation = onMutationExecuted(
-  { operation: "UpdateFinancials" },
+  { operation: 'UpdateFinancials' },
   (event) => {
-    if (event.authType === "admin") {
-      console.log("Elevated admin mutation execution.");
+    if (event.authType === 'admin') {
+      console.log('Elevated admin mutation execution.');
     } else {
       console.log(`Mutation initiated by user: ${event.authId}`);
     }
-  }
+  },
 );
 ```
 
-______________________________________________________________________
+---
 
 ## Parsing Event Data Payloads
 
@@ -162,14 +162,14 @@ and return values generated from the execution (`payload.data`).
 ### Payload Extraction Example
 
 ```typescript
-import { onMutationExecuted } from "firebase-functions/dataconnect";
-import { logger } from "firebase-functions";
+import { onMutationExecuted } from 'firebase-functions/dataconnect';
+import { logger } from 'firebase-functions';
 
 export const onNewReview = onMutationExecuted(
   {
-    service: "myAppService",
-    connector: "reviews",
-    operation: "CreateReview",
+    service: 'myAppService',
+    connector: 'reviews',
+    operation: 'CreateReview',
   },
   (event) => {
     // Extract input variables passed to the mutation
@@ -178,7 +178,9 @@ export const onNewReview = onMutationExecuted(
     // Extract returned fields from the database write
     const returnedFields = event.data.payload.data;
 
-    logger.info(`Processed review ${returnedFields.review_insert.id} for movie ${inputVariables.movieId}`);
-  }
+    logger.info(
+      `Processed review ${returnedFields.review_insert.id} for movie ${inputVariables.movieId}`,
+    );
+  },
 );
 ```

@@ -1,14 +1,10 @@
-import { ACCOUNT_TYPE, type TAccountType } from '@turndown/library';
+import { ACCOUNT_TYPE } from '@turndown/library';
 
 import { Checkbox } from '@td/components/form/checkbox/checkbox.component';
-import { Dropdown } from '@td/components/form/dropdown/dropdown.component';
 import { Form } from '@td/components/form/form';
 import { Input } from '@td/components/form/input/input.component';
 import { Row } from '@td/components/layout/row/row.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
-import { Spacer } from '@td/components/ui/spacer/spacer.component';
-import { AccountTypeOptions } from '@td/constants/app.constants';
-import { Spacing } from '@td/theme/spacing';
 
 import { StyledSecondaryActionsRow } from '../../screens/login.styles';
 import type { IRegisterFormValues } from './register.form.types';
@@ -35,15 +31,6 @@ export const RegisterForm = () => {
 			name={RegisterFormData.name}
 			editValues={RegisterFormData.defaultValue}
 		>
-			<Dropdown<TAccountType>
-				name='accountType'
-				testID='auth-register-account-type-dropdown'
-				label='Account Type'
-				options={AccountTypeOptions}
-				placeholder='Select one or more services'
-				defaultValue={RegisterFormData.defaultValue.accountType}
-			/>
-			<Spacer size={Spacing.Small} />
 			<Row>
 				<Input
 					name='firstName'

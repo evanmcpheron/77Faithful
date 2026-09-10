@@ -18,6 +18,7 @@ import {
 	StyledRootGestureContainer,
 } from '@td/components/layout/root/root-layout.styles';
 import { NotificationHost } from '@td/components/ui/notification/notification-host.component';
+import { AuthProvider } from '@td/providers/auth/auth.provider';
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
 
@@ -64,8 +65,10 @@ const RootLayout = () => {
 	return (
 		<SafeAreaProvider initialMetrics={initialWindowMetrics}>
 			<StyledRootGestureContainer>
-				<StackLayout />
-				<NotificationHost />
+				<AuthProvider>
+					<StackLayout />
+					<NotificationHost />
+				</AuthProvider>
 			</StyledRootGestureContainer>
 		</SafeAreaProvider>
 	);

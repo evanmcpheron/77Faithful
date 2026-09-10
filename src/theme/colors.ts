@@ -35,7 +35,7 @@ export const FeedbackColors = {
 } as const;
 
 export const SurfaceColors = {
-	Screen: NeutralColors.Grey050,
+	Screen: NeutralColors.Grey100,
 	Card: NeutralColors.White,
 	Elevated: NeutralColors.Grey100,
 	Muted: '#EEEAE3',

@@ -1,7 +1,0 @@
-import { Stack } from 'expo-router';
-
-const FutureLayout = () => {
-	return <Stack screenOptions={{ headerShown: false }} />;
-};
-
-export default FutureLayout;

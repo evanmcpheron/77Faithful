@@ -11,6 +11,7 @@ export type TNavigationTabConfig = {
 	name: string;
 	label: string;
 	icon: TIconName;
+	enabled?: boolean;
 	title?: string;
 	routeName?: string;
 	options?: BottomTabNavigationOptions;

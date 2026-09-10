@@ -21,7 +21,7 @@
 		"web": {
 			"bundler": "metro",
 			"output": "static",
-			"favicon": "./src/assets/images/brand/app-icon.png"
+			"favicon": "./src/assets/images/brand/favicon.png"
 		},
 		"plugins": [
 			"expo-router",
@@ -29,10 +29,14 @@
 			[
 				"expo-splash-screen",
 				{
-					"image": "./src/assets/images/brand/light-logo.png",
+					"image": "./src/assets/images/brand/splash-light.png",
+					"imageWidth": 288,
 					"resizeMode": "contain",
-					"backgroundColor": "#ffffff",
-					"enableFullScreenImage_legacy": true
+					"backgroundColor": "#071730",
+					"ios": {
+						"enableFullScreenImage_legacy": true,
+						"resizeMode": "cover"
+					}
 				}
 			],
 			"expo-web-browser"

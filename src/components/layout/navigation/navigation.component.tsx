@@ -555,6 +555,10 @@ const CustomTabBar: FC<TCustomTabBarProps> = ({
 };
 
 export const TabsLayout: FC<ITabsLayoutProps> = ({ tabs }) => {
+	const visibleTabs = useMemo(
+		() => tabs.filter((tab) => tab.enabled !== false),
+		[tabs],
+	);
 	return (
 		<Tabs
 			screenOptions={{
@@ -564,19 +568,23 @@ export const TabsLayout: FC<ITabsLayoutProps> = ({ tabs }) => {
 			tabBar={(props) => (
 				<CustomTabBar
 					{...props}
-					tabs={tabs}
+					tabs={visibleTabs}
 				/>
 			)}
 		>
 			{tabs.map((tab) => (
-				<Tabs.Screen
+				<Tabs.Protected
 					key={tab.name}
-					name={tab.name}
-					options={{
-						title: tab.title ?? tab.label,
-						...tab.options,
-					}}
-				/>
+					guard={tab.enabled !== false}
+				>
+					<Tabs.Screen
+						name={tab.name}
+						options={{
+							title: tab.title ?? tab.label,
+							...tab.options,
+						}}
+					/>
+				</Tabs.Protected>
 			))}
 		</Tabs>
 	);

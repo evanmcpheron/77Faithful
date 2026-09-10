@@ -1,9 +1,15 @@
 import { IconName, type TIconName } from '@td/components/ui/icon/icon.types';
-import { ActionColors, NeutralColors, TextColors } from '@td/theme/colors';
+import { COMMUNITIES_ENABLED } from '@td/constants/feature-flags.constants';
+import {
+	ActionColors,
+	NeutralColors,
+	SurfaceColors,
+	TextColors,
+} from '@td/theme/colors';
 
 import type { TNavigationTabConfig, TTabMeta } from './navigation.types';
 
-export const BAR_BACKGROUND = NeutralColors.White;
+export const BAR_BACKGROUND = SurfaceColors.Screen;
 export const ACTIVE_COLOR = ActionColors.PrimaryBackground;
 export const INACTIVE_COLOR = TextColors.Primary;
 export const ACTIVE_ICON_COLOR = TextColors.Inverse;
@@ -90,6 +96,12 @@ export const resolveInactiveIconName = (iconName: TIconName): TIconName => {
 export const APP_TABS: TNavigationTabConfig[] = [
 	{ name: 'today', label: 'Today', icon: IconName.HomeFilled },
 	{ name: '(journey)', label: 'Journey', icon: IconName.CalendarFilled },
+	{
+		name: 'communities',
+		label: 'Communities',
+		icon: IconName.UsersFilled,
+		enabled: COMMUNITIES_ENABLED,
+	},
 	{ name: 'settings', label: 'Settings', icon: IconName.SettingsFilled },
 ];
 

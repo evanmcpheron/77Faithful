@@ -4,9 +4,7 @@ import { useJourneyAccess } from '@td/providers/journey/journey-access.provider'
 import { Redirect, Slot, usePathname, useRouter } from 'expo-router';
 import { KeyboardAvoidingView, StatusBar, View } from 'react-native';
 import Animated, {
-	interpolate,
 	useAnimatedRef,
-	useAnimatedStyle,
 	useScrollOffset,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,13 +15,14 @@ import { IconName } from '@td/components/ui/icon/icon.types';
 import { Layout } from '@td/theme/layout';
 
 import { IconButtonVariant } from '@td/components/ui/icon-button/icon-button.types';
+import { AuthHeaderBackground } from '@td/features/auth/components/auth-header.component';
+import { useAuthHeaderAnimation } from '@td/features/auth/hooks/use-auth-header-animation.hook';
 import {
 	AuthScrollContentStyle,
 	StyledAuthBodyContainer,
 	StyledAuthHeaderContainer,
 	StyledAuthHeaderContent,
 	StyledAuthHeaderSafeArea,
-	StyledAuthHeaderSvg,
 	StyledAuthScreen,
 	StyledAuthScrollView,
 } from '@td/features/auth/screens/auth.styles';
@@ -49,30 +48,10 @@ const AuthLayout = () => {
 	const showBackButton =
 		pathname === '/forgot-password' || pathname === '/reset-password';
 
-	const headerAnimatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [
-				{
-					translateY: interpolate(
-						scrollOffset.value,
-						[-Layout.AuthHeaderHeight, 0, Layout.AuthHeaderHeight],
-						[
-							-Layout.AuthHeaderHeight / 2,
-							0,
-							Layout.AuthHeaderHeight * 0.75,
-						],
-					),
-				},
-				{
-					scale: interpolate(
-						scrollOffset.value,
-						[-Layout.AuthHeaderHeight, 0, Layout.AuthHeaderHeight],
-						[2, 1, 1],
-					),
-				},
-			],
-		};
-	});
+	const headerAnimatedStyle = useAuthHeaderAnimation(
+		scrollOffset,
+		Layout.AuthHeaderHeight,
+	);
 
 	if (redirect) return <Redirect href={redirect} />;
 
@@ -90,11 +69,7 @@ const AuthLayout = () => {
 					showsVerticalScrollIndicator={false}
 				>
 					<StyledAuthHeaderContainer style={headerAnimatedStyle}>
-						<StyledAuthHeaderSvg
-							width='100%'
-							height='100%'
-							preserveAspectRatio='xMidYMid slice'
-						/>
+						<AuthHeaderBackground />
 
 						<StyledAuthHeaderSafeArea edges={['top']}>
 							<StyledAuthHeaderContent

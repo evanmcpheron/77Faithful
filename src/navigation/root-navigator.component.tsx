@@ -54,7 +54,6 @@ export const RootNavigator = () => {
 			<Stack.Screen name='(public)' />
 			<Stack.Screen name='+not-found' />
 			<Stack.Protected guard={false}>
-				<Stack.Screen name='(future)' />
 				<Stack.Screen name='_sitemap' />
 			</Stack.Protected>
 			<Stack.Protected

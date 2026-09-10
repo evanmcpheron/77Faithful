@@ -1,19 +1,5 @@
-import { TurndownStaticScreen } from '@td/components/layout/screen/screen.component';
-import { Typography } from '@td/components/ui/typography/typography.component';
-import { StyledCenteredScreenContent } from '@td/features/shared/styles/boilerplate.styles';
-import { SurfaceColors } from '@td/theme/colors';
-
-export const PrayerScreen = () => {
-	return (
-		<TurndownStaticScreen backgroundColor={SurfaceColors.Screen}>
-			<StyledCenteredScreenContent>
-				<Typography
-					size='H1'
-					align='center'
-				>
-					Prayer
-				</Typography>
-			</StyledCenteredScreenContent>
-		</TurndownStaticScreen>
-	);
-};
+import { FoundationalPracticeId } from '@td/types/formation/practice.types';
+import { JourneyPracticeScreen } from './journey-practice.screen';
+export const PrayerScreen = () => (
+	<JourneyPracticeScreen foundationalPractice={FoundationalPracticeId.Pray} />
+);

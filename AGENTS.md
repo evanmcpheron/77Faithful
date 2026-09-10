@@ -1,5 +1,21 @@
 # Agent Instructions
 
+## Components are strictly read-only
+
+AI agents must NEVER alter anything inside `/src/component/**` or the existing
+`/src/components/**` directory unless the user explicitly instructs them to make
+those component changes. These paths are relative to the repository root.
+
+This protection prohibits creating, modifying, overwriting, deleting, renaming,
+moving, or reformatting any file in these directories, including through
+formatters, generators, scripts, or other indirect operations. Whitespace-only
+changes are also prohibited.
+
+A general request to implement a feature, build or adjust a screen, fix code,
+refactor, test, or format does not authorize component changes. Compose existing
+components using their existing APIs. Any explicit authorization applies only to
+the component changes the user requested.
+
 ## Documentation is strictly read-only
 
 All `.md` and `.txt` files are strictly read-only for AI agents, including

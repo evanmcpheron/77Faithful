@@ -36,8 +36,8 @@ const AuthLayout = () => {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
 	const router = useRouter();
-	const { account } = useAuth();
-	const redirect = getAuthRouteRedirect(account, pathname);
+	const { account, isProfileReady } = useAuth();
+	const redirect = getAuthRouteRedirect(account, pathname, isProfileReady);
 
 	const showBackButton =
 		pathname === '/forgot-password' || pathname === '/reset-password';

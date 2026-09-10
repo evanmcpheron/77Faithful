@@ -11,6 +11,8 @@ export const validateAuthValues = (
 		return 'Enter a valid email address.';
 	if (!values.password) return 'Enter your password.';
 	if (mode === 'signUp') {
+		if ((values.preferredName?.trim().length ?? 0) > 80)
+			return 'Use a preferred name with no more than 80 characters.';
 		if (values.password.length < 6)
 			return 'Choose a password with at least 6 characters.';
 		if (values.password !== values.confirmPassword)

@@ -5,8 +5,9 @@ import { useAuth } from '@td/providers/auth/auth.hook';
 import { Stack } from 'expo-router';
 
 export const RootNavigator = () => {
-	const { account, isInitializing, initializationError } = useAuth();
-	const isVerified = account?.isEmailConfirmed === true;
+	const { account, isInitializing, initializationError, isProfileReady } =
+		useAuth();
+	const isVerified = account?.isEmailConfirmed === true && isProfileReady;
 
 	// Do not mount routes until persistence has resolved; deep links must not flash private screens.
 	if (isInitializing) return <LoadingState label='Loading your account…' />;

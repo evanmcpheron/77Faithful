@@ -40,6 +40,11 @@ export const RegisterScreen = () => {
 			>
 				Create account
 			</TurndownButton>
+			<Spacer size={Spacing.Small} />
+			<Typography tone='Muted'>
+				Creating an account doesn’t start Day 1. Confirm your email
+				before setting up your 77 days.
+			</Typography>
 			<Spacer size={Spacing.Large} />
 			<StyledDividerRow>
 				<Divider />

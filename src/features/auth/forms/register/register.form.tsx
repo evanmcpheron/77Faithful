@@ -1,9 +1,6 @@
-import { ACCOUNT_TYPE } from '@turndown/library';
-
 import { Checkbox } from '@td/components/form/checkbox/checkbox.component';
 import { Form } from '@td/components/form/form';
 import { Input } from '@td/components/form/input/input.component';
-import { Row } from '@td/components/layout/row/row.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
 
 import { StyledSecondaryActionsRow } from '../../screens/login.styles';
@@ -15,9 +12,7 @@ const RegisterFormData: {
 } = {
 	name: 'formRegister',
 	defaultValue: {
-		accountType: ACCOUNT_TYPE.ACCOUNT_ADMIN,
-		firstName: '',
-		lastName: '',
+		preferredName: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
@@ -31,22 +26,13 @@ export const RegisterForm = () => {
 			name={RegisterFormData.name}
 			editValues={RegisterFormData.defaultValue}
 		>
-			<Row>
-				<Input
-					name='firstName'
-					testID='auth-register-first-name-input'
-					label='First Name'
-					type='Text'
-					placeholder='First Name'
-				/>
-				<Input
-					name='lastName'
-					testID='auth-register-last-name-input'
-					label='Last Name'
-					type='Text'
-					placeholder='Last Name'
-				/>
-			</Row>
+			<Input
+				name='preferredName'
+				testID='auth-register-preferred-name-input'
+				label='Preferred name (optional)'
+				type='Text'
+				placeholder='What would you like to be called?'
+			/>
 			<Input
 				name='email'
 				testID='auth-register-email-input'

@@ -1,4 +1,5 @@
 import { showErrorNotification } from '@td/components/ui/notification/notification.helper';
+import { ensureAccountProfile } from '@td/features/account/account-profile.service';
 import { useAuthActions } from '@td/features/auth/hooks/use-auth-actions.hook';
 import { useAuth } from '@td/providers/auth/auth.hook';
 import { AuthProvider } from '@td/providers/auth/auth.provider';
@@ -23,6 +24,10 @@ jest.mock('@td/components/ui/notification/notification.helper', () => ({
 	showErrorNotification: jest.fn(),
 }));
 
+jest.mock('@td/features/account/account-profile.service', () => ({
+	ensureAccountProfile: jest.fn(),
+}));
+
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
 const account: IAuthenticatedAccountIdentity = {
@@ -42,11 +47,12 @@ let renderer: ReactTestRenderer;
 
 const mount = (mode: 'signIn' | 'signUp') => {
 	const Consumer = () => {
-		const { account: currentAccount } = useAuth();
+		const { account: currentAccount, isProfileReady } = useAuth();
 		submit = useAuthActions(mode).submit;
 		return getAuthRouteRedirect(
 			currentAccount,
 			mode === 'signIn' ? '/' : '/register',
+			isProfileReady,
 		);
 	};
 	act(() => {
@@ -58,6 +64,7 @@ const mount = (mode: 'signIn' | 'signUp') => {
 
 beforeEach(() => {
 	jest.resetAllMocks();
+	jest.mocked(ensureAccountProfile).mockResolvedValue(undefined);
 	jest.mocked(subscribeToAccount).mockImplementation((next) => {
 		onAccount = next;
 		next(null);

@@ -7,8 +7,15 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 export const OtpScreen = () => {
-	const { account, sendEmailVerification, refreshAccount, signOut } =
-		useAuth();
+	const {
+		account,
+		sendEmailVerification,
+		refreshAccount,
+		signOut,
+		isProfileReady,
+		profileError,
+		retryAccountProfile,
+	} = useAuth();
 	const [isWorking, setIsWorking] = useState(false);
 	const [message, setMessage] = useState<string | null>(null);
 
@@ -38,28 +45,58 @@ export const OtpScreen = () => {
 
 	return (
 		<View testID='auth-confirm-email-screen'>
-			<Typography size='Display'>Confirm your email</Typography>
-			<Spacer size={Spacing.Small} />
-			<Typography>
-				Confirm {account?.contactEmail ?? 'your email address'} to
-				continue. Open the link in your inbox, or request a confirmation
-				email below.
+			<Typography size='Display'>
+				{account?.isEmailConfirmed
+					? 'Finish setting up your account'
+					: 'Confirm your email'}
 			</Typography>
-			<Spacer size={Spacing.Large} />
-			<TurndownButton
-				disabled={isWorking}
-				onPress={() => void performAction('refresh')}
-			>
-				I’ve confirmed my email
-			</TurndownButton>
 			<Spacer size={Spacing.Small} />
-			<TurndownButton
-				variant='Outline'
-				disabled={isWorking}
-				onPress={() => void performAction('resend')}
-			>
-				Send confirmation email
-			</TurndownButton>
+			{!account?.isEmailConfirmed && (
+				<>
+					<Typography>
+						Confirm {account?.contactEmail ?? 'your email address'}{' '}
+						to continue. Open the link in your inbox, or request a
+						confirmation email below.
+					</Typography>
+					<Spacer size={Spacing.Large} />
+					<TurndownButton
+						disabled={isWorking}
+						onPress={() => void performAction('refresh')}
+					>
+						I’ve confirmed my email
+					</TurndownButton>
+					<Spacer size={Spacing.Small} />
+					<TurndownButton
+						variant='Outline'
+						disabled={isWorking}
+						onPress={() => void performAction('resend')}
+					>
+						Send confirmation email
+					</TurndownButton>
+				</>
+			)}
+			{!isProfileReady && (
+				<View accessibilityLiveRegion='polite'>
+					<Spacer size={Spacing.Small} />
+					<Typography tone={profileError ? 'Error' : 'Primary'}>
+						{profileError
+							? 'Your account is created, but we could not finish saving your profile. Try again to continue.'
+							: 'Preparing your profile…'}
+					</Typography>
+					{profileError && (
+						<>
+							<Spacer size={Spacing.Small} />
+							<TurndownButton
+								variant='Outline'
+								disabled={isWorking}
+								onPress={retryAccountProfile}
+							>
+								Try saving profile again
+							</TurndownButton>
+						</>
+					)}
+				</View>
+			)}
 			<Spacer size={Spacing.Small} />
 			<TurndownButton
 				variant='Outline'

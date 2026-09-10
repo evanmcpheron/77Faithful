@@ -15,16 +15,30 @@ it.each([
 	'/recover-access',
 	'/reset-password',
 ])('allows guests on %s and redirects signed-in accounts', (pathname) => {
-	expect(getAuthRouteRedirect(null, pathname)).toBeNull();
-	expect(getAuthRouteRedirect(unverified, pathname)).toBe('/confirm-email');
-	expect(getAuthRouteRedirect(verified, pathname)).toBe('/today');
+	expect(getAuthRouteRedirect(null, pathname, false)).toBeNull();
+	expect(getAuthRouteRedirect(unverified, pathname, true)).toBe(
+		'/confirm-email',
+	);
+	expect(getAuthRouteRedirect(verified, pathname, true)).toBe('/today');
 });
 
 it.each(['/confirm-email', '/otp'])(
 	'only allows unverified accounts on %s',
 	(pathname) => {
-		expect(getAuthRouteRedirect(null, pathname)).toBe('/');
-		expect(getAuthRouteRedirect(unverified, pathname)).toBeNull();
-		expect(getAuthRouteRedirect(verified, pathname)).toBe('/today');
+		expect(getAuthRouteRedirect(null, pathname, false)).toBe('/');
+		expect(getAuthRouteRedirect(unverified, pathname, true)).toBeNull();
+		expect(getAuthRouteRedirect(verified, pathname, true)).toBe('/today');
 	},
 );
+
+it.each(['/', '/register', '/today'])(
+	'keeps a verified account without a saved profile on confirmation from %s',
+	(pathname) => {
+		expect(getAuthRouteRedirect(verified, pathname, false)).toBe(
+			'/confirm-email',
+		);
+	},
+);
+it('allows a verified account to retry profile creation on confirmation', () => {
+	expect(getAuthRouteRedirect(verified, '/otp', false)).toBeNull();
+});

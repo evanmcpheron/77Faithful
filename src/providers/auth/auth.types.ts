@@ -5,10 +5,14 @@ export interface IEmailPasswordCredentials {
 	readonly password: string;
 }
 
+export interface ISignUpCredentials extends IEmailPasswordCredentials {
+	readonly preferredName?: string;
+}
+
 export interface IAuthActions {
 	/** Creates and signs in the account. Send verification separately so delivery can be retried. */
 	signUp: (
-		credentials: IEmailPasswordCredentials,
+		credentials: ISignUpCredentials,
 	) => Promise<IAuthenticatedAccountIdentity>;
 	signIn: (
 		credentials: IEmailPasswordCredentials,
@@ -32,4 +36,7 @@ export interface IAuthContextValue extends IAuthActions {
 	/** True until Firebase has restored the persisted session. */
 	readonly isInitializing: boolean;
 	readonly initializationError: Error | null;
+	readonly isProfileReady: boolean;
+	readonly profileError: Error | null;
+	retryAccountProfile: () => void;
 }

@@ -37,7 +37,10 @@ const mockSession = (
 		'account' | 'isInitializing' | 'initializationError'
 	>,
 ) => {
-	jest.mocked(useAuth).mockReturnValue({ ...state } as IAuthContextValue);
+	jest.mocked(useAuth).mockReturnValue({
+		isProfileReady: true,
+		...state,
+	} as IAuthContextValue);
 };
 const render = () => {
 	act(() => {
@@ -98,5 +101,23 @@ it('switches available route groups as sign-in, verification, and sign-out happe
 	update({ ...account, isEmailConfirmed: true });
 	expect(renderer.toJSON()).toEqual(['(app)', '(public)', '+not-found']);
 	update(null);
+	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+});
+
+it('blocks private routes for a verified account until its profile is saved', () => {
+	mockSession({
+		account: {
+			userId: 'account-1',
+			contactEmail: null,
+			isEmailConfirmed: true,
+		},
+		isInitializing: false,
+		initializationError: null,
+	});
+	jest.mocked(useAuth).mockReturnValue({
+		...useAuth(),
+		isProfileReady: false,
+	});
+	render();
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
 });

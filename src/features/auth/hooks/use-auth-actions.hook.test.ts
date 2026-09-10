@@ -98,3 +98,23 @@ it('blocks duplicate submissions and allows retry after an auth failure', async 
 	expect(signIn).toHaveBeenCalledTimes(2);
 	expect(current.error).toBeNull();
 });
+
+it('passes the optional preferred name to signup', async () => {
+	mount('signUp');
+	await act(async () =>
+		current.submit({ ...values, preferredName: '  Reader  ' }),
+	);
+	expect(signUp).toHaveBeenCalledWith({
+		email: 'reader@example.com',
+		password: values.password,
+		preferredName: 'Reader',
+	});
+});
+it('rejects oversized names before creating an account', async () => {
+	mount('signUp');
+	await act(async () =>
+		current.submit({ ...values, preferredName: 'x'.repeat(81) }),
+	);
+	expect(signUp).not.toHaveBeenCalled();
+	expect(current.error).toContain('80 characters');
+});

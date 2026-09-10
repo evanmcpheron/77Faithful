@@ -25,7 +25,10 @@ export const useAuthActions = (mode: 'signIn' | 'signUp') => {
 			if (mode === 'signIn') {
 				await signIn(credentials);
 			} else {
-				await signUp(credentials);
+				await signUp({
+					...credentials,
+					preferredName: values.preferredName?.trim() ?? '',
+				});
 				// Account creation succeeds even if delivery fails; the confirmation screen allows retrying.
 				try {
 					await sendEmailVerification();

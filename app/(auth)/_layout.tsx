@@ -1,4 +1,6 @@
-import { Slot, usePathname, useRouter } from 'expo-router';
+import { getAuthRouteRedirect } from '@td/navigation/auth-route-access';
+import { useAuth } from '@td/providers/auth/auth.hook';
+import { Redirect, Slot, usePathname, useRouter } from 'expo-router';
 import { KeyboardAvoidingView, StatusBar, View } from 'react-native';
 import Animated, {
 	interpolate,
@@ -34,6 +36,8 @@ const AuthLayout = () => {
 	const insets = useSafeAreaInsets();
 	const pathname = usePathname();
 	const router = useRouter();
+	const { account } = useAuth();
+	const redirect = getAuthRouteRedirect(account, pathname);
 
 	const showBackButton =
 		pathname === '/forgot-password' || pathname === '/reset-password';
@@ -62,6 +66,8 @@ const AuthLayout = () => {
 			],
 		};
 	});
+
+	if (redirect) return <Redirect href={redirect} />;
 
 	return (
 		<StyledAuthScreen>

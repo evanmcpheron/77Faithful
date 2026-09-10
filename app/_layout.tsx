@@ -10,14 +10,11 @@ import { NotoSansTC_500Medium } from '@expo-google-fonts/noto-sans-tc/500Medium'
 import { NotoSansTC_600SemiBold } from '@expo-google-fonts/noto-sans-tc/600SemiBold';
 import { NotoSansTC_700Bold } from '@expo-google-fonts/noto-sans-tc/700Bold';
 import { useFonts } from '@expo-google-fonts/noto-sans-tc/useFonts';
-import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
-import {
-	StackContentStyle,
-	StyledRootGestureContainer,
-} from '@td/components/layout/root/root-layout.styles';
+import { StyledRootGestureContainer } from '@td/components/layout/root/root-layout.styles';
 import { NotificationHost } from '@td/components/ui/notification/notification-host.component';
+import { RootNavigator } from '@td/navigation/root-navigator.component';
 import { AuthProvider } from '@td/providers/auth/auth.provider';
 
 const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
@@ -66,34 +63,11 @@ const RootLayout = () => {
 		<SafeAreaProvider initialMetrics={initialWindowMetrics}>
 			<StyledRootGestureContainer>
 				<AuthProvider>
-					<StackLayout />
+					<RootNavigator />
 					<NotificationHost />
 				</AuthProvider>
 			</StyledRootGestureContainer>
 		</SafeAreaProvider>
-	);
-};
-
-const StackLayout = () => {
-	return (
-		<Stack
-			screenOptions={{
-				contentStyle: StackContentStyle,
-				headerBackVisible: false,
-				animation: 'none',
-				headerShown: false,
-				headerStyle: { backgroundColor: 'transparent' },
-			}}
-		>
-			<Stack.Screen name='(auth)' />
-			<Stack.Protected guard={false}>
-				<Stack.Screen name='(future)' />
-				<Stack.Screen name='_sitemap' />
-			</Stack.Protected>
-			<Stack.Protected guard={storybookEnabled}>
-				<Stack.Screen name='(storybook)/storybook' />
-			</Stack.Protected>
-		</Stack>
 	);
 };
 

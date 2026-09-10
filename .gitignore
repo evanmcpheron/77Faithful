@@ -42,3 +42,7 @@ yarn-error.*
 /android
 
 .env
+# Firebase generated build output
+/functions/generated/
+/functions/lib/
+firebase-debug.log

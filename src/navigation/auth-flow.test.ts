@@ -53,6 +53,7 @@ const mount = (mode: 'signIn' | 'signUp') => {
 			currentAccount,
 			mode === 'signIn' ? '/' : '/register',
 			isProfileReady,
+			true,
 		);
 	};
 	act(() => {

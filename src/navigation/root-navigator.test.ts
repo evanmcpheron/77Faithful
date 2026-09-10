@@ -1,5 +1,6 @@
 import { useAuth } from '@td/providers/auth/auth.hook';
 import type { IAuthContextValue } from '@td/providers/auth/auth.types';
+import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
 import { createElement, type ReactNode } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { RootNavigator } from './root-navigator.component';
@@ -27,6 +28,18 @@ jest.mock('expo-router', () => {
 	}) => (guard ? children : null);
 	Stack.Protected = Protected;
 	return { Stack };
+});
+
+jest.mock('@td/providers/journey/journey-access.provider', () => ({
+	useJourneyAccess: jest.fn(),
+}));
+beforeEach(() => {
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		hasJourney: true,
+		isLoading: false,
+		hasError: false,
+		retry: jest.fn(),
+	});
 });
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -120,4 +133,59 @@ it('blocks private routes for a verified account until its profile is saved', ()
 	});
 	render();
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+});
+
+it('routes an eligible account without a journey into setup and opens the app after confirmation', () => {
+	mockSession({
+		account: {
+			userId: 'owner',
+			contactEmail: 'reader@example.com',
+			isEmailConfirmed: true,
+		},
+		isInitializing: false,
+		initializationError: null,
+	});
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		hasJourney: false,
+		isLoading: false,
+		hasError: false,
+		retry: jest.fn(),
+	});
+	render();
+	expect(renderer.toJSON()).toEqual(['onboarding', '(public)', '+not-found']);
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		hasJourney: true,
+		isLoading: false,
+		hasError: false,
+		retry: jest.fn(),
+	});
+	act(() => renderer.update(createElement(RootNavigator)));
+	expect(renderer.toJSON()).toEqual(['(app)', '(public)', '+not-found']);
+});
+it('does not infer missing setup while journey access is loading or failed', () => {
+	mockSession({
+		account: {
+			userId: 'owner',
+			contactEmail: 'reader@example.com',
+			isEmailConfirmed: true,
+		},
+		isInitializing: false,
+		initializationError: null,
+	});
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		hasJourney: false,
+		isLoading: true,
+		hasError: false,
+		retry: jest.fn(),
+	});
+	render();
+	expect(renderer.toJSON()).toBe('account-loading');
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		hasJourney: false,
+		isLoading: false,
+		hasError: true,
+		retry: jest.fn(),
+	});
+	act(() => renderer.update(createElement(RootNavigator)));
+	expect(renderer.toJSON()).toBe('account-error');
 });

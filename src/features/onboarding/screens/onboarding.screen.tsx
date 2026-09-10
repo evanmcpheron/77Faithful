@@ -1,19 +1,11 @@
-import { TurndownStaticScreen } from '@td/components/layout/screen/screen.component';
-import { Typography } from '@td/components/ui/typography/typography.component';
-import { StyledCenteredScreenContent } from '@td/features/shared/styles/boilerplate.styles';
-import { SurfaceColors } from '@td/theme/colors';
-
+import { JourneySetupScreen } from '@td/features/journey-setup/journey-setup-screen.component';
+import { useAuth } from '@td/providers/auth/auth.hook';
 export const OnboardingScreen = () => {
-	return (
-		<TurndownStaticScreen backgroundColor={SurfaceColors.Screen}>
-			<StyledCenteredScreenContent>
-				<Typography
-					size='H1'
-					align='center'
-				>
-					Journey Setup
-				</Typography>
-			</StyledCenteredScreenContent>
-		</TurndownStaticScreen>
-	);
+	const { account } = useAuth();
+	return account ? (
+		<JourneySetupScreen
+			key={account.userId}
+			userId={account.userId}
+		/>
+	) : null;
 };

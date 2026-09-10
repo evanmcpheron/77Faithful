@@ -1,5 +1,6 @@
 import { getAuthRouteRedirect } from '@td/navigation/auth-route-access';
 import { useAuth } from '@td/providers/auth/auth.hook';
+import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
 import { Redirect, Slot, usePathname, useRouter } from 'expo-router';
 import { KeyboardAvoidingView, StatusBar, View } from 'react-native';
 import Animated, {
@@ -37,7 +38,13 @@ const AuthLayout = () => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { account, isProfileReady } = useAuth();
-	const redirect = getAuthRouteRedirect(account, pathname, isProfileReady);
+	const { hasJourney } = useJourneyAccess();
+	const redirect = getAuthRouteRedirect(
+		account,
+		pathname,
+		isProfileReady,
+		hasJourney,
+	);
 
 	const showBackButton =
 		pathname === '/forgot-password' || pathname === '/reset-password';

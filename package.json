@@ -18,7 +18,9 @@
 		"format:check": "prettier . --check",
 		"test": "jest",
 		"prepare": "node scripts/install-git-hooks.cjs",
-		"test:rules": "node tests/firestore-rules.test.cjs"
+		"test:rules": "node tests/firestore-rules.test.cjs",
+		"test:journey-setup": "node --test tests/journey-setup.test.cjs",
+		"test:journey-start": "npm --prefix functions run build && node --test tests/start-journey.test.cjs"
 	},
 	"dependencies": {
 		"@expo-google-fonts/noto-sans-tc": "^0.4.3",

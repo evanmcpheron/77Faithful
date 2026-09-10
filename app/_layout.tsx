@@ -1,3 +1,4 @@
+import { JourneyAccessProvider } from '@td/providers/journey/journey-access.provider';
 import type { ComponentType } from 'react';
 import { useEffect } from 'react';
 import {
@@ -63,7 +64,9 @@ const RootLayout = () => {
 		<SafeAreaProvider initialMetrics={initialWindowMetrics}>
 			<StyledRootGestureContainer>
 				<AuthProvider>
-					<RootNavigator />
+					<JourneyAccessProvider>
+						<RootNavigator />
+					</JourneyAccessProvider>
 					<NotificationHost />
 				</AuthProvider>
 			</StyledRootGestureContainer>

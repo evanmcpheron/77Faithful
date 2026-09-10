@@ -127,6 +127,23 @@ for (const key of Object.keys(profile)) {
 	delete incomplete[key];
 	addProfile(`profile missing ${key}`, 'DENY', 'create', incomplete);
 }
+for (const path of [
+	'users/owner/journeyControl/current',
+	'users/owner/journeyStartOperations/operation1',
+]) {
+	for (const method of ['get', 'create', 'update', 'delete']) {
+		add(
+			`client cannot ${method} start authority ${path}`,
+			'DENY',
+			method,
+			path,
+			'owner',
+			true,
+			true,
+			{ journeyId: 'forged' },
+		);
+	}
+}
 const draft = 'users/owner/journeySetupDrafts/current';
 const device = 'users/owner/devicePreferences/12345678901234567890';
 const journey = 'users/owner/journeys/current';

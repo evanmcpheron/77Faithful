@@ -4,8 +4,10 @@ export const getAuthRouteRedirect = (
 	account: IAuthenticatedAccountIdentity | null,
 	pathname: string,
 	isProfileReady: boolean,
-): '/' | '/confirm-email' | '/today' | null => {
-	if (account?.isEmailConfirmed && isProfileReady) return '/today';
+	hasJourney: boolean,
+): '/' | '/confirm-email' | '/onboarding' | '/today' | null => {
+	if (account?.isEmailConfirmed && isProfileReady)
+		return hasJourney ? '/today' : '/onboarding';
 
 	const isVerificationRoute =
 		pathname === '/confirm-email' || pathname === '/otp';

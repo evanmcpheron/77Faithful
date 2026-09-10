@@ -118,13 +118,22 @@ export const Input = ({
 		};
 	}, [defaultValue, formProxy, name, usesFormProxy]);
 
-	useEffect(() => {
-		if (usesFormProxy) {
-			return;
-		}
+	const [previousValueProps, setPreviousValueProps] = useState({
+		value,
+		defaultValue,
+		usesFormProxy,
+	});
 
-		setInputValue(resolveInputValue(value ?? defaultValue));
-	}, [defaultValue, usesFormProxy, value]);
+	if (
+		!Object.is(previousValueProps.value, value) ||
+		!Object.is(previousValueProps.defaultValue, defaultValue) ||
+		previousValueProps.usesFormProxy !== usesFormProxy
+	) {
+		setPreviousValueProps({ value, defaultValue, usesFormProxy });
+		if (!usesFormProxy) {
+			setInputValue(resolveInputValue(value ?? defaultValue));
+		}
+	}
 
 	const handleIconPress = () => {
 		if (isPasswordInput) {

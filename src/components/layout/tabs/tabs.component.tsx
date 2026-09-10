@@ -1,12 +1,5 @@
 import type { FC, ReactElement } from 'react';
-import {
-	Children,
-	isValidElement,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import { Children, isValidElement, useEffect, useMemo, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { Animated, Easing } from 'react-native';
 
@@ -45,12 +38,12 @@ const TabsRoot = ({ children, defaultIndex = 0, onPress }: ITabsProps) => {
 		Math.max(tabs.length - 1, 0),
 	);
 
-	const [selectedIndex, setSelectedIndex] =
+	const [storedSelectedIndex, setSelectedIndex] =
 		useState<number>(safeDefaultIndex);
 	const [tabListWidth, setTabListWidth] = useState(0);
 
-	const activeThumbTranslateX = useRef(new Animated.Value(0)).current;
-	const activeThumbScale = useRef(new Animated.Value(1)).current;
+	const [activeThumbTranslateX] = useState(() => new Animated.Value(0));
+	const [activeThumbScale] = useState(() => new Animated.Value(1));
 
 	const tabCount = tabs.length;
 	const availableWidth = Math.max(
@@ -59,11 +52,13 @@ const TabsRoot = ({ children, defaultIndex = 0, onPress }: ITabsProps) => {
 	);
 	const tabWidth = tabCount > 0 ? availableWidth / tabCount : 0;
 
-	useEffect(() => {
-		if (selectedIndex >= tabs.length) {
-			setSelectedIndex(Math.max(tabs.length - 1, 0));
-		}
-	}, [selectedIndex, tabs.length]);
+	const selectedIndex = Math.min(
+		storedSelectedIndex,
+		Math.max(tabs.length - 1, 0),
+	);
+	if (storedSelectedIndex !== selectedIndex) {
+		setSelectedIndex(selectedIndex);
+	}
 
 	useEffect(() => {
 		if (tabWidth === 0) {
@@ -121,6 +116,9 @@ const TabsRoot = ({ children, defaultIndex = 0, onPress }: ITabsProps) => {
 	}
 
 	const activeTab = tabs[selectedIndex];
+	if (!activeTab) {
+		return null;
+	}
 
 	return (
 		<StyledTabsContainer>

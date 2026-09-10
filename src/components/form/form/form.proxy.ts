@@ -66,8 +66,7 @@ export const createFormProxy = <TFormValues extends object>({
 	onHandleUpdate,
 }: ICreateFormProxyParams<TFormValues>): FormProxy<TFormValues> => {
 	const existingFormProxy = formProxyRegistry[formName] as
-		| FormProxy<TFormValues>
-		| undefined;
+		FormProxy<TFormValues> | undefined;
 
 	if (existingFormProxy) {
 		existingFormProxy.validationModel =

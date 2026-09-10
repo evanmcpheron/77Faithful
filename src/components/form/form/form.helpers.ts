@@ -96,8 +96,7 @@ export const validateInternalComponent = (
 
 	const formProxy = formProxyRegistry[formName];
 	const validationModelRecord = formProxy?.validationModel as
-		| Record<string, unknown>
-		| undefined;
+		Record<string, unknown> | undefined;
 	const validateFunction = validationModelRecord?.[name];
 
 	if (!isValidationRule(validateFunction)) {

@@ -11,7 +11,9 @@ import type {
 } from '@turndown/library';
 
 export interface IRoomApiService {
-	getRooms: (request: IGetRoomsRequest) => Promise<IGetRoomsByPropertyIdResponse>;
+	getRooms: (
+		request: IGetRoomsRequest,
+	) => Promise<IGetRoomsByPropertyIdResponse>;
 	getRoomsByPropertyId: (
 		propertyId: string,
 	) => Promise<IGetRoomsByPropertyIdResponse>;

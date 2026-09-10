@@ -12,7 +12,7 @@ export const useScreenScrollOffset = () => {
 
 	useFocusEffect(
 		useCallback(() => {
-			scrollOffset.value = lastKnownScrollY.current;
+			scrollOffset.set(lastKnownScrollY.current);
 		}, [scrollOffset]),
 	);
 

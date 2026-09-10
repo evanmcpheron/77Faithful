@@ -15,7 +15,7 @@ export const HeaderScrollProvider = ({
 	const scrollOffset = useSharedValue(0);
 
 	const resetScrollOffset = useCallback(() => {
-		scrollOffset.value = 0;
+		scrollOffset.set(0);
 	}, [scrollOffset]);
 
 	const value = useMemo(

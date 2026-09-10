@@ -2,7 +2,9 @@
 
 ## Visual direction: Quiet Sanctuary
 
-Build an interface that feels like opening a thoughtfully typeset devotional beside a still lake: calm, warm, spacious, grounded, and unmistakably Christian without becoming ornate or sentimental.
+Build an interface that feels like opening a thoughtfully typeset devotional
+beside a still lake: calm, warm, spacious, grounded, and unmistakably Christian
+without becoming ornate or sentimental.
 
 The core feeling should be:
 
@@ -29,7 +31,8 @@ The interface should not feel like:
 
 The central design test is:
 
-> Does this screen invite a person to slow down, understand what matters, and respond to Christ without unnecessary friction?
+> Does this screen invite a person to slow down, understand what matters, and
+> respond to Christ without unnecessary friction?
 
 ## Design authority
 
@@ -37,7 +40,8 @@ Use these documents together:
 
 - `product/` owns behavior and participant requirements.
 - `VOICE_AND_LANGUAGE_GUIDE.md` owns original participant-facing language.
-- this guide owns visual composition, spacing, color, typography, and interaction tone.
+- this guide owns visual composition, spacing, color, typography, and
+  interaction tone.
 - `STYLE_GUIDE.md` and `AGENTS.md` own code quality and agent behavior.
 - `docs/domain-type-system.md` owns the intended cross-boundary data model.
 
@@ -54,7 +58,8 @@ Do not invent visual affordances for behavior that the product does not support.
 5. **Quiet controls with clear states.**
 6. **Grace-oriented progress presentation.**
 7. **Scripture given visual priority over commentary and metrics.**
-8. **Stable, opaque surfaces that remain readable in light and dark appearance.**
+8. **Stable, opaque surfaces that remain readable in light and dark
+   appearance.**
 
 ## Color system
 
@@ -62,42 +67,46 @@ Use semantic tokens rather than raw color values inside feature screens.
 
 ### Core palette
 
-| Semantic role | Light | Dark |
-| --- | --- | --- |
-| Background | `#F6F3EE` | `#17231F` |
-| Surface | `#FFFEFC` | `#21332B` |
+| Semantic role    | Light     | Dark      |
+| ---------------- | --------- | --------- |
+| Background       | `#F6F3EE` | `#17231F` |
+| Surface          | `#FFFEFC` | `#21332B` |
 | Elevated surface | `#F2F0EA` | `#2A3D33` |
-| Subtle surface | `#EEEAE3` | `#314439` |
-| Primary text | `#203D34` | `#F4F0E7` |
-| Secondary text | `#616963` | `#C3CBBF` |
-| Muted text | `#6B706A` | `#A3AEA3` |
-| Primary action | `#294F42` | `#426953` |
-| Primary pressed | `#1E3D32` | `#355842` |
-| On primary | `#FFFEFC` | `#F4F0E7` |
-| Link | `#294F42` | `#C1D8C5` |
-| Soft accent | `#DCE5DD` | `#314A3B` |
-| Border | `#E4E2DA` | `#405448` |
-| Control border | `#838A82` | `#8B9B8E` |
-| Focus | `#365F4B` | `#D3BD89` |
+| Subtle surface   | `#EEEAE3` | `#314439` |
+| Primary text     | `#203D34` | `#F4F0E7` |
+| Secondary text   | `#616963` | `#C3CBBF` |
+| Muted text       | `#6B706A` | `#A3AEA3` |
+| Primary action   | `#294F42` | `#426953` |
+| Primary pressed  | `#1E3D32` | `#355842` |
+| On primary       | `#FFFEFC` | `#F4F0E7` |
+| Link             | `#294F42` | `#C1D8C5` |
+| Soft accent      | `#DCE5DD` | `#314A3B` |
+| Border           | `#E4E2DA` | `#405448` |
+| Control border   | `#838A82` | `#8B9B8E` |
+| Focus            | `#365F4B` | `#D3BD89` |
 
 ### Practice accents
 
-Use practice accents sparingly. They help distinguish content without turning daily participation into a multicolor scorecard.
+Use practice accents sparingly. They help distinguish content without turning
+daily participation into a multicolor scorecard.
 
 | Accent | Light background | Light text | Dark background | Dark text |
-| --- | --- | --- | --- | --- |
-| Sage | `#DCE5DD` | `#294F42` | `#314A3B` | `#D8E8DB` |
-| Ochre | `#EBD8AF` | `#785A20` | `#4A3E27` | `#E8D3A5` |
-| Slate | `#D9E0E4` | `#365462` | `#2E4148` | `#CEDFE7` |
-| Clay | `#E7D5D1` | `#7B4D44` | `#4B3632` | `#E8CCC4` |
+| ------ | ---------------- | ---------- | --------------- | --------- |
+| Sage   | `#DCE5DD`        | `#294F42`  | `#314A3B`       | `#D8E8DB` |
+| Ochre  | `#EBD8AF`        | `#785A20`  | `#4A3E27`       | `#E8D3A5` |
+| Slate  | `#D9E0E4`        | `#365462`  | `#2E4148`       | `#CEDFE7` |
+| Clay   | `#E7D5D1`        | `#7B4D44`  | `#4B3632`       | `#E8CCC4` |
 
 Do not assign spiritual meaning to accent colors.
 
 ### Dark appearance
 
-Dark appearance should feel like the same sanctuary at dusk, not a generic black inversion.
+Dark appearance should feel like the same sanctuary at dusk, not a generic black
+inversion.
 
-Use deep green-charcoal backgrounds, warm off-white text, softened borders, and subdued accent surfaces. Preserve the same hierarchy and spacing as light appearance.
+Use deep green-charcoal backgrounds, warm off-white text, softened borders, and
+subdued accent surfaces. Preserve the same hierarchy and spacing as light
+appearance.
 
 ## Typography
 
@@ -106,27 +115,30 @@ The target type pairing is:
 - **Source Serif 4** for editorial and devotional emphasis;
 - **Inter** for interface text.
 
-If these fonts are not yet bundled, use a stable platform serif and system sans-serif fallback until the intended fonts are deliberately added.
+If these fonts are not yet bundled, use a stable platform serif and system
+sans-serif fallback until the intended fonts are deliberately added.
 
 ### Type roles
 
-| Role | Target size / line height | Family / emphasis |
-| --- | --- | --- |
-| Hero | `34 / 40` | Serif |
-| Page title | `30 / 38` | Serif |
-| Section heading | `24 / 30` | Serif |
-| Editorial/practice card title | `20 / 26` | Serif |
-| Body / form field | `16 / 24` | Sans |
-| Supporting copy | `14 / 20` | Sans |
-| Field label | `14 / 20` | Sans medium |
-| Metadata / navigation | `13 / 18` | Sans |
-| Primary button | `16 / 22` | Sans semibold |
-| Scripture | `20 / 32` default | Serif, participant-adjustable |
-| Featured quote | `20 / 28` | Serif |
+| Role                          | Target size / line height | Family / emphasis             |
+| ----------------------------- | ------------------------- | ----------------------------- |
+| Hero                          | `34 / 40`                 | Serif                         |
+| Page title                    | `30 / 38`                 | Serif                         |
+| Section heading               | `24 / 30`                 | Serif                         |
+| Editorial/practice card title | `20 / 26`                 | Serif                         |
+| Body / form field             | `16 / 24`                 | Sans                          |
+| Supporting copy               | `14 / 20`                 | Sans                          |
+| Field label                   | `14 / 20`                 | Sans medium                   |
+| Metadata / navigation         | `13 / 18`                 | Sans                          |
+| Primary button                | `16 / 22`                 | Sans semibold                 |
+| Scripture                     | `20 / 32` default         | Serif, participant-adjustable |
+| Featured quote                | `20 / 28`                 | Serif                         |
 
-Do not reduce text merely to fit a fixed-height card. Prefer intrinsic height and scrolling.
+Do not reduce text merely to fit a fixed-height card. Prefer intrinsic height
+and scrolling.
 
-Support dynamic type. Headings may scale differently from body copy, but text must remain legible and must not clip.
+Support dynamic type. Headings may scale differently from body copy, but text
+must remain legible and must not clip.
 
 ## Spacing
 
@@ -156,11 +168,13 @@ Recommended defaults:
 - content-to-primary-action gap: **24**;
 - final content padding: **24–32** plus safe-area requirements.
 
-Do not fill every open area with text, decoration, or a secondary call to action.
+Do not fill every open area with text, decoration, or a secondary call to
+action.
 
 ## Width and layout
 
-Target readable content widths rather than stretching forms across tablets or desktop-sized web views.
+Target readable content widths rather than stretching forms across tablets or
+desktop-sized web views.
 
 Suggested maximum content widths:
 
@@ -169,13 +183,17 @@ Suggested maximum content widths:
 
 Phone layouts should normally be single-column.
 
-Use intrinsic content height. Avoid fixed-height cards for variable copy. Allow pages to scroll naturally.
+Use intrinsic content height. Avoid fixed-height cards for variable copy. Allow
+pages to scroll naturally.
 
-Daily practice rows should generally land around **88–104 px** when they include title, support copy, and a completion control.
+Daily practice rows should generally land around **88–104 px** when they include
+title, support copy, and a completion control.
 
-Primary buttons and form fields should generally be at least **52–56 px** high and may grow with larger text.
+Primary buttons and form fields should generally be at least **52–56 px** high
+and may grow with larger text.
 
-Absolute positioning should be reserved for decorative elements or tightly controlled overlays, not normal document flow.
+Absolute positioning should be reserved for decorative elements or tightly
+controlled overlays, not normal document flow.
 
 ## Surfaces
 
@@ -188,7 +206,8 @@ Suggested radii:
 
 Use opaque surfaces.
 
-Shadows should be subtle and rare. Prefer tonal surface separation and borders. The product does not require glass effects, blur, or gradients.
+Shadows should be subtle and rare. Prefer tonal surface separation and borders.
+The product does not require glass effects, blur, or gradients.
 
 ## Imagery
 
@@ -208,11 +227,13 @@ Preferred image qualities:
 - no watermark;
 - no high-saturation treatment.
 
-Avoid staged “victory” imagery, glowing crosses, stock-photo worship poses, or literal devotional clichés.
+Avoid staged “victory” imagery, glowing crosses, stock-photo worship poses, or
+literal devotional clichés.
 
 ### Today imagery
 
-Today may use a wide scenic header or atmospheric image when it supports the day without pushing the essential content too far below the fold.
+Today may use a wide scenic header or atmospheric image when it supports the day
+without pushing the essential content too far below the fold.
 
 A clean Today landscape asset should be:
 
@@ -223,15 +244,18 @@ A clean Today landscape asset should be:
 - low-detail behind text;
 - free of text and branding.
 
-Always provide a stable no-image presentation so the screen remains complete if the asset is unavailable.
+Always provide a stable no-image presentation so the screen remains complete if
+the asset is unavailable.
 
 ### Botanical illustration
 
-Small botanical or natural-form illustration may be used as a supporting editorial detail. It should remain subtle and secondary.
+Small botanical or natural-form illustration may be used as a supporting
+editorial detail. It should remain subtle and secondary.
 
 ## Shared application primitives
 
-The UI layer should establish a small reusable component system rather than let every screen invent its own visual language.
+The UI layer should establish a small reusable component system rather than let
+every screen invent its own visual language.
 
 Expected primitives include:
 
@@ -250,9 +274,11 @@ Expected primitives include:
 - tab presentation;
 - Scripture reading surface.
 
-These primitives should encode spacing, typography, states, contrast, disabled behavior, and accessibility consistently.
+These primitives should encode spacing, typography, states, contrast, disabled
+behavior, and accessibility consistently.
 
-Do not make a component “reusable” by giving it dozens of arbitrary style props. Prefer a small semantic API.
+Do not make a component “reusable” by giving it dozens of arbitrary style props.
+Prefer a small semantic API.
 
 ## Touch and control behavior
 
@@ -263,9 +289,11 @@ A daily practice row has two distinct possible actions:
 - open the practice guidance;
 - mark or unmark completion.
 
-Do not make those actions ambiguous. The navigation target and completion target should be visually and semantically distinct.
+Do not make those actions ambiguous. The navigation target and completion target
+should be visually and semantically distinct.
 
-Do not render a chevron, switch, checkbox, overflow menu, or link unless the product actually supports the implied action.
+Do not render a chevron, switch, checkbox, overflow menu, or link unless the
+product actually supports the implied action.
 
 ## Screen family patterns
 
@@ -297,9 +325,12 @@ Use one meaningful decision per step.
 
 Show progress through setup without making onboarding feel like a survey.
 
-Practice selection must make the required **2–4** range obvious. Selected state, disabled state at the maximum, and the current count must be understandable without relying on color alone.
+Practice selection must make the required **2–4** range obvious. Selected state,
+disabled state at the maximum, and the current count must be understandable
+without relying on color alone.
 
-Motivation and reminders are optional. The final review should make **Start my journey** feel deliberate because it establishes the calendar.
+Motivation and reminders are optional. The final review should make **Start my
+journey** feel deliberate because it establishes the calendar.
 
 ### Today
 
@@ -315,17 +346,20 @@ Prioritize:
 
 Use a preferred-name greeting only when a preferred name is actually available.
 
-Show foundational practices first, followed by the participant's actual chosen practices.
+Show foundational practices first, followed by the participant's actual chosen
+practices.
 
 The day number comes from the calendar, not from the number of complete days.
 
-Do not fill Today with future-day previews, large statistical dashboards, or motivational copy that competes with Scripture and prayer.
+Do not fill Today with future-day previews, large statistical dashboards, or
+motivational copy that competes with Scripture and prayer.
 
 ### Journey
 
 Journey is a reflective record, not an analytics product.
 
-Use the calendar/day grid and list to help the participant understand where they are, review reached days, and access previous journeys.
+Use the calendar/day grid and list to help the participant understand where they
+are, review reached days, and access previous journeys.
 
 Statistics should be modest and clearly descriptive.
 
@@ -333,7 +367,8 @@ Statistics should be modest and clearly descriptive.
 
 Reflections is a private writing collection within the Journey area.
 
-Make the relationship to the originating journey/day obvious. Use readable excerpts and clear privacy language where useful.
+Make the relationship to the originating journey/day obvious. Use readable
+excerpts and clear privacy language where useful.
 
 Do not visually imply social publishing.
 
@@ -341,21 +376,25 @@ Do not visually imply social publishing.
 
 Settings should be quiet and practical.
 
-Group account, practices, reminders, appearance, Scripture preference, privacy, and help logically. Keep destructive actions separated and explicit.
+Group account, practices, reminders, appearance, Scripture preference, privacy,
+and help logically. Keep destructive actions separated and explicit.
 
 ### Scripture
 
 Scripture should be the most reading-oriented screen in the app.
 
-The passage reference, translation label, text, and required acknowledgments must be clear. Commentary must remain visually distinct from Scripture.
+The passage reference, translation label, text, and required acknowledgments
+must be clear. Commentary must remain visually distinct from Scripture.
 
-Reading, scrolling, or changing translation must not automatically mark completion.
+Reading, scrolling, or changing translation must not automatically mark
+completion.
 
 ### Prayer
 
 Prayer should feel focused rather than form-heavy.
 
-Present the prayer prompt and any authored written prayer clearly. A participant should be able to spend time in prayer without entering text.
+Present the prayer prompt and any authored written prayer clearly. A participant
+should be able to spend time in prayer without entering text.
 
 ### Reflection and intention
 
@@ -363,13 +402,16 @@ Use comfortable writing surfaces with visible save state.
 
 Saving writing and marking Reflect complete are separate actions.
 
-When a draft or save is at risk, communicate the state directly rather than hiding it behind a generic spinner.
+When a draft or save is at risk, communicate the state directly rather than
+hiding it behind a generic spinner.
 
 ### Historical days
 
-Historical days should keep the original day number, date, reading, and assigned practices.
+Historical days should keep the original day number, date, reading, and assigned
+practices.
 
-When a participant updates a historical day after its date, show a modest indication rather than a warning treatment.
+When a participant updates a historical day after its date, show a modest
+indication rather than a warning treatment.
 
 ### Completed or early-ended journey
 
@@ -390,13 +432,15 @@ Use progressive disclosure:
 - Reflections holds private writing history.
 - Settings holds configuration and account controls.
 
-Long explanatory copy belongs in focused help surfaces or expandable sections when appropriate.
+Long explanatory copy belongs in focused help surfaces or expandable sections
+when appropriate.
 
 ## Motion
 
 Motion should be restrained and functional.
 
-Short transitions around **120–180 ms** are reasonable for ordinary state changes when platform accessibility settings permit them.
+Short transitions around **120–180 ms** are reasonable for ordinary state
+changes when platform accessibility settings permit them.
 
 Do not use celebratory motion as a reward for spiritual activity.
 
@@ -407,7 +451,8 @@ Respect reduced-motion preferences.
 Target at least WCAG AA contrast:
 
 - **4.5:1** for ordinary text;
-- **3:1** for large text and meaningful non-text controls where the applicable criterion permits it.
+- **3:1** for large text and meaningful non-text controls where the applicable
+  criterion permits it.
 
 Also:
 
@@ -426,9 +471,11 @@ Also:
 
 Do not stack multiple independent safe-area paddings on the same edge.
 
-Bottom-tab layouts should have one clear owner for tab-bar and safe-area spacing.
+Bottom-tab layouts should have one clear owner for tab-bar and safe-area
+spacing.
 
-Writing screens must keep the active field and save controls reachable with the keyboard open.
+Writing screens must keep the active field and save controls reachable with the
+keyboard open.
 
 ## Visual copy budget
 
@@ -441,13 +488,17 @@ Prefer:
 - one primary action;
 - secondary help only where it changes a decision.
 
-Long spiritual content is appropriate where the product calls for Scripture, a devotional, a weekly introduction, or reflection guidance. UI chrome should remain quiet around it.
+Long spiritual content is appropriate where the product calls for Scripture, a
+devotional, a weekly introduction, or reflection guidance. UI chrome should
+remain quiet around it.
 
 ## Future surfaces
 
-Do not display fake community feeds, fake messages, fake public profiles, or other future capabilities in V1.
+Do not display fake community feeds, fake messages, fake public profiles, or
+other future capabilities in V1.
 
-Design documentation may describe later surfaces, but participant-facing release UI should expose only working product behavior.
+Design documentation may describe later surfaces, but participant-facing release
+UI should expose only working product behavior.
 
 ## Visual acceptance checklist
 
@@ -481,4 +532,5 @@ When implementing these requirements, consult current official references for:
 - Inter;
 - Expo-supported system-symbol/icon approaches.
 
-Official technical documentation may refine API details, but it must not override the visual or product intent described here.
+Official technical documentation may refine API details, but it must not
+override the visual or product intent described here.

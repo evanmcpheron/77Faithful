@@ -10,8 +10,7 @@ export interface INavigationActionListItem {
 }
 
 export type TNavigationActionListActions =
-	| INavigationActionListItem
-	| readonly INavigationActionListItem[];
+	INavigationActionListItem | readonly INavigationActionListItem[];
 
 export interface INavigationActionListProps {
 	actions: TNavigationActionListActions;

@@ -2,9 +2,12 @@
 
 ## Goal
 
-Write TypeScript and React Native code that is easy to understand, safe to modify, and unsurprising to another engineer or coding agent.
+Write TypeScript and React Native code that is easy to understand, safe to
+modify, and unsurprising to another engineer or coding agent.
 
-Clarity is more important than cleverness. The codebase should look intentionally maintained rather than generated from a collection of unrelated patterns.
+Clarity is more important than cleverness. The codebase should look
+intentionally maintained rather than generated from a collection of unrelated
+patterns.
 
 ## Core philosophy
 
@@ -47,7 +50,8 @@ const d = 12;
 const doThing = () => {};
 ```
 
-Short names are acceptable only when the abbreviation is universally understood in context.
+Short names are acceptable only when the abbreviation is universally understood
+in context.
 
 ### Components, classes, and types
 
@@ -61,7 +65,8 @@ class JourneyRepository {}
 
 ### Constants
 
-Use descriptive immutable names. Use `SCREAMING_SNAKE_CASE` for true module-level constants when that improves recognition.
+Use descriptive immutable names. Use `SCREAMING_SNAKE_CASE` for true
+module-level constants when that improves recognition.
 
 ```ts
 const JOURNEY_DAY_COUNT = 77;
@@ -73,23 +78,21 @@ Do not use constant-style names for ordinary local values.
 
 ### Prefer precise domain types
 
-Do not use `string` when a narrow union or branded domain value materially improves correctness.
+Do not use `string` when a narrow union or branded domain value materially
+improves correctness.
 
 ```ts
 type TJourneyStatus = 'active' | 'completed' | 'endedEarly';
 type TPracticeId =
-  | 'readScripture'
-  | 'pray'
-  | 'reflect'
-  | 'movement'
-  | 'serveOrEncourage';
+	'readScripture' | 'pray' | 'reflect' | 'movement' | 'serveOrEncourage';
 ```
 
 Do not invent a narrow type that provides no practical safety.
 
 ### Interface and type naming
 
-For project domain contracts, use the established `I` / `T` convention consistently:
+For project domain contracts, use the established `I` / `T` convention
+consistently:
 
 ```ts
 interface IJourneyDocument {}
@@ -104,15 +107,17 @@ Use `unknown` at untrusted boundaries and narrow it.
 
 ```ts
 const parsePayload = (payload: unknown): IStartJourneyRequest => {
-  // validate and return
+	// validate and return
 };
 ```
 
-Use `any` only when an external library genuinely makes a safer type impractical, and isolate it.
+Use `any` only when an external library genuinely makes a safer type
+impractical, and isolate it.
 
 ### Avoid casual assertions
 
-An assertion should not be used to silence a compiler error caused by missing validation.
+An assertion should not be used to silence a compiler error caused by missing
+validation.
 
 Bad:
 
@@ -127,16 +132,13 @@ Prefer runtime validation at external boundaries.
 Use immutable literal collections when they define a stable domain catalog.
 
 ```ts
-const FOUNDATIONAL_PRACTICE_IDS = [
-  'readScripture',
-  'pray',
-  'reflect',
-] as const;
+const FOUNDATIONAL_PRACTICE_IDS = ['readScripture', 'pray', 'reflect'] as const;
 ```
 
 ## Functions
 
-Prefer arrow functions for module functions and callbacks unless a declaration meaningfully improves the file.
+Prefer arrow functions for module functions and callbacks unless a declaration
+meaningfully improves the file.
 
 Keep functions focused. A function should have one coherent reason to change.
 
@@ -144,15 +146,15 @@ Prefer early returns when they make invalid states obvious:
 
 ```ts
 const getDayAccess = (dayNumber: number, reachedDayNumber: number) => {
-  if (dayNumber < 1 || dayNumber > 77) {
-    return 'invalid';
-  }
+	if (dayNumber < 1 || dayNumber > 77) {
+		return 'invalid';
+	}
 
-  if (dayNumber > reachedDayNumber) {
-    return 'future';
-  }
+	if (dayNumber > reachedDayNumber) {
+		return 'future';
+	}
 
-  return 'available';
+	return 'available';
 };
 ```
 
@@ -160,27 +162,31 @@ Do not compress meaningful branches into nested ternaries.
 
 ### Parameters
 
-Prefer a single object parameter when a function has several related arguments or when positional meaning is not obvious.
+Prefer a single object parameter when a function has several related arguments
+or when positional meaning is not obvious.
 
 ```ts
 interface ICreateJourneyDateRangeInput {
-  startDate: TCalendarDate;
-  timeZoneId: TIanaTimeZoneId;
+	startDate: TCalendarDate;
+	timeZoneId: TIanaTimeZoneId;
 }
 
 const createJourneyDateRange = ({
-  startDate,
-  timeZoneId,
+	startDate,
+	timeZoneId,
 }: ICreateJourneyDateRangeInput) => {};
 ```
 
-Avoid parameter objects for trivial two-argument utilities when positional meaning is already clear.
+Avoid parameter objects for trivial two-argument utilities when positional
+meaning is already clear.
 
 ## React and React Native
 
 Use functional components and hooks.
 
-Keep route modules thin. A route should usually resolve route-specific parameters and compose a feature screen rather than contain substantial domain behavior.
+Keep route modules thin. A route should usually resolve route-specific
+parameters and compose a feature screen rather than contain substantial domain
+behavior.
 
 Keep domain calculations outside presentation components.
 
@@ -188,13 +194,14 @@ Prefer:
 
 ```tsx
 const TodayScreen = () => {
-  const journeyDay = useJourneyDay();
+	const journeyDay = useJourneyDay();
 
-  return <TodayView journeyDay={journeyDay} />;
+	return <TodayView journeyDay={journeyDay} />;
 };
 ```
 
-over a screen that combines navigation, Firestore access, date calculations, business rules, and rendering in one file.
+over a screen that combines navigation, Firestore access, date calculations,
+business rules, and rendering in one file.
 
 ### Component responsibilities
 
@@ -205,42 +212,48 @@ A component should primarily own one of:
 - a focused workflow;
 - orchestration of a small number of child components.
 
-If a component becomes difficult to name without `And`, review its responsibilities.
+If a component becomes difficult to name without `And`, review its
+responsibilities.
 
 ### Props
 
 Define explicit props types. Pass the narrowest data required.
 
-Do not pass entire account, journey, or Firestore documents into a leaf component that needs two fields.
+Do not pass entire account, journey, or Firestore documents into a leaf
+component that needs two fields.
 
 ### Hooks
 
 Hooks should expose behavior or state with a clear domain meaning.
 
-Avoid hooks that hide large amounts of mutation and navigation behind vague names.
+Avoid hooks that hide large amounts of mutation and navigation behind vague
+names.
 
 Good:
 
 ```ts
-useJourneyDay()
-useStartJourney()
-useAccountAccessState()
+useJourneyDay();
+useStartJourney();
+useAccountAccessState();
 ```
 
 Avoid:
 
 ```ts
-useEverything()
-useAppStuff()
+useEverything();
+useAppStuff();
 ```
 
 ## Services and repositories
 
-Use a class only when state, lifecycle, substitution, or dependency injection makes it useful. Do not create classes as static utility containers.
+Use a class only when state, lifecycle, substitution, or dependency injection
+makes it useful. Do not create classes as static utility containers.
 
-Keep Firebase SDK concerns behind focused adapters or repositories where doing so prevents SDK-specific types from spreading through the application.
+Keep Firebase SDK concerns behind focused adapters or repositories where doing
+so prevents SDK-specific types from spreading through the application.
 
-A service may coordinate a workflow; it should not become a global dumping ground.
+A service may coordinate a workflow; it should not become a global dumping
+ground.
 
 ## Async code
 
@@ -248,20 +261,22 @@ Use `async` / `await` for sequential asynchronous workflows.
 
 Handle expected errors at the layer that can make a useful decision.
 
-Do not catch an error merely to log it and rethrow it unless the added context is materially useful.
+Do not catch an error merely to log it and rethrow it unless the added context
+is materially useful.
 
 Bad:
 
 ```ts
 try {
-  return await saveReflection();
+	return await saveReflection();
 } catch (error) {
-  console.error(error);
-  throw error;
+	console.error(error);
+	throw error;
 }
 ```
 
-Prefer either letting the error propagate or converting it to a meaningful domain result.
+Prefer either letting the error propagate or converting it to a meaningful
+domain result.
 
 ## Error handling
 
@@ -276,13 +291,15 @@ Differentiate:
 
 Do not show raw Firebase error strings to participants.
 
-Participant-facing errors must follow the voice guide and should explain the next useful action when one exists.
+Participant-facing errors must follow the voice guide and should explain the
+next useful action when one exists.
 
 ## State and data flow
 
 Prefer the smallest owner of state.
 
-Do not duplicate the same server-backed value in several state containers unless each copy has a clear lifecycle and reconciliation rule.
+Do not duplicate the same server-backed value in several state containers unless
+each copy has a clear lifecycle and reconciliation rule.
 
 Derived values should normally be calculated rather than persisted.
 
@@ -295,7 +312,8 @@ Examples of values that should usually be derived:
 - current streak;
 - Day 77 date.
 
-Persist a derived value only when there is a clear performance, audit, or query requirement and a defined source of truth.
+Persist a derived value only when there is a clear performance, audit, or query
+requirement and a defined source of truth.
 
 ## Object handling
 
@@ -305,9 +323,9 @@ Avoid spreading large untrusted or persistent objects into outward-facing DTOs:
 
 ```ts
 return {
-  journeyId,
-  dayNumber,
-  status,
+	journeyId,
+	dayNumber,
+	status,
 };
 ```
 
@@ -315,7 +333,7 @@ instead of:
 
 ```ts
 return {
-  ...firestoreDocument,
+	...firestoreDocument,
 };
 ```
 
@@ -339,9 +357,11 @@ src/
 
 This is an intended organization, not proof that those directories exist.
 
-Keep shared components genuinely shared. Keep feature-specific components near the feature until their reuse is established.
+Keep shared components genuinely shared. Keep feature-specific components near
+the feature until their reuse is established.
 
-Avoid generic `utils.ts` files containing unrelated functions. Name utility modules after the concept they own.
+Avoid generic `utils.ts` files containing unrelated functions. Name utility
+modules after the concept they own.
 
 ## Comments
 
@@ -364,11 +384,14 @@ Remove comments that no longer match the code.
 
 ## Reuse and abstraction
 
-Create an abstraction when repeated code represents the same concept and is likely to change together.
+Create an abstraction when repeated code represents the same concept and is
+likely to change together.
 
-Do not create a component factory, generic repository base class, registry, or configuration-driven mini-framework for a single use case.
+Do not create a component factory, generic repository base class, registry, or
+configuration-driven mini-framework for a single use case.
 
-When two implementations are similar but have different domain rules, duplication can be safer than forcing them behind a false shared abstraction.
+When two implementations are similar but have different domain rules,
+duplication can be safer than forcing them behind a false shared abstraction.
 
 ## Testing
 
@@ -401,7 +424,8 @@ Review code that contains:
 
 - unnecessary commentary on obvious syntax;
 - multiple abstraction layers introduced together without a concrete need;
-- generic names such as `Manager`, `Processor`, or `Handler` with broad responsibilities;
+- generic names such as `Manager`, `Processor`, or `Handler` with broad
+  responsibilities;
 - repeated type assertions;
 - defensive branches for impossible states without a documented reason;
 - several helper functions used only once where direct code is clearer;
@@ -421,5 +445,6 @@ Before considering a code change ready:
 - expected error states are handled;
 - UI text follows the voice guide;
 - UI follows the visual guide;
-- formatter, linter, type checks, and relevant tests have been run when configured;
+- formatter, linter, type checks, and relevant tests have been run when
+  configured;
 - the work report distinguishes local code from deployed behavior.

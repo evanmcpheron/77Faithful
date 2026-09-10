@@ -2,9 +2,12 @@
 
 ## Status
 
-This is the target V1 navigation specification. It describes the route tree and access rules that should be created. It does not assume that any route file, navigator, screen component, or route guard already exists.
+This is the target V1 navigation specification. It describes the route tree and
+access rules that should be created. It does not assume that any route file,
+navigator, screen component, or route guard already exists.
 
-Product behavior in `product/11-pages-and-navigation.md` is authoritative. This document translates that behavior into an Expo Router-oriented route plan.
+Product behavior in `product/11-pages-and-navigation.md` is authoritative. This
+document translates that behavior into an Expo Router-oriented route plan.
 
 ## Navigation model
 
@@ -16,7 +19,8 @@ V1 should use three primary signed-in destinations:
 
 **Reflections** is a child destination within Journey.
 
-Private Communities are a future direction and must not be visible as a V1 tab, drawer item, disabled teaser, or fake feed.
+Private Communities are a future direction and must not be visible as a V1 tab,
+drawer item, disabled teaser, or fake feed.
 
 ## Route groups
 
@@ -29,51 +33,56 @@ A maintainable Expo Router structure should distinguish:
 5. Settings child routes;
 6. future community routes that are not registered in V1 release navigation.
 
-The exact folder grouping can follow Expo Router conventions, but public URLs and participant behavior should remain stable.
+The exact folder grouping can follow Expo Router conventions, but public URLs
+and participant behavior should remain stable.
 
 ## Target public routes
 
-| Path | Surface | Purpose |
-| --- | --- | --- |
-| `/` | Account Entry | Explain 77Faithful briefly and offer Create account / Sign in. |
-| `/register` | Create Account | Create a personal account. |
-| `/confirm-email` | Confirm Email | Explain and complete email confirmation. |
-| `/recover-access` | Recover Access | Restore access to an existing account. |
-| `/about` | About & Help | Explain the product and provide support/contact information when real. |
-| `/privacy` | Privacy | Explain participant privacy and data handling truthfully. |
-| `/scripture-acknowledgments` | Scripture Acknowledgments | Show required edition and publisher acknowledgments. |
-| `/themes` | Weekly Themes | Show the eleven-theme overview without exposing future daily content. |
+| Path                         | Surface                   | Purpose                                                                |
+| ---------------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| `/`                          | Account Entry             | Explain 77Faithful briefly and offer Create account / Sign in.         |
+| `/register`                  | Create Account            | Create a personal account.                                             |
+| `/confirm-email`             | Confirm Email             | Explain and complete email confirmation.                               |
+| `/recover-access`            | Recover Access            | Restore access to an existing account.                                 |
+| `/about`                     | About & Help              | Explain the product and provide support/contact information when real. |
+| `/privacy`                   | Privacy                   | Explain participant privacy and data handling truthfully.              |
+| `/scripture-acknowledgments` | Scripture Acknowledgments | Show required edition and publisher acknowledgments.                   |
+| `/themes`                    | Weekly Themes             | Show the eleven-theme overview without exposing future daily content.  |
 
-Terms or other legal surfaces may be added when a real release requirement exists, but their existence should not be invented solely for navigation completeness.
+Terms or other legal surfaces may be added when a real release requirement
+exists, but their existence should not be invented solely for navigation
+completeness.
 
 ## Target authenticated routes
 
-| Path | Surface | Purpose |
-| --- | --- | --- |
-| `/onboarding` | Journey Setup | Resume the setup workflow until the participant deliberately starts. |
-| `/today` | Today | Show the actual current reached journey day and assigned practices. |
-| `/journey` | Journey | Show active/previous journey context, calendar/list, themes, and summary access. |
-| `/reflections` | Reflections | Show private saved motivation, intentions, and reflections within Journey. |
-| `/journeys/[journeyId]/days/[dayNumber]` | Journey Day | Review one reached day in context. |
-| `/journeys/[journeyId]/days/[dayNumber]/scripture` | Scripture | Read the assigned passage and devotional. |
-| `/journeys/[journeyId]/days/[dayNumber]/prayer` | Prayer | Use the day's prayer prompt and authored prayer. |
-| `/journeys/[journeyId]/days/[dayNumber]/reflection` | Reflection | Review/save intention and reflection and separately manage Reflect completion. |
-| `/journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]` | Chosen Practice | Read guidance for one assigned additional practice. |
-| `/journeys/[journeyId]/summary` | Journey Summary | Review a completed or early-ended journey accurately. |
-| `/settings` | Settings | Entry point for preferences and account controls. |
-| `/settings/practices` | Practice Settings | Review current selection and prepare a next-day change. |
-| `/settings/account` | Account | Manage profile/contact state, sign-out, and deletion access. |
-| `/settings/account/delete` | Delete Account | Explicit destructive-account confirmation workflow. |
+| Path                                                            | Surface           | Purpose                                                                          |
+| --------------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------- |
+| `/onboarding`                                                   | Journey Setup     | Resume the setup workflow until the participant deliberately starts.             |
+| `/today`                                                        | Today             | Show the actual current reached journey day and assigned practices.              |
+| `/journey`                                                      | Journey           | Show active/previous journey context, calendar/list, themes, and summary access. |
+| `/reflections`                                                  | Reflections       | Show private saved motivation, intentions, and reflections within Journey.       |
+| `/journeys/[journeyId]/days/[dayNumber]`                        | Journey Day       | Review one reached day in context.                                               |
+| `/journeys/[journeyId]/days/[dayNumber]/scripture`              | Scripture         | Read the assigned passage and devotional.                                        |
+| `/journeys/[journeyId]/days/[dayNumber]/prayer`                 | Prayer            | Use the day's prayer prompt and authored prayer.                                 |
+| `/journeys/[journeyId]/days/[dayNumber]/reflection`             | Reflection        | Review/save intention and reflection and separately manage Reflect completion.   |
+| `/journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]` | Chosen Practice   | Read guidance for one assigned additional practice.                              |
+| `/journeys/[journeyId]/summary`                                 | Journey Summary   | Review a completed or early-ended journey accurately.                            |
+| `/settings`                                                     | Settings          | Entry point for preferences and account controls.                                |
+| `/settings/practices`                                           | Practice Settings | Review current selection and prepare a next-day change.                          |
+| `/settings/account`                                             | Account           | Manage profile/contact state, sign-out, and deletion access.                     |
+| `/settings/account/delete`                                      | Delete Account    | Explicit destructive-account confirmation workflow.                              |
 
 Unknown paths should resolve to a clear not-found experience.
 
 ## Product screen mapping
 
-The product specification describes conceptual pages P01–P27. They do not all require separate URLs.
+The product specification describes conceptual pages P01–P27. They do not all
+require separate URLs.
 
 ### P01 — Product Introduction
 
-Integrate the concise product introduction into the signed-out account-entry surface.
+Integrate the concise product introduction into the signed-out account-entry
+surface.
 
 It should explain:
 
@@ -90,23 +99,28 @@ The introduction must not suggest that creating an account starts Day 1.
 
 Use `/`, `/register`, and `/recover-access`.
 
-Do not choose sign-in methods based on assumptions in documentation. The release should use the account methods deliberately selected and configured for the application.
+Do not choose sign-in methods based on assumptions in documentation. The release
+should use the account methods deliberately selected and configured for the
+application.
 
 ### P03 — Confirm Email
 
 Use `/confirm-email`.
 
-A participant whose account requires confirmation should not reach private journey data until confirmation is complete.
+A participant whose account requires confirmation should not reach private
+journey data until confirmation is complete.
 
 ### P04 — Recover Access
 
 Use `/recover-access`.
 
-Recovery restores an existing identity. It must not create a new journey or silently create a second account.
+Recovery restores an existing identity. It must not create a new journey or
+silently create a second account.
 
 ### P05–P10 — Journey setup
 
-Use one `/onboarding` workflow with internal steps rather than creating a permanent public URL for every answer.
+Use one `/onboarding` workflow with internal steps rather than creating a
+permanent public URL for every answer.
 
 Recommended conceptual steps:
 
@@ -121,13 +135,16 @@ Recommended conceptual steps:
 
 Progress should be resumable until the start is confirmed.
 
-The practice-selection step must show **N selected · Choose 2–4**. Fewer than two is incomplete. Two, three, or four are valid. A fifth or duplicate selection is invalid.
+The practice-selection step must show **N selected · Choose 2–4**. Fewer than
+two is incomplete. Two, three, or four are valid. A fifth or duplicate selection
+is invalid.
 
 ### P11 — Today
 
 Use `/today`.
 
-Today must be derived from the active journey and the phone's current local calendar date/time zone.
+Today must be derived from the active journey and the phone's current local
+calendar date/time zone.
 
 It should not be driven by:
 
@@ -140,7 +157,9 @@ It should not be driven by:
 
 Use `/journeys/[journeyId]/days/[dayNumber]`.
 
-Historical navigation should preserve the original journey/day context. A participant can update eligible history without shifting the current journey date.
+Historical navigation should preserve the original journey/day context. A
+participant can update eligible history without shifting the current journey
+date.
 
 ### P13 — Scripture
 
@@ -166,7 +185,9 @@ No writing is required. Prayer completion is manual.
 
 Use the Reflection child route.
 
-The day may contain both optional private intention writing and optional private reflection writing. Saving text and marking Reflect complete are separate operations.
+The day may contain both optional private intention writing and optional private
+reflection writing. Saving text and marking Reflect complete are separate
+operations.
 
 ### P16 — Chosen Practice guidance
 
@@ -178,19 +199,23 @@ The route must resolve only to a practice actually assigned to that day.
 
 Use `/journey`.
 
-This is the home for calendar/list history, journey selection, theme overview access, Reflections access, and summary access.
+This is the home for calendar/list history, journey selection, theme overview
+access, Reflections access, and summary access.
 
 ### P18 — Theme Overview
 
 Use `/themes` for the overview.
 
-For a signed-in participant, a query such as `journeyId` and `weekNumber` may identify the relevant reached weekly introduction when needed. Future full introductions remain unavailable.
+For a signed-in participant, a query such as `journeyId` and `weekNumber` may
+identify the relevant reached weekly introduction when needed. Future full
+introductions remain unavailable.
 
 ### P19 — Reflections
 
 Use `/reflections` as a Journey child destination.
 
-It should provide chronological private writing and a journey filter. Search and favorites are outside V1.
+It should provide chronological private writing and a journey filter. Search and
+favorites are outside V1.
 
 ### P20 — Journey Summary
 
@@ -212,7 +237,8 @@ Use `/settings/account`.
 
 ### P24 — Appearance and reading preferences
 
-These can be sections within Settings rather than separate routes unless the final design benefits from a dedicated screen.
+These can be sections within Settings rather than separate routes unless the
+final design benefits from a dedicated screen.
 
 ### P25 — About, Privacy, and Scripture acknowledgment
 
@@ -220,13 +246,16 @@ Use the public informational routes and link to them from Settings.
 
 ### P26 — End Journey
 
-Use an explicit confirmation flow launched from Journey/Settings. It does not need a permanent route if a modal or sheet provides clear, accessible confirmation.
+Use an explicit confirmation flow launched from Journey/Settings. It does not
+need a permanent route if a modal or sheet provides clear, accessible
+confirmation.
 
 ### P27 — Delete Account
 
 Use `/settings/account/delete`.
 
-Account deletion must remain separate from ending a journey or deleting one reflection.
+Account deletion must remain separate from ending a journey or deleting one
+reflection.
 
 ## Route access state
 
@@ -256,13 +285,15 @@ Do not expose private journey records.
 
 ### Signed in but email not confirmed
 
-Direct the participant to Confirm Email while preserving a reasonable path to sign out or change account information.
+Direct the participant to Confirm Email while preserving a reasonable path to
+sign out or change account information.
 
 ### Confirmed account with no active journey and incomplete setup
 
 Open/resume Journey Setup.
 
-Previous journey history may remain accessible for a returning participant. Setup should not erase it.
+Previous journey history may remain accessible for a returning participant.
+Setup should not erase it.
 
 ### Confirmed account with one active journey
 
@@ -272,7 +303,8 @@ Journey and Settings remain available.
 
 ### Confirmed account with no active journey but prior history
 
-Journey should expose previous journeys and a deliberate **Start another journey** action.
+Journey should expose previous journeys and a deliberate **Start another
+journey** action.
 
 Do not fabricate an active Today state.
 
@@ -300,9 +332,11 @@ When feasible, preserve meaningful origin:
 - from Journey history → return to Journey;
 - from Reflections → return to Reflections.
 
-A cold deep link should return to the logical parent rather than depend on a missing navigation history.
+A cold deep link should return to the logical parent rather than depend on a
+missing navigation history.
 
-Do not put private writing or sensitive account information in a `returnTo` query string.
+Do not put private writing or sensitive account information in a `returnTo`
+query string.
 
 ## Route parameters
 
@@ -335,7 +369,8 @@ Requirements:
 
 ## Suggested query parameters
 
-Use query parameters only when they improve navigation without exposing private content.
+Use query parameters only when they improve navigation without exposing private
+content.
 
 Examples:
 
@@ -356,7 +391,8 @@ in a URL or analytics event.
 
 ## Future community route plan
 
-The following routes describe a possible later private-community structure. They must not be exposed in V1:
+The following routes describe a possible later private-community structure. They
+must not be exposed in V1:
 
 - `/communities`
 - `/communities/create`
@@ -369,7 +405,8 @@ The following routes describe a possible later private-community structure. They
 
 Future community access must depend on active membership and privacy rules.
 
-An invitation URL may carry an opaque invitation token, but the token must not reveal email addresses, member lists, or private data.
+An invitation URL may carry an opaque invitation token, but the token must not
+reveal email addresses, member lists, or private data.
 
 ## Future-content boundaries
 
@@ -433,6 +470,8 @@ Use current Expo Router conventions for:
 - protected navigation;
 - deep links.
 
-Keep route files thin. Product access checks should be reusable and testable rather than duplicated in every route module.
+Keep route files thin. Product access checks should be reusable and testable
+rather than duplicated in every route module.
 
-Official Expo Router behavior may shape file organization, but it must not change the participant product rules above.
+Official Expo Router behavior may shape file organization, but it must not
+change the participant product rules above.

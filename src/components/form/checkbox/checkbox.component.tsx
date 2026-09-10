@@ -50,13 +50,22 @@ export const Checkbox = ({
 		};
 	}, [checked, defaultValue, formProxy, name, usesFormProxy]);
 
-	useEffect(() => {
-		if (usesFormProxy) {
-			return;
-		}
+	const [previousValueProps, setPreviousValueProps] = useState({
+		checked,
+		defaultValue,
+		usesFormProxy,
+	});
 
-		setInternalChecked(checked ?? defaultValue);
-	}, [checked, defaultValue, usesFormProxy]);
+	if (
+		!Object.is(previousValueProps.checked, checked) ||
+		!Object.is(previousValueProps.defaultValue, defaultValue) ||
+		previousValueProps.usesFormProxy !== usesFormProxy
+	) {
+		setPreviousValueProps({ checked, defaultValue, usesFormProxy });
+		if (!usesFormProxy) {
+			setInternalChecked(checked ?? defaultValue);
+		}
+	}
 
 	const handlePress = () => {
 		if (disabled) {

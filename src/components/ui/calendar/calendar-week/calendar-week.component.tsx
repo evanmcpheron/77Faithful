@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Animated } from 'react-native';
 
 import dayjs from 'dayjs';
@@ -80,14 +80,15 @@ const CalendarWeekDay = ({
 	isSelected,
 	onSelect,
 }: ICalendarWeekDayProps) => {
-	const pressAnimation = useRef(
-		new Animated.Value(RestingAnimationValue),
-	).current;
-	const selectedAnimation = useRef(
-		new Animated.Value(
-			isSelected ? SelectedAnimationValue : RestingAnimationValue,
-		),
-	).current;
+	const [pressAnimation] = useState(
+		() => new Animated.Value(RestingAnimationValue),
+	);
+	const [selectedAnimation] = useState(
+		() =>
+			new Animated.Value(
+				isSelected ? SelectedAnimationValue : RestingAnimationValue,
+			),
+	);
 
 	useEffect(() => {
 		const selectedSpring = Animated.spring(selectedAnimation, {
@@ -197,12 +198,12 @@ const CalendarWeekDay = ({
 };
 
 export const CalendarWeek = ({}: ICalendarWeekProps) => {
-	const previousWeekPressAnimation = useRef(
-		new Animated.Value(RestingAnimationValue),
-	).current;
-	const nextWeekPressAnimation = useRef(
-		new Animated.Value(RestingAnimationValue),
-	).current;
+	const [previousWeekPressAnimation] = useState(
+		() => new Animated.Value(RestingAnimationValue),
+	);
+	const [nextWeekPressAnimation] = useState(
+		() => new Animated.Value(RestingAnimationValue),
+	);
 	const [anchor, setAnchor] = useState<Date>(() => startOfWeek(new Date()));
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 	const days = useMemo(() => getWeekDays(anchor), [anchor]);

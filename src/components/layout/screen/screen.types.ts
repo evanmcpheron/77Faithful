@@ -73,6 +73,4 @@ export interface IListScreenProps<
 }
 
 export type TScreenProps<TItem> =
-	| IStaticScreenProps
-	| IScrollScreenProps
-	| IListScreenProps<TItem>;
+	IStaticScreenProps | IScrollScreenProps | IListScreenProps<TItem>;

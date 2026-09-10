@@ -1,7 +1,7 @@
 import { ApiClientService } from './api-client.service';
 import type { IApiClientAuthConfig } from './api.types';
 
-const apiBaseUrl = process.env['EXPO_PUBLIC_BASE_URL'];
+const apiBaseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 
 if (!apiBaseUrl) {
 	throw new Error('EXPO_PUBLIC_BASE_URL is required.');

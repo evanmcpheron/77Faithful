@@ -1,3 +1,4 @@
+import { HTTP_METHOD } from '@turndown/library';
 import type {
 	AxiosError,
 	AxiosInstance,
@@ -15,7 +16,6 @@ import type {
 	IApiRequestControlConfig,
 	IApiRequestOptions,
 } from './api.types';
-import { HTTP_METHOD } from '@turndown/library';
 
 import type { IApiErrorResponse, TApiErrorDetails } from '@turndown/library';
 
@@ -179,8 +179,7 @@ export class ApiClientService implements IApiClient {
 		error: AxiosError,
 	): Promise<AxiosResponse> => {
 		const originalRequest = error.config as
-			| TApiInternalRequestConfig
-			| undefined;
+			TApiInternalRequestConfig | undefined;
 
 		if (!this.shouldRefreshSession(error, originalRequest)) {
 			throw this.normalizeError(error);

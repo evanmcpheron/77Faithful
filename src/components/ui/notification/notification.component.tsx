@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
@@ -35,44 +35,58 @@ export const Notification = ({
 	type = 'Info',
 }: INotificationProps) => {
 	const [mounted, setMounted] = useState(visible);
+	const [previousVisible, setPreviousVisible] = useState(visible);
+	if (previousVisible !== visible) {
+		setPreviousVisible(visible);
+		if (visible) {
+			setMounted(true);
+		}
+	}
+
 	const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const baseOffset = useSharedValue(-60);
 	const dragOffset = useSharedValue(0);
 
-	const dismiss = (animate = true) => {
-		if (timerRef.current) {
-			clearTimeout(timerRef.current);
-			timerRef.current = null;
-		}
+	const dismiss = useCallback(
+		(animate = true) => {
+			if (timerRef.current) {
+				clearTimeout(timerRef.current);
+				timerRef.current = null;
+			}
 
-		const done = () => {
-			setMounted(false);
-			onClose?.();
-		};
+			const done = () => {
+				setMounted(false);
+				onClose?.();
+			};
 
-		dragOffset.value = 0;
+			dragOffset.set(0);
 
-		if (animate) {
-			baseOffset.value = withTiming(
-				-80,
-				{ duration: NOTIFICATION_OUT_DURATION },
-				() => runOnJS(done)(),
-			);
-		} else {
-			baseOffset.value = -80;
-			done();
-		}
-	};
+			if (animate) {
+				baseOffset.set(
+					withTiming(
+						-80,
+						{ duration: NOTIFICATION_OUT_DURATION },
+						() => runOnJS(done)(),
+					),
+				);
+			} else {
+				baseOffset.set(-80);
+				done();
+			}
+		},
+		[baseOffset, dragOffset, onClose],
+	);
 
 	useEffect(() => {
 		if (visible) {
-			setMounted(true);
-			dragOffset.value = 0;
-			baseOffset.value = -60;
-			baseOffset.value = withTiming(0, {
-				duration: NOTIFICATION_IN_DURATION,
-			});
+			dragOffset.set(0);
+			baseOffset.set(-60);
+			baseOffset.set(
+				withTiming(0, {
+					duration: NOTIFICATION_IN_DURATION,
+				}),
+			);
 
 			if (duration > 0) {
 				if (timerRef.current) clearTimeout(timerRef.current);
@@ -99,26 +113,32 @@ export const Notification = ({
 	const pan = Gesture.Pan()
 		.onUpdate((e) => {
 			if (e.translationY < 0) {
-				dragOffset.value = e.translationY;
+				dragOffset.set(e.translationY);
 			} else {
-				dragOffset.value = 0;
+				dragOffset.set(0);
 			}
 		})
+		// Gesture Handler invokes this callback after render on the UI thread.
+		// eslint-disable-next-line react-hooks/refs -- runOnJS defers dismiss and its timer-ref access to the JS thread.
 		.onEnd((e) => {
 			const THRESHOLD = -60;
 			const FAST_VELOCITY = -900;
 
 			if (e.translationY < THRESHOLD || e.velocityY < FAST_VELOCITY) {
-				dragOffset.value = withTiming(
-					-NOTIFICATION_SCREEN.height,
-					{ duration: 160 },
-					() => runOnJS(dismiss)(false),
+				dragOffset.set(
+					withTiming(
+						-NOTIFICATION_SCREEN.height,
+						{ duration: 160 },
+						() => runOnJS(dismiss)(false),
+					),
 				);
 			} else {
-				dragOffset.value = withSpring(0, {
-					damping: 18,
-					stiffness: 180,
-				});
+				dragOffset.set(
+					withSpring(0, {
+						damping: 18,
+						stiffness: 180,
+					}),
+				);
 			}
 		});
 

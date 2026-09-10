@@ -2,13 +2,18 @@
 
 ## Status
 
-This document defines the server-authoritative journey-start boundary that should be built. It does not assume that a Cloud Function, client service, Firestore transaction, collection, rule, or test already exists.
+This document defines the server-authoritative journey-start boundary that
+should be built. It does not assume that a Cloud Function, client service,
+Firestore transaction, collection, rule, or test already exists.
 
 ## Why journey start is trusted
 
-Starting establishes the participant's immutable calendar and creates the one active journey allowed by V1.
+Starting establishes the participant's immutable calendar and creates the one
+active journey allowed by V1.
 
-A client should not be able to create an active journey by directly writing arbitrary Firestore documents because the start operation must atomically validate:
+A client should not be able to create an active journey by directly writing
+arbitrary Firestore documents because the start operation must atomically
+validate:
 
 - authenticated identity;
 - required email confirmation;
@@ -20,7 +25,8 @@ A client should not be able to create an active journey by directly writing arbi
 - one-active-journey invariant;
 - idempotency for repeated requests.
 
-The target implementation should use a Firebase callable Cloud Function or another equivalent authenticated trusted server boundary.
+The target implementation should use a Firebase callable Cloud Function or
+another equivalent authenticated trusted server boundary.
 
 ## Suggested operation
 
@@ -28,26 +34,31 @@ A clear name is:
 
 `startJourney`
 
-The final exported name can differ if project conventions require it, but the semantics should remain stable.
+The final exported name can differ if project conventions require it, but the
+semantics should remain stable.
 
 ## Suggested request
 
-A request should contain only the participant-controlled and concurrency values the server needs.
+A request should contain only the participant-controlled and concurrency values
+the server needs.
 
 Example target shape:
 
 ```ts
 interface IStartJourneyRequest {
-  setupRevision: number;
-  reviewedStartDate: TCalendarDate;
-  reviewedTimeZoneId: TIanaTimeZoneId;
-  deviceOperationId: string;
+	setupRevision: number;
+	reviewedStartDate: TCalendarDate;
+	reviewedTimeZoneId: TIanaTimeZoneId;
+	deviceOperationId: string;
 }
 ```
 
-The server should resolve authoritative setup selections, course/version, and account identity rather than trust duplicate client-supplied copies of those values.
+The server should resolve authoritative setup selections, course/version, and
+account identity rather than trust duplicate client-supplied copies of those
+values.
 
-If the setup model requires explicit IDs in the request, validate them against the owned setup record.
+If the setup model requires explicit IDs in the request, validate them against
+the owned setup record.
 
 ## Authentication
 
@@ -71,7 +82,8 @@ The setup used for start must:
 - reference the intended released course/version;
 - contain only optional motivation/reminder data permitted by the product.
 
-A stale setup revision should produce a conflict/review response rather than starting with unseen choices.
+A stale setup revision should produce a conflict/review response rather than
+starting with unseen choices.
 
 ## Practice validation
 
@@ -86,7 +98,8 @@ Do not trust UI disabled states as validation.
 
 ## Formation content readiness
 
-Before the start is confirmed, the selected course/version must be suitable for a 77-day journey.
+Before the start is confirmed, the selected course/version must be suitable for
+a 77-day journey.
 
 At minimum:
 
@@ -100,25 +113,31 @@ A catalog label alone is insufficient.
 
 ## Date review
 
-The participant should see today's proposed start date and projected Day 77 date before submitting Start.
+The participant should see today's proposed start date and projected Day 77 date
+before submitting Start.
 
 The server should verify that:
 
 - `reviewedTimeZoneId` is a valid IANA time-zone ID;
-- `reviewedStartDate` equals the current calendar date derived for that zone at the trusted server check;
+- `reviewedStartDate` equals the current calendar date derived for that zone at
+  the trusted server check;
 - the setup review is not stale.
 
-If midnight has passed between review and confirmation, reject with a specific review-outdated result and require the UI to show the new Day 1 / Day 77 dates.
+If midnight has passed between review and confirmation, reject with a specific
+review-outdated result and require the UI to show the new Day 1 / Day 77 dates.
 
 Do not silently start on a date the participant did not review.
 
 ## One active journey
 
-The operation must atomically enforce no more than one active journey for the participant.
+The operation must atomically enforce no more than one active journey for the
+participant.
 
-Two devices starting at nearly the same time must not create two active journeys.
+Two devices starting at nearly the same time must not create two active
+journeys.
 
-Use a transaction, lock/sentinel record, or another Firestore-safe invariant pattern that can be covered by automated tests.
+Use a transaction, lock/sentinel record, or another Firestore-safe invariant
+pattern that can be covered by automated tests.
 
 Do not rely on a client query followed by a client write.
 
@@ -126,13 +145,18 @@ Do not rely on a client query followed by a client write.
 
 `deviceOperationId` should make a repeated request safe.
 
-If the same authenticated participant retries the same start operation because a response was lost, return the same confirmed result rather than creating another journey.
+If the same authenticated participant retries the same start operation because a
+response was lost, return the same confirmed result rather than creating another
+journey.
 
-Idempotency records must not become an unbounded source of sensitive history. Define a practical retention strategy consistent with the final privacy architecture before release.
+Idempotency records must not become an unbounded source of sensitive history.
+Define a practical retention strategy consistent with the final privacy
+architecture before release.
 
 ## Atomic write set
 
-A successful transaction should establish the minimum durable records needed for the active journey.
+A successful transaction should establish the minimum durable records needed for
+the active journey.
 
 Potential write responsibilities include:
 
@@ -141,13 +165,15 @@ Potential write responsibilities include:
 - pin the released course/version;
 - pin the initial selected practices;
 - record start date and starting time zone;
-- copy the optional starting motivation into journey ownership where the product model requires it;
+- copy the optional starting motivation into journey ownership where the product
+  model requires it;
 - mark or archive setup as consumed/started;
 - preserve an auditable start operation result for idempotency.
 
 Do not pre-mark any daily practice complete.
 
-Do not create future participant completion records merely to fill a 77-row structure.
+Do not create future participant completion records merely to fill a 77-row
+structure.
 
 ## Suggested response
 
@@ -155,12 +181,12 @@ Return enough information for the client to navigate safely:
 
 ```ts
 interface IStartJourneyResponse {
-  journeyId: string;
-  status: 'active';
-  startDate: TCalendarDate;
-  day77Date: TCalendarDate;
-  courseId: string;
-  courseVersionId: string;
+	journeyId: string;
+	status: 'active';
+	startDate: TCalendarDate;
+	day77Date: TCalendarDate;
+	courseId: string;
+	courseVersionId: string;
 }
 ```
 
@@ -191,8 +217,10 @@ Participant-facing text belongs in the client voice layer.
 If an active journey already exists:
 
 - never create a second one;
-- if the request is a known retry of the operation that created it, return the idempotent result;
-- otherwise return a typed active-journey conflict that lets the app navigate to the real journey.
+- if the request is a known retry of the operation that created it, return the
+  idempotent result;
+- otherwise return a typed active-journey conflict that lets the app navigate to
+  the real journey.
 
 Do not end or replace an active journey automatically.
 
@@ -203,7 +231,8 @@ The motivation is optional.
 If present:
 
 - preserve the participant's exact text;
-- transfer/copy it into the new journey's private writing scope as defined by the domain model;
+- transfer/copy it into the new journey's private writing scope as defined by
+  the domain model;
 - do not make motivation nonempty as a start condition;
 - do not publish it to future community data.
 
@@ -211,7 +240,9 @@ If present:
 
 Reminder choices do not determine journey eligibility.
 
-If setup collects them, persist them through the device-preferences workflow rather than making the journey transaction depend on local notification permission.
+If setup collects them, persist them through the device-preferences workflow
+rather than making the journey transaction depend on local notification
+permission.
 
 A participant can start with reminders disabled.
 
@@ -219,19 +250,23 @@ A participant can start with reminders disabled.
 
 Journey start requires connection.
 
-If the request has not been confirmed by the trusted backend, the client must not display a definitive active journey.
+If the request has not been confirmed by the trusted backend, the client must
+not display a definitive active journey.
 
-After confirmation, content preparation for offline use is a separate state. The UI should distinguish:
+After confirmation, content preparation for offline use is a separate state. The
+UI should distinguish:
 
 - journey confirmed;
 - content preparing;
 - content prepared.
 
-Do not call the journey start failed merely because local content preparation is still running.
+Do not call the journey start failed merely because local content preparation is
+still running.
 
 ## Security Rules
 
-Security Rules should prevent a client from bypassing the trusted start operation with equivalent direct writes.
+Security Rules should prevent a client from bypassing the trusted start
+operation with equivalent direct writes.
 
 Rules should also protect:
 
@@ -284,7 +319,8 @@ The exact collection layout may vary, but the invariant must be testable.
 - no practice starts as complete;
 - starting motivation is preserved exactly when supplied;
 - empty motivation does not block start;
-- journey pins the released course/version and selected Bible edition preference correctly.
+- journey pins the released course/version and selected Bible edition preference
+  correctly.
 
 ### Security
 

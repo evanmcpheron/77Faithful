@@ -20,7 +20,10 @@ import type {
 } from '@turndown/library';
 
 import { apiClient } from '@td/services/api/api-client.instance';
-import type { IApiRequestConfig, TApiResponse } from '@td/services/api/api.types';
+import type {
+	IApiRequestConfig,
+	TApiResponse,
+} from '@td/services/api/api.types';
 
 import type { ICompanyApiService } from './company.types';
 
@@ -28,10 +31,9 @@ class CompanyApiService implements ICompanyApiService {
 	getCompanies = async (
 		query?: IGetCompaniesQuery,
 	): Promise<IGetCompaniesResponse> => {
-		const response = await apiClient.get<TApiResponse<IGetCompaniesResponse>>(
-			'/companies',
-			this.getQueryConfig(query),
-		);
+		const response = await apiClient.get<
+			TApiResponse<IGetCompaniesResponse>
+		>('/companies', this.getQueryConfig(query));
 
 		return response.data;
 	};

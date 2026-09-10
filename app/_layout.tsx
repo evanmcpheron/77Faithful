@@ -27,8 +27,7 @@ import {
 } from '@td/components/layout/root/root-layout.styles';
 import { NotificationHost } from '@td/components/ui/notification/notification-host.component';
 
-const storybookEnabled =
-	process.env['EXPO_PUBLIC_STORYBOOK_ENABLED'] === 'true';
+const storybookEnabled = process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true';
 
 const getStorybookRoot = (): ComponentType => {
 	const storybookModule = require('../.rnstorybook') as {
@@ -37,6 +36,8 @@ const getStorybookRoot = (): ComponentType => {
 
 	return storybookModule.default;
 };
+
+const StorybookRoot = storybookEnabled ? getStorybookRoot() : null;
 
 SplashScreen.preventAutoHideAsync();
 
@@ -58,9 +59,7 @@ const RootLayout = () => {
 		return null;
 	}
 
-	if (storybookEnabled) {
-		const StorybookRoot = getStorybookRoot();
-
+	if (StorybookRoot) {
 		return (
 			<SafeAreaProvider initialMetrics={initialWindowMetrics}>
 				<StyledRootGestureContainer>

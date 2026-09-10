@@ -16,9 +16,8 @@ export type TFormValidationRule<
 
 type TFormValidationEntry<TValue, TValidationResult = TFormValidationResult> =
 	NonNullable<TValue> extends object
-		?
-				| TFormValidationRule<TValue, TValidationResult>
-				| IFormValidationModel<NonNullable<TValue>, TValidationResult>
+		? | TFormValidationRule<TValue, TValidationResult>
+			| IFormValidationModel<NonNullable<TValue>, TValidationResult>
 		: TFormValidationRule<TValue, TValidationResult>;
 
 export type IFormValidationModel<

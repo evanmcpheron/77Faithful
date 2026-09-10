@@ -173,7 +173,7 @@ export const Dropdown = <T extends string = string>({
 	);
 	const [menuPosition, setMenuPosition] =
 		useState<IDropdownMenuPosition | null>(null);
-	const arrowAnimation = useRef(new Animated.Value(0)).current;
+	const [arrowAnimation] = useState(() => new Animated.Value(0));
 
 	const usesFormProxy = Boolean(formName && name && !ignoreForm);
 	const resolvedValue = usesFormProxy
@@ -306,13 +306,22 @@ export const Dropdown = <T extends string = string>({
 		};
 	}, [defaultValue, formProxy, multiSelect, name, usesFormProxy]);
 
-	useEffect(() => {
-		if (usesFormProxy) {
-			return;
-		}
+	const [previousValueProps, setPreviousValueProps] = useState({
+		value,
+		defaultValue,
+		usesFormProxy,
+	});
 
-		setInternalValue(value ?? defaultValue);
-	}, [defaultValue, usesFormProxy, value]);
+	if (
+		!Object.is(previousValueProps.value, value) ||
+		!Object.is(previousValueProps.defaultValue, defaultValue) ||
+		previousValueProps.usesFormProxy !== usesFormProxy
+	) {
+		setPreviousValueProps({ value, defaultValue, usesFormProxy });
+		if (!usesFormProxy) {
+			setInternalValue(value ?? defaultValue);
+		}
+	}
 
 	useEffect(() => {
 		Animated.timing(arrowAnimation, {

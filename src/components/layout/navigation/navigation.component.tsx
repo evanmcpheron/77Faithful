@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { useWindowDimensions } from 'react-native';
 
@@ -225,7 +225,19 @@ const CustomTabBar: FC<TCustomTabBarProps> = ({
 		);
 
 	const hideProgress = useSharedValue(routeIsOnNestedScreen ? 1 : 0);
-	const hasMountedRef = useRef(false);
+	const [previousNestedScreen, setPreviousNestedScreen] = useState(
+		routeIsOnNestedScreen,
+	);
+
+	if (previousNestedScreen !== routeIsOnNestedScreen) {
+		setPreviousNestedScreen(routeIsOnNestedScreen);
+		if (routeIsOnNestedScreen) {
+			setStyledIsOnNestedScreen(true);
+		}
+		setNavigationAnimationState(
+			routeIsOnNestedScreen ? 'hiding' : 'showing',
+		);
+	}
 
 	const completeHideAnimation = useCallback(() => {
 		setNavigationAnimationState('hidden');
@@ -237,36 +249,25 @@ const CustomTabBar: FC<TCustomTabBarProps> = ({
 	}, []);
 
 	useEffect(() => {
-		const target = routeIsOnNestedScreen ? 1 : 0;
-
-		if (!hasMountedRef.current) {
-			hasMountedRef.current = true;
-			hideProgress.value = target;
-			setStyledIsOnNestedScreen(routeIsOnNestedScreen);
-			setNavigationAnimationState(
-				routeIsOnNestedScreen ? 'hidden' : 'visible',
-			);
+		if (routeIsOnNestedScreen || navigationAnimationState !== 'showing') {
 			return;
 		}
 
-		cancelAnimation(hideProgress);
+		hideProgress.set(
+			withSpring(0, NAV_HIDE_SPRING, (finished) => {
+				if (finished) {
+					runOnJS(completeShowAnimation)();
+				}
+			}),
+		);
 
-		if (routeIsOnNestedScreen) {
-			setStyledIsOnNestedScreen(true);
-			setNavigationAnimationState('hiding');
-			return;
-		}
-
-		setNavigationAnimationState('showing');
-
-		hideProgress.value = withSpring(0, NAV_HIDE_SPRING, (finished) => {
-			if (!finished) {
-				return;
-			}
-
-			runOnJS(completeShowAnimation)();
-		});
-	}, [completeShowAnimation, hideProgress, routeIsOnNestedScreen]);
+		return () => cancelAnimation(hideProgress);
+	}, [
+		completeShowAnimation,
+		hideProgress,
+		navigationAnimationState,
+		routeIsOnNestedScreen,
+	]);
 
 	useEffect(() => {
 		if (
@@ -277,13 +278,17 @@ const CustomTabBar: FC<TCustomTabBarProps> = ({
 			return;
 		}
 
-		hideProgress.value = withSpring(1, NAV_HIDE_SPRING, (finished) => {
-			if (!finished) {
-				return;
-			}
+		hideProgress.set(
+			withSpring(1, NAV_HIDE_SPRING, (finished) => {
+				if (!finished) {
+					return;
+				}
 
-			runOnJS(completeHideAnimation)();
-		});
+				runOnJS(completeHideAnimation)();
+			}),
+		);
+
+		return () => cancelAnimation(hideProgress);
 	}, [
 		completeHideAnimation,
 		hideProgress,

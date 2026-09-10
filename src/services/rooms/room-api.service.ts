@@ -59,9 +59,9 @@ class RoomApiService implements IRoomApiService {
 	};
 
 	getRoomById = async (roomId: string): Promise<IGetRoomByIdResponse> => {
-		const response = await apiClient.get<TApiResponse<IGetRoomByIdResponse>>(
-			`/rooms/${roomId}`,
-		);
+		const response = await apiClient.get<
+			TApiResponse<IGetRoomByIdResponse>
+		>(`/rooms/${roomId}`);
 
 		return response.data;
 	};
@@ -79,9 +79,9 @@ class RoomApiService implements IRoomApiService {
 	};
 
 	deleteRoom = async (roomId: string): Promise<IDeleteRoomResponse> => {
-		const response = await apiClient.delete<TApiResponse<IDeleteRoomResponse>>(
-			`/rooms/${roomId}`,
-		);
+		const response = await apiClient.delete<
+			TApiResponse<IDeleteRoomResponse>
+		>(`/rooms/${roomId}`);
 
 		return response.data;
 	};

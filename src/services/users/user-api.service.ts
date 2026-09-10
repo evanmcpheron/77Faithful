@@ -12,9 +12,10 @@ import type { IUserApiService } from './user.types';
 
 class UserApiService implements IUserApiService {
 	getCurrentUser = async (): Promise<IGetCurrentUserResponse> => {
-		const response = await apiClient.get<TApiResponse<IGetCurrentUserResponse>>(
-			'/users/me',
-		);
+		const response =
+			await apiClient.get<TApiResponse<IGetCurrentUserResponse>>(
+				'/users/me',
+			);
 
 		return response.data;
 	};
@@ -31,17 +32,18 @@ class UserApiService implements IUserApiService {
 	};
 
 	getUserById = async (userId: string): Promise<IGetUserByIdResponse> => {
-		const response = await apiClient.get<TApiResponse<IGetUserByIdResponse>>(
-			`/users/${userId}`,
-		);
+		const response = await apiClient.get<
+			TApiResponse<IGetUserByIdResponse>
+		>(`/users/${userId}`);
 
 		return response.data;
 	};
 
 	deleteCurrentUser = async (): Promise<IDeleteUserResponse> => {
-		const response = await apiClient.delete<TApiResponse<IDeleteUserResponse>>(
-			'/users/me',
-		);
+		const response =
+			await apiClient.delete<TApiResponse<IDeleteUserResponse>>(
+				'/users/me',
+			);
 
 		return response.data;
 	};

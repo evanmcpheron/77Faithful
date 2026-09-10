@@ -21,28 +21,29 @@ class PropertyApiService implements IPropertyApiService {
 	getProperties = async (
 		request?: IGetPropertiesRequest,
 	): Promise<IGetPropertiesResponse> => {
-		const response = await apiClient.get<TApiResponse<IGetPropertiesResponse>>(
-			'/properties',
-			this.getPropertiesQueryConfig(request),
-		);
-
-		return response.data;
-	};
-
-	getCompanyProperties = async (): Promise<IGetPropertiesByCompanyIdResponse> => {
 		const response = await apiClient.get<
-			TApiResponse<IGetPropertiesByCompanyIdResponse>
-		>('/properties/me');
+			TApiResponse<IGetPropertiesResponse>
+		>('/properties', this.getPropertiesQueryConfig(request));
 
 		return response.data;
 	};
+
+	getCompanyProperties =
+		async (): Promise<IGetPropertiesByCompanyIdResponse> => {
+			const response =
+				await apiClient.get<
+					TApiResponse<IGetPropertiesByCompanyIdResponse>
+				>('/properties/me');
+
+			return response.data;
+		};
 
 	getPropertyById = async (
 		propertyId: string,
 	): Promise<IGetPropertyByIdResponse> => {
-		const response = await apiClient.get<TApiResponse<IGetPropertyByIdResponse>>(
-			`/properties/${propertyId}`,
-		);
+		const response = await apiClient.get<
+			TApiResponse<IGetPropertyByIdResponse>
+		>(`/properties/${propertyId}`);
 
 		return response.data;
 	};
@@ -73,9 +74,9 @@ class PropertyApiService implements IPropertyApiService {
 	deleteProperty = async (
 		propertyId: string,
 	): Promise<IDeletePropertyResponse> => {
-		const response = await apiClient.delete<TApiResponse<IDeletePropertyResponse>>(
-			`/properties/${propertyId}`,
-		);
+		const response = await apiClient.delete<
+			TApiResponse<IDeletePropertyResponse>
+		>(`/properties/${propertyId}`);
 
 		return response.data;
 	};

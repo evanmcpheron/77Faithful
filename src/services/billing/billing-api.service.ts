@@ -15,9 +15,10 @@ import type { IBillingApiService } from './billing.types';
 
 class BillingApiService implements IBillingApiService {
 	getBillingProducts = async (): Promise<IGetBillingProductsResponse> => {
-		const response = await apiClient.get<
-			TApiResponse<IGetBillingProductsResponse>
-		>('/billing/products');
+		const response =
+			await apiClient.get<TApiResponse<IGetBillingProductsResponse>>(
+				'/billing/products',
+			);
 
 		return response.data;
 	};

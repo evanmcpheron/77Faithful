@@ -16,7 +16,8 @@
 		"lint:fix": "ESLINT_USE_FLAT_CONFIG=false expo lint --fix",
 		"format": "prettier . --write",
 		"format:check": "prettier . --check",
-		"test": "jest"
+		"test": "jest",
+		"prepare": "node scripts/install-git-hooks.cjs"
 	},
 	"dependencies": {
 		"@expo-google-fonts/noto-sans-tc": "^0.4.3",

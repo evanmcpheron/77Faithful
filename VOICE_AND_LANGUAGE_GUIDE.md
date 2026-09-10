@@ -2,9 +2,14 @@
 
 ## Purpose
 
-This guide governs original participant-facing language written for 77Faithful: interface copy, onboarding explanations, reminders, errors, devotional support copy, prompts, reflection guidance, settings descriptions, and future community copy.
+This guide governs original participant-facing language written for 77Faithful:
+interface copy, onboarding explanations, reminders, errors, devotional support
+copy, prompts, reflection guidance, settings descriptions, and future community
+copy.
 
-It does **not** authorize changing Scripture. Scripture text must remain exactly faithful to the approved source and edition being displayed. App capitalization, punctuation, and style rules do not rewrite Bible text.
+It does **not** authorize changing Scripture. Scripture text must remain exactly
+faithful to the approved source and edition being displayed. App capitalization,
+punctuation, and style rules do not rewrite Bible text.
 
 ## Core voice
 
@@ -56,17 +61,23 @@ Use names and terms such as:
 - service;
 - Christian community.
 
-Do not hide the product's Christian purpose behind generic terms such as “wellness,” “mindfulness,” or “wisdom.”
+Do not hide the product's Christian purpose behind generic terms such as
+“wellness,” “mindfulness,” or “wisdom.”
 
-At the same time, keep language understandable. Do not assume every participant knows specialized theological vocabulary without context.
+At the same time, keep language understandable. Do not assume every participant
+knows specialized theological vocabulary without context.
 
 ## Theological posture
 
 77Faithful should remain broadly Christian and biblically based.
 
-It may speak clearly about Jesus, grace, Scripture, prayer, repentance, love, service, and perseverance.
+It may speak clearly about Jesus, grace, Scripture, prayer, repentance, love,
+service, and perseverance.
 
-Avoid casually making a disputed secondary doctrinal position into a universal requirement. When a passage touches an area with substantial differences between Christian traditions, write carefully and stay close to the passage's clear formation purpose.
+Avoid casually making a disputed secondary doctrinal position into a universal
+requirement. When a passage touches an area with substantial differences between
+Christian traditions, write carefully and stay close to the passage's clear
+formation purpose.
 
 Never invent a personal message from God.
 
@@ -77,11 +88,14 @@ Do not write:
 - “This happened because God wanted you to…”
 - “If you complete this, God will…”
 
-A prompt may invite the participant to pray, reflect, examine Scripture, seek wisdom, or consider a faithful response. It must not impersonate divine revelation.
+A prompt may invite the participant to pray, reflect, examine Scripture, seek
+wisdom, or consider a faithful response. It must not impersonate divine
+revelation.
 
 ## Grace and effort
 
-The product encourages deliberate effort, but spiritual disciplines do not earn God's favor.
+The product encourages deliberate effort, but spiritual disciplines do not earn
+God's favor.
 
 Do not imply that a participant is:
 
@@ -91,7 +105,8 @@ Do not imply that a participant is:
 - guaranteed a blessing because they completed a practice;
 - spiritually mature because they reached Day 77.
 
-Prefer language that describes the record accurately and invites continued faith.
+Prefer language that describes the record accurately and invites continued
+faith.
 
 Good:
 
@@ -114,11 +129,13 @@ Avoid:
 
 Prefer direct, ordinary words.
 
-Use **Scripture** or **Bible** when that is what the app means. Do not replace it with vague terms such as “daily wisdom.”
+Use **Scripture** or **Bible** when that is what the app means. Do not replace
+it with vague terms such as “daily wisdom.”
 
 Use **pray** when the action is prayer. Do not obscure it as “center yourself.”
 
-Use **Jesus** when the message concerns Jesus. Do not reduce Him to an abstract “higher purpose.”
+Use **Jesus** when the message concerns Jesus. Do not reduce Him to an abstract
+“higher purpose.”
 
 ## Mobile writing style
 
@@ -156,7 +173,8 @@ Use terms consistently.
 
 Use **77-day journey** or **journey**.
 
-A journey is a calendar-based 77-day formation period, not a count of 77 perfect days.
+A journey is a calendar-based 77-day formation period, not a count of 77 perfect
+days.
 
 ### Day
 
@@ -174,9 +192,11 @@ The foundational practices are:
 - **Pray**
 - **Reflect**
 
-Use **Chosen Practices** or **additional practices** for the participant-selected practices. Avoid changing labels casually between screens.
+Use **Chosen Practices** or **additional practices** for the
+participant-selected practices. Avoid changing labels casually between screens.
 
-The participant chooses two to four additional practices, producing five to seven total practices.
+The participant chooses two to four additional practices, producing five to
+seven total practices.
 
 ### Completion
 
@@ -194,7 +214,8 @@ Avoid “failed,” “failure,” or “unsuccessful” for an ordinary incompl
 
 ### Streak
 
-A **complete-day streak** is a factual record of consecutive days whose assigned practices are all marked complete.
+A **complete-day streak** is a factual record of consecutive days whose assigned
+practices are all marked complete.
 
 It must never be described as the participant's faithfulness to God.
 
@@ -252,11 +273,14 @@ Prayer prompts should be:
 - humble about outcomes;
 - usable by someone who does not know elaborate prayer language.
 
-A prompt may invite praise, confession, thanksgiving, lament, intercession, or a request for help.
+A prompt may invite praise, confession, thanksgiving, lament, intercession, or a
+request for help.
 
 Example:
 
-> Ask Jesus to help you depend on Him rather than use this journey to prove yourself. Bring Him one situation in which you need help responding with love today.
+> Ask Jesus to help you depend on Him rather than use this journey to prove
+> yourself. Bring Him one situation in which you need help responding with love
+> today.
 
 Do not imply that a prescribed prayer wording is necessary for God to listen.
 
@@ -267,19 +291,22 @@ When the content includes an authored prayer, keep it:
 - biblically grounded;
 - personal without pretending to know private facts;
 - specific enough to be useful;
-- short enough to remain an aid rather than a script the participant must repeat.
+- short enough to remain an aid rather than a script the participant must
+  repeat.
 
 Do not promise outcomes that Scripture does not promise in the passage.
 
 ## Reflection questions
 
-Reflection questions should be thought-provoking and connected to the Scripture just read.
+Reflection questions should be thought-provoking and connected to the Scripture
+just read.
 
 They should invite honest attention rather than a correct answer.
 
 Good:
 
-- “Where today did you notice a need to depend on Jesus, and how did you respond?”
+- “Where today did you notice a need to depend on Jesus, and how did you
+  respond?”
 - “What part of this passage is difficult for you to put into practice?”
 - “Where might love require both compassion and a wise boundary?”
 
@@ -293,11 +320,14 @@ Avoid questions that force a positive report:
 
 A trusted Christian guide can be direct.
 
-It is appropriate to invite repentance, confession, obedience, reconciliation, generosity, patience, or other biblical responses when the passage supports them.
+It is appropriate to invite repentance, confession, obedience, reconciliation,
+generosity, patience, or other biblical responses when the passage supports
+them.
 
 Balance conviction with grace and accuracy.
 
-Do not soften every difficult biblical theme into generic positivity. Do not use conviction as an excuse for shame, manipulation, or unsafe advice.
+Do not soften every difficult biblical theme into generic positivity. Do not use
+conviction as an excuse for shame, manipulation, or unsafe advice.
 
 ## Missed practices and returning after absence
 
@@ -326,7 +356,8 @@ Good:
 - “You completed 48 of 77 days with every assigned practice marked complete.”
 - “Your 77-day period is complete.”
 
-Use **Well done** occasionally if the context is appropriate, but do not make it the default response to every checkbox.
+Use **Well done** occasionally if the context is appropriate, but do not make it
+the default response to every checkbox.
 
 Day 77 is a meaningful milestone, not a spiritual graduation.
 
@@ -350,8 +381,10 @@ State:
 Examples:
 
 - “We could not confirm that change yet. Your current practices are unchanged.”
-- “This reflection is saved on this phone but has not been confirmed for your account.”
-- “You are offline. The reading already prepared on this phone is still available.”
+- “This reflection is saved on this phone but has not been confirmed for your
+  account.”
+- “You are offline. The reading already prepared on this phone is still
+  available.”
 
 Do not say “saved” when data may still be at risk.
 
@@ -365,7 +398,8 @@ Good:
 
 - “Your reflection is private.”
 - “This writing is not shared with a group.”
-- “Deleting this entry removes it from your personal record, subject to the privacy policy's stated handling.”
+- “Deleting this entry removes it from your personal record, subject to the
+  privacy policy's stated handling.”
 
 Do not imply that staff, pastors, or community leaders monitor private journals.
 
@@ -381,7 +415,8 @@ Do not encourage:
 - giving money the person cannot safely give;
 - pressuring another person into a religious conversation.
 
-Use adaptable language such as “in a way that is safe and appropriate for your circumstances.”
+Use adaptable language such as “in a way that is safe and appropriate for your
+circumstances.”
 
 ## Community language for later versions
 
@@ -404,7 +439,8 @@ Avoid:
 - public streak ranking;
 - organizer access to private journals.
 
-Do not default to “brother” or “sister” as the form of address for every participant.
+Do not default to “brother” or “sister” as the form of address for every
+participant.
 
 ## Capitalization
 
@@ -417,9 +453,11 @@ In original 77Faithful copy:
 - Lord
 - Holy Spirit
 
-When referring to God with a pronoun in original devotional copy, use **He / Him / His** consistently with the project's chosen editorial style.
+When referring to God with a pronoun in original devotional copy, use **He / Him
+/ His** consistently with the project's chosen editorial style.
 
-This rule does not alter quoted or displayed Scripture. Preserve the approved Bible edition exactly.
+This rule does not alter quoted or displayed Scripture. Preserve the approved
+Bible edition exactly.
 
 ## Numbers
 
@@ -436,12 +474,17 @@ Do not write “Day 78.”
 
 ## AI-generated content review order
 
-When an AI system drafts participant-facing formation content, review it in this order:
+When an AI system drafts participant-facing formation content, review it in this
+order:
 
-1. **Biblical faithfulness** — Is the statement supported by the passage and broader Christian context?
-2. **Theological restraint** — Does it avoid invented revelation, guaranteed outcomes, and disputed assumptions presented as universal?
-3. **Safety** — Could it pressure someone toward physical, relational, financial, or emotional harm?
-4. **Accuracy** — Does it describe product state and participant behavior truthfully?
+1. **Biblical faithfulness** — Is the statement supported by the passage and
+   broader Christian context?
+2. **Theological restraint** — Does it avoid invented revelation, guaranteed
+   outcomes, and disputed assumptions presented as universal?
+3. **Safety** — Could it pressure someone toward physical, relational,
+   financial, or emotional harm?
+4. **Accuracy** — Does it describe product state and participant behavior
+   truthfully?
 5. **Clarity** — Can a person understand the intended response?
 6. **Pastoral warmth** — Does it invite faithful participation without shame?
 7. **Brevity** — Is the interface copy as short as it can reasonably be?

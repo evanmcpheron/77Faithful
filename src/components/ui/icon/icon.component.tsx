@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import { View } from 'react-native';
 
 import { NeutralColors, TextColors } from '@td/theme/colors';
@@ -49,9 +50,18 @@ export const AppIcon = ({
 	tone = ComponentTone.Neutral,
 	variant,
 }: IAppIconProps) => {
-	const SelectedIcon = getIconComponent(name, variant);
 	const colorValue =
 		color ?? getBrandIconColor(name) ?? getIconToneColor(tone);
+
+	const icon = createElement(getIconComponent(name, variant), {
+		color: colorValue,
+		height: size,
+		opacity: disabled ? 0.5 : 1,
+		strokeWidth,
+		style,
+		...(testID === undefined ? {} : { testID }),
+		width: size,
+	});
 
 	if (hasBackground) {
 		return (
@@ -62,28 +72,10 @@ export const AppIcon = ({
 					padding: Spacing.XSmall,
 				}}
 			>
-				<SelectedIcon
-					color={colorValue}
-					height={size}
-					opacity={disabled ? 0.5 : 1}
-					strokeWidth={strokeWidth}
-					style={style}
-					testID={testID}
-					width={size}
-				/>
+				{icon}
 			</View>
 		);
 	}
 
-	return (
-		<SelectedIcon
-			color={colorValue}
-			height={size}
-			opacity={disabled ? 0.5 : 1}
-			strokeWidth={strokeWidth}
-			style={style}
-			testID={testID}
-			width={size}
-		/>
-	);
+	return icon;
 };

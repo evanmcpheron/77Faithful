@@ -24,16 +24,14 @@ export interface IApiRequestControlConfig {
 }
 
 export interface IApiRequestOptions<TBody = unknown>
-	extends AxiosRequestConfig<TBody>,
-		IApiRequestControlConfig {
+	extends AxiosRequestConfig<TBody>, IApiRequestControlConfig {
 	method?: THttpMethod;
 	path: string;
 	body?: TBody;
 }
 
 export interface IApiRequestConfig<TBody = unknown>
-	extends AxiosRequestConfig<TBody>,
-		IApiRequestControlConfig {}
+	extends AxiosRequestConfig<TBody>, IApiRequestControlConfig {}
 
 export interface IApiClientAuthConfig {
 	getAccessToken: () => string | null | Promise<string | null>;

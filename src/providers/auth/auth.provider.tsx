@@ -7,10 +7,10 @@ import { authSessionService } from '@td/services/auth/auth-session.service';
 import { AuthContext } from './auth.context';
 import {
 	AuthStatus,
-	type IRegisterRequest,
 	type IAuthProviderProps,
 	type IAuthProviderValue,
 	type ILoginCredentials,
+	type IRegisterRequest,
 	type ISetAuthSessionParams,
 	type TAuthStatus,
 } from './auth.types';
@@ -85,18 +85,21 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 		[setSession],
 	);
 
-	const register = useCallback(async (credentials: IRegisterRequest) => {
-		const response = await authApiService.register(credentials);
+	const register = useCallback(
+		async (credentials: IRegisterRequest) => {
+			const response = await authApiService.register(credentials);
 
-		const { accessToken, refreshToken, user, expiresAt } = response;
+			const { accessToken, refreshToken, user, expiresAt } = response;
 
-		await setSession({
-			accessToken,
-			refreshToken,
-			user,
-			expiresAt: expiresAt ?? null,
-		});
-	}, [setSession]);
+			await setSession({
+				accessToken,
+				refreshToken,
+				user,
+				expiresAt: expiresAt ?? null,
+			});
+		},
+		[setSession],
+	);
 
 	const logout = useCallback(async () => {
 		const refreshToken = authSessionService.getRefreshToken();

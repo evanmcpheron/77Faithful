@@ -1,351 +1,484 @@
 # 77Faithful Visual Design Guide
 
-## Quiet Sanctuary
+## Visual direction: Quiet Sanctuary
 
-**Status:** Visual direction selected by the product owner from the Today concept.  
-**Applies to:** Every app screen, shared component, navigation surface, interaction state, and future screen design.  
-**Visual reference:** [The selected Today concept](docs/design/today-reference.png).  
-**Companion documents:** `STYLE_GUIDE.md` governs code; `VOICE_AND_LANGUAGE_GUIDE.md` governs words; `/product` governs the product.
+Build an interface that feels like opening a thoughtfully typeset devotional beside a still lake: calm, warm, spacious, grounded, and unmistakably Christian without becoming ornate or sentimental.
 
-> Build an interface that feels like opening a thoughtfully typeset devotional beside a still lake in the early morning: warm paper, deep green ink, quiet light, generous margins, and a clear invitation to spend time with God. It should feel personal and comforting before it feels like software.
+The core feeling should be:
 
-## 1. The feeling we are protecting
+- peaceful;
+- grounded;
+- human;
+- morning light over water or hills;
+- natural materials such as paper, stone, leaves, and wood;
+- book-inspired composition;
+- serif-led editorial headings with a clean sans-serif interface;
+- restrained cream and forest-green color;
+- paper-like cards;
+- subtle accent circles and markers;
+- warm editorial minimalism with recognizably Christian content.
 
-The atmosphere is peaceful, grounded, and human. Soft morning light rests over distant mountains. Water is still rather than dramatic. The colors feel borrowed from paper, stone, leaves, and weathered wood. Nothing flashes, glows, competes for attention, or demands that the participant prove something.
+The interface should not feel like:
 
-The interface has the warmth of a familiar book and the clarity of a well-designed mobile application. Large, graceful serif headings give important words room to settle. A clean sans serif quietly handles instructions, controls, and details. Cream-colored space surrounds nearly white cards. Forest-green actions feel dependable, not promotional.
+- a generic wellness app;
+- a fitness or productivity challenge;
+- a neon church-event brand;
+- a glassy analytics dashboard;
+- a gamified score surface;
+- a dense administration application.
 
-The cards are softly rounded and substantial without looking inflated. Their edges are barely announced. A restrained shadow suggests a sheet of paper resting above another surface, not a floating glass dashboard. Small circles of sage, muted ochre, slate, and clay distinguish practices without turning the page into a rainbow.
+The central design test is:
 
-The person should not encounter a wall of explanations. A greeting feels addressed to them. A heading tells them where they are. One short sentence offers context. The next action is obvious. Additional detail is available when it is useful, not delivered all at once.
+> Does this screen invite a person to slow down, understand what matters, and respond to Christ without unnecessary friction?
 
-This is **warm editorial minimalism with a distinctly Christian purpose**. It is not generic wellness, luxury branding, a productivity dashboard, a fitness challenge, or an ornamental church brochure. Beauty supports Scripture, prayer, reflection, and ordinary faithful action. It never becomes the main event.
+## Design authority
 
-**The central design test:** Does this screen make room for the person, or ask the person to make room for the interface?
+Use these documents together:
 
-## 2. Authority and boundaries
+- `product/` owns behavior and participant requirements.
+- `VOICE_AND_LANGUAGE_GUIDE.md` owns original participant-facing language.
+- this guide owns visual composition, spacing, color, typography, and interaction tone.
+- `STYLE_GUIDE.md` and `AGENTS.md` own code quality and agent behavior.
+- `docs/domain-type-system.md` owns the intended cross-boundary data model.
 
-This document is the visual source of truth. It does not replace the coding guide, change domain contracts, decide theological wording, or authorize new functionality.
+Do not invent visual affordances for behavior that the product does not support.
 
-| Concern                                                      | Authority                                  |
-| ------------------------------------------------------------ | ------------------------------------------ |
-| Product behavior, release scope, privacy, navigation         | Relevant specialist document in `/product` |
-| Existing implementation and available capabilities           | Actual source, configuration, and tests    |
-| Visual identity, spacing, typography, surfaces, presentation | This document                              |
-| UI wording and Christian voice                               | `VOICE_AND_LANGUAGE_GUIDE.md`              |
-| Code structure, naming, typing, abstraction                  | `STYLE_GUIDE.md` and `AGENTS.md`           |
-| Data contracts                                               | Relevant read-only files in `src/types/**` |
+## Signature characteristics
 
-The reference image establishes an aesthetic, **not an exact product specification**. Its five-tab navigation, example name, passage, wording, practice count, and illustrated progress are not requirements. Do not implement mistakes or unsupported features to imitate it.
+77Faithful should be recognizable through a consistent set of design decisions:
 
-For the repository reviewed on September 9, 2026, the working tab set is Today, Journey, and Settings; Communities remains feature-flagged. The daily commitment is three foundational practices plus two to four chosen practices. Use the actual assigned total rather than hard-coding five. Reinspect the current repository before implementation; this paragraph is a dated orientation, not a competing product definition.
+1. **Warm light surfaces and deep green structure.**
+2. **Editorial hierarchy rather than dashboard density.**
+3. **Generous whitespace as an intentional design feature.**
+4. **Selective atmospheric imagery rather than decorative image overload.**
+5. **Quiet controls with clear states.**
+6. **Grace-oriented progress presentation.**
+7. **Scripture given visual priority over commentary and metrics.**
+8. **Stable, opaque surfaces that remain readable in light and dark appearance.**
 
-When appearance conflicts with readability or truthful behavior, improve the appearance without sacrificing the latter. Do not resolve a product disagreement by quietly changing code during a styling task.
+## Color system
 
-## 3. Recognizable visual signatures
+Use semantic tokens rather than raw color values inside feature screens.
 
-**Warm light, not clinical white.** Use ivory for the page and soft off-white for working surfaces. Reserve pure-looking brightness for contrast, not as the entire atmosphere.
+### Core palette
 
-**Deep green, not luminous blue.** Forest green is the principal action and identity color. Blue can remain a muted supporting hue, never the old electric-blue visual language.
-
-**A book-like hierarchy.** Serif headings establish warmth; clean sans-serif labels preserve usability. Not every sentence is a heading, and not every heading needs to be bold.
-
-**Generous, repeated spacing.** The same distances recur across the app. Whitespace separates thoughts before borders do. A crowded form does not belong to a different design system just because it is functional.
-
-**Selective atmosphere.** Scenic imagery is welcome at entry points and Today. Settings and forms should feel like the same app without requiring a mountain behind every control.
-
-**Restrained language.** One clear thought at a time. One main action in an action group. Short support text. Important details remain accessible.
-
-**Grace without vagueness.** Completion states are honest and calm. Incomplete work is not an alarm. Errors are still unmistakable, and privacy or safety explanations are never softened into ambiguity.
-
-## 4. Color system
-
-These are deliberate implementation targets informed by the reference and the repository's existing warm formation subthemes. They are not claimed to be the original image's exact sampled colors.
-
-### Core semantic palette
-
-| Semantic role     | Light     | Dark      | Use                                                         |
-| ----------------- | --------- | --------- | ----------------------------------------------------------- |
-| `background`      | `#F6F3EE` | `#17231F` | Page canvas                                                 |
-| `surface`         | `#FFFEFC` | `#21332B` | Cards and primary reading/form surfaces                     |
-| `surfaceElevated` | `#F2F0EA` | `#2A3D33` | Quiet alternate surface and pressed/secondary areas         |
-| `surfaceSubtle`   | `#EEEAE3` | `#314439` | Insets and low-emphasis grouping                            |
-| `textPrimary`     | `#203D34` | `#F4F0E7` | Headings and primary text                                   |
-| `textSecondary`   | `#616963` | `#C3CBBF` | Supporting text                                             |
-| `textMuted`       | `#6B706A` | `#A3AEA3` | Low-emphasis text on the main canvas; verify other pairings |
-| `primary`         | `#294F42` | `#426953` | Filled primary action                                       |
-| `primaryPressed`  | `#1E3D32` | `#355842` | Pressed primary action                                      |
-| `onPrimary`       | `#FFFEFC` | `#F4F0E7` | Filled primary action text/icons                            |
-| `link`            | `#294F42` | `#C1D8C5` | Inline links and navigation emphasis                        |
-| `accentSoft`      | `#DCE5DD` | `#314A3B` | Selection wash; not a text color                            |
-| `border`          | `#E4E2DA` | `#405448` | Decorative card outlines and dividers                       |
-| `controlBorder`   | `#838A82` | `#8B9B8E` | Boundaries necessary to identify controls                   |
-| `focus`           | `#365F4B` | `#D3BD89` | Visible interaction focus                                   |
-
-`border` and `controlBorder` are intentionally different. A subtle card outline can be decorative. An unchecked checkbox or empty input cannot disappear into the page.
-
-Set semantic values centrally. Component code consumes theme roles rather than spreading hex colors through screens. Map the same roles into navigation headers, tab bars, root backgrounds, field focus, placeholder text, selection, loading states, and native presentation where the existing stack allows it. Do not leave a blue inherited state behind a green default state.
+| Semantic role | Light | Dark |
+| --- | --- | --- |
+| Background | `#F6F3EE` | `#17231F` |
+| Surface | `#FFFEFC` | `#21332B` |
+| Elevated surface | `#F2F0EA` | `#2A3D33` |
+| Subtle surface | `#EEEAE3` | `#314439` |
+| Primary text | `#203D34` | `#F4F0E7` |
+| Secondary text | `#616963` | `#C3CBBF` |
+| Muted text | `#6B706A` | `#A3AEA3` |
+| Primary action | `#294F42` | `#426953` |
+| Primary pressed | `#1E3D32` | `#355842` |
+| On primary | `#FFFEFC` | `#F4F0E7` |
+| Link | `#294F42` | `#C1D8C5` |
+| Soft accent | `#DCE5DD` | `#314A3B` |
+| Border | `#E4E2DA` | `#405448` |
+| Control border | `#838A82` | `#8B9B8E` |
+| Focus | `#365F4B` | `#D3BD89` |
 
 ### Practice accents
 
-Use these primarily for icon discs, not entire large cards. The text/icon color must be darker than the disc in light mode. Category color never communicates completion by itself.
+Use practice accents sparingly. They help distinguish content without turning daily participation into a multicolor scorecard.
 
-| Family | Light disc / ink      | Dark disc / ink       | Typical use                                |
-| ------ | --------------------- | --------------------- | ------------------------------------------ |
-| Sage   | `#DCE5DD` / `#294F42` | `#314A3B` / `#D8E8DB` | Scripture, service, nature-related accents |
-| Ochre  | `#EBD8AF` / `#785A20` | `#4A3E27` / `#E8D3A5` | Prayer and quiet emphasis                  |
-| Slate  | `#D9E0E4` / `#365462` | `#2E4148` / `#CEDFE7` | Reflection and writing                     |
-| Clay   | `#E7D5D1` / `#7B4D44` | `#4B3632` / `#E8CCC4` | Movement and intentional action            |
+| Accent | Light background | Light text | Dark background | Dark text |
+| --- | --- | --- | --- | --- |
+| Sage | `#DCE5DD` | `#294F42` | `#314A3B` | `#D8E8DB` |
+| Ochre | `#EBD8AF` | `#785A20` | `#4A3E27` | `#E8D3A5` |
+| Slate | `#D9E0E4` | `#365462` | `#2E4148` | `#CEDFE7` |
+| Clay | `#E7D5D1` | `#7B4D44` | `#4B3632` | `#E8CCC4` |
 
-Optional practices may reuse these families. Do not create ten unrelated bright colors. Keep a stable mapping by practice ID rather than by list position.
+Do not assign spiritual meaning to accent colors.
 
-Retain distinct semantic error, warning, success, and information colors, with readable text/surface pairings in both modes. Clay is not automatically an error; green is not automatically a success. Never make a missed day look like a destructive error.
+### Dark appearance
 
-### Dark mode
+Dark appearance should feel like the same sanctuary at dusk, not a generic black inversion.
 
-Dark mode is the same sanctuary at dusk: deep evergreen surfaces, warm pale text, softened imagery, and quiet edges. It is not inverted beige, black-and-neon green, or the old navy theme. Preserve the same spacing and hierarchy. Use surface separation rather than heavy shadows. Check selection and button foregrounds independently; do not reuse a light-theme foreground by habit.
+Use deep green-charcoal backgrounds, warm off-white text, softened borders, and subdued accent surfaces. Preserve the same hierarchy and spacing as light appearance.
 
-## 5. Typography
+## Typography
 
-### Character and family strategy
+The target type pairing is:
 
-Headings should feel literary and approachable: a readable book serif with open counters and enough stroke weight to remain clear on a phone. Avoid decorative script, excessively thin fashion serifs, and oversized all-caps religious slogans.
+- **Source Serif 4** for editorial and devotional emphasis;
+- **Inter** for interface text.
 
-The proposed final pairing is **Source Serif 4 for editorial headings and reading accents, with Inter for interface text**. This is a design recommendation, not an identification of the font in the generated image. Official family references are listed below. [R7–R8]
+If these fonts are not yet bundled, use a stable platform serif and system sans-serif fallback until the intended fonts are deliberately added.
 
-The supplied repository has no bundled custom font files. Do not assume a named font works because a `fontFamily` string was added. Until approved assets are available, centralize a verified platform-serif fallback for headings and the system sans serif for UI. The fallback is an interim implementation, not a promise of identical cross-platform typography.
+### Type roles
 
-Do not download font assets, install font packages, or add external font requests without owner approval. When approved files are supplied, use the existing font facilities, map actual families/weights, and handle loading or failure without trapping the app behind a splash. Expo documents local-asset loading and native embedding separately; use the approach compatible with this project's platforms and development workflow. [R3]
+| Role | Target size / line height | Family / emphasis |
+| --- | --- | --- |
+| Hero | `34 / 40` | Serif |
+| Page title | `30 / 38` | Serif |
+| Section heading | `24 / 30` | Serif |
+| Editorial/practice card title | `20 / 26` | Serif |
+| Body / form field | `16 / 24` | Sans |
+| Supporting copy | `14 / 20` | Sans |
+| Field label | `14 / 20` | Sans medium |
+| Metadata / navigation | `13 / 18` | Sans |
+| Primary button | `16 / 22` | Sans semibold |
+| Scripture | `20 / 32` default | Serif, participant-adjustable |
+| Featured quote | `20 / 28` | Serif |
 
-### Type roles at default text size
+Do not reduce text merely to fit a fixed-height card. Prefer intrinsic height and scrolling.
 
-Sizes below are logical interface units, not pixels measured from the reference image. They are starting values for the shared system, not fixed-height layout constraints.
+Support dynamic type. Headings may scale differently from body copy, but text must remain legible and must not clip.
 
-| Role                                | Size / line height | Treatment                                      |
-| ----------------------------------- | ------------------ | ---------------------------------------------- |
-| Personal greeting / hero title      | 34 / 40            | Serif, regular or medium                       |
-| Page title                          | 30 / 38            | Serif, regular or medium                       |
-| Section heading                     | 24 / 30            | Serif, medium                                  |
-| Practice or editorial card title    | 20 / 26            | Serif, medium                                  |
-| Body and field value                | 16 / 24            | Sans serif, regular                            |
-| Supporting description              | 14 / 20            | Sans serif, regular                            |
-| Field label / important small label | 14 / 20            | Sans serif, medium                             |
-| Metadata / navigation label         | 13 / 18            | Sans serif, regular or medium                  |
-| Primary button                      | 16 / 22            | Sans serif, semibold                           |
-| Scripture reading                   | 20 / 32            | Readable book serif; adjustable when supported |
-| Brief featured quotation            | 20 / 28            | Serif; italic only where appropriate           |
+## Spacing
 
-Use modest or no tracking for ordinary text. Reserve small uppercase labels and approximately 1 unit of tracking for occasional short markers such as “THIS WEEK.” Do not apply tracking to paragraphs, email addresses, or button labels.
+Whitespace is a defining feature, not leftover room.
 
-Allow names, headings, buttons, and rows to grow. At large accessibility sizes, wrap and stack rather than shrinking the font. Do not set low `maxFontSizeMultiplier` caps to protect a composition. React Native's text scaling behavior should remain enabled. [R4]
+Use a coherent spacing scale:
 
-## 6. Spacing, proportion, and rhythm
+**4, 8, 12, 16, 20, 24, 32, 40, 48, 64**
 
-The whitespace is a defining feature, not leftover room.
+Create shared semantic spacing tokens or mappings.
 
-Use a coherent scale: **4, 8, 12, 16, 20, 24, 32, 40, 48, 64**. Create meaningful shared tokens or mappings; do not assume an existing Tamagui token such as `$4` equals a particular number without checking configuration. Tamagui supports centralized tokens and font configuration. [R1]
+Recommended defaults:
 
-| Relationship                       | Default target                                 |
-| ---------------------------------- | ---------------------------------------------- |
-| Phone page gutter                  | 24; 16 on narrow layouts when needed           |
-| Broad-screen gutter                | 32 around a centered content column            |
-| Related title and description      | 8                                              |
-| Label and input                    | 8                                              |
-| Helper text and its control        | 4–8                                            |
-| Form field groups                  | 20                                             |
-| Major sections                     | 24–32                                          |
-| Card interior                      | 20–24; 16 for compact cards                    |
-| Practice-row interior              | 12–16                                          |
-| Practice rows                      | 10–12                                          |
-| Icon to text                       | 12                                             |
-| Content to primary action          | 24                                             |
-| Screen content after the last item | 24–32, plus only the inset not already handled |
+- phone horizontal gutter: **24**;
+- narrow-phone gutter: **16** when necessary;
+- broad centered layouts: **32** side space where available;
+- title to description: **8**;
+- label to input: **8**;
+- helper/error below input: **4–8**;
+- form-group separation: **20**;
+- major section separation: **24–32**;
+- standard card padding: **20–24**;
+- compact card padding: **16**;
+- practice row vertical padding: **12–16**;
+- stacked row gap: **10–12**;
+- icon-to-text gap: **12**;
+- content-to-primary-action gap: **24**;
+- final content padding: **24–32** plus safe-area requirements.
 
-At typical phone widths, use one readable column. Two compact context cards can share a row when their text actually fits. On narrow screens or with larger text, stack them. Never shrink labels to preserve two columns.
+Do not fill every open area with text, decoration, or a secondary call to action.
 
-Keep account forms around 460 logical units maximum width and general content around 640. These are content constraints, not reasons to stretch controls across a tablet. Allow the scenic background to extend beyond the text column where appropriate.
+## Width and layout
 
-Use intrinsic height. A routine practice row will often be about 88–104 units tall, but long names or larger text can require more. Buttons and single-line input frames start around 52–56 units and may grow. Do not specify a fixed height that clips scaled content.
+Target readable content widths rather than stretching forms across tablets or desktop-sized web views.
 
-The reference is a visual composition, not a promise that all content fits on one physical screen. A real Today screen can scroll. At an ordinary phone size, the greeting, day context, and beginning of the practices should be readily discoverable; seven practices must not be compressed to fit above the fold.
+Suggested maximum content widths:
 
-Prefer normal document flow. Percentage-positioned form controls, absolute-positioned headings, and fixed-offset footers are not the spacing system. Absolute positioning is appropriate for background art and controlled decoration, not for core reading and interaction.
+- account and focused forms: approximately **460 px**;
+- general reading and application content: approximately **640 px**.
 
-## 7. Surfaces, shape, and depth
+Phone layouts should normally be single-column.
 
-Use a consistent radius family: **16 for inputs, 18 for buttons and practice rows, 24 for standard cards, and up to 28 for a featured panel**. Circular icon discs are genuinely circular. Pills are reserved for compact tags or controls that benefit from the shape, not every button in the app.
+Use intrinsic content height. Avoid fixed-height cards for variable copy. Allow pages to scroll naturally.
 
-Working surfaces are mostly opaque. The softness comes from tone, padding, typography, and restrained depth—not mandatory blur, transparency, glass effects, or gradients.
+Daily practice rows should generally land around **88–104 px** when they include title, support copy, and a completion control.
 
-A suggested light-mode card shadow is a dark-green shadow at roughly 5–8% opacity with a small vertical offset and a broad, soft blur. Translate this into appropriate platform styling centrally; do not assume web shadow syntax is universally supported. Use little or no shadow in dark mode.
+Primary buttons and form fields should generally be at least **52–56 px** high and may grow with larger text.
 
-Two visible grouping levels are normally enough: a section panel and its quiet rows. Do not stack cards inside cards inside colored cards. Not every paragraph needs a border. A form can sit directly on the page.
+Absolute positioning should be reserved for decorative elements or tightly controlled overlays, not normal document flow.
 
-Press feedback should feel like a surface responding under a fingertip: a mild tonal change, not a glowing halo, dramatic bounce, or enlargement. A stable layout is preferable to an animated one that draws attention away from the task.
+## Surfaces
 
-## 8. Imagery and decorative restraint
+Suggested radii:
 
-Choose wide, quiet landscapes: mist over water, layered mountains, soft tree silhouettes, muted shorelines, and diffused dawn light. Composition should include areas of low visual detail where text can remain readable. Use natural, low-saturation color with warm highlights and cool atmospheric depth.
+- inputs: **16**;
+- buttons and practice rows: **18**;
+- standard cards: **24**;
+- featured editorial cards: **28**.
 
-Avoid hard midday sunlight, intensely green stock photography, saturated cyan skies, prominent people, dramatic lens flares, towering glowing crosses, busy foregrounds, or imagery that makes the app feel like a promotional poster.
+Use opaque surfaces.
 
-The Today header may begin with atmosphere and settle into the ivory page. That transition need not require a new rendering dependency. A well-cropped approved image, a restrained overlay, or a simple tonal boundary is sufficient. Prefer an opaque text region when a photograph cannot support reliable contrast.
+Shadows should be subtle and rare. Prefer tonal surface separation and borders. The product does not require glass effects, blur, or gradients.
 
-**Image fallback:** No broken-image icon, blocked interaction, blank hero, or dependence on a remote image request. Render the same header hierarchy on the theme background when approved artwork is unavailable. Do not treat the current vivid landscape placeholder as the final art direction.
+## Imagery
 
-The reference PNG is documentation only. It includes generated text and controls. Do not use it as the runtime screen, crop its lettering into an asset, or trace its controls into a static background. UI must remain real, accessible text and components.
+Imagery should create atmosphere without becoming the product's main content.
 
-Botanical details or a paper-like texture may appear sparingly in a secondary reflective surface. They must not run behind long text, repeat on every card, or require a new asset before the app looks coherent. Omit them before sacrificing readability.
+Preferred image qualities:
 
-**Clean landscape asset brief:**
+- quiet landscape photography;
+- dawn or soft morning light;
+- open water;
+- low hills or mountains;
+- natural greens and muted blues;
+- low focal complexity;
+- no prominent people;
+- no logos;
+- no embedded text;
+- no watermark;
+- no high-saturation treatment.
 
-> A quiet mountain lake at dawn, photographed with natural realism. Layered distant ridgelines softened by mist, still water, subdued evergreen trees, warm ivory morning light, gentle gray-blue atmospheric depth, low saturation, and an uncluttered upper-left area for interface text. Peaceful and grounded, not dramatic or fantastical. No text, letters, logo, UI, people, religious symbol, lens flare, or glowing effect. Compose for both a shallow mobile header crop and a taller welcome crop. Supply landscape artwork separately from all interface elements.
+Avoid staged “victory” imagery, glowing crosses, stock-photo worship poses, or literal devotional clichés.
 
-## 9. Shared component language
+### Today imagery
 
-Evolve the existing `SeventySeven*` components instead of introducing a parallel UI kit. Use Tamagui where suitable; verify the installed API. Keep feature-specific compositions close to their feature until reuse is real.
+Today may use a wide scenic header or atmospheric image when it supports the day without pushing the essential content too far below the fold.
 
-| Component responsibility | Required visual behavior                                                                                             |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| Text                     | Central type roles; editorial serif versus functional sans; semantic text colors                                     |
-| Button                   | Filled, outlined, and restrained text action where needed; consistent radius; busy, disabled, focus, and error cases |
-| Card                     | Quiet surface, padding, border, and optional featured treatment; no arbitrary per-screen redesign                    |
-| Form field               | Persistent label, readable value, distinct control outline, visible focus, inline error, retained password behavior  |
-| Checkbox / radio         | Clear unchecked and checked states; accessible target; label remains readable and tappable                           |
-| Page shell               | Shared gutters, content width, safe areas, scroll behavior, and bottom clearance                                     |
-| Account shell            | Same visual family as Today, with less scenery and a clear form-first hierarchy                                      |
-| Section heading          | Title, optional short description, and optional restrained secondary action                                          |
-| Notice                   | Compact but clear loading, error, confirmation, or unavailable state; truthful action/status text                    |
-| Practice row             | Category icon, name, optional short description, and independent action/status regions when supported                |
-| Tab presentation         | Quiet surface, stable icon/label positions, clear active state, unchanged product destinations                       |
+A clean Today landscape asset should be:
 
-A decorative icon can be 22–24 units inside a 44–48 unit tinted disc. A small visible checkbox still needs a comfortably sized interactive region. Adopt at least a 48-by-48 logical target for primary touch controls and icon-only actions as this project's design target; do not confuse visible glyph size with hit area.
+- morning-side lake or mountain scenery;
+- muted blue/green palette;
+- soft sky;
+- visually calm;
+- low-detail behind text;
+- free of text and branding.
 
-When a practice row supports both opening guidance and marking completion, use **separate sibling targets**. A checkbox must not be nested in a tappable card that also navigates. Give each action an unambiguous accessible name. Opening guidance, scrolling, saving writing, and marking completion remain separate behaviors.
+Always provide a stable no-image presentation so the screen remains complete if the asset is unavailable.
 
-Do not draw an interactive checkbox, chevron, or primary button for a capability that is unavailable. Unknown completion is not zero completion. Present the practice without a false affordance, or use an explicitly labeled development-only preview.
+### Botanical illustration
 
-## 10. Screen families
+Small botanical or natural-form illustration may be used as a supporting editorial detail. It should remain subtle and secondary.
 
-### Welcome and account entry
+## Shared application primitives
 
-More atmospheric than other screens, but never a poster with buttons pasted onto it. Introduce the brand, one short Christ-centered invitation, a clear account-creation action, and a quieter sign-in action. Use normal layout flow and safe areas. Keep the actions reachable on short phones and with large text.
+The UI layer should establish a small reusable component system rather than let every screen invent its own visual language.
 
-Do not display a private name or progress on a signed-out screen. Do not imply account creation starts Day 1. No full-screen electric-blue glow remains in the interactive entry screen.
+Expected primitives include:
 
-### Sign in, create account, recovery, and email confirmation
+- semantic text roles;
+- primary, secondary, quiet, and destructive buttons;
+- text links;
+- cards and elevated surfaces;
+- text fields and text areas;
+- checkbox and radio controls;
+- page shell;
+- focused account shell;
+- notice/status surface;
+- section heading;
+- practice row;
+- progress indicator;
+- tab presentation;
+- Scripture reading surface.
 
-Use a compact editorial heading, one short description, and a breathable form. Inputs belong to the same color and radius system as Today. A small scenic strip is optional; filling a form should not require looking through scenery.
+These primitives should encode spacing, typography, states, contrast, disabled behavior, and accessibility consistently.
 
-Preserve all meaningful account, recovery, verification, privacy, and error information. Reduce repetition through hierarchy, not by removing consequences or changing how actions work. Make long email addresses wrap. Confirmation should feel like another page in the same app, not a different template.
+Do not make a component “reusable” by giving it dozens of arbitrary style props. Prefer a small semantic API.
+
+## Touch and control behavior
+
+Prefer a **48 × 48 px** minimum interactive area for ordinary controls.
+
+A daily practice row has two distinct possible actions:
+
+- open the practice guidance;
+- mark or unmark completion.
+
+Do not make those actions ambiguous. The navigation target and completion target should be visually and semantically distinct.
+
+Do not render a chevron, switch, checkbox, overflow menu, or link unless the product actually supports the implied action.
+
+## Screen family patterns
+
+### Public welcome and account entry
+
+The first signed-out experience should be visually warm and quiet.
+
+It may include:
+
+- atmospheric imagery;
+- the 77Faithful name;
+- a concise Christ-centered invitation;
+- clear **Create account** and **Sign in** actions;
+- secondary access to About, Privacy, and related information.
+
+Do not imply that account creation itself starts Day 1.
+
+### Sign in, registration, recovery, and email confirmation
+
+Use a compact editorial heading, restrained support text, and a clear form.
+
+Validation should appear near the field or action that needs attention.
+
+Do not create a different visual theme for every account screen.
 
 ### Journey setup
 
-One decision per step. A small “Step X of Y” indicator, a quiet progress line, a serif title, and the relevant choices are enough to orient the participant.
+Use one meaningful decision per step.
 
-Keep selected practices obvious. Explanations and examples may expand on request, but essential selection limits and safety boundaries remain available and clear. Optional motivation and reminders must still look optional. Review/start is the deliberate commitment boundary, not a congratulatory launch animation.
+Show progress through setup without making onboarding feel like a survey.
+
+Practice selection must make the required **2–4** range obvious. Selected state, disabled state at the maximum, and the current count must be understandable without relying on color alone.
+
+Motivation and reminders are optional. The final review should make **Start my journey** feel deliberate because it establishes the calendar.
 
 ### Today
 
-Arrange the page as a gentle progression from welcome to action:
+Today is the primary daily surface.
 
-1. A personal greeting, with a short time-appropriate invitation and restrained atmosphere.
-2. Current day and weekly context, presented compactly.
-3. A dominant “Today's practices” panel with readable rows.
-4. Optional secondary reflection or motivation content only when it is useful and supported.
+Prioritize:
 
-Use a real preferred name only when safely available from the current account. Otherwise, “Good morning” or “Welcome back” is sufficient. Never invent “Alex,” infer a name from an email address, or pretend to know how the person feels.
+1. current day and week context;
+2. theme and reading;
+3. the participant's assigned practices;
+4. optional intention/reflection prompts;
+5. secondary journey context.
 
-The practice panel is the functional center of the screen. Foundational practices come first, then the person's actual chosen practices. A row usually needs a name and at most one short supporting thought. Full prayers, devotionals, technical dates, time-zone identifiers, and long motivation text should not become the default overview density. Preserve access to existing content with an appropriate detail view or local disclosure rather than deleting it.
+Use a preferred-name greeting only when a preferred name is actually available.
 
-Use actual day content; do not mix an attractive reference passage with an unrelated weekly theme. “X of N complete” requires known real completion data. A calendar-location indicator such as “Day 12 of 77” must not be mislabeled as twelve fully completed days. Any bar must represent its labeled value proportionally, not an attractive arbitrary fill.
+Show foundational practices first, followed by the participant's actual chosen practices.
 
-“Start my journey” belongs only to deliberate onboarding confirmation. A daily reading action may say “Read Scripture” or “Continue Day 12” when it has a real destination. The screenshot's “Start Today's Journey” is not the preferred action label.
+The day number comes from the calendar, not from the number of complete days.
 
-A second decorative Bible quotation is optional, not required. Avoid stacking multiple encouragements and verses just to fill space. Scripture wording must come from an approved text source with the necessary reference and translation context; never transcribe the generated image as authoritative Scripture.
+Do not fill Today with future-day previews, large statistical dashboards, or motivational copy that competes with Scripture and prayer.
 
 ### Journey
 
-A reflective record, not an analytics dashboard. Use a clear summary, compact date/context details, a legible sequence of weeks or reached days when implemented, and restrained access to saved reflections. Highlight the current week with a gentle visual distinction, not a trophy or score.
+Journey is a reflective record, not an analytics product.
 
-Keep calendar position, recorded completion, and spiritual growth conceptually separate. Never invent a faith score, leaderboard, completion heat map, or statistic to populate a design.
+Use the calendar/day grid and list to help the participant understand where they are, review reached days, and access previous journeys.
+
+Statistics should be modest and clearly descriptive.
+
+### Reflections
+
+Reflections is a private writing collection within the Journey area.
+
+Make the relationship to the originating journey/day obvious. Use readable excerpts and clear privacy language where useful.
+
+Do not visually imply social publishing.
 
 ### Settings
 
-Quiet and practical. A serif heading and well-spaced grouped rows should be sufficient. Reduce decorative scenery here. Keep settings explanations near the relevant controls and destructive actions clearly distinguished. Do not make read-only information look like a configurable setting.
+Settings should be quiet and practical.
 
-### Scripture, prayer, and reflection
+Group account, practices, reminders, appearance, Scripture preference, privacy, and help logically. Keep destructive actions separated and explicit.
 
-Reading and thought take precedence over decoration. Use a stable, opaque reading surface, generous leading, and a comfortable column. Scripture and original commentary are visibly distinct. Prayer includes its prompt and written prayer when supplied. Reflection writing remains optional and private.
+### Scripture
 
-The minimal-copy rule does **not** abbreviate Scripture, truncate a supplied prayer, rewrite authored devotional content, or remove required acknowledgments. These are focused reading experiences, not dashboard summaries.
+Scripture should be the most reading-oriented screen in the app.
 
-### Placeholders and future screens
+The passage reference, translation label, text, and required acknowledgments must be clear. Commentary must remain visually distinct from Scripture.
 
-Existing title-only placeholders inherit the background and typography. Do not fill them with invented legal copy, fake community activity, mock private writing, unsupported controls, or speculative features. A cohesive unfinished screen is preferable to a misleading finished-looking screen.
+Reading, scrolling, or changing translation must not automatically mark completion.
 
-## 11. Language density and personal warmth
+### Prayer
 
-Follow the voice guide for wording. The following are presentation budgets, not rigid validation limits:
+Prayer should feel focused rather than form-heavy.
 
-| Element              | Default writing target                                         |
-| -------------------- | -------------------------------------------------------------- |
-| Page title           | About 2–6 words                                                |
-| Introductory support | One short sentence, normally 1–2 lines                         |
-| Practice row         | Name plus one short supporting phrase                          |
-| Button               | Familiar, specific action, usually 1–4 words                   |
-| Empty state          | Clear title, one explanation, one relevant action if available |
-| Error                | What happened and what the person can do next                  |
+Present the prayer prompt and any authored written prayer clearly. A participant should be able to spend time in prayer without entering text.
 
-Use progressive disclosure for secondary explanations. Never put mandatory consent, a destructive consequence, an unsaved-work warning, essential validation, or an availability limitation behind optional reading solely to keep the page short.
+### Reflection and intention
 
-Personal does not mean repeatedly using the participant's name. Comfort comes from restraint, accurate reassurance, and a lack of pressure. An honest “Your setup is saved” is comforting only when the application knows it is saved.
+Use comfortable writing surfaces with visible save state.
 
-## 12. Interaction states and accessibility
+Saving writing and marking Reflect complete are separate actions.
 
-Loading uses a stable surface and a restrained indicator; avoid unnecessary skeleton frameworks or flickering layout. Errors appear near the failed task, with a real retry where supported. Missing artwork must not affect the task.
+When a draft or save is at risk, communicate the state directly rather than hiding it behind a generic spinner.
 
-Completion uses a clear check and calm wording when the data is known. Incomplete states remain neutral. No confetti, fire icons, public comparison, manufactured urgency, or rewards that suggest spiritual superiority.
+### Historical days
 
-Motion is optional and brief. A small transition of roughly 120–180 milliseconds is a starting design target, not a requirement. Respect reduced-motion preferences and avoid continuous movement or parallax.
+Historical days should keep the original day number, date, reading, and assigned practices.
 
-Use WCAG contrast criteria as design checks: at least 4.5:1 for ordinary text and 3:1 for qualifying large text. Necessary control/state indicators should reach 3:1 against adjacent colors. Test the rendered background, including images and overlays; a palette alone is not an accessibility certification. [R5–R6]
+When a participant updates a historical day after its date, show a modest indication rather than a warning treatment.
 
-Preserve system text scaling, screen-reader labels and states, visible keyboard focus, meaningful reading order, and non-color state indicators. Check both appearance modes. Keep validation and required instructions readable; “minimal” must never mean tiny gray text.
+### Completed or early-ended journey
 
-Safe-area, keyboard, and tab-bar spacing each need a single owner. Do not apply bottom-tab height in both the tab wrapper and every child page. Do not add top safe-area padding again beneath a native header that already provides it.
+Completion summaries should be reflective and factual.
 
-## 13. Reusable brief for future generated screens
+Avoid celebratory trophy language, confetti, rankings, or a spiritual grade.
 
-Use this with the reference image and the screen's actual content/behavior specification:
+An early-ended journey must be clearly labeled as such without shame.
 
-> Design this 77Faithful screen in the Quiet Sanctuary visual language. Preserve the atmosphere of a beautifully typeset devotional in a peaceful natural setting: warm ivory canvas, soft off-white surfaces, deep forest-green emphasis, restrained sage/ochre/slate/clay icon accents, graceful readable serif headings, clean sans-serif controls, rounded paper-like cards, generous consistent spacing, and very little unnecessary text. The experience should feel personal, grounded, comforting, clearly Christian, and easy to begin. Use scenic imagery selectively rather than on every surface. Give the page one clear hierarchy and one dominant action per action group. Let content breathe, wrap, and scroll; do not shrink it to imitate a screenshot. Preserve the supplied product behavior, actual navigation, content, accessibility, and truthful states. Do not add extra tabs, fake completion, a spiritual score, glowing blue buttons, oversized promotional copy, ornate religious decoration, or unsupported features. Match the same design system rather than inventing a new interpretation for this screen.
+## Information density
 
-## 14. Acceptance checklist
+A screen should not contain every fact that exists about the participant.
 
-A screen is ready for visual review when:
+Use progressive disclosure:
 
-- It belongs to the same warm forest-and-ivory family as the reference, including dark mode and transient states.
-- Its typography, spacing, radii, and colors come from shared definitions rather than local reinvention.
-- The main purpose and next supported action are clear without reading a paragraph of introduction.
-- Larger text, long names, long email addresses, narrow widths, and the keyboard do not break the composition.
-- Labels, unchecked controls, focus, and required messages remain readable and identifiable.
-- Working flows, private data boundaries, and product navigation remain intact.
-- Unavailable capabilities and unknown values are not disguised as completed implementation.
-- Actual screenshots have been compared when a runtime is available; untested platforms are identified honestly.
+- Today shows what is needed for today's participation.
+- Journey holds history and broader context.
+- Reflections holds private writing history.
+- Settings holds configuration and account controls.
 
-**Final question:** If this screen were placed beside Today, would it feel like another page of the same book?
+Long explanatory copy belongs in focused help surfaces or expandable sections when appropriate.
 
-## Technical references
+## Motion
 
-The art direction and numeric layout targets above are project design decisions. These primary sources support the technical and accessibility guidance; inspect the installed package versions before adopting API examples.
+Motion should be restrained and functional.
 
-- **R1:** [Tamagui configuration and tokens](https://tamagui.dev/docs/core/configuration).
-- **R2:** [Tamagui themes](https://tamagui.dev/docs/core/theme).
-- **R3:** [Expo fonts](https://docs.expo.dev/develop/user-interface/fonts/).
-- **R4:** [React Native Text and font scaling](https://reactnative.dev/docs/text).
-- **R5:** [W3C: Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).
-- **R6:** [W3C: Non-text Contrast](https://www.w3.org/WAI/WCAG22/understanding/non-text-contrast.html).
-- **R7:** [Adobe's Source Serif project](https://github.com/adobe-fonts/source-serif).
-- **R8:** [Inter's official project](https://rsms.me/inter/).
-- **R9:** [Expo Symbols](https://docs.expo.dev/versions/latest/sdk/symbols/).
+Short transitions around **120–180 ms** are reasonable for ordinary state changes when platform accessibility settings permit them.
+
+Do not use celebratory motion as a reward for spiritual activity.
+
+Respect reduced-motion preferences.
+
+## Accessibility
+
+Target at least WCAG AA contrast:
+
+- **4.5:1** for ordinary text;
+- **3:1** for large text and meaningful non-text controls where the applicable criterion permits it.
+
+Also:
+
+- support dynamic text;
+- preserve logical screen-reader order;
+- provide meaningful accessibility labels;
+- expose control state semantically;
+- do not communicate completion only through color;
+- preserve visible focus on keyboard-capable platforms;
+- keep interactive targets large;
+- provide a readable list alternative to the journey grid;
+- manage the software keyboard without obscuring writing actions;
+- ensure one layout owner handles safe-area and bottom-navigation insets.
+
+## Safe areas and keyboard behavior
+
+Do not stack multiple independent safe-area paddings on the same edge.
+
+Bottom-tab layouts should have one clear owner for tab-bar and safe-area spacing.
+
+Writing screens must keep the active field and save controls reachable with the keyboard open.
+
+## Visual copy budget
+
+Original app copy should be concise.
+
+Prefer:
+
+- one strong page title;
+- one short description;
+- one primary action;
+- secondary help only where it changes a decision.
+
+Long spiritual content is appropriate where the product calls for Scripture, a devotional, a weekly introduction, or reflection guidance. UI chrome should remain quiet around it.
+
+## Future surfaces
+
+Do not display fake community feeds, fake messages, fake public profiles, or other future capabilities in V1.
+
+Design documentation may describe later surfaces, but participant-facing release UI should expose only working product behavior.
+
+## Visual acceptance checklist
+
+Before accepting a user-facing screen, verify:
+
+- the screen follows Quiet Sanctuary;
+- typography has a clear editorial hierarchy;
+- whitespace is generous;
+- colors come from semantic tokens;
+- light and dark appearance both preserve hierarchy;
+- all text remains readable at larger sizes;
+- touch targets are adequate;
+- controls expose their state without color alone;
+- the primary action is clear;
+- Scripture is visually distinguished from commentary;
+- progress is factual rather than competitive;
+- no fake domain data or future feature is used to make the screen look fuller;
+- the layout works on a narrow phone and a wider device;
+- the keyboard does not hide required actions;
+- navigation matches the product hierarchy.
+
+## Technical references for implementation work
+
+When implementing these requirements, consult current official references for:
+
+- Expo font loading;
+- React Native `Text` and dynamic type behavior;
+- WCAG text contrast;
+- WCAG non-text contrast;
+- Source Serif 4;
+- Inter;
+- Expo-supported system-symbol/icon approaches.
+
+Official technical documentation may refine API details, but it must not override the visual or product intent described here.

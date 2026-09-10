@@ -1,320 +1,462 @@
-# 77Faithful Voice & Language Guide
+# 77Faithful Voice and Language Guide
 
-This document defines the default voice, terminology, and writing conventions for original 77Faithful content and interface copy.
+## Purpose
 
-It applies to onboarding, authentication, instructions, buttons, empty states, completion states, prayer prompts, written prayers, reflection questions, missed-day messaging, community copy, and other non-Scripture text.
+This guide governs original participant-facing language written for 77Faithful: interface copy, onboarding explanations, reminders, errors, devotional support copy, prompts, reflection guidance, settings descriptions, and future community copy.
 
-Scripture must always be presented exactly as provided by the selected Bible text source. Do not rewrite, simplify, paraphrase, modernize, or otherwise alter Scripture unless the product explicitly identifies the content as a separate paraphrase or summary.
+It does **not** authorize changing Scripture. Scripture text must remain exactly faithful to the approved source and edition being displayed. App capitalization, punctuation, and style rules do not rewrite Bible text.
 
-## 1. Core Voice
+## Core voice
 
-77Faithful should sound like a **warm, pastoral, encouraging, trusted Christian guide**.
+77Faithful should sound like a **trusted Christian guide**.
 
-The voice should be:
+The voice is:
 
-- Clearly and unapologetically Christian.
-- Centered on God, Jesus, Christ Jesus, Scripture, prayer, obedience, and life with God.
-- Warm without becoming sentimental.
-- Encouraging without becoming generic or motivational.
-- Direct when Scripture or the subject calls for directness.
-- Reflective and thought-provoking without sounding academic.
-- Simple and approachable for Christians at different levels of spiritual maturity.
-- Focused on faithfulness rather than perfection or performance.
+- warm;
+- pastoral;
+- encouraging;
+- direct when clarity requires it;
+- thoughtful;
+- biblically grounded;
+- explicitly Christian;
+- accessible to people with different levels of familiarity.
 
-Do not make the app sound like a secular habit tracker with Christian terminology added to it. At the same time, avoid unnecessarily dense theological language when plain language communicates the same truth more clearly.
+It should not sound like:
 
-## 2. Theological Posture
+- a secular habit tracker;
+- a fitness challenge;
+- a corporate productivity tool;
+- a motivational speaker;
+- a guilt-based accountability system;
+- a sermon aimed at proving a point;
+- a voice claiming private revelation from God.
 
-77Faithful is explicitly Christian. It does not need to minimize references to God or Jesus to appear broadly accessible.
+## Christian identity
 
-Use names and references such as:
+The app may and should use direct Christian language when it is relevant.
 
-- God
-- Jesus
-- Jesus Christ
-- Christ Jesus
-- Christ
-- the Lord
-- the Holy Spirit
+Use names and terms such as:
 
-Biblical subjects such as sin, repentance, obedience, surrender, sacrifice, conviction, stewardship, service, forgiveness, witness, and spiritual discipline are appropriate when relevant.
+- God;
+- Jesus;
+- Jesus Christ;
+- Christ Jesus;
+- Lord;
+- Holy Spirit;
+- Scripture;
+- Bible;
+- prayer;
+- grace;
+- faith;
+- sin;
+- repentance;
+- forgiveness;
+- obedience;
+- worship;
+- service;
+- Christian community.
 
-Keep the language broadly Christian and grounded in Scripture. Avoid making unnecessary claims about disputed secondary doctrines when the passage or feature does not require them.
+Do not hide the product's Christian purpose behind generic terms such as “wellness,” “mindfulness,” or “wisdom.”
 
-Do not claim to know God's specific will, message, or private revelation for a user. Prefer language such as:
+At the same time, keep language understandable. Do not assume every participant knows specialized theological vocabulary without context.
 
-- "Consider what God may be showing you through this passage."
-- "Ask God for wisdom about how to respond."
-- "Where might God be calling you to greater obedience?"
+## Theological posture
 
-Avoid assertions such as:
+77Faithful should remain broadly Christian and biblically based.
 
-- "God is telling you to..."
-- "God gave you this situation because..."
-- "This is what God wants you to do next."
+It may speak clearly about Jesus, grace, Scripture, prayer, repentance, love, service, and perseverance.
 
-The app can guide users toward Scripture, prayer, discernment, repentance, obedience, and wise action without pretending to speak for God beyond what Scripture supports.
+Avoid casually making a disputed secondary doctrinal position into a universal requirement. When a passage touches an area with substantial differences between Christian traditions, write carefully and stay close to the passage's clear formation purpose.
 
-## 3. Grace, Effort, and Faithfulness
+Never invent a personal message from God.
 
-77Faithful provides structure for spiritual practices. It must never imply that completing practices earns God's love, favor, salvation, or approval.
+Do not write:
 
-When appropriate, reinforce that spiritual disciplines are responses to God's grace and ways of intentionally making room to know Him, obey Him, and grow in Christ.
+- “God told me to tell you…”
+- “God is saying to you right now…”
+- “This happened because God wanted you to…”
+- “If you complete this, God will…”
 
-Preferred framing:
+A prompt may invite the participant to pray, reflect, examine Scripture, seek wisdom, or consider a faithful response. It must not impersonate divine revelation.
 
-> These practices do not earn God's favor. They help you intentionally spend time with God, respond to His Word, and practice your faith in everyday life.
+## Grace and effort
 
-Faithfulness is central to the brand, but the app must not claim to measure a user's holiness or spiritual condition.
+The product encourages deliberate effort, but spiritual disciplines do not earn God's favor.
 
-Avoid statements such as:
+Do not imply that a participant is:
 
-- "You are more faithful now."
-- "Your faith is stronger because you completed today."
-- "You are becoming a better Christian."
-- "God is proud of you for keeping your streak."
+- a better Christian because they have a longer streak;
+- more loved by God because they completed a day;
+- less faithful to Christ because the app shows an incomplete record;
+- guaranteed a blessing because they completed a practice;
+- spiritually mature because they reached Day 77.
 
-Instead, describe what can actually be known:
+Prefer language that describes the record accurately and invites continued faith.
 
-- "Today's practices are complete."
-- "You completed Day 27."
-- "Keep returning to Scripture, prayer, and faithful action."
-- "Take a moment to reflect on what you learned today."
+Good:
 
-## 4. Plain Christian Language
+- “3 of 5 practices complete.”
+- “You can return to this day later.”
+- “Your journey continues today.”
+- “Take time to pray.”
+- “Return to today's Scripture.”
+- “Day 12 is available.”
 
-Assume users have some familiarity with Christianity, but do not assume advanced theological vocabulary.
+Avoid:
 
-Use familiar biblical terms naturally. When a less familiar term is important, explain it briefly in plain language rather than avoiding it entirely.
+- “You failed today.”
+- “You broke your faith streak.”
+- “Do not let God down.”
+- “A faithful Christian would finish this.”
+- “Earn your way back.”
 
-Example:
+## Plain Christian language
 
-- Prefer: "Repentance means turning away from sin and returning to God."
-- Avoid replacing every biblical concept with vague language such as "personal growth" or "positive change."
+Prefer direct, ordinary words.
 
-Prefer "Scripture" and "the Bible" naturally depending on context. Use "Scripture" frequently in devotional and formation content; use "Bible" when it is clearer in ordinary interface language.
+Use **Scripture** or **Bible** when that is what the app means. Do not replace it with vague terms such as “daily wisdom.”
 
-## 5. Writing Style
+Use **pray** when the action is prayer. Do not obscure it as “center yourself.”
 
-Write for a mobile screen.
+Use **Jesus** when the message concerns Jesus. Do not reduce Him to an abstract “higher purpose.”
 
-- Prefer short sentences and short paragraphs.
-- Usually communicate one main idea per sentence.
-- Use contractions naturally when they make the copy warmer and easier to read.
-- Address the user primarily as "you."
-- Use "we" or "us" only when speaking about shared Christian life or community in a genuine way.
-- Avoid church clichés, corporate language, marketing language, hype, and inspirational filler.
-- Do not overuse "journey." It is acceptable occasionally, especially for the full 77-day experience, but it should not become default wording for every screen.
+## Mobile writing style
 
-Avoid phrases such as:
-
-- "You've got this!"
-- "Crush your goals."
-- "Level up your faith."
-- "Be your best self."
-- "Lean in."
-- "Pour into yourself."
-- "Transform your life in 77 days."
-
-Prefer grounded encouragement:
-
-- "Keep going."
-- "Continue with today."
-- "Return to Scripture and prayer."
-- "Take the next faithful step."
-- "Spend time with God in prayer."
-
-## 6. Product Terminology
-
-Use these terms consistently unless a specific screen has a strong reason not to.
-
-| Concept                             | Preferred term                                                  |
-| ----------------------------------- | --------------------------------------------------------------- |
-| A numbered date in the program      | **Day** — e.g. "Day 12"                                         |
-| The five to seven daily items       | **Practices**                                                   |
-| Scripture, prayer, and reflection   | **Foundational Practices**                                      |
-| The two to four user-selected items | **Chosen Practices**                                            |
-| The full program                    | **77Faithful**, **77 days**, or occasionally **77-day journey** |
-| A finished practice                 | **Complete** / **Completed**                                    |
-| A day with unfinished practices     | **Incomplete**                                                  |
-| Consecutive fully completed days    | **Complete-day streak** or **streak** when context is clear     |
-
-Avoid "failed," "failure," and "broke your streak" as standard product language.
-
-A streak is an accountability tool. It is **not** a measurement of someone's faithfulness to God.
-
-The number **77** should remain prominent in brand language where natural. Do not force references to seven into unrelated copy merely for branding.
-
-## 7. Calls to Action and Interface Copy
-
-Use familiar product language where familiarity improves usability, with restrained brand voice around it.
-
-Examples:
-
-### Authentication
-
-Preferred:
-
-- "Create account"
-- "Sign in"
-- "Forgot password?"
-- "Begin your 77 days"
-- "Continue your 77Faithful journey"
-
-Do not replace standard actions with clever or ambiguous Christian wording.
-
-### Daily actions
-
-Preferred:
-
-- "Begin Day 12"
-- "Read Scripture"
-- "Spend time in prayer"
-- "Mark complete"
-- "Save reflection"
-- "Finish today"
-- "Continue"
-
-The practice name and completion control are normally enough. Do not require repetitive first-person labels such as "I did this" unless the interaction specifically benefits from a personal acknowledgment.
-
-## 8. Prayer Prompts and Written Prayers
-
-Each devotional prayer section should normally contain both:
-
-1. A **thought-provoking prayer prompt** connected directly to the Scripture just read.
-2. A **short written prayer** the user may pray as written or use as a starting point.
-
-Prayer prompts should move beyond generic requests. They should help users respond to the actual passage.
-
-Weak:
-
-> Pray for a good day.
-
-Better:
-
-> Ask God to show you where fear is shaping your decisions more than trust in Him.
-
-Written prayers should be simple, sincere, biblically grounded, and natural to pray aloud.
-
-Example:
-
-> Lord Jesus, show me where I have been relying on myself instead of trusting You. Give me the courage to obey You today, even when obedience is uncomfortable. Help me walk in faith and depend on Your strength. Amen.
-
-Do not write prayers that place unsupported words in God's mouth or guarantee outcomes Scripture does not guarantee.
-
-## 9. Reflection Questions
-
-Reflection should help the user respond honestly to Scripture, not merely recall information.
-
-Questions may be gentle or direct depending on the passage. Direct questions are appropriate when the biblical text calls for them.
-
-Examples:
-
-- "Where have you been resisting God?"
-- "Is there something you need to confess to God today?"
-- "Who do you need to forgive?"
-- "Where has comfort become more important to you than obedience?"
-- "What would trusting Jesus look like in this situation today?"
-- "What is one concrete way you can respond to this passage?"
-
-Do not make every reflection confrontational. Balance conviction with hope, gratitude, worship, dependence, love, service, and practical obedience.
-
-## 10. Missed Practices and Incomplete Days
-
-Missing a practice does not erase progress and does not restart the 77 days.
-
-Messaging should balance honesty, reflection, grace, and encouragement. Maintain a pool of varied messages so users do not repeatedly see identical copy.
-
-Good patterns include:
-
-- "Yesterday was incomplete. Continue with today."
-- "You do not need to restart. Return to today's practices and keep going."
-- "Faithfulness is not perfection. Begin again with Scripture, prayer, and today's practices."
-- "Yesterday did not go as planned. Consider what got in the way, then continue with today."
-- "An incomplete day does not erase the days you've already completed. Keep going."
-- "Record the day honestly, learn from it, and continue."
-- "If something made yesterday difficult, take a moment to reflect on it. Then begin today."
-
-Avoid shame, alarm, or artificial urgency.
-
-Do not say:
-
-- "You failed yesterday."
-- "Your streak is ruined."
-- "Don't give up now!"
-- "You let yourself down."
-- "Start over and try again."
-
-## 11. Completion and Encouragement
-
-Completion messaging should be positive but restrained. Avoid turning spiritual practices into achievements that imply spiritual superiority.
-
-Preferred:
-
-- "Day 18 complete."
-- "Today's practices are complete."
-- "Take a moment to thank God for what He showed you today."
-- "Day 77 complete. Carry these practices with you beyond these 77 days."
-
-Occasional warm encouragement such as "Well done" is acceptable, but avoid repetitive praise like "Amazing!", "Great job!", or "You're crushing it!"
-
-## 12. Day 77
-
-Day 77 is a milestone, not graduation from following Jesus.
-
-The ending should be celebratory, reflective, and forward-looking. Encourage users to consider what God has taught them, which practices they want to continue, and how they will keep pursuing Christ.
-
-Do not imply that completing 77 days proves spiritual maturity.
-
-Preferred idea:
-
-> You completed 77 days of intentional practice. Take time to thank God, reflect on what you learned, and decide how you will continue making Scripture, prayer, and faithful action part of everyday life.
-
-## 13. Community Language
-
-Future community features should emphasize encouragement, prayer, accountability, and shared growth rather than popularity.
+Interface text should be short enough to scan without becoming impersonal.
 
 Prefer:
 
-- "I'm praying for you."
-- "Thank you for sharing."
-- "Encourage someone in your group."
-- "Pray for your group."
-- "Group members"
-- "People in your group"
+- one idea per sentence;
+- short paragraphs;
+- contractions when natural;
+- second person (“you”) for participant guidance;
+- direct verbs;
+- concrete labels;
+- helpful error explanations;
+- restrained punctuation.
 
-Avoid designing the tone around likes, popularity, competition, rankings, or public spiritual performance.
+Avoid unnecessary exclamation marks and slogans.
 
-Terms such as "brother" and "sister" may appear naturally in authored Christian content when appropriate, but should not be the default UI label for every user.
+Do not use:
 
-## 14. Capitalization
+- “You've got this!”
+- “Crush your goals.”
+- “Level up your faith.”
+- “Stay on track at all costs.”
+- “Optimize your spiritual life.”
+- “Become the best version of yourself.”
+- “Never miss again.”
+- “Perfect streak.”
 
-Use standard English capitalization.
+## Product terminology
+
+Use terms consistently.
+
+### Journey
+
+Use **77-day journey** or **journey**.
+
+A journey is a calendar-based 77-day formation period, not a count of 77 perfect days.
+
+### Day
+
+Use **Day 1** through **Day 77**.
+
+Do not equate the current day number with the number of complete days.
+
+### Practices
+
+Use **practices** for the daily commitments.
+
+The foundational practices are:
+
+- **Read Scripture**
+- **Pray**
+- **Reflect**
+
+Use **Chosen Practices** or **additional practices** for the participant-selected practices. Avoid changing labels casually between screens.
+
+The participant chooses two to four additional practices, producing five to seven total practices.
+
+### Completion
+
+Use **complete** and **completed** for factual app state.
+
+Use **incomplete** carefully and neutrally.
+
+Prefer:
+
+- “2 of 6 practices complete.”
+- “No practices marked complete.”
+- “All practices complete.”
+
+Avoid “failed,” “failure,” or “unsuccessful” for an ordinary incomplete day.
+
+### Streak
+
+A **complete-day streak** is a factual record of consecutive days whose assigned practices are all marked complete.
+
+It must never be described as the participant's faithfulness to God.
+
+Do not write “faith streak,” “spiritual streak,” or “holiness streak.”
+
+## Call-to-action language
+
+Use labels that state the real action.
+
+### Account
+
+Preferred examples:
+
+- **Create account**
+- **Sign in**
+- **Forgot password?**
+- **Send recovery email**
+- **Confirm email**
+- **Sign out**
+
+### Journey setup
+
+Preferred examples:
+
+- **Continue**
+- **Review my journey**
+- **Start my journey**
+- **Start another journey**
+
+Do not use a start label before the action actually creates the journey.
+
+### Daily experience
+
+Preferred examples:
+
+- **Read Scripture**
+- **Spend time in prayer**
+- **Reflect**
+- **Mark complete**
+- **Mark Scripture complete**
+- **Save reflection**
+- **Save intention**
+- **Return to Today**
+
+Avoid labels that overstate spiritual outcomes.
+
+## Prayer prompts
+
+Prayer prompts should be:
+
+- reverent;
+- concrete;
+- concise;
+- connected to Scripture;
+- humble about outcomes;
+- usable by someone who does not know elaborate prayer language.
+
+A prompt may invite praise, confession, thanksgiving, lament, intercession, or a request for help.
+
+Example:
+
+> Ask Jesus to help you depend on Him rather than use this journey to prove yourself. Bring Him one situation in which you need help responding with love today.
+
+Do not imply that a prescribed prayer wording is necessary for God to listen.
+
+## Authored written prayers
+
+When the content includes an authored prayer, keep it:
+
+- biblically grounded;
+- personal without pretending to know private facts;
+- specific enough to be useful;
+- short enough to remain an aid rather than a script the participant must repeat.
+
+Do not promise outcomes that Scripture does not promise in the passage.
+
+## Reflection questions
+
+Reflection questions should be thought-provoking and connected to the Scripture just read.
+
+They should invite honest attention rather than a correct answer.
+
+Good:
+
+- “Where today did you notice a need to depend on Jesus, and how did you respond?”
+- “What part of this passage is difficult for you to put into practice?”
+- “Where might love require both compassion and a wise boundary?”
+
+Avoid questions that force a positive report:
+
+- “How did you succeed today?”
+- “How did God reward your obedience?”
+- “Why were you more faithful today?”
+
+## Conviction and encouragement
+
+A trusted Christian guide can be direct.
+
+It is appropriate to invite repentance, confession, obedience, reconciliation, generosity, patience, or other biblical responses when the passage supports them.
+
+Balance conviction with grace and accuracy.
+
+Do not soften every difficult biblical theme into generic positivity. Do not use conviction as an excuse for shame, manipulation, or unsafe advice.
+
+## Missed practices and returning after absence
+
+The app should have several neutral, encouraging ways to help someone continue.
+
+Examples:
+
+- “Today is still available.”
+- “Your journey has continued. You can begin with today's practices.”
+- “You do not need to complete earlier days before continuing.”
+- “You can return to a previous day if you want to update your record.”
+- “An incomplete day does not reset your journey.”
+
+Avoid repetitive cheerleading.
+
+Do not require an apology, explanation, or restart.
+
+## Completion language
+
+Keep completion understated.
+
+Good:
+
+- “Day 14 complete.”
+- “Today's practices are complete.”
+- “You completed 48 of 77 days with every assigned practice marked complete.”
+- “Your 77-day period is complete.”
+
+Use **Well done** occasionally if the context is appropriate, but do not make it the default response to every checkbox.
+
+Day 77 is a meaningful milestone, not a spiritual graduation.
+
+Do not write:
+
+- “You made it. You are transformed.”
+- “You are now more faithful.”
+- “You completed your spiritual growth.”
+- “God is proud because you finished.”
+
+## Errors and uncertainty
+
+Error copy should be calm and truthful.
+
+State:
+
+1. what could not be completed;
+2. whether the participant's work is safe;
+3. the next useful action.
+
+Examples:
+
+- “We could not confirm that change yet. Your current practices are unchanged.”
+- “This reflection is saved on this phone but has not been confirmed for your account.”
+- “You are offline. The reading already prepared on this phone is still available.”
+
+Do not say “saved” when data may still be at risk.
+
+Do not blame the participant for a service failure.
+
+## Privacy language
+
+Use plain language.
+
+Good:
+
+- “Your reflection is private.”
+- “This writing is not shared with a group.”
+- “Deleting this entry removes it from your personal record, subject to the privacy policy's stated handling.”
+
+Do not imply that staff, pastors, or community leaders monitor private journals.
+
+## Safety-sensitive language
+
+Do not encourage:
+
+- unsafe fasting;
+- stopping medication or medical care;
+- remaining in abuse or danger;
+- contacting someone where a boundary or protection order makes contact unsafe;
+- treating app content as professional counseling;
+- giving money the person cannot safely give;
+- pressuring another person into a religious conversation.
+
+Use adaptable language such as “in a way that is safe and appropriate for your circumstances.”
+
+## Community language for later versions
+
+Future community copy should emphasize:
+
+- encouragement;
+- prayer;
+- mutual support;
+- accountability;
+- shared learning;
+- privacy;
+- deliberate sharing.
+
+Avoid:
+
+- popularity;
+- public follower counts;
+- comparative completion;
+- “top members”;
+- public streak ranking;
+- organizer access to private journals.
+
+Do not default to “brother” or “sister” as the form of address for every participant.
+
+## Capitalization
+
+In original 77Faithful copy:
 
 - God
 - Jesus
 - Jesus Christ
-- Christ Jesus
 - Christ
+- Lord
 - Holy Spirit
-- Scripture
-- Bible
-- Word of God
 
-For original 77Faithful copy, capitalize divine pronouns when they refer to God: **He, Him, His**.
+When referring to God with a pronoun in original devotional copy, use **He / Him / His** consistently with the project's chosen editorial style.
 
-Never modify capitalization inside quoted Scripture. Preserve the Bible text exactly as supplied.
+This rule does not alter quoted or displayed Scripture. Preserve the approved Bible edition exactly.
 
-## 15. AI Content Rule
+## Numbers
 
-When an AI agent writes or reviews 77Faithful copy, it should ask:
+Use **77Faithful** as the product name.
 
-1. Is this clearly Christian and centered on God rather than generic self-improvement?
-2. Is it faithful to the meaning of the relevant Scripture?
-3. Is it understandable without advanced theological knowledge?
-4. Does it guide rather than pretend to speak for God?
-5. Does it encourage honest faithfulness without rewarding spiritual performance?
-6. Is it concise enough for a mobile interface?
-7. Does it sound like a trusted Christian guide rather than marketing copy or a habit-tracking app?
+Use numerals for journey days and progress:
 
-When these goals conflict, prioritize **biblical faithfulness, clarity, pastoral warmth, and truthful language** over cleverness or motivational intensity.
+- Day 7
+- 3 of 5 practices complete
+- Week 4
+- 77-day journey
+
+Do not write “Day 78.”
+
+## AI-generated content review order
+
+When an AI system drafts participant-facing formation content, review it in this order:
+
+1. **Biblical faithfulness** — Is the statement supported by the passage and broader Christian context?
+2. **Theological restraint** — Does it avoid invented revelation, guaranteed outcomes, and disputed assumptions presented as universal?
+3. **Safety** — Could it pressure someone toward physical, relational, financial, or emotional harm?
+4. **Accuracy** — Does it describe product state and participant behavior truthfully?
+5. **Clarity** — Can a person understand the intended response?
+6. **Pastoral warmth** — Does it invite faithful participation without shame?
+7. **Brevity** — Is the interface copy as short as it can reasonably be?
+
+## Final copy check
+
+Before shipping original app language, verify:
+
+- Jesus is named when the context calls for Him;
+- Scripture is not reduced to motivational content;
+- the app does not claim spiritual authority it does not have;
+- completion language is factual;
+- missed-day language does not shame or reset;
+- paid access or advertising is never implied;
+- private writing is described honestly;
+- prompts do not prescribe unsafe behavior;
+- words fit the visual space without becoming abrupt;
+- Scripture text itself has not been altered to match this guide.

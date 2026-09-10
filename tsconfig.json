@@ -1,12 +1,41 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "@77/*": ["./src/*"],
-      "@77/assets/*": ["./assets/*"]
-    }
-  },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": ["node_modules", "functions"]
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"strict": true,
+		"noImplicitAny": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"allowUnusedLabels": false,
+		"noUncheckedSideEffectImports": true,
+		"allowUnreachableCode": false,
+		"noUncheckedIndexedAccess": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"erasableSyntaxOnly": true,
+		"noImplicitOverride": true,
+		"exactOptionalPropertyTypes": true,
+		"allowJs": true,
+		"checkJs": true,
+		"types": ["jest", "node", "react"],
+		"rootDir": "./",
+		"paths": {
+			"@td/assets/*": ["./src/assets/*"],
+			"@td/components/*": ["./src/components/*"],
+			"@td/features/*": ["./src/features/*"],
+			"@td/services/*": ["./src/services/*"],
+			"@td/providers/*": ["./src/providers/*"],
+			"@td/navigation/*": ["./src/navigation/*"],
+			"@td/hooks/*": ["./src/hooks/*"],
+			"@td/utils/*": ["./src/utils/*"],
+			"@td/constants/*": ["./src/constants/*"],
+			"@td/types/*": ["./src/types/*"],
+			"@td/theme/*": ["./src/theme/*"]
+		}
+	},
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		".expo/types/**/*.ts",
+		"expo-env.d.ts",
+		"jest.config.js"
+	]
 }

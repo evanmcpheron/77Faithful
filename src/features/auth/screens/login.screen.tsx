@@ -1,4 +1,7 @@
+import { useForm } from '@td/components/form/form';
 import { View } from 'react-native';
+import type { ILoginFormValues } from '../forms/login/login.form.types';
+import { useAuthActions } from '../hooks/use-auth-actions.hook';
 
 import { TurndownButton } from '@td/components/ui/button/button.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
@@ -13,6 +16,8 @@ import { StyledDividerRow, StyledSocialButtonsRow } from './login.styles';
 import { LoginForm } from '../forms/login/login.form';
 
 export const LoginScreen = () => {
+	const form = useForm<ILoginFormValues>({ formName: 'formLogin' });
+	const { submit, isSubmitting, error } = useAuthActions('signIn');
 	return (
 		<View testID='auth-login-screen'>
 			<Typography size='Display'>Welcome Back</Typography>
@@ -22,14 +27,20 @@ export const LoginScreen = () => {
 			</Typography>
 			<Spacer size={Spacing.Medium} />
 			<LoginForm />
+			{error && (
+				<View accessibilityLiveRegion='polite'>
+					<Typography tone='Error'>{error}</Typography>
+				</View>
+			)}
 			<Spacer size={Spacing.Large} />
 
 			<TurndownButton
 				testID='auth-login-submit-button'
-				disabled
-				onPress={() => {}}
+				disabled={isSubmitting}
+				loading={isSubmitting}
+				onPress={() => void submit(form.getFormState())}
 			>
-				Login
+				Sign in
 			</TurndownButton>
 			<Spacer size={Spacing.Large} />
 			<StyledDividerRow>

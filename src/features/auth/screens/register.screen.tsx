@@ -1,4 +1,7 @@
+import { useForm } from '@td/components/form/form';
 import { View } from 'react-native';
+import type { IRegisterFormValues } from '../forms/register/register.form.types';
+import { useAuthActions } from '../hooks/use-auth-actions.hook';
 
 import { TurndownButton } from '@td/components/ui/button/button.component';
 import { Divider } from '@td/components/ui/divider/divider.component';
@@ -12,6 +15,8 @@ import { RegisterForm } from '../forms/register/register.form';
 import { StyledDividerRow, StyledSocialButtonsRow } from './login.styles';
 
 export const RegisterScreen = () => {
+	const form = useForm<IRegisterFormValues>({ formName: 'formRegister' });
+	const { submit, isSubmitting, error } = useAuthActions('signUp');
 	return (
 		<View testID='auth-register-screen'>
 			<Typography size='Display'>Create Account</Typography>
@@ -21,13 +26,19 @@ export const RegisterScreen = () => {
 			</Typography>
 			<Spacer size={Spacing.Large} />
 			<RegisterForm />
+			{error && (
+				<View accessibilityLiveRegion='polite'>
+					<Typography tone='Error'>{error}</Typography>
+				</View>
+			)}
 			<Spacer size={Spacing.Large} />
 			<TurndownButton
 				testID='auth-register-submit-button'
-				disabled
-				onPress={() => {}}
+				disabled={isSubmitting}
+				loading={isSubmitting}
+				onPress={() => void submit(form.getFormState())}
 			>
-				Register
+				Create account
 			</TurndownButton>
 			<Spacer size={Spacing.Large} />
 			<StyledDividerRow>

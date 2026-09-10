@@ -59,7 +59,7 @@ export const StyledInputContainer = styled(
 		? BorderColors.Error
 		: isFocused
 			? BorderColors.Focus
-			: BorderColors.Default,
+			: BorderColors.Control,
 	borderRadius: rounded ? Radius.Full : Radius.Medium,
 	borderWidth:
 		isFocused || hasError ? INPUT_ACTIVE_BORDER_WIDTH : INPUT_BORDER_WIDTH,

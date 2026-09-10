@@ -34,7 +34,7 @@ const getChipBorderColor = ({
 	if (tone === 'Info') return FeedbackColors.Info;
 	if (tone === 'Inverse') return BorderColors.Inverse;
 
-	return BorderColors.Default;
+	return BorderColors.Control;
 };
 
 const getChipBackgroundColor = ({
@@ -42,6 +42,10 @@ const getChipBackgroundColor = ({
 	tone,
 	variant,
 }: Pick<TChipStyleProps, 'selected' | 'tone' | 'variant'>): string => {
+	if (tone === 'Inverse') {
+		return SurfaceColors.Inverse;
+	}
+
 	if (variant === 'Outline' && !selected) {
 		return 'transparent';
 	}
@@ -50,11 +54,12 @@ const getChipBackgroundColor = ({
 		return NeutralColors.White;
 	}
 
-	if (tone === 'Inverse') {
-		return SurfaceColors.Inverse;
-	}
+	if (tone === 'Success') return FeedbackColors.SuccessMuted;
+	if (tone === 'Warning') return FeedbackColors.WarningMuted;
+	if (tone === 'Error') return FeedbackColors.ErrorMuted;
+	if (tone === 'Info') return FeedbackColors.InfoMuted;
 
-	return SurfaceColors.Muted;
+	return SurfaceColors.Accent;
 };
 
 const FilteredPressable = withFilteredProps<PressableProps, TChipStyleProps>(

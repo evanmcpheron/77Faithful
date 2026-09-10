@@ -70,7 +70,7 @@ export const StyledInventoryIconOptionButton = styled(
 	FilteredPressable,
 )<IInventoryIconOptionButtonStyleProps>(({ selected }) => ({
 	alignItems: 'center',
-	backgroundColor: selected ? SurfaceColors.Muted : NeutralColors.White,
+	backgroundColor: selected ? SurfaceColors.Accent : NeutralColors.White,
 	borderColor: selected ? BrandColors.Primary : BorderColors.Subtle,
 	borderRadius: Radius.Medium,
 	borderWidth: 1,

@@ -15,7 +15,7 @@ interface ITabLabelStyleProps {
 const TRACK_BACKGROUND_COLOR = SurfaceColors.Muted;
 const ACTIVE_THUMB_BACKGROUND_COLOR = NeutralColors.White;
 const ACTIVE_TEXT_COLOR = TextColors.Secondary;
-const INACTIVE_TEXT_COLOR = TextColors.Disabled;
+const INACTIVE_TEXT_COLOR = TextColors.Secondary;
 
 const TRACK_PADDING = Spacing.XSmall;
 const TRACK_HEIGHT = 60;

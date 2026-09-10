@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import { NeutralColors } from './colors';
+import { BorderColors, NeutralColors } from './colors';
 
 const createShadow = (
 	color: string,
@@ -29,6 +29,6 @@ const createShadow = (
 };
 
 export const Shadows = {
-	Card: createShadow('#D8EAE8', 8, 0.26, 15, 6),
+	Card: createShadow(BorderColors.Default, 8, 0.26, 15, 6),
 	Subtle: createShadow(NeutralColors.Black, 4, 0.08, 12, 3),
 };

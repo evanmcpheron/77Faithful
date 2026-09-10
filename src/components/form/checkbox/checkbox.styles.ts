@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 import { Pressable, View } from 'react-native';
 import styled from 'styled-components/native';
 
-import { BrandColors, NeutralColors } from '@td/theme/colors';
+import { BorderColors, NeutralColors } from '@td/theme/colors';
 import { Radius } from '@td/theme/radius';
 import { Spacing } from '@td/theme/spacing';
 import { withFilteredProps } from '@td/utils/styles/styles.util';
@@ -36,7 +36,7 @@ export const StyledUncheckedBox = styled(FilteredView)({
 	justifyContent: 'center',
 	alignItems: 'center',
 	backgroundColor: NeutralColors.White,
-	borderColor: BrandColors.Secondary,
+	borderColor: BorderColors.Control,
 	borderRadius: Radius.Small,
 	borderWidth: 1,
 	height: 24,

@@ -1,4 +1,4 @@
-import { NeutralColors } from '@td/theme/colors';
+import { BorderColors } from '@td/theme/colors';
 import { withFilteredProps } from '@td/utils/styles/styles.util';
 import { View, ViewProps } from 'react-native';
 import styled from 'styled-components/native';
@@ -13,7 +13,7 @@ export const StyledDivider = styled(FilteredView)<IDividerProps>(({
 }) => {
 	return {
 		height: thickness === 'Line' ? 1 : 0,
-		backgroundColor: NeutralColors.Grey500,
+		backgroundColor: BorderColors.Default,
 		flex: 1,
 	};
 });

@@ -19,7 +19,7 @@ const SolidBadgeTypographyToneByTone = {
 	Brand: 'Inverse',
 	Neutral: 'Inverse',
 	Success: 'Inverse',
-	Warning: 'Primary',
+	Warning: 'Inverse',
 	Error: 'Inverse',
 	Info: 'Inverse',
 	Inverse: 'Inverse',

@@ -75,7 +75,7 @@ const getIconButtonBackgroundColor = ({
 	variant: TIconButtonVariant;
 }): string => {
 	if (variant === 'Ghost') {
-		return 'rgba(255, 255, 255, 0.25)';
+		return SurfaceColors.Inverse;
 	}
 
 	if (variant === 'Solid') {
@@ -89,7 +89,12 @@ const getIconButtonBackgroundColor = ({
 		return BrandColors.Primary;
 	}
 
-	return SurfaceColors.Muted;
+	if (tone === 'Success') return FeedbackColors.SuccessMuted;
+	if (tone === 'Warning') return FeedbackColors.WarningMuted;
+	if (tone === 'Error') return FeedbackColors.ErrorMuted;
+	if (tone === 'Info') return FeedbackColors.InfoMuted;
+
+	return SurfaceColors.Accent;
 };
 
 const FilteredPressable = withFilteredProps<

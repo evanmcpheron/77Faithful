@@ -8,8 +8,11 @@ import { IconButtonVariant, type IIconButtonProps } from './icon-button.types';
 const getIconTone = ({
 	tone,
 	variant,
-}: Required<Pick<IIconButtonProps, 'tone' | 'variant'>>): TComponentTone => {
-	if (variant === 'Solid' || variant === 'Ghost') {
+	hasBackground,
+}: Required<
+	Pick<IIconButtonProps, 'tone' | 'variant' | 'hasBackground'>
+>): TComponentTone => {
+	if (hasBackground && (variant === 'Solid' || variant === 'Ghost')) {
 		return 'Inverse';
 	}
 
@@ -29,7 +32,7 @@ export const IconButton = ({
 	strokeWidth = IconStrokeWidths.Regular,
 	onPress,
 }: IIconButtonProps) => {
-	const iconTone = getIconTone({ tone, variant });
+	const iconTone = getIconTone({ tone, variant, hasBackground });
 
 	return (
 		<StyledIconButton

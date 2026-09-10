@@ -20,7 +20,7 @@ import { IconButtonVariant } from '@td/components/ui/icon-button/icon-button.typ
 import { AppIcon } from '@td/components/ui/icon/icon.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
 import { Typography } from '@td/components/ui/typography/typography.component';
-import { BrandColors } from '@td/theme/colors';
+import { SurfaceColors } from '@td/theme/colors';
 import { IconSizes, IconStrokeWidths } from '@td/theme/icon-sizes';
 import {
 	TypographySize,
@@ -28,7 +28,6 @@ import {
 	TypographyWeight,
 } from '@td/theme/typography';
 import { ComponentTone } from '@td/types/ui.types';
-import { hexToRgbaString } from '@td/utils/styles/styles.util';
 
 import { scheduleOnRN } from 'react-native-worklets';
 import {
@@ -180,7 +179,7 @@ export const HeaderTopRow = ({
 						isInteractive
 						style={{
 							backgroundColor: isGlassVisible
-								? hexToRgbaString(BrandColors.Secondary, 0.8)
+								? SurfaceColors.Header
 								: 'transparent',
 						}}
 					/>
@@ -198,10 +197,7 @@ export const HeaderTopRow = ({
 								fallbackAnimatedStyle,
 								{
 									backgroundColor: isGlassVisible
-										? hexToRgbaString(
-												BrandColors.Secondary,
-												0.6,
-											)
+										? SurfaceColors.Header
 										: 'transparent',
 								},
 							]}

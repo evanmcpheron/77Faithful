@@ -415,14 +415,12 @@ export const Dropdown = <T extends string = string>({
 								)}
 							</StyledDropdownTagsContainer>
 						) : (
-							<Typography tone='Disabled'>
-								{placeholder}
-							</Typography>
+							<Typography tone='Muted'>{placeholder}</Typography>
 						)
 					) : selectedSingleOption ? (
 						<Typography>{selectedSingleOption.label}</Typography>
 					) : (
-						<Typography tone='Disabled'>{placeholder}</Typography>
+						<Typography tone='Muted'>{placeholder}</Typography>
 					)}
 				</StyledDropdownValueContainer>
 
@@ -465,7 +463,7 @@ export const Dropdown = <T extends string = string>({
 							>
 								{options.length === 0 ? (
 									<StyledDropdownEmptyState>
-										<Typography tone='Disabled'>
+										<Typography tone='Muted'>
 											No options available
 										</Typography>
 									</StyledDropdownEmptyState>

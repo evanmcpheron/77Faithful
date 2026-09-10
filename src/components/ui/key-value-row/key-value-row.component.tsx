@@ -20,7 +20,7 @@ export const KeyValueRow = ({
 			<StyledKeyValueRowContent>
 				<Typography
 					size='Body2'
-					tone='Muted'
+					tone='Secondary'
 				>
 					{label}
 				</Typography>

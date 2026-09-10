@@ -3,7 +3,7 @@ import type { ViewStyle } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
-import { NeutralColors } from '@td/theme/colors';
+import { SurfaceColors } from '@td/theme/colors';
 import { withFilteredProps } from '@td/utils/styles/styles.util';
 
 const FilteredGestureHandlerRootView = withFilteredProps<
@@ -15,9 +15,9 @@ export const StyledRootGestureContainer = styled(
 	FilteredGestureHandlerRootView,
 )({
 	flex: 1,
-	backgroundColor: NeutralColors.White,
+	backgroundColor: SurfaceColors.Screen,
 });
 
 export const StackContentStyle = {
-	backgroundColor: NeutralColors.White,
+	backgroundColor: SurfaceColors.Screen,
 } satisfies ViewStyle;

@@ -1,10 +1,10 @@
 import { IconName, type TIconName } from '@td/components/ui/icon/icon.types';
-import { FeedbackColors, NeutralColors, TextColors } from '@td/theme/colors';
+import { ActionColors, NeutralColors, TextColors } from '@td/theme/colors';
 
 import type { TNavigationTabConfig, TTabMeta } from './navigation.types';
 
 export const BAR_BACKGROUND = NeutralColors.White;
-export const ACTIVE_COLOR = FeedbackColors.Error;
+export const ACTIVE_COLOR = ActionColors.PrimaryBackground;
 export const INACTIVE_COLOR = TextColors.Primary;
 export const ACTIVE_ICON_COLOR = TextColors.Inverse;
 

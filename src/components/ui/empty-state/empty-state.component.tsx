@@ -46,7 +46,7 @@ export const EmptyState = ({
 				{description ? (
 					<Typography
 						size='Body'
-						tone='Muted'
+						tone='Secondary'
 						align='center'
 					>
 						{description}

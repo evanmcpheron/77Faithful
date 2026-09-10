@@ -193,7 +193,7 @@ export const InventoryIconSearch = ({
 											align='center'
 											numberOfLines={1}
 											size={TypographySize.Body2}
-											tone='Muted'
+											tone='Secondary'
 										>
 											{inventoryIconOption.category}
 										</Typography>
@@ -220,7 +220,7 @@ export const InventoryIconSearch = ({
 					<Typography
 						align='center'
 						size={TypographySize.Body2}
-						tone='Muted'
+						tone='Secondary'
 					>
 						Try a different inventory item name.
 					</Typography>

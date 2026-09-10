@@ -18,7 +18,11 @@ const FilteredView = withFilteredProps<ViewProps, TStyledSurfaceProps>(View, [
 export const StyledSurface = styled(FilteredView)<TStyledSurfaceProps>(
 	({ padding, variant }) => ({
 		backgroundColor:
-			variant === 'Brand' ? SurfaceColors.Muted : NeutralColors.White,
+			variant === 'Brand'
+				? SurfaceColors.Accent
+				: variant === 'Muted'
+					? SurfaceColors.Muted
+					: NeutralColors.White,
 		borderColor:
 			variant === 'Muted' ? NeutralColors.Grey200 : BorderColors.Subtle,
 		borderRadius: Radius.Medium,

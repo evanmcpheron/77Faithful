@@ -2,12 +2,7 @@ import type { ComponentProps } from 'react';
 import { Pressable, PressableProps, ScrollView, View } from 'react-native';
 import styled from 'styled-components/native';
 
-import {
-	BorderColors,
-	BrandColors,
-	NeutralColors,
-	SurfaceColors,
-} from '@td/theme/colors';
+import { BorderColors, NeutralColors, SurfaceColors } from '@td/theme/colors';
 import { Radius } from '@td/theme/radius';
 import { Shadows } from '@td/theme/shadows';
 import { Spacing } from '@td/theme/spacing';
@@ -53,7 +48,7 @@ export const StyledDropdownTrigger = styled(
 	...Shadows.Card,
 	alignItems: 'center',
 	backgroundColor: NeutralColors.White,
-	borderColor: isOpen ? BrandColors.Primary : BorderColors.Default,
+	borderColor: isOpen ? BorderColors.Focus : BorderColors.Control,
 	borderRadius: Radius.Medium,
 	borderWidth: isOpen ? 2 : 1,
 	flexDirection: 'row',
@@ -126,7 +121,7 @@ export const StyledDropdownCheckboxOptionRow = styled(FilteredView)({
 export const StyledDropdownSingleOptionRow = styled(
 	FilteredDropdownSingleOptionPressable,
 )<IDropdownSingleOptionRowStyleProps>(({ isSelected }) => ({
-	backgroundColor: isSelected ? SurfaceColors.Muted : 'transparent',
+	backgroundColor: isSelected ? SurfaceColors.Accent : 'transparent',
 	borderRadius: Radius.Medium,
 	justifyContent: 'center',
 	minHeight: Spacing.XXLarge,

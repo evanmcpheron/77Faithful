@@ -13,15 +13,15 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./src/assets/images/brand/adaptive-icon-foreground.png",
-				"backgroundColor": "#ffffff"
+				"foregroundImage": "./src/assets/images/brand/app-icon.png",
+				"backgroundColor": "#071730"
 			},
 			"predictiveBackGestureEnabled": false
 		},
 		"web": {
 			"bundler": "metro",
 			"output": "static",
-			"favicon": "./src/assets/images/brand/light-logo.png"
+			"favicon": "./src/assets/images/brand/app-icon.png"
 		},
 		"plugins": [
 			"expo-router",

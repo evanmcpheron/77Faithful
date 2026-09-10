@@ -110,7 +110,7 @@ const getButtonBorderColor = ({
 	}
 
 	if (tone === 'Neutral') {
-		return BorderColors.Muted;
+		return BorderColors.Control;
 	}
 
 	if (tone === 'Error') {

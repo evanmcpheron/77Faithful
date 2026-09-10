@@ -3,6 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { AppIcon } from '@td/components/ui/icon/icon.component';
 import { IconSizes } from '@td/theme/icon-sizes';
 import {
+	TypographyColors,
 	TypographySize,
 	TypographyTone,
 	TypographyWeight,
@@ -24,16 +25,18 @@ const getButtonTypographyTone = ({
 	if (variant === ButtonVariant.Link) {
 		return tone === ComponentTone.Inverse
 			? TypographyTone.Inverse
-			: TypographyTone.Error;
+			: TypographyTone.Brand;
 	}
 
 	if (variant === ButtonVariant.Solid) {
-		return tone === ComponentTone.Warning ||
-			tone === ComponentTone.Neutral ||
-			tone === ComponentTone.Brand
+		return tone === ComponentTone.Neutral
 			? TypographyTone.Primary
 			: TypographyTone.Inverse;
 	}
+	if (variant === ButtonVariant.Inverse) {
+		return TypographyTone.Brand;
+	}
+
 	if (tone === ComponentTone.Inverse) {
 		return TypographyTone.Inverse;
 	}
@@ -63,13 +66,18 @@ export const TurndownButton = ({
 	const typographyTone = getButtonTypographyTone({ tone, variant });
 	const isDisabled = disabled || loading;
 	const iconTone =
-		typographyTone === ComponentTone.Brand
-			? tone
+		typographyTone === TypographyTone.Primary
+			? ComponentTone.Neutral
 			: (typographyTone as TComponentTone);
 
 	const content = (
 		<>
-			{loading ? <ActivityIndicator size='small' /> : null}
+			{loading ? (
+				<ActivityIndicator
+					size='small'
+					color={TypographyColors[typographyTone]}
+				/>
+			) : null}
 
 			{!loading && leadingIconName ? (
 				<AppIcon

@@ -42,7 +42,7 @@ const getBadgeBackgroundColor = ({
 	if (tone === 'Inverse') return SurfaceColors.Inverse;
 	if (tone === 'Neutral') return NeutralColors.Grey100;
 
-	return SurfaceColors.Muted;
+	return SurfaceColors.Accent;
 };
 
 const getBadgeBorderColor = (tone: TComponentTone): string => {

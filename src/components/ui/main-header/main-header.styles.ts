@@ -5,14 +5,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components/native';
 
-import { BrandColors, SurfaceColors } from '@td/theme/colors';
+import { SurfaceColors } from '@td/theme/colors';
 import { Radius } from '@td/theme/radius';
 import { Shadows } from '@td/theme/shadows';
 import { Spacing } from '@td/theme/spacing';
-import {
-	hexToRgbaString,
-	withFilteredProps,
-} from '@td/utils/styles/styles.util';
+import { withFilteredProps } from '@td/utils/styles/styles.util';
 
 export const MainHeaderLayout = {
 	HeaderBackgroundHeight: 175,
@@ -83,8 +80,8 @@ export const StyledHeaderBackground = styled(FilteredAnimatedView).attrs({
 );
 
 const HeaderGradientColors = [
-	hexToRgbaString(SurfaceColors.HeaderGradientStart, 0.16),
-	'transparent',
+	SurfaceColors.HeaderGradientStart,
+	SurfaceColors.HeaderGradientEnd,
 ] as const;
 
 const HeaderGradientLocations = [0, 1] as const;
@@ -114,7 +111,7 @@ export const StyledHeroCard = styled.View.attrs({
 	style: Platform.OS !== 'web' ? { elevation: 8 } : undefined,
 })({
 	...Shadows.Card,
-	backgroundColor: BrandColors.Primary,
+	backgroundColor: SurfaceColors.Accent,
 	borderRadius: Radius.XLarge,
 	bottom: 0,
 	height: MainHeaderLayout.HeroCardHeight,

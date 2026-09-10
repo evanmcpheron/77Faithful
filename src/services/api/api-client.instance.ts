@@ -1,5 +1,4 @@
 import { ApiClientService } from './api-client.service';
-import type { IApiClientAuthConfig } from './api.types';
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_BASE_URL;
 
@@ -9,11 +8,5 @@ if (!apiBaseUrl) {
 
 export const apiClient = new ApiClientService({
 	baseUrl: apiBaseUrl,
-	withCredentials: true,
+	withCredentials: false,
 });
-
-export const configureApiClientAuth = (
-	authConfig: IApiClientAuthConfig,
-): void => {
-	apiClient.configureAuth(authConfig);
-};

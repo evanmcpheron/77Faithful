@@ -130,10 +130,7 @@ class CompanyApiService implements ICompanyApiService {
 	): Promise<IValidateCompanyInvitationResponse> => {
 		const response = await apiClient.get<
 			TApiResponse<IValidateCompanyInvitationResponse>
-		>(`/companies/invitations/${token}/validate`, {
-			skipAuth: true,
-			skipRefresh: true,
-		});
+		>(`/companies/invitations/${token}/validate`);
 
 		return response.data;
 	};

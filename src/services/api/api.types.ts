@@ -1,44 +1,16 @@
 import type { AxiosRequestConfig } from 'axios';
 
-import type {
-	IApiSuccessResponse,
-	ISetAuthSessionParams,
-	THttpMethod,
-} from '@turndown/library';
+import type { IApiSuccessResponse, THttpMethod } from '@turndown/library';
 
-export interface IApiRequestControlConfig {
-	/**
-	 * Skips attaching the access token for public endpoints.
-	 */
-	skipAuth?: boolean;
-
-	/**
-	 * Skips refresh/retry behavior. Use this for /auth/refresh.
-	 */
-	skipRefresh?: boolean;
-
-	/**
-	 * Internal guard to prevent infinite unauthorized retry loops.
-	 */
-	_retry?: boolean;
-}
-
-export interface IApiRequestOptions<TBody = unknown>
-	extends AxiosRequestConfig<TBody>, IApiRequestControlConfig {
+export interface IApiRequestOptions<
+	TBody = unknown,
+> extends AxiosRequestConfig<TBody> {
 	method?: THttpMethod;
 	path: string;
 	body?: TBody;
 }
 
-export interface IApiRequestConfig<TBody = unknown>
-	extends AxiosRequestConfig<TBody>, IApiRequestControlConfig {}
-
-export interface IApiClientAuthConfig {
-	getAccessToken: () => string | null | Promise<string | null>;
-	refreshSession: () => Promise<void>;
-	setSession: (session: ISetAuthSessionParams) => void;
-	clearSession: () => void | Promise<void>;
-}
+export type IApiRequestConfig<TBody = unknown> = AxiosRequestConfig<TBody>;
 
 export interface IApiClientConfig {
 	baseUrl: string;
@@ -47,8 +19,6 @@ export interface IApiClientConfig {
 }
 
 export interface IApiClient {
-	configureAuth: (authConfig: IApiClientAuthConfig) => void;
-
 	request: <TResponse, TBody = unknown>(
 		options: IApiRequestOptions<TBody>,
 	) => Promise<TResponse>;

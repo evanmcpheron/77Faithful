@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import {
 	initialWindowMetrics,
 	SafeAreaProvider,
@@ -10,16 +10,8 @@ import { NotoSansTC_500Medium } from '@expo-google-fonts/noto-sans-tc/500Medium'
 import { NotoSansTC_600SemiBold } from '@expo-google-fonts/noto-sans-tc/600SemiBold';
 import { NotoSansTC_700Bold } from '@expo-google-fonts/noto-sans-tc/700Bold';
 import { useFonts } from '@expo-google-fonts/noto-sans-tc/useFonts';
-import {
-	Stack,
-	usePathname,
-	useRootNavigationState,
-	useRouter,
-} from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-
-import { useAuth } from '@td/providers/auth/auth.hook';
-import { AuthProvider } from '@td/providers/auth/auth.provider';
 
 import {
 	StackContentStyle,
@@ -50,7 +42,7 @@ const RootLayout = () => {
 	});
 
 	useEffect(() => {
-		if (fontsLoaded && storybookEnabled) {
+		if (fontsLoaded) {
 			SplashScreen.hideAsync();
 		}
 	}, [fontsLoaded]);
@@ -70,52 +62,16 @@ const RootLayout = () => {
 	}
 
 	return (
-		<AuthProvider>
-			<SafeAreaProvider initialMetrics={initialWindowMetrics}>
-				<StyledRootGestureContainer>
-					<StackLayout />
-					<NotificationHost />
-				</StyledRootGestureContainer>
-			</SafeAreaProvider>
-		</AuthProvider>
+		<SafeAreaProvider initialMetrics={initialWindowMetrics}>
+			<StyledRootGestureContainer>
+				<StackLayout />
+				<NotificationHost />
+			</StyledRootGestureContainer>
+		</SafeAreaProvider>
 	);
 };
 
 const StackLayout = () => {
-	const { isAuthenticated, isInitializingSession } = useAuth();
-	const pathname = usePathname();
-	const router = useRouter();
-	const navigationState = useRootNavigationState();
-	const hasResolvedInitialSession = useRef(false);
-
-	useEffect(() => {
-		if (isInitializingSession || !navigationState?.key) {
-			return;
-		}
-
-		SplashScreen.hideAsync();
-
-		if (hasResolvedInitialSession.current) {
-			return;
-		}
-
-		hasResolvedInitialSession.current = true;
-
-		if (isAuthenticated && pathname === '/') {
-			router.replace('/today');
-		}
-	}, [
-		isAuthenticated,
-		isInitializingSession,
-		navigationState?.key,
-		pathname,
-		router,
-	]);
-
-	if (isInitializingSession) {
-		return null;
-	}
-
 	return (
 		<Stack
 			screenOptions={{

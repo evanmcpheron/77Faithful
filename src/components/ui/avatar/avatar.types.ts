@@ -16,6 +16,7 @@ export type TAvatarSize = (typeof AvatarSize)[keyof typeof AvatarSize];
 
 export interface IAvatarProps {
 	imageUrl?: string;
+	initials?: string;
 	accessibilityLabel?: string;
 	size?: TAvatarSize;
 	variant?: TAvatarVariant;

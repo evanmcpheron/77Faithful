@@ -8,17 +8,11 @@ import { Spacing } from '@td/theme/spacing';
 
 import { Divider } from '@td/components/ui/divider/divider.component';
 import { IconButton } from '@td/components/ui/icon-button/icon-button.component';
-import { useRouter } from 'expo-router';
-import { useRef } from 'react';
 import { StyledDividerRow, StyledSocialButtonsRow } from './login.styles';
 
-import { TSubmitWithIdRef } from '@td/types/global.types';
 import { LoginForm } from '../forms/login/login.form';
 
 export const LoginScreen = () => {
-	const router = useRouter();
-	const signInFormRef = useRef<TSubmitWithIdRef>(null);
-
 	return (
 		<View testID='auth-login-screen'>
 			<Typography size='Display'>Welcome Back</Typography>
@@ -27,27 +21,13 @@ export const LoginScreen = () => {
 				Enter your credentials to continue
 			</Typography>
 			<Spacer size={Spacing.Medium} />
-			<LoginForm ref={signInFormRef} />
+			<LoginForm />
 			<Spacer size={Spacing.Large} />
 
 			<TurndownButton
 				testID='auth-login-submit-button'
-				onPress={() => {
-					if (signInFormRef.current) {
-						signInFormRef.current.submitData(
-							(success: boolean, id?: string) => {
-								if (id) {
-									router.replace(`/(app)/(admin)/dashboard`);
-								} else {
-									router.replace(
-										'/(app)/onboarding/create-company',
-									);
-								}
-								console.log('success: ', success);
-							},
-						);
-					}
-				}}
+				disabled
+				onPress={() => {}}
 			>
 				Login
 			</TurndownButton>
@@ -62,25 +42,22 @@ export const LoginScreen = () => {
 					name={IconName.Google}
 					hasBackground
 					accessibilityLabel={'google-login'}
-					onPress={() => {
-						console.log('LOG IN WITH FACEBOOK');
-					}}
+					disabled
+					onPress={() => {}}
 				/>
 				<IconButton
 					name={IconName.Facebook}
 					hasBackground
 					accessibilityLabel={'facebook-login'}
-					onPress={() => {
-						console.log('LOG IN WITH FACEBOOK');
-					}}
+					disabled
+					onPress={() => {}}
 				/>
 				<IconButton
 					name={IconName.Apple}
 					hasBackground
 					accessibilityLabel={'apple-login'}
-					onPress={function (): void {
-						console.log('LOG IN WITH APPLE');
-					}}
+					disabled
+					onPress={() => {}}
 				/>
 			</StyledSocialButtonsRow>
 		</View>

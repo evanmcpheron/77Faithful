@@ -1,34 +1,20 @@
 import { HTTP_METHOD } from '@turndown/library';
-import type {
-	AxiosError,
-	AxiosInstance,
-	AxiosResponse,
-	InternalAxiosRequestConfig,
-} from 'axios';
-import axios, { AxiosHeaders } from 'axios';
+import type { AxiosInstance } from 'axios';
+import axios from 'axios';
 import type { IApiClientErrorParams } from './api-client.error';
 import { ApiClientError } from './api-client.error';
 import type {
 	IApiClient,
-	IApiClientAuthConfig,
 	IApiClientConfig,
 	IApiRequestConfig,
-	IApiRequestControlConfig,
 	IApiRequestOptions,
 } from './api.types';
 
 import type { IApiErrorResponse, TApiErrorDetails } from '@turndown/library';
 
 const DefaultTimeoutMs = 15000;
-const UnauthorizedStatusCode = 401;
-
-type TApiInternalRequestConfig<TBody = unknown> =
-	InternalAxiosRequestConfig<TBody> & IApiRequestControlConfig;
-
 export class ApiClientService implements IApiClient {
 	private readonly axiosInstance: AxiosInstance;
-	private authConfig: IApiClientAuthConfig | null = null;
-	private refreshPromise: Promise<void> | null = null;
 
 	constructor(config: IApiClientConfig);
 	constructor(baseUrl: string);
@@ -43,10 +29,6 @@ export class ApiClientService implements IApiClient {
 
 		this.setupInterceptors();
 	}
-
-	configureAuth = (authConfig: IApiClientAuthConfig): void => {
-		this.authConfig = authConfig;
-	};
 
 	request = async <TResponse, TBody = unknown>({
 		path,
@@ -132,133 +114,22 @@ export class ApiClientService implements IApiClient {
 			return {
 				baseUrl: configOrBaseUrl,
 				timeoutMs: DefaultTimeoutMs,
-				withCredentials: true,
+				withCredentials: false,
 			};
 		}
 
 		return {
 			baseUrl: configOrBaseUrl.baseUrl,
 			timeoutMs: configOrBaseUrl.timeoutMs ?? DefaultTimeoutMs,
-			withCredentials: configOrBaseUrl.withCredentials ?? true,
+			withCredentials: configOrBaseUrl.withCredentials ?? false,
 		};
 	};
 
 	private setupInterceptors = (): void => {
-		this.axiosInstance.interceptors.request.use(this.handleRequest);
-
 		this.axiosInstance.interceptors.response.use(
 			(response) => response,
-			this.handleResponseError,
+			(error: unknown) => Promise.reject(this.normalizeError(error)),
 		);
-	};
-
-	private handleRequest = async <TBody = unknown>(
-		config: InternalAxiosRequestConfig<TBody>,
-	): Promise<InternalAxiosRequestConfig<TBody>> => {
-		const requestConfig = config as TApiInternalRequestConfig<TBody>;
-
-		if (requestConfig.skipAuth || this.authConfig === null) {
-			return config;
-		}
-
-		const accessToken = await this.authConfig.getAccessToken();
-
-		if (!accessToken) {
-			return config;
-		}
-
-		const requestHeaders = AxiosHeaders.from(config.headers);
-		requestHeaders.set('Authorization', `Bearer ${accessToken}`);
-
-		config.headers = requestHeaders;
-
-		return config;
-	};
-
-	private handleResponseError = async (
-		error: AxiosError,
-	): Promise<AxiosResponse> => {
-		const originalRequest = error.config as
-			TApiInternalRequestConfig | undefined;
-
-		if (!this.shouldRefreshSession(error, originalRequest)) {
-			throw this.normalizeError(error);
-		}
-
-		try {
-			await this.handleUnauthorizedRequest();
-		} catch (refreshError) {
-			await this.authConfig?.clearSession();
-
-			throw this.normalizeError(refreshError);
-		}
-
-		if (originalRequest === undefined) {
-			throw this.normalizeError(error);
-		}
-
-		originalRequest._retry = true;
-		await this.attachAccessToken(originalRequest);
-
-		return this.axiosInstance(originalRequest);
-	};
-
-	private shouldRefreshSession = (
-		error: AxiosError,
-		originalRequest: TApiInternalRequestConfig | undefined,
-	): boolean => {
-		if (this.authConfig === null) {
-			return false;
-		}
-
-		if (originalRequest === undefined) {
-			return false;
-		}
-
-		if (originalRequest._retry) {
-			return false;
-		}
-
-		if (originalRequest.skipRefresh) {
-			return false;
-		}
-
-		return error.response?.status === UnauthorizedStatusCode;
-	};
-
-	private handleUnauthorizedRequest = async (): Promise<void> => {
-		if (this.authConfig === null) {
-			throw new ApiClientError({
-				message: 'Auth configuration is missing.',
-			});
-		}
-
-		if (this.refreshPromise !== null) {
-			return this.refreshPromise;
-		}
-
-		const refreshPromise = this.authConfig.refreshSession().finally(() => {
-			this.refreshPromise = null;
-		});
-
-		this.refreshPromise = refreshPromise;
-
-		return refreshPromise;
-	};
-
-	private attachAccessToken = async (
-		config: TApiInternalRequestConfig,
-	): Promise<void> => {
-		const accessToken = await this.authConfig?.getAccessToken();
-
-		if (!accessToken) {
-			return;
-		}
-
-		const requestHeaders = AxiosHeaders.from(config.headers);
-		requestHeaders.set('Authorization', `Bearer ${accessToken}`);
-
-		config.headers = requestHeaders;
 	};
 
 	private normalizeError = (error: unknown): ApiClientError => {

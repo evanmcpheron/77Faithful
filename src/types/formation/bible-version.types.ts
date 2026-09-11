@@ -6,14 +6,14 @@ import type {
 export const BibleVersionId = {
 	AmplifiedBible: 'Amp',
 	GoodNewsTranslation: 'Gnt',
-	NewAmericanStandardBible2020: 'Nasb2020', // mini verses done
-	NewInternationalVersion: 'Niv', // mini verse done
-	NewLivingTranslation: 'Nlt', // mini verses done
-	TheMessage: 'Msg', // mini verses done
-	KingJamesVersion: 'Kjv', // mini vese done
-	NewKingJamesVersion: 'Nkjv', //mini verse done
-	ChristianStandardBible: 'Csb', // mini verses done
-	WorldEnglishBible: 'Web', // mini verses done
+	NewAmericanStandardBible2020: 'Nasb2020',
+	NewInternationalVersion: 'Niv',
+	NewLivingTranslation: 'Nlt',
+	TheMessage: 'Msg',
+	KingJamesVersion: 'Kjv',
+	NewKingJamesVersion: 'Nkjv',
+	ChristianStandardBible: 'Csb',
+	WorldEnglishBible: 'Web',
 } as const;
 
 export type TBibleVersionId =

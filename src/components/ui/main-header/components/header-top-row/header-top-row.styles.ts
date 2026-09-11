@@ -1,10 +1,13 @@
 import { BlurView } from 'expo-blur';
 import { GlassView } from 'expo-glass-effect';
+import { StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
+import { NeutralColors } from '@td/theme/colors';
 import { Radius } from '@td/theme/radius';
+import { Shadows } from '@td/theme/shadows';
 import { Spacing } from '@td/theme/spacing';
 
 export const StyledHeaderTopRow = styled(SafeAreaView).attrs({
@@ -17,7 +20,14 @@ export const StyledHeaderTopRow = styled(SafeAreaView).attrs({
 	zIndex: 3,
 });
 
+export const StyledHeaderShadow = styled.View({
+	...Shadows.Subtle,
+	backgroundColor: NeutralColors.Grey200,
+	borderRadius: Radius.XLarge,
+});
+
 export const StyledHeaderChrome = styled.View({
+	backgroundColor: NeutralColors.Grey200,
 	borderRadius: Radius.XLarge,
 	overflow: 'hidden',
 	position: 'relative',
@@ -62,6 +72,15 @@ export const StyledHeaderBrandRow = styled.View({
 	alignItems: 'center',
 	flexDirection: 'row',
 	gap: Spacing.XSmall,
+});
+
+export const StyledHeaderProgress = styled.View({
+	borderColor: NeutralColors.Black,
+	borderWidth: StyleSheet.hairlineWidth,
+	borderRadius: Radius.Full,
+	overflow: 'hidden',
+	width: Spacing.XXXLarge,
+	flexShrink: 1,
 });
 
 export const StyledSearchInputSlot = styled.View({

@@ -14,13 +14,13 @@ import {
 
 import { Input } from '@td/components/form/input/input.component';
 import { Avatar } from '@td/components/ui/avatar/avatar.component';
-import { ButtonVariant } from '@td/components/ui/button/button.types';
 import { IconButton } from '@td/components/ui/icon-button/icon-button.component';
 import { IconButtonVariant } from '@td/components/ui/icon-button/icon-button.types';
 import { AppIcon } from '@td/components/ui/icon/icon.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
+import { ProgressBar } from '@td/components/ui/progress-bar/progress-bar.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
-import { SurfaceColors } from '@td/theme/colors';
+import { NeutralColors } from '@td/theme/colors';
 import { IconSizes, IconStrokeWidths } from '@td/theme/icon-sizes';
 import {
 	TypographySize,
@@ -36,6 +36,8 @@ import {
 	StyledHeaderFallbackBlur,
 	StyledHeaderFallbackOverlay,
 	StyledHeaderGlassBackground,
+	StyledHeaderProgress,
+	StyledHeaderShadow,
 	StyledHeaderTopRow,
 	StyledHeaderTopRowContent,
 	StyledSearchInputSlot,
@@ -46,17 +48,15 @@ const SCROLL_THRESHOLD = 5;
 const GLASS_ANIMATION_DURATION_SECONDS = 0.22;
 
 interface IHeaderActionButtonProps {
-	hasGradientHeader: boolean;
-	canGoBack: boolean;
 	notifications: unknown[];
+	showNotifications: boolean;
 	onAddPress?: () => void;
 	onEditPress?: () => void;
 }
 
 const HeaderActionButton = ({
-	hasGradientHeader,
-	canGoBack,
 	notifications,
+	showNotifications,
 	onAddPress,
 	onEditPress,
 }: IHeaderActionButtonProps) => {
@@ -90,6 +90,8 @@ const HeaderActionButton = ({
 		);
 	}
 
+	if (!showNotifications) return null;
+
 	return (
 		<IconButton
 			name={
@@ -98,18 +100,10 @@ const HeaderActionButton = ({
 					: IconName.Bell
 			}
 			hasBackground
-			variant={
-				hasGradientHeader || canGoBack
-					? IconButtonVariant.Soft
-					: ButtonVariant.Ghost
-			}
+			variant={IconButtonVariant.Soft}
 			iconSize={IconSizes.Large}
 			accessibilityLabel='Notifications'
-			tone={
-				hasGradientHeader || canGoBack
-					? ComponentTone.Neutral
-					: ComponentTone.Inverse
-			}
+			tone={ComponentTone.Neutral}
 			onPress={(): void => {
 				console.log('Notification Pressed');
 			}}
@@ -118,9 +112,11 @@ const HeaderActionButton = ({
 };
 
 export const HeaderTopRow = ({
-	hasGradientHeader = false,
 	canGoBack = false,
+	onBackPress,
+	showNotifications = true,
 	title,
+	progress,
 	titleIcon,
 	hasLogo = false,
 	searchInput,
@@ -171,97 +167,100 @@ export const HeaderTopRow = ({
 
 	return (
 		<StyledHeaderTopRow>
-			<StyledHeaderChrome>
-				{canUseLiquidGlass ? (
-					<StyledHeaderGlassBackground
-						colorScheme='light'
-						glassEffectStyle={glassEffectStyle}
-						isInteractive
-						style={{
-							backgroundColor: isGlassVisible
-								? SurfaceColors.Header
-								: 'transparent',
-						}}
-					/>
-				) : (
-					<>
-						{shouldRenderFallbackBlur ? (
-							<StyledHeaderFallbackBlur
-								intensity={18}
-								tint='light'
-								style={{ opacity: isGlassVisible ? 1 : 0 }}
-							/>
-						) : null}
-						<StyledHeaderFallbackOverlay
-							style={[
-								fallbackAnimatedStyle,
-								{
-									backgroundColor: isGlassVisible
-										? SurfaceColors.Header
-										: 'transparent',
-								},
-							]}
-						/>
-					</>
-				)}
-
-				<StyledHeaderTopRowContent>
-					{canGoBack ? (
-						<IconButton
-							name={IconName.ArrowLeft}
-							variant={IconButtonVariant.Soft}
-							hasBackground
-							strokeWidth={IconStrokeWidths.Regular}
-							accessibilityLabel='back button'
-							onPress={(): void => {
-								router.back();
+			<StyledHeaderShadow>
+				<StyledHeaderChrome>
+					{canUseLiquidGlass ? (
+						<StyledHeaderGlassBackground
+							colorScheme='light'
+							glassEffectStyle={glassEffectStyle}
+							isInteractive
+							style={{
+								backgroundColor: isGlassVisible
+									? NeutralColors.Grey200
+									: 'transparent',
 							}}
 						/>
 					) : (
-						<Avatar />
+						<>
+							{shouldRenderFallbackBlur ? (
+								<StyledHeaderFallbackBlur
+									intensity={18}
+									tint='light'
+									style={{ opacity: isGlassVisible ? 1 : 0 }}
+								/>
+							) : null}
+							<StyledHeaderFallbackOverlay
+								style={[
+									fallbackAnimatedStyle,
+									{
+										backgroundColor: isGlassVisible
+											? NeutralColors.Grey200
+											: 'transparent',
+									},
+								]}
+							/>
+						</>
 					)}
 
-					{hasLogo ? (
-						<AppIcon
-							name={IconName.LightLogo}
-							size={IconSizes.XXLarge}
+					<StyledHeaderTopRowContent>
+						{canGoBack ? (
+							<IconButton
+								name={IconName.ArrowLeft}
+								variant={IconButtonVariant.Soft}
+								hasBackground
+								strokeWidth={IconStrokeWidths.Regular}
+								accessibilityLabel='back button'
+								onPress={(): void => {
+									if (onBackPress) onBackPress();
+									else router.back();
+								}}
+							/>
+						) : (
+							<Avatar />
+						)}
+
+						{hasLogo ? (
+							<AppIcon
+								name={IconName.DarkLogo}
+								size={IconSizes.XXLarge}
+							/>
+						) : (
+							(title || titleIcon) && (
+								<StyledHeaderBrandRow>
+									{titleIcon && (
+										<AppIcon
+											tone={ComponentTone.Brand}
+											name={titleIcon}
+										/>
+									)}
+
+									{progress && (
+										<StyledHeaderProgress>
+											<ProgressBar {...progress} />
+										</StyledHeaderProgress>
+									)}
+									{title && (
+										<Typography
+											size={TypographySize.H1}
+											tone={TypographyTone.Primary}
+											weight={TypographyWeight.Bold}
+										>
+											{title}
+										</Typography>
+									)}
+								</StyledHeaderBrandRow>
+							)
+						)}
+
+						<HeaderActionButton
+							notifications={notifications}
+							showNotifications={showNotifications}
+							onAddPress={onAddPress}
+							onEditPress={onEditPress}
 						/>
-					) : (
-						(title || titleIcon) && (
-							<StyledHeaderBrandRow>
-								{titleIcon && (
-									<AppIcon
-										tone={ComponentTone.Brand}
-										name={titleIcon}
-									/>
-								)}
-
-								{title && (
-									<Typography
-										size={TypographySize.H1}
-										tone={
-											hasGradientHeader && !isGlassVisible
-												? TypographyTone.Primary
-												: TypographyTone.Inverse
-										}
-										weight={TypographyWeight.Bold}
-									>
-										{title}
-									</Typography>
-								)}
-							</StyledHeaderBrandRow>
-						)
-					)}
-
-					<HeaderActionButton
-						hasGradientHeader={hasGradientHeader}
-						canGoBack={canGoBack}
-						notifications={notifications}
-						onAddPress={onAddPress}
-						onEditPress={onEditPress}
-					/>
-				</StyledHeaderTopRowContent>
-			</StyledHeaderChrome>
+					</StyledHeaderTopRowContent>
+				</StyledHeaderChrome>
+			</StyledHeaderShadow>
 
 			{searchInput ? (
 				<StyledSearchInputSlot>

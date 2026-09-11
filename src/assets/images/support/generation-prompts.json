@@ -1,0 +1,13 @@
+{
+	"method": "Built-in image_gen",
+	"assets": [
+		{
+			"file": "watercolor-footer.png",
+			"prompt": "Use case: illustration-story. Asset type: wide decorative footer artwork for a quiet Christian mobile app, 1536x1024. Create a delicate watercolor illustration with genuinely transparent background: overlapping low rolling hills along the bottom edge in very pale sage, warm gray-green and muted cream, translucent washes, fine cold-pressed paper pigment texture within the painted shapes. One slender olive branch rises gracefully from bottom right to halfway up right edge with elongated sage leaves. Upper half mostly completely transparent negative space, softly undulating organic hill edges. Calm understated botanical editorial artwork. No text, lettering, UI, border, icons or watermark. Artwork reaches bottom and side edges. Designed to overlay a warm off-white page."
+		},
+		{
+			"file": "olive-landscape.png",
+			"prompt": "Use case: photorealistic-natural. Asset type: landscape mobile app hero photograph, 1536x1024. Quiet Mediterranean olive hillside at early morning. Detailed olive branches and dark sage leaves frame left third, distant softly blurred layered mountains across center, warm ivory mist and pale golden sky open on right half. Natural editorial photography, restrained sage and warm cream palette, soft atmospheric light, no people. Top third low-detail light sky suitable for navigation overlay. No text, letters, logos, watermark, UI, or border. Peaceful grounded mood."
+		}
+	]
+}

@@ -23,8 +23,9 @@ import {
 	StyledAuthHeaderContent,
 	StyledAuthHeaderSafeArea,
 } from '@td/features/auth/screens/auth.styles';
+import { setupPractices } from '@td/features/journey-setup/journey-setup-content';
 import { getPracticeHref } from '@td/features/journey/journey-practice-route';
-import { SurfaceColors } from '@td/theme/colors';
+import { FeedbackColors, SurfaceColors } from '@td/theme/colors';
 import { Layout } from '@td/theme/layout';
 import { Spacing } from '@td/theme/spacing';
 import { FormationStructure } from '@td/types/formation/formation-course.types';
@@ -55,9 +56,27 @@ export const TodayScreen = () => {
 	}));
 	const { data, session, practices, error, refresh } = useToday();
 	const [bodyHeight, setBodyHeight] = useState(0);
+	// Temporary review list: unassigned practices open read-only guidance.
+	const reviewPractices = [
+		...practices.map((practice) => ({ ...practice, preview: false })),
+		...setupPractices
+			.filter(
+				(definition) =>
+					!practices.some(
+						(practice) => practice.id === definition.practiceId,
+					),
+			)
+			.map((definition) => ({
+				id: definition.practiceId,
+				title: definition.name,
+				description: definition.purpose,
+				completion: null,
+				preview: true,
+			})),
+	];
 	const completedCount = practices.filter(
 		(practice) =>
-			practice.completion.status === PracticeCompletionStatus.Complete,
+			practice.completion?.status === PracticeCompletionStatus.Complete,
 	).length;
 	const hour = new Date().getHours();
 	const greeting =
@@ -254,21 +273,49 @@ export const TodayScreen = () => {
 									complete
 								</Typography>
 							</Row>
-							{practices.map((practice) => (
+							<Typography tone='Muted'>
+								Temporary review: all practices are shown.
+								Unselected practices open as previews.
+							</Typography>
+							{reviewPractices.map((practice) => (
 								<Link
 									key={practice.id}
-									href={getPracticeHref(
-										session.day.journeyId,
-										session.day.dayNumber,
-										practice.id,
-									)}
+									href={
+										practice.preview
+											? {
+													pathname:
+														'/journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]',
+													params: {
+														journeyId:
+															session.day
+																.journeyId,
+														dayNumber: String(
+															session.day
+																.dayNumber,
+														),
+														practiceId: practice.id,
+														preview: '1',
+													},
+												}
+											: getPracticeHref(
+													session.day.journeyId,
+													session.day.dayNumber,
+													practice.id,
+												)
+									}
 									asChild
 								>
 									<StyledCard
 										padding={Spacing.Small}
 										tone='Neutral'
 										variant='Outlined'
-										accessibilityLabel={`${practice.title}${practice.completion.status === PracticeCompletionStatus.Complete ? ', complete' : ''}`}
+										style={
+											practice.completion?.status ===
+											PracticeCompletionStatus.Complete
+												? styles.completedPractice
+												: undefined
+										}
+										accessibilityLabel={`${practice.title}${practice.completion?.status === PracticeCompletionStatus.Complete ? ', complete' : ''}`}
 									>
 										<Row
 											fillChildren={false}
@@ -284,6 +331,9 @@ export const TodayScreen = () => {
 													weight='Semibold'
 												>
 													{practice.title}
+													{practice.preview
+														? ' (Preview)'
+														: ''}
 												</Typography>
 												<Typography
 													tone='Muted'
@@ -293,9 +343,9 @@ export const TodayScreen = () => {
 												</Typography>
 											</View>
 											<Typography tone='Muted'>
-												{practice.completion.status ===
+												{practice.completion?.status ===
 												PracticeCompletionStatus.Complete
-													? 'Complete'
+													? '✓'
 													: '›'}
 											</Typography>
 										</Row>
@@ -367,6 +417,9 @@ export const TodayScreen = () => {
 };
 
 const styles = StyleSheet.create({
+	completedPractice: {
+		backgroundColor: FeedbackColors.SuccessMuted,
+	},
 	greeting: { width: '100%' },
 	header: {
 		// Account for the body panel’s existing negative top margin.

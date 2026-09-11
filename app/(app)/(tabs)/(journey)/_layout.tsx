@@ -8,7 +8,12 @@ const JourneyLayout = () => {
 	const router = useRouter();
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
-			{['scripture', 'prayer', 'reflection'].map((practice) => (
+			{[
+				'scripture',
+				'prayer',
+				'reflection',
+				'practices/[practiceId]',
+			].map((practice) => (
 				<Stack.Screen
 					key={practice}
 					name={`journeys/[journeyId]/days/[dayNumber]/${practice}`}
@@ -41,7 +46,9 @@ const JourneyLayout = () => {
 												? 'Pray'
 												: practice === 'reflection'
 													? 'Reflect'
-													: 'Scripture'
+													: practice === 'scripture'
+														? 'Scripture'
+														: 'Chosen Practice'
 									}
 								/>
 							),

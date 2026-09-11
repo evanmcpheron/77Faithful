@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { TurndownScrollScreen } from '@td/components/layout/screen/screen.component';
+import { TurndownButton } from '@td/components/ui/button/button.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
 import { NavigationActionList } from '@td/components/ui/navigation-action-list/navigation-action-list.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
@@ -27,7 +28,9 @@ import { SETTINGS_PHOTO_HEIGHT, styles } from './settings.styles';
 
 export const SettingsScreen = () => {
 	const router = useRouter();
-	const { account } = useAuth();
+	const { account, signOut } = useAuth();
+	const [isSigningOut, setIsSigningOut] = useState(false);
+	const [signOutError, setSignOutError] = useState<string | null>(null);
 	const [viewportHeight, setViewportHeight] = useState(0);
 	const [headerHeight, setHeaderHeight] = useState(styles.header.minHeight);
 	const scrollOffset = useSharedValue(0);
@@ -39,6 +42,19 @@ export const SettingsScreen = () => {
 	const titleAnimatedStyle = useAnimatedStyle(() => ({
 		transform: [{ translateY: Math.min(scrollOffset.value, 0) }],
 	}));
+
+	const handleSignOut = async () => {
+		if (isSigningOut) return;
+		setIsSigningOut(true);
+		setSignOutError(null);
+		try {
+			await signOut();
+		} catch {
+			setSignOutError('We could not sign you out. Please try again.');
+		} finally {
+			setIsSigningOut(false);
+		}
+	};
 
 	return (
 		<View
@@ -210,6 +226,21 @@ export const SettingsScreen = () => {
 									},
 								]}
 							/>
+							<NavigationActionList
+								actions={{
+									id: 'support',
+									title: 'Support 77Faithful',
+									iconName: IconName.Note,
+									onPress: () => router.push('/support'),
+								}}
+							/>
+							<Typography
+								size='Body2'
+								tone='Secondary'
+								weight='Regular'
+							>
+								Help cover hosting costs. Giving is optional.
+							</Typography>
 						</View>
 						<Typography
 							size='Body2'
@@ -219,6 +250,23 @@ export const SettingsScreen = () => {
 						>
 							Centered on Christ. Always free. No advertising.
 						</Typography>
+						<View style={styles.section}>
+							<TurndownButton
+								variant='Solid'
+								tone='Error'
+								loading={isSigningOut}
+								onPress={() => void handleSignOut()}
+							>
+								Sign out
+							</TurndownButton>
+							{signOutError && (
+								<View accessibilityLiveRegion='polite'>
+									<Typography tone='Error'>
+										{signOutError}
+									</Typography>
+								</View>
+							)}
+						</View>
 					</View>
 				</StyledAuthBodyContainer>
 			</TurndownScrollScreen>

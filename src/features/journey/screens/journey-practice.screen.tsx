@@ -275,17 +275,6 @@ export const JourneyPracticeScreen = ({
 								>
 									{isComplete ? 'Completed' : 'Complete'}
 								</TurndownButton>
-								{isComplete && (
-									<TurndownButton
-										variant='Outline'
-										fullWidth
-										onPress={() =>
-											router.dismissTo('/today')
-										}
-									>
-										Back to Today
-									</TurndownButton>
-								)}
 							</>
 						)}
 					</>

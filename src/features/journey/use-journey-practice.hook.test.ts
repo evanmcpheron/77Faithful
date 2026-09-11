@@ -12,7 +12,9 @@ import { useJourneyPractice } from './use-journey-practice.hook';
 
 jest.mock('@td/providers/auth/auth.hook');
 jest.mock('./journey-practice.service');
+const mockNavigate = jest.fn();
 jest.mock('expo-router', () => ({
+	useRouter: () => ({ navigate: mockNavigate }),
 	useFocusEffect: (callback: () => void) => {
 		const { useEffect } = jest.requireActual('react');
 		useEffect(callback, [callback]);
@@ -107,6 +109,7 @@ it('keeps failed saves incomplete and requires a refresh before retry', async ()
 	await act(async () => current.complete());
 	expect(current.completion?.status).toBe('NotMarked');
 	expect(current.error).toContain('Refresh this practice');
+	expect(mockNavigate).not.toHaveBeenCalled();
 	await act(async () => current.complete());
 	expect(savePracticeCompletion).toHaveBeenCalledTimes(1);
 	await act(async () => current.refresh());
@@ -143,3 +146,35 @@ it('hides content when the account changes and ignores the previous load', async
 	await act(async () => resolve(session));
 	expect(current.session).toBeNull();
 });
+
+it.each(['ReadScripture', 'Pray', 'Reflect', 'Worship', 'Gratitude'] as const)(
+	'returns %s to Today only after its completion is saved',
+	async (id) => {
+		practiceId = id;
+		let resolve!: (
+			value: Awaited<ReturnType<typeof savePracticeCompletion>>,
+		) => void;
+		jest.mocked(savePracticeCompletion).mockReturnValue(
+			new Promise((done) => {
+				resolve = done;
+			}),
+		);
+		await mount();
+		let pending!: Promise<void>;
+		await act(async () => {
+			pending = current.complete();
+		});
+		expect(mockNavigate).not.toHaveBeenCalled();
+		await act(async () => {
+			resolve({
+				journeyId: 'journey',
+				dayNumber: 12,
+				practiceId: id,
+				completion: { ...completion, status: 'Complete', revision: 3 },
+			});
+			await pending;
+		});
+		expect(mockNavigate).toHaveBeenCalledTimes(1);
+		expect(mockNavigate).toHaveBeenCalledWith('/today');
+	},
+);

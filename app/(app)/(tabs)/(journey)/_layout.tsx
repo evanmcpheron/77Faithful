@@ -8,38 +8,47 @@ const JourneyLayout = () => {
 	const router = useRouter();
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
-			<Stack.Screen
-				name='journeys/[journeyId]/days/[dayNumber]/scripture'
-				options={({ route }) => {
-					const dayNumber =
-						route.params && 'dayNumber' in route.params
-							? route.params.dayNumber
-							: null;
-					return {
-						headerShown: true,
-						headerTransparent: true,
-						headerShadowVisible: false,
-						header: () => (
-							<HeaderTopRow
-								canGoBack
-								showNotifications={false}
-								onBackPress={() => router.navigate('/today')}
-								{...(typeof dayNumber === 'string' && {
-									progress: {
-										value: Number(dayNumber),
-										max: FormationStructure.DayCount,
-									},
-								})}
-								title={
-									typeof dayNumber === 'string'
-										? `${dayNumber} of ${FormationStructure.DayCount}`
-										: 'Scripture'
-								}
-							/>
-						),
-					};
-				}}
-			/>
+			{['scripture', 'prayer', 'reflection'].map((practice) => (
+				<Stack.Screen
+					key={practice}
+					name={`journeys/[journeyId]/days/[dayNumber]/${practice}`}
+					options={({ route }) => {
+						const dayNumber =
+							route.params && 'dayNumber' in route.params
+								? route.params.dayNumber
+								: null;
+						return {
+							headerShown: true,
+							headerTransparent: true,
+							headerShadowVisible: false,
+							header: () => (
+								<HeaderTopRow
+									canGoBack
+									showNotifications={false}
+									onBackPress={() =>
+										router.navigate('/today')
+									}
+									{...(typeof dayNumber === 'string' && {
+										progress: {
+											value: Number(dayNumber),
+											max: FormationStructure.DayCount,
+										},
+									})}
+									title={
+										typeof dayNumber === 'string'
+											? `${dayNumber} of ${FormationStructure.DayCount}`
+											: practice === 'prayer'
+												? 'Pray'
+												: practice === 'reflection'
+													? 'Reflect'
+													: 'Scripture'
+									}
+								/>
+							),
+						};
+					}}
+				/>
+			))}
 		</Stack>
 	);
 };

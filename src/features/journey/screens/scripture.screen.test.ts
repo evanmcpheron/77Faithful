@@ -168,7 +168,7 @@ it('keeps completion an explicit action', async () => {
 
 it('the Scripture route reuses the shared back header and returns to Today', async () => {
 	await act(async () => renderer.update(createElement(JourneyLayout)));
-	const header = renderer.root.findByType(HeaderTopRow);
+	const header = renderer.root.findAllByType(HeaderTopRow)[0]!;
 	expect(header.props['canGoBack']).toBe(true);
 	expect(header.props['showNotifications']).toBe(false);
 	expect(header.props['title']).toBe('1 of 77');
@@ -177,7 +177,7 @@ it('the Scripture route reuses the shared back header and returns to Today', asy
 	expect(mockNavigate).toHaveBeenCalledWith('/today');
 	expect(complete).not.toHaveBeenCalled();
 });
-it('Continue returns a completed reading to the Today tab', async () => {
+it('a completed reading has no Continue button', async () => {
 	const current = jest.mocked(useJourneyPractice).mock.results[0]?.value;
 	jest.mocked(useJourneyPractice).mockReturnValue({
 		...current,
@@ -188,6 +188,6 @@ it('Continue returns a completed reading to the Today tab', async () => {
 		},
 	});
 	await act(async () => renderer.update(createElement(ScriptureScreen)));
-	await press('Continue');
-	expect(mockNavigate).toHaveBeenCalledWith('/today');
+	expect(textOf(renderer.root)).not.toContain('Continue');
+	expect(button('Completed').props['disabled']).toBe(true);
 });

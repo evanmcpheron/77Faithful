@@ -4,7 +4,6 @@ import { TurndownScrollScreen } from '@td/components/layout/screen/screen.compon
 import { TurndownButton } from '@td/components/ui/button/button.component';
 import { Card } from '@td/components/ui/card/card.component';
 import { StyledIconButton } from '@td/components/ui/icon-button/icon-button.styles';
-import { IconName } from '@td/components/ui/icon/icon.types';
 import { Typography } from '@td/components/ui/typography/typography.component';
 import { SurfaceColors, TextColors } from '@td/theme/colors';
 import { IconSizes } from '@td/theme/icon-sizes';
@@ -12,7 +11,7 @@ import { Spacing } from '@td/theme/spacing';
 import { FoundationalPracticeId } from '@td/types/formation/practice.types';
 import type { ITranslatedScripturePassage } from '@td/types/formation/scripture.types';
 import { PracticeCompletionStatus } from '@td/types/journey/journey-day.types';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useState } from 'react';
 import { Share } from 'react-native';
@@ -257,7 +256,6 @@ const ScriptureReading = ({ session }: { session: IJourneyDaySession }) => {
 export const ScriptureScreen = () => {
 	const headerHeight = useHeaderHeight();
 	const params = useLocalSearchParams();
-	const router = useRouter();
 	const route = parsePracticeRoute(
 		params['journeyId'],
 		params['dayNumber'],
@@ -309,16 +307,6 @@ export const ScriptureScreen = () => {
 						>
 							{isComplete ? 'Completed' : 'Complete reading'}
 						</TurndownButton>
-						{isComplete && (
-							<TurndownButton
-								fullWidth
-								variant='Outline'
-								trailingIconName={IconName.ArrowRight}
-								onPress={() => router.navigate('/today')}
-							>
-								Continue
-							</TurndownButton>
-						)}
 					</>
 				)}
 			</ReadingColumn>

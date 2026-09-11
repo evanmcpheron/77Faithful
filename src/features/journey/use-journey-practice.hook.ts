@@ -1,7 +1,7 @@
 import { useAuth } from '@td/providers/auth/auth.hook';
 import type { IPracticeCompletion } from '@td/types/journey/journey-day.types';
 import { PracticeCompletionStatus } from '@td/types/journey/journey-day.types';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import type { IJourneyDaySession } from './journey-day-session.types';
 import type { parsePracticeRoute } from './journey-practice-route';
@@ -15,6 +15,7 @@ export const useJourneyPractice = (
 	route: ReturnType<typeof parsePracticeRoute>,
 ) => {
 	const { account, isProfileReady } = useAuth();
+	const router = useRouter();
 	const userId =
 		account?.isEmailConfirmed && isProfileReady ? account.userId : null;
 	const journeyId = route?.journeyId;
@@ -102,11 +103,14 @@ export const useJourneyPractice = (
 			if (
 				result.journeyId !== session.day.journeyId ||
 				result.dayNumber !== session.day.dayNumber ||
-				result.practiceId !== practice.id
+				result.practiceId !== practice.id ||
+				result.completion.status !== PracticeCompletionStatus.Complete
 			)
 				throw new Error('Unexpected completion.');
-			if (request === generation.current)
+			if (request === generation.current) {
 				setSaved({ key, completion: result.completion });
+				router.navigate('/today');
+			}
 		} catch {
 			if (request === generation.current)
 				setError(

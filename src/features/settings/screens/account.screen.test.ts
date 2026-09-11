@@ -5,6 +5,9 @@ import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { AccountScreen } from './account.screen';
 
+jest.mock('expo-router/react-navigation', () => ({
+	useHeaderHeight: () => 100,
+}));
 jest.mock('@td/providers/auth/auth.hook');
 jest.mock('@td/features/account/use-account-profile.hook');
 jest.mock('react-native', () => ({ View: 'view' }));
@@ -28,7 +31,7 @@ let renderer: ReactTestRenderer;
 const button = (label: string) =>
 	renderer.root
 		.findAllByType(TurndownButton)
-		.find((node) => node.props.children === label)!;
+		.find((node) => node.props['children'] === label)!;
 beforeEach(() => {
 	jest.resetAllMocks();
 	jest.mocked(useAuth).mockReturnValue({
@@ -60,27 +63,27 @@ beforeEach(() => {
 afterEach(() => act(() => renderer.unmount()));
 it('sends recovery to the authenticated email only after a deliberate press', async () => {
 	expect(sendPasswordResetEmail).not.toHaveBeenCalled();
-	await act(async () => button('Send recovery email').props.onPress());
+	await act(async () => button('Send recovery email').props['onPress']());
 	expect(sendPasswordResetEmail).toHaveBeenCalledWith('reader@example.com');
 	expect(JSON.stringify(renderer.toJSON())).toContain('Recovery email sent');
-	expect(button('Send recovery email').props.disabled).toBe(true);
+	expect(button('Send recovery email').props['disabled']).toBe(true);
 });
 it('shows a recoverable sign-out failure without raw provider errors', async () => {
 	signOut.mockRejectedValue(new Error('internal auth failure'));
-	await act(async () => button('Sign out').props.onPress());
+	await act(async () => button('Sign out').props['onPress']());
 	expect(JSON.stringify(renderer.toJSON())).toContain(
 		'We could not sign you out',
 	);
 	expect(JSON.stringify(renderer.toJSON())).not.toContain(
 		'internal auth failure',
 	);
-	expect(button('Sign out').props.disabled).toBe(false);
+	expect(button('Sign out').props['disabled']).toBe(false);
 });
 it('does not expose a destructive action while deletion is unavailable', () => {
 	expect(
 		renderer.root
 			.findAllByType(TurndownButton)
-			.some((node) => node.props.children === 'Delete account'),
+			.some((node) => node.props['children'] === 'Delete account'),
 	).toBe(false);
 	expect(JSON.stringify(renderer.toJSON())).toContain(
 		'Account deletion is not available',

@@ -1,5 +1,4 @@
 import { HeaderTopRow } from '@td/components/ui/main-header/components/header-top-row/header-top-row.component';
-import { SurfaceColors } from '@td/theme/colors';
 import { Stack, useRouter } from 'expo-router';
 
 export const unstable_settings = { initialRouteName: 'index' };
@@ -12,8 +11,9 @@ const SettingsLayout = () => {
 				name='account/index'
 				options={{
 					headerShown: true,
+					headerTransparent: true,
 					headerShadowVisible: false,
-					headerStyle: { backgroundColor: SurfaceColors.Screen },
+					headerStyle: { backgroundColor: 'transparent' },
 					header: () => (
 						<HeaderTopRow
 							canGoBack

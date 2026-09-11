@@ -8,6 +8,7 @@ import { useAuth } from '@td/providers/auth/auth.hook';
 import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
 import type { IAuthenticatedAccountIdentity } from '@td/types/account/user.types';
+import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useRef, useState } from 'react';
 import { View } from 'react-native';
 import { accountStyles as styles } from './account.styles';
@@ -48,17 +49,6 @@ const AccountDetails = ({
 	};
 	return (
 		<View style={styles.column}>
-			<View style={styles.heading}>
-				<View accessibilityRole='header'>
-					<Typography size='Display'>Your account</Typography>
-				</View>
-				<Typography
-					tone='Secondary'
-					weight='Regular'
-				>
-					Your personal details and sign-in information.
-				</Typography>
-			</View>
 			<Card>
 				<View style={styles.section}>
 					<View accessibilityRole='header'>
@@ -81,14 +71,6 @@ const AccountDetails = ({
 							testID='account-preferred-name'
 						/>
 					)}
-					<Typography
-						size='Body2'
-						tone='Secondary'
-						weight='Regular'
-					>
-						The name used to greet you in 77Faithful. You can leave
-						this blank.
-					</Typography>
 					{profile.error && (
 						<View accessibilityLiveRegion='polite'>
 							<Typography tone='Error'>
@@ -111,7 +93,7 @@ const AccountDetails = ({
 						loading={profile.saving}
 						onPress={() => void profile.save()}
 					>
-						Save name
+						Save
 					</TurndownButton>
 					{profile.saved && (
 						<View accessibilityLiveRegion='polite'>
@@ -188,7 +170,8 @@ const AccountDetails = ({
 					You can sign in again to return to your journey.
 				</Typography>
 				<TurndownButton
-					variant='Outline'
+					variant='Solid'
+					tone='Error'
 					fullWidth
 					disabled={!!pending || profile.saving}
 					loading={pending === 'signOut'}
@@ -220,6 +203,7 @@ const AccountDetails = ({
 
 export const AccountScreen = () => {
 	const { account } = useAuth();
+	const headerHeight = useHeaderHeight();
 	return (
 		<TurndownScrollScreen
 			backgroundColor={SurfaceColors.Screen}
@@ -228,14 +212,16 @@ export const AccountScreen = () => {
 			safeAreaEdges={['left', 'right', 'bottom']}
 			testID='account-screen'
 		>
-			{account ? (
-				<AccountDetails
-					key={account.userId}
-					account={account}
-				/>
-			) : (
-				<Typography>Sign in to view your account.</Typography>
-			)}
+			<View style={{ paddingTop: headerHeight }}>
+				{account ? (
+					<AccountDetails
+						key={account.userId}
+						account={account}
+					/>
+				) : (
+					<Typography>Sign in to view your account.</Typography>
+				)}
+			</View>
 		</TurndownScrollScreen>
 	);
 };

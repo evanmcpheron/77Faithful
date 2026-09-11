@@ -1,5 +1,10 @@
 #!/bin/sh
 set -e
 
-npm run format:check
+if ! npm run format:check; then
+	npm run format
+	printf '%s\n' 'Prettier updated formatting. Review and stage the changes, then commit again.'
+	exit 1
+fi
+
 npm run lint

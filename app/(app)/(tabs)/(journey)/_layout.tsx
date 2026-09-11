@@ -7,7 +7,32 @@ export const unstable_settings = { initialRouteName: 'journey' };
 const JourneyLayout = () => {
 	const router = useRouter();
 	return (
-		<Stack screenOptions={{ headerShown: false }}>
+		<Stack
+			initialRouteName='journey'
+			screenOptions={{ headerShown: false }}
+		>
+			<Stack.Screen name='journey' />
+			<Stack.Screen
+				name='reflections'
+				options={{
+					headerShown: true,
+					headerShadowVisible: false,
+					headerTransparent: true,
+					headerStyle: { backgroundColor: 'transparent' },
+					header: () => (
+						<HeaderTopRow
+							canGoBack
+							title='Reflections'
+							showNotifications={false}
+							onBackPress={() =>
+								router.canGoBack()
+									? router.back()
+									: router.replace('/journey')
+							}
+						/>
+					),
+				}}
+			/>
 			{[
 				'scripture',
 				'prayer',
@@ -30,9 +55,19 @@ const JourneyLayout = () => {
 								<HeaderTopRow
 									canGoBack
 									showNotifications={false}
-									onBackPress={() =>
-										router.navigate('/today')
-									}
+									onBackPress={() => {
+										if (
+											practice === 'reflection' &&
+											route.params &&
+											'returnTo' in route.params &&
+											route.params.returnTo ===
+												'reflections'
+										) {
+											if (router.canGoBack())
+												router.back();
+											else router.replace('/reflections');
+										} else router.navigate('/today');
+									}}
 									{...(typeof dayNumber === 'string' && {
 										progress: {
 											value: Number(dayNumber),

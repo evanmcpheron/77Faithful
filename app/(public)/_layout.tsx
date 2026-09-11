@@ -26,8 +26,20 @@ const PublicLayout = () => {
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
 			<Stack.Screen
+				name='themes'
+				options={{
+					...informationOptions('Weekly Themes', '/'),
+					headerTransparent: true,
+					headerStyle: { backgroundColor: 'transparent' },
+				}}
+			/>
+			<Stack.Screen
 				name='about'
 				options={informationOptions('About 77Faithful', '/')}
+			/>
+			<Stack.Screen
+				name='privacy'
+				options={informationOptions('Privacy', '/')}
 			/>
 			<Stack.Screen
 				name='support'

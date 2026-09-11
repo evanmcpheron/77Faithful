@@ -130,6 +130,8 @@ for (const key of Object.keys(profile)) {
 for (const path of [
 	'users/owner/journeyControl/current',
 	'users/owner/journeyStartOperations/operation1',
+	'users/owner/practiceReplacementOperations/operation1',
+	'users/owner/journeys/current/practiceChanges/change1',
 ]) {
 	for (const method of ['get', 'create', 'update', 'delete']) {
 		add(

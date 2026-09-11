@@ -2,6 +2,16 @@ import { initializeApp } from 'firebase-admin/app';
 import { setGlobalOptions } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import {
+	cancelPracticeSettingsForAccount,
+	confirmPracticeSettingsForAccount,
+	getPracticeSettingsForAccount,
+} from './journey/practice-settings';
+import {
+	parseCancelPracticeSettingsRequest,
+	parseConfirmPracticeSettingsRequest,
+	parsePracticeSettingsRequest,
+} from './journey/practice-settings-request';
 import { refreshTodayVerseSources } from './journey/refresh-today-verses';
 
 import { getJourneyDayForAccount } from './journey/journey-day';
@@ -21,6 +31,42 @@ import {
 
 initializeApp();
 setGlobalOptions({ maxInstances: 10 });
+
+export const getPracticeSettings = onCall(async (request) => {
+	if (!request.auth || request.auth.token.email_verified !== true)
+		throw new HttpsError(
+			'permission-denied',
+			'Sign in with a confirmed email to view your practices.',
+		);
+	return getPracticeSettingsForAccount(
+		request.auth.uid,
+		parsePracticeSettingsRequest(request.data),
+	);
+});
+
+export const confirmOptionalPracticeReplacement = onCall(async (request) => {
+	if (!request.auth || request.auth.token.email_verified !== true)
+		throw new HttpsError(
+			'permission-denied',
+			'Sign in with a confirmed email to change your practices.',
+		);
+	return confirmPracticeSettingsForAccount(
+		request.auth.uid,
+		parseConfirmPracticeSettingsRequest(request.data),
+	);
+});
+
+export const cancelOptionalPracticeReplacement = onCall(async (request) => {
+	if (!request.auth || request.auth.token.email_verified !== true)
+		throw new HttpsError(
+			'permission-denied',
+			'Sign in with a confirmed email to change your practices.',
+		);
+	return cancelPracticeSettingsForAccount(
+		request.auth.uid,
+		parseCancelPracticeSettingsRequest(request.data),
+	);
+});
 
 export const startJourney = onCall(async (request) => {
 	if (!request.auth)
@@ -88,3 +134,5 @@ export const refreshTodayVerses = onSchedule(
 		await refreshTodayVerseSources();
 	},
 );
+
+export { listReflections } from './journey/list-reflections';

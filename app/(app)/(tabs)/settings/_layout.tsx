@@ -6,7 +6,32 @@ export const unstable_settings = { initialRouteName: 'index' };
 const SettingsLayout = () => {
 	const router = useRouter();
 	return (
-		<Stack screenOptions={{ headerShown: false }}>
+		<Stack
+			initialRouteName='index'
+			screenOptions={{ headerShown: false }}
+		>
+			<Stack.Screen name='index' />
+			<Stack.Screen
+				name='practices'
+				options={{
+					headerShown: true,
+					headerTransparent: true,
+					headerShadowVisible: false,
+					headerStyle: { backgroundColor: 'transparent' },
+					header: () => (
+						<HeaderTopRow
+							canGoBack
+							title='Practices'
+							showNotifications={false}
+							onBackPress={() =>
+								router.canGoBack()
+									? router.back()
+									: router.replace('/settings')
+							}
+						/>
+					),
+				}}
+			/>
 			<Stack.Screen
 				name='account/index'
 				options={{

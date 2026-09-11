@@ -504,7 +504,6 @@ Desired catalog:
 - NASB 2020;
 - NIV;
 - NLT;
-- ESV;
 - MSG;
 - KJV;
 - NKJV;

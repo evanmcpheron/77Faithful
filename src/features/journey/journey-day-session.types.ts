@@ -6,6 +6,7 @@ import type {
 	IFormationWeekOverviewDocument,
 } from '../../types/formation/formation-course.types';
 import type { IScriptureAssignmentTextDocument } from '../../types/formation/scripture.types';
+import type { ITodayVerses } from '../../types/formation/today-verse.types';
 import type {
 	IJourneyDayDocument,
 	ISetPracticeCompletionRequest,
@@ -22,6 +23,7 @@ export interface IGetJourneyDayRequest {
 }
 
 export interface IJourneyDaySession {
+	todayVerses?: ITodayVerses | null;
 	day: IJourneyDayDocument;
 	content: IFormationDayContentDocument;
 	scripture: IScriptureAssignmentTextDocument | null;

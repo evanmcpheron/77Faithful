@@ -612,3 +612,46 @@ test('the provisional import preserves an unrelated configured course', async ()
 	);
 	assert.deepEqual([...documents], before);
 });
+
+for (const bibleVersionId of ['Amp', 'Gnt']) {
+	test(`${bibleVersionId} starts only with its own complete released readings`, async () => {
+		const { database, documents } = createDatabase();
+		documents.get(
+			'users/owner/journeySetupDrafts/current',
+		).choices.bibleVersionId = bibleVersionId;
+		await assert.rejects(
+			startJourneyForAccount('owner', request(), database),
+			/readings.*aren’t ready/,
+		);
+		assert.equal(journeys(documents).length, 0);
+		documents.get('formationConfiguration/current').bibleTextEditionIds[
+			bibleVersionId
+		] = 'test-edition';
+		documents.set('bibleTextEditions/test-edition', {
+			...documents.get('bibleTextEditions/web-edition'),
+			bibleVersionId,
+		});
+		for (let day = 1; day <= 77; day++) {
+			documents.set(
+				`bibleTextEditions/test-edition/assignmentTexts/reading-${day}`,
+				{
+					...documents.get(
+						`bibleTextEditions/web-edition/assignmentTexts/reading-${day}`,
+					),
+					bibleVersionId,
+					bibleTextEditionId: 'test-edition',
+				},
+			);
+		}
+		const result = await startJourneyForAccount(
+			'owner',
+			request(),
+			database,
+		);
+		assert.equal(result.outcome, 'Started');
+		assert.equal(
+			documents.get('users/owner/preferences/current').bibleVersionId,
+			bibleVersionId,
+		);
+	});
+}

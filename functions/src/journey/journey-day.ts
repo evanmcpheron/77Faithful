@@ -1,6 +1,7 @@
 import type { Firestore, Transaction } from 'firebase-admin/firestore';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { HttpsError } from 'firebase-functions/v2/https';
+import { readTodayVerses } from './today-verses';
 
 import {
 	addJourneyCalendarDays,
@@ -353,9 +354,16 @@ export const getJourneyDayForAccount = async (
 				acknowledgments = edition.acknowledgments;
 			}
 		}
+		const todayVerses = await readTodayVerses(
+			transaction,
+			database,
+			day.dayNumber,
+			translation.bibleVersionId,
+		);
 		if (isNew) transaction.create(dayReference, day);
 		return {
 			day: serializeDay(day),
+			todayVerses,
 			content,
 			scripture,
 			scriptureReference: assignment.displayReference,

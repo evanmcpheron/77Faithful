@@ -12,7 +12,6 @@ import { TurndownButton } from '@td/components/ui/button/button.component';
 import { Card } from '@td/components/ui/card/card.component';
 import { StyledCard } from '@td/components/ui/card/card.styles';
 import { IconBadge } from '@td/components/ui/icon-badge/icon-badge.component';
-import { IconButton } from '@td/components/ui/icon-button/icon-button.component';
 import { IconName } from '@td/components/ui/icon/icon.types';
 import { ProgressBar } from '@td/components/ui/progress-bar/progress-bar.component';
 import { Spacer } from '@td/components/ui/spacer/spacer.component';
@@ -37,7 +36,7 @@ import {
 	StyledTodaySummaryCards,
 } from './today.styles';
 
-const TODAY_PHOTO_HEIGHT = Layout.AuthHeaderHeight * 2;
+const TODAY_PHOTO_HEIGHT = Layout.AuthHeaderHeight * 1.5;
 // Halfway between the original panel overlap and the one-third photo overlap.
 const TODAY_BODY_OVERLAP = Math.round(
 	(Spacing.Large + TODAY_PHOTO_HEIGHT / 3) / 2,
@@ -50,8 +49,8 @@ export const TodayScreen = () => {
 		scrollOffset,
 		TODAY_PHOTO_HEIGHT,
 	);
-	const contentAnimatedStyle = useAnimatedStyle(() => ({
-		// Cancel the scroll view’s downward bounce without scaling the text or controls.
+	const greetingAnimatedStyle = useAnimatedStyle(() => ({
+		// Keep the greeting still on pull-down; let normal upward scrolling carry it away.
 		transform: [{ translateY: Math.min(scrollOffset.value, 0) }],
 	}));
 	const { data, session, practices, error, refresh } = useToday();
@@ -73,7 +72,7 @@ export const TodayScreen = () => {
 			backgroundColor={SurfaceColors.Screen}
 			contentBackgroundColor='transparent'
 			contentPadding={0}
-			bottomSpacing={Spacing.Small}
+			bottomSpacing={0}
 			safeAreaEdges={['left', 'right']}
 			keyboardEnabled={false}
 			testID='today-screen'
@@ -94,65 +93,63 @@ export const TodayScreen = () => {
 							accessible={false}
 						/>
 					</Animated.View>
-					<Animated.View
-						style={[styles.content, contentAnimatedStyle]}
-					>
+					<View style={styles.content}>
 						<StyledAuthHeaderSafeArea
 							edges={['top', 'left', 'right']}
 						>
 							<StyledAuthHeaderContent
 								style={styles.headerContent}
 							>
-								<Row
-									fillChildren={false}
-									justifyContent='space-between'
-									gap={Spacing.Small}
+								<Animated.View
+									style={[
+										styles.greeting,
+										greetingAnimatedStyle,
+									]}
 								>
-									<View style={{ flex: 1 }}>
-										<Typography
-											size='Display'
-											tone='Inverse'
-										>
-											{greeting}
-											{session?.preferredName
-												? `, ${session.preferredName}`
-												: ''}
-										</Typography>
-										<Spacer size={Spacing.XSmall} />
-									</View>
-									<IconButton
-										name={IconName.User}
-										hasBackground
-										accessibilityLabel='Account settings'
-										onPress={() =>
-											router.push('/settings/account')
-										}
-									/>
-								</Row>
-								<View style={styles.headerDetails}>
-									<Row
-										justifyContent='flex-end'
-										fillChildren={false}
+									<Typography
+										size='Display'
+										tone='Inverse'
 									>
-										<View style={{ flex: 1 }}>
-											<Typography
-												size='H2'
-												tone='Inverse'
-												align='right'
-											>
-												“His mercies are new every
-												morning.”
-											</Typography>
-											<Typography
-												size='Body2'
-												tone='Inverse'
-												align='right'
-												weight='Regular'
-											>
-												LAMENTATIONS 3:23
-											</Typography>
-										</View>
-									</Row>
+										{greeting}
+										{session?.preferredName
+											? `, ${session.preferredName}`
+											: ''}
+									</Typography>
+									<Spacer size={Spacing.XSmall} />
+								</Animated.View>
+								<View style={styles.headerDetails}>
+									{session?.todayVerses && (
+										<Row
+											justifyContent='flex-end'
+											fillChildren={false}
+										>
+											<View style={{ flex: 1 }}>
+												<Typography
+													size='H2'
+													tone='Inverse'
+													align='right'
+												>
+													{session?.todayVerses?.top
+														.text ?? ''}
+												</Typography>
+												<Typography
+													size='Body2'
+													tone='Inverse'
+													align='right'
+													weight='Regular'
+												>
+													{session.todayVerses.top
+														.displayReference ??
+														session.todayVerses.top
+															.verse}
+													{session?.todayVerses?.top
+														.text
+														? ` (${session.translation.abbreviation})`
+														: ''}
+												</Typography>
+											</View>
+										</Row>
+									)}
 									{session && (
 										<StyledTodaySummaryCards>
 											<StyledTodaySummaryCard
@@ -203,7 +200,7 @@ export const TodayScreen = () => {
 								</View>
 							</StyledAuthHeaderContent>
 						</StyledAuthHeaderSafeArea>
-					</Animated.View>
+					</View>
 				</View>
 			}
 		>
@@ -315,24 +312,53 @@ export const TodayScreen = () => {
 							</TurndownButton>
 						</Card>
 						<Spacer size={Spacing.Medium} />
-						<Card
-							variant='Muted'
-							padding={Spacing.Medium}
-						>
-							<Typography
-								size='H1'
-								align='center'
+						{session.todayVerses && (
+							<Card
+								variant='Muted'
+								padding={Spacing.Medium}
 							>
-								“Abide in me, and I in you.”
-							</Typography>
-							<Typography
-								size='Body2'
-								tone='Secondary'
-								align='center'
-							>
-								JOHN 15:4
-							</Typography>
-						</Card>
+								<Typography
+									size='H1'
+									align='center'
+								>
+									{session.todayVerses?.bottom.text ?? ''}
+								</Typography>
+								<Typography
+									size='Body2'
+									tone='Secondary'
+									align='center'
+								>
+									{session.todayVerses.bottom
+										.displayReference ??
+										session.todayVerses.bottom.verse}
+									{session.todayVerses?.bottom.text
+										? ` (${session.translation.abbreviation})`
+										: ''}
+								</Typography>
+							</Card>
+						)}
+						{session.todayVerses?.copyright && (
+							<View>
+								<Typography
+									size='Body2'
+									tone='Muted'
+									align='center'
+								>
+									{session.todayVerses.copyright}
+								</Typography>
+								<Link
+									href='https://api.bible'
+									accessibilityLabel='Scripture provided by API.Bible'
+								>
+									<Typography
+										size='Body2'
+										align='center'
+									>
+										Scripture provided by API.Bible
+									</Typography>
+								</Link>
+							</View>
+						)}
 					</>
 				)}
 			</StyledAuthBodyContainer>
@@ -341,6 +367,7 @@ export const TodayScreen = () => {
 };
 
 const styles = StyleSheet.create({
+	greeting: { width: '100%' },
 	header: {
 		// Account for the body panel’s existing negative top margin.
 		minHeight: TODAY_PHOTO_HEIGHT - TODAY_BODY_OVERLAP + Spacing.Large,
@@ -376,5 +403,6 @@ const styles = StyleSheet.create({
 	},
 	body: {
 		marginHorizontal: Spacing.Small,
+		paddingBottom: Spacing.Medium + Spacing.Small,
 	},
 });

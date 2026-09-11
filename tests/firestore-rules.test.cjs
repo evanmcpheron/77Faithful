@@ -290,6 +290,12 @@ const readyDraft = {
 		bibleVersionId: 'Web',
 	},
 };
+for (const bibleVersionId of ['Amp', 'Gnt']) {
+	addWrite(`${bibleVersionId} translation create`, 'ALLOW', draft, {
+		...readyDraft,
+		choices: { ...readyDraft.choices, bibleVersionId },
+	});
+}
 addWrite('four practices create', 'ALLOW', draft, readyDraft);
 addWrite('three practices create', 'ALLOW', draft, {
 	...readyDraft,
@@ -354,6 +360,10 @@ const invalidDrafts = [
 	[
 		'unknown translation',
 		{ choices: { ...readyDraft.choices, bibleVersionId: 'Unknown' } },
+	],
+	[
+		'removed translation',
+		{ choices: { ...readyDraft.choices, bibleVersionId: 'Esv' } },
 	],
 	['extra choice field', { choices: { ...readyDraft.choices, extra: true } }],
 	['spoofed owner', { userId: 'other' }],

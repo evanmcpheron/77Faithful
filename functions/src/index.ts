@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase-admin/app';
 import { setGlobalOptions } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { refreshTodayVerseSources } from './journey/refresh-today-verses';
 
 import { getJourneyDayForAccount } from './journey/journey-day';
 import {
@@ -72,3 +74,17 @@ export const saveJourneyReflection = onCall(async (request) => {
 		parseSaveJourneyReflectionRequest(request.data),
 	);
 });
+
+export const refreshTodayVerses = onSchedule(
+	{
+		schedule: '0 3 * * 0',
+		timeZone: 'Etc/UTC',
+		secrets: ['API_BIBLE_KEY'],
+		timeoutSeconds: 540,
+		maxInstances: 1,
+		retryCount: 0,
+	},
+	async () => {
+		await refreshTodayVerseSources();
+	},
+);

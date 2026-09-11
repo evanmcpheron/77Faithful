@@ -4,15 +4,16 @@ import type {
 } from '../shared/persistence.types';
 
 export const BibleVersionId = {
-	NewAmericanStandardBible2020: 'Nasb2020',
-	NewInternationalVersion: 'Niv',
-	NewLivingTranslation: 'Nlt',
-	EnglishStandardVersion: 'Esv',
-	TheMessage: 'Msg',
-	KingJamesVersion: 'Kjv',
-	NewKingJamesVersion: 'Nkjv',
-	ChristianStandardBible: 'Csb',
-	WorldEnglishBible: 'Web',
+	AmplifiedBible: 'Amp',
+	GoodNewsTranslation: 'Gnt',
+	NewAmericanStandardBible2020: 'Nasb2020', // mini verses done
+	NewInternationalVersion: 'Niv', // mini verse done
+	NewLivingTranslation: 'Nlt', // mini verses done
+	TheMessage: 'Msg', // mini verses done
+	KingJamesVersion: 'Kjv', // mini vese done
+	NewKingJamesVersion: 'Nkjv', //mini verse done
+	ChristianStandardBible: 'Csb', // mini verses done
+	WorldEnglishBible: 'Web', // mini verses done
 } as const;
 
 export type TBibleVersionId =
@@ -27,6 +28,18 @@ export interface IBibleVersionDefinition {
 
 /** The intended catalog is display metadata, not authorization to publish these texts. */
 export const BibleVersion = {
+	AmplifiedBible: {
+		bibleVersionId: BibleVersionId.AmplifiedBible,
+		abbreviation: 'AMP',
+		name: 'Amplified Bible',
+		edition: '2015',
+	},
+	GoodNewsTranslation: {
+		bibleVersionId: BibleVersionId.GoodNewsTranslation,
+		abbreviation: 'GNT',
+		name: 'Good News Translation',
+		edition: 'US Version, Second Edition',
+	},
 	NewAmericanStandardBible2020: {
 		bibleVersionId: BibleVersionId.NewAmericanStandardBible2020,
 		abbreviation: 'NASB 2020',
@@ -43,12 +56,6 @@ export const BibleVersion = {
 		bibleVersionId: BibleVersionId.NewLivingTranslation,
 		abbreviation: 'NLT',
 		name: 'New Living Translation',
-		edition: null,
-	},
-	EnglishStandardVersion: {
-		bibleVersionId: BibleVersionId.EnglishStandardVersion,
-		abbreviation: 'ESV',
-		name: 'English Standard Version',
 		edition: null,
 	},
 	TheMessage: {

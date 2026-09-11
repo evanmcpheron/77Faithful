@@ -46,6 +46,16 @@ jest.mock('react-native-svg', () => ({
 jest.mock('@td/components/ui/divider/divider.component', () => ({
 	Divider: 'divider',
 }));
+jest.mock('@td/components/ui/icon/icon.component', () => ({ AppIcon: 'icon' }));
+jest.mock('./serve-or-encourage.styles', () => ({
+	ServeContent: 'serve-content',
+	ServeHeading: 'serve-heading',
+	ServeHeadingRule: 'serve-heading-rule',
+	ServeExamples: 'serve-examples',
+	ServeExampleRow: 'serve-example-row',
+	ServeExampleCopy: 'serve-example-copy',
+	ServeIconCircle: 'serve-icon-circle',
+}));
 jest.mock('./movement.styles', () => ({
 	MovementCopy: 'copy',
 	MovementExamplesSection: 'examples',
@@ -139,7 +149,9 @@ it.each(setupPractices)(
 			practiceId: definition.practiceId,
 		});
 		expect(textOf(renderer.root)).toContain(definition.name);
-		expect(textOf(renderer.root)).toContain('Begin here');
+		if (definition.practiceId !== 'ServeOrEncourage') {
+			expect(textOf(renderer.root)).toContain('Begin here');
+		}
 		expect(complete).not.toHaveBeenCalled();
 		expect(button('Mark complete').props['disabled']).toBe(false);
 		await act(async () => button('Mark complete').props['onPress']());
@@ -280,6 +292,40 @@ it('opens an unselected practice preview using authorized day access and never s
 	});
 	expect(textOf(renderer.root)).toContain('Intentional Witness');
 	expect(textOf(renderer.root)).toContain('Practice preview');
+	expect(button('Preview only').props['disabled']).toBe(true);
+	await act(async () => button('Preview only').props['onPress']());
+	expect(complete).not.toHaveBeenCalled();
+});
+
+it('shows the approved service boundaries before the action', async () => {
+	mockPracticeId = 'ServeOrEncourage';
+	await render();
+	const text = textOf(renderer.root);
+	expect(text).toContain(
+		'Practice the love of Jesus through practical help or sincere encouragement.',
+	);
+	expect(text).toContain(
+		'Notice one person you can serve or encourage today. Choose a simple response that is helpful, sincere, and appropriate for your relationship and circumstances.',
+	);
+	expect(text).toContain('Help with a task or practical need.');
+	expect(text).toContain(
+		'Send a thoughtful message or speak an encouraging word.',
+	);
+	expect(text).toContain(
+		'Listen carefully and offer support when it is welcome.',
+	);
+	expect(text).toContain(
+		'Serve in a way that respects consent, privacy, personal safety, and needed relational boundaries. Do not contact someone when doing so would be unsafe or inappropriate.',
+	);
+	expect(text).not.toContain('No note, name, or proof');
+	expect(text.endsWith('Mark complete')).toBe(true);
+	expect(text).not.toContain('Begin here');
+});
+
+it('keeps the service preview completion action disabled', async () => {
+	mockPracticeId = 'ServeOrEncourage';
+	mockPreview = '1';
+	await render();
 	expect(button('Preview only').props['disabled']).toBe(true);
 	await act(async () => button('Preview only').props['onPress']());
 	expect(complete).not.toHaveBeenCalled();

@@ -18,13 +18,13 @@ export const chosenPracticeContent = {
 	},
 	[OptionalPracticeId.ServeOrEncourage]: {
 		purpose:
-			'Put the love of Jesus into practice through care for another person.',
+			'Practice the love of Jesus through practical help or sincere encouragement.',
 		invitation:
-			'Notice someone you could help or encourage, and choose a concrete act of care that fits your circumstances.',
+			'Notice one person you can serve or encourage today. Choose a simple response that is helpful, sincere, and appropriate for your relationship and circumstances.',
 		examples: [
-			'Offer practical help with a task.',
-			'Send a sincere word of encouragement.',
-			'Listen with attention to someone who wants to talk.',
+			'Help with a task or practical need.',
+			'Send a thoughtful message or speak an encouraging word.',
+			'Listen carefully and offer support when it is welcome.',
 		],
 	},
 	[OptionalPracticeId.ScriptureMemorization]: {
@@ -120,3 +120,8 @@ export const chosenPracticeContent = {
 		readonly invitation: string;
 	}
 >;
+
+export const serveOrEncourageNotes = {
+	boundaries:
+		'Serve in a way that respects consent, privacy, personal safety, and needed relational boundaries. Do not contact someone when doing so would be unsafe or inappropriate.',
+};

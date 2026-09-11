@@ -28,6 +28,7 @@ import {
 	ReadingTitle,
 	scriptureTitleStyle,
 } from './scripture.styles';
+import { ServeOrEncourageContent } from './serve-or-encourage-content';
 
 export const ChosenPracticeScreen = () => {
 	const headerHeight = useHeaderHeight();
@@ -65,6 +66,8 @@ export const ChosenPracticeScreen = () => {
 	const isComplete =
 		!isPreview && completion?.status === PracticeCompletionStatus.Complete;
 	const isMovement = practiceId === OptionalPracticeId.Movement;
+	const isServeOrEncourage =
+		practiceId === OptionalPracticeId.ServeOrEncourage;
 	const completionLabel = isPreview
 		? 'Preview only'
 		: isMovement && isSaving
@@ -97,7 +100,9 @@ export const ChosenPracticeScreen = () => {
 	return (
 		<TurndownScrollScreen
 			backgroundColor={
-				isMovement ? SurfaceColors.Card : SurfaceColors.Screen
+				isMovement || isServeOrEncourage
+					? SurfaceColors.Card
+					: SurfaceColors.Screen
 			}
 			contentPadding={isMovement ? Spacing.Small : Spacing.Medium}
 			bottomSpacing={Spacing.Large}
@@ -141,107 +146,122 @@ export const ChosenPracticeScreen = () => {
 									: 'Practice preview · This does not change your chosen practices.'}
 							</Typography>
 						)}
-						<ReadingTitle
-							style={
-								isMovement ? movementHeadingStyle : undefined
-							}
-						>
-							<PassageSection
-								accessible
-								accessibilityRole='header'
-							>
-								<Typography
-									size='Display'
-									align={isMovement ? 'left' : 'center'}
-									weight='Regular'
+						{isServeOrEncourage ? (
+							<ServeOrEncourageContent>
+								{completionButton}
+							</ServeOrEncourageContent>
+						) : (
+							<>
+								<ReadingTitle
 									style={
 										isMovement
-											? movementTitleStyle
-											: scriptureTitleStyle
+											? movementHeadingStyle
+											: undefined
 									}
 								>
-									{isMovement
-										? 'Movement'
-										: (previewDefinition?.name ??
-											practice.title)}
-								</Typography>
-							</PassageSection>
-							<Typography
-								align={isMovement ? 'left' : 'center'}
-								weight={isMovement ? 'Regular' : 'Bold'}
-								tone='Secondary'
-								style={
-									isMovement
-										? movementPurposeStyle
-										: undefined
-								}
-							>
-								{guidance.purpose}
-							</Typography>
-						</ReadingTitle>
-						{isMovement ? (
-							<MovementGuidance
-								invitation={guidance.invitation}
-							/>
-						) : (
-							<PassageSection>
-								<Typography
-									size='H1'
-									style={scriptureTitleStyle}
-								>
-									Begin here
-								</Typography>
-								<Typography>{guidance.invitation}</Typography>
-							</PassageSection>
-						)}
-						{!isMovement && completionButton}
-						{isMovement ? (
-							<>
-								<MovementExamples
-									examples={guidance.examples}
-								/>
-								{completionButton}
-							</>
-						) : (
-							<PassageSection>
-								<Typography
-									size='H1'
-									style={scriptureTitleStyle}
-								>
-									Ways to practice
-								</Typography>
-								{guidance.examples.map((example) => (
-									<Typography
-										key={example}
-										tone='Secondary'
+									<PassageSection
+										accessible
+										accessibilityRole='header'
 									>
-										{example}
+										<Typography
+											size='Display'
+											align={
+												isMovement ? 'left' : 'center'
+											}
+											weight='Regular'
+											style={
+												isMovement
+													? movementTitleStyle
+													: scriptureTitleStyle
+											}
+										>
+											{isMovement
+												? 'Movement'
+												: (previewDefinition?.name ??
+													practice.title)}
+										</Typography>
+									</PassageSection>
+									<Typography
+										align={isMovement ? 'left' : 'center'}
+										weight={isMovement ? 'Regular' : 'Bold'}
+										tone='Secondary'
+										style={
+											isMovement
+												? movementPurposeStyle
+												: undefined
+										}
+									>
+										{guidance.purpose}
 									</Typography>
-								))}
-							</PassageSection>
-						)}
-						{practiceId ===
-							OptionalPracticeId.FamilyOrHouseholdDevotion && (
-							<PassageSection>
-								<Typography tone='Secondary'>
-									You can use this day’s assigned Scripture:{' '}
-									{session.scriptureReference}.
-								</Typography>
-								<TurndownButton
-									variant='Outline'
-									onPress={() =>
-										router.push(
-											getPracticeHref(
-												session.day.journeyId,
-												session.day.dayNumber,
-												FoundationalPracticeId.ReadScripture,
-											),
-										)
-									}
-								>
-									Open assigned Scripture
-								</TurndownButton>
-							</PassageSection>
+								</ReadingTitle>
+								{isMovement ? (
+									<MovementGuidance
+										invitation={guidance.invitation}
+									/>
+								) : (
+									<PassageSection>
+										<Typography
+											size='H1'
+											style={scriptureTitleStyle}
+										>
+											Begin here
+										</Typography>
+										<Typography>
+											{guidance.invitation}
+										</Typography>
+									</PassageSection>
+								)}
+								{!isMovement && completionButton}
+								{isMovement ? (
+									<>
+										<MovementExamples
+											examples={guidance.examples}
+										/>
+										{completionButton}
+									</>
+								) : (
+									<PassageSection>
+										<Typography
+											size='H1'
+											style={scriptureTitleStyle}
+										>
+											Ways to practice
+										</Typography>
+										{guidance.examples.map((example) => (
+											<Typography
+												key={example}
+												tone='Secondary'
+											>
+												{example}
+											</Typography>
+										))}
+									</PassageSection>
+								)}
+								{practiceId ===
+									OptionalPracticeId.FamilyOrHouseholdDevotion && (
+									<PassageSection>
+										<Typography tone='Secondary'>
+											You can use this day’s assigned
+											Scripture:{' '}
+											{session.scriptureReference}.
+										</Typography>
+										<TurndownButton
+											variant='Outline'
+											onPress={() =>
+												router.push(
+													getPracticeHref(
+														session.day.journeyId,
+														session.day.dayNumber,
+														FoundationalPracticeId.ReadScripture,
+													),
+												)
+											}
+										>
+											Open assigned Scripture
+										</TurndownButton>
+									</PassageSection>
+								)}
+							</>
 						)}
 					</>
 				)}

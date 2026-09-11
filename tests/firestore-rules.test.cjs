@@ -281,6 +281,52 @@ const addWrite = (
 	if (previousDocument) test.resource = { data: previousDocument };
 	if (mocks) test.functionMocks = mocks;
 };
+const updatedProfile = {
+	...profile,
+	revision: 1,
+	preferredName: 'New name',
+	updatedAt: testTimestamp,
+};
+for (const preferredName of ['New name', null, 'x'.repeat(80)]) {
+	addWrite(
+		'owner updates preferred name ' + JSON.stringify(preferredName),
+		'ALLOW',
+		'users/owner',
+		{ ...updatedProfile, preferredName },
+		profile,
+	);
+}
+for (const patch of [
+	{ preferredName: 'x'.repeat(81) },
+	{ preferredName: 123 },
+	{ revision: 0 },
+	{ revision: 2 },
+	{ revision: 1.5 },
+	{ createdAt: '2020-01-01T00:00:00Z' },
+	{ updatedAt: '2020-01-01T00:00:00Z' },
+	{ schemaVersion: 2 },
+	{ email: 'private@example.com' },
+]) {
+	addWrite(
+		'reject invalid profile update ' + JSON.stringify(patch),
+		'DENY',
+		'users/owner',
+		{ ...updatedProfile, ...patch },
+		profile,
+	);
+}
+for (const uid of [null, 'other']) {
+	addWrite(
+		'reject unauthorized valid profile update ' + uid,
+		'DENY',
+		'users/owner',
+		updatedProfile,
+		profile,
+	);
+	tests.at(-1).test.request.auth = uid
+		? { uid, token: { email_verified: true } }
+		: null;
+}
 const readyDraft = {
 	...newDraft,
 	currentStep: 'WeeklyThemes',

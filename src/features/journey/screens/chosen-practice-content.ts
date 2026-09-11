@@ -29,89 +29,84 @@ export const chosenPracticeContent = {
 	},
 	[OptionalPracticeId.ScriptureMemorization]: {
 		purpose:
-			'Keep returning to God’s Word so its words and meaning become familiar in ordinary life.',
+			'Spend time memorizing and reviewing Scripture so its words and meaning become more familiar as you follow Jesus.',
 		invitation:
-			'Choose a short passage in your Bible. Read it, repeat it, try recalling it, and revisit it over several days.',
+			'Choose a verse or short passage from Scripture. Read it carefully, repeat it, and practice recalling what you can. If you are already learning a passage, continue with it.',
 		examples: [
-			'Begin with a short part of the passage.',
-			'Say the words aloud or repeat them silently.',
-			'Review the same passage, looking back whenever you need help.',
+			'Learn a few words, one verse, or part of a longer passage.',
+			'Review a passage you have already been memorizing.',
+			'Practice recalling a passage with your Bible nearby for help.',
 		],
 	},
 	[OptionalPracticeId.Gratitude]: {
-		purpose:
-			'Notice God’s gifts and respond with thanks, even when life is difficult.',
+		purpose: 'Notice God’s gifts and respond with thanks.',
 		invitation:
-			'Notice a specific gift and thank God for it. Gratitude can sit alongside grief or struggle.',
+			'Choose one specific gift to notice and thank God for it in your own words. It might be a person, something He has provided, a truth from Scripture, or His grace in Jesus Christ. You do not need to ignore grief or difficulty to practice gratitude.',
 		examples: [
-			'Silently name something you are thankful for.',
-			'Thank God in prayer for someone’s kindness.',
-			'If it helps, write a few words in your own notebook.',
+			'Thank God for a person who showed you care or kindness.',
+			'Thank God for something He has provided or an ordinary gift in your day.',
+			'Return to a truth from Scripture and thank God for what it shows you about Him or about Jesus.',
 		],
 	},
 	[OptionalPracticeId.ChristianReading]: {
 		purpose:
-			'Let thoughtful Christian writing help you consider what it means to follow Jesus.',
+			'Spend time with thoughtful Christian writing that helps you understand Jesus Christ, the Christian faith, and faithful living. This practice complements, rather than replaces, your time in Scripture.',
 		invitation:
-			'Read a manageable portion of a Christian book you have chosen. Consider its message in light of Scripture.',
+			'Choose a Christian book or other substantive Christian writing from a source you trust, and read a manageable portion. There is no required page count or reading time.',
 		examples: [
-			'Continue from where you left off.',
-			'Pause over an idea and compare it with Scripture.',
-			'Consider how what you read relates to an ordinary situation.',
+			'A few pages or a chapter from a Christian book, a substantive Christian article or essay, or a section from a Christian biography can all fit.',
 		],
 	},
 	[OptionalPracticeId.Worship]: {
 		purpose:
-			'Turn your attention to God and honor Him for who He is and what He has done.',
-		invitation: 'Choose a simple way to offer God your praise.',
+			'Turn your attention to God with praise and adoration for who He is and what He has done.',
+		invitation:
+			'Choose a simple way to praise God for who He is or what He has done in Jesus Christ. You can sing, pray, or use Scripture; music is not required.',
 		examples: [
-			'Sing a hymn or a song of praise.',
-			'Read a psalm from your Bible as worship.',
+			'Sing or listen attentively to a hymn or song of praise.',
+			'Read a psalm from your Bible and use its words to praise God.',
 			'Praise God in your own words in prayer.',
 		],
 	},
 	[OptionalPracticeId.Generosity]: {
 		purpose:
-			'Respond to God’s generosity by freely offering what you can for another person’s good.',
+			'Share what you can for another person’s good as part of following Jesus.',
 		invitation:
-			'Choose a thoughtful way to share that fits your circumstances. A financial gift is not required.',
+			'Notice a real need you can help meet today, then choose what you can freely and wisely share.',
 		examples: [
-			'Give your time or attentive company.',
-			'Share useful resources or offer hospitality.',
-			'Give money when you can do so without neglecting your needs or responsibilities.',
+			'Give someone your time or focused attention.',
+			'Share a meal, offer hospitality, or meet a practical need.',
+			'Give money when it is appropriate for your circumstances.',
 		],
 	},
 	[OptionalPracticeId.FamilyOrHouseholdDevotion]: {
 		purpose:
-			'Make room to attend to Jesus together with willing family or household members.',
+			'Set aside time with your family or household to read Scripture, pray, and seek Jesus together.',
 		invitation:
-			'Read a short Scripture passage together, discuss “What does this help us notice about God?”, and pray. Adapt the rhythm to those taking part.',
+			'Begin with a short passage of Scripture. Read it together, talk about what it shows you about God and following Jesus, and pray together.',
 		examples: [
-			'Read with a spouse, relative, roommate, or child who wants to join.',
-			'Keep the words and question accessible to those present.',
-			'If you live apart, share this time with a willing family member by phone.',
+			'Begin with a short passage of Scripture. Read it together, talk about what it shows you about God and following Jesus, and pray together.',
+			'On a shorter day, read a brief passage and pray for one another.',
 		],
 	},
 	[OptionalPracticeId.IntentionalDiscipline]: {
 		purpose:
-			'Make room for attention to Christ through a freely chosen practice or boundary. This does not earn God’s favor.',
+			'Set aside a distraction or choose a suitable restraint so you can give more deliberate attention to God as you follow Jesus.',
 		invitation:
-			'Choose a specific, manageable practice or boundary, and return to that same choice consistently.',
+			'Choose one nonessential thing to limit or set aside for a period that fits your circumstances. The point is to make room for attention to God, not simply to go without something.',
 		examples: [
-			'Put your phone aside while you pray.',
-			'Set aside nonessential scrolling to make room for Scripture.',
-			'Keep a quiet pause before beginning your usual activities.',
+			'Pause nonessential scrolling or social media for a chosen period.',
+			'Set aside entertainment for part of the day.',
 		],
 	},
 	[OptionalPracticeId.IntentionalWitness]: {
 		purpose:
-			'Reflect Jesus through attentive care and honest, respectful words about your faith.',
+			'Share your faith in Jesus through respectful words and conduct.',
 		invitation:
-			'Listen and care for the people you meet. When welcomed, speak honestly about your hope in Jesus, respecting their willingness and boundaries.',
+			'When a natural opportunity arises, speak honestly about Jesus, listen well, and respect the other person’s choice to engage or not. Their response does not determine completion.',
 		examples: [
-			'Listen to someone’s experience without steering the conversation.',
-			'Answer a sincere question about your faith.',
-			'Share what following Jesus means to you when invited.',
+			'You might answer a sincere question, share why you follow Jesus, or mention a Scripture passage that has shaped your faith.',
+			'Look for everyday opportunities — with a friend, coworker, neighbor, or family member — to reflect the hope you have in Christ through your words and actions.',
 		],
 	},
 } satisfies Record<

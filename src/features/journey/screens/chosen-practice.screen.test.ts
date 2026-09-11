@@ -1,3 +1,4 @@
+import { Card } from '@td/components/ui/card/card.component';
 import { setupPractices } from '@td/features/journey-setup/journey-setup-content';
 import { createElement } from 'react';
 import {
@@ -47,6 +48,70 @@ jest.mock('@td/components/ui/divider/divider.component', () => ({
 	Divider: 'divider',
 }));
 jest.mock('@td/components/ui/icon/icon.component', () => ({ AppIcon: 'icon' }));
+jest.mock('./household-devotion.styles', () => ({
+	HouseholdAction: 'household-action',
+	HouseholdCopy: 'household-copy',
+	HouseholdExamples: 'household-examples',
+	HouseholdIntroduction: 'household-introduction',
+	HouseholdNumber: 'household-number',
+	HouseholdRow: 'household-row',
+	HouseholdRows: 'household-rows',
+	HouseholdSections: 'household-sections',
+}));
+jest.mock('./generosity.styles', () => ({
+	GenerosityCopy: 'generosity-copy',
+	GenerosityDecoration: 'generosity-decoration',
+	GenerosityExamples: 'generosity-examples',
+	GenerosityHeading: 'generosity-heading',
+	GenerosityIconCircle: 'generosity-icon',
+	GenerosityNotice: 'generosity-notice',
+	GenerosityRow: 'generosity-row',
+	GenerositySections: 'generosity-sections',
+}));
+jest.mock('./intentional-witness.styles', () => ({
+	WitnessAction: 'witness-action',
+	WitnessBullet: 'witness-bullet',
+	WitnessCopy: 'witness-copy',
+	WitnessDecoration: 'witness-decoration',
+	WitnessExamples: 'witness-examples',
+	WitnessHeading: 'witness-heading',
+	WitnessInvitation: 'witness-invitation',
+	WitnessRow: 'witness-row',
+	WitnessSections: 'witness-sections',
+}));
+jest.mock('./intentional-discipline.styles', () => ({
+	DisciplineAction: 'discipline-action',
+	DisciplineCopy: 'discipline-copy',
+	DisciplineDecoration: 'discipline-decoration',
+	DisciplineExamples: 'discipline-examples',
+	DisciplineHeading: 'discipline-heading',
+	DisciplineIconCircle: 'discipline-icon',
+	DisciplineRow: 'discipline-row',
+	DisciplineSections: 'discipline-sections',
+}));
+jest.mock('./gratitude.styles', () => ({
+	GratitudeAction: 'gratitude-action',
+	GratitudeCopy: 'gratitude-copy',
+	GratitudeExamples: 'gratitude-examples',
+	GratitudeHeading: 'gratitude-heading',
+	GratitudeIconCircle: 'gratitude-icon',
+	GratitudeRow: 'gratitude-row',
+	GratitudeSections: 'gratitude-sections',
+	gratitudeIconStyles: [],
+	gratitudeIconColors: [],
+}));
+jest.mock('./worship.styles', () => ({
+	WorshipAction: 'worship-action',
+	WorshipCopy: 'worship-copy',
+	WorshipExamples: 'worship-examples',
+	WorshipHeading: 'worship-heading',
+	WorshipIconCircle: 'worship-icon',
+	WorshipIntroduction: 'worship-introduction',
+	WorshipRow: 'worship-row',
+	WorshipRows: 'worship-rows',
+	WorshipSections: 'worship-sections',
+	worshipIconStyles: [],
+}));
 jest.mock('./serve-or-encourage.styles', () => ({
 	ServeContent: 'serve-content',
 	ServeHeading: 'serve-heading',
@@ -55,6 +120,28 @@ jest.mock('./serve-or-encourage.styles', () => ({
 	ServeExampleRow: 'serve-example-row',
 	ServeExampleCopy: 'serve-example-copy',
 	ServeIconCircle: 'serve-icon-circle',
+}));
+jest.mock('react-native', () => ({
+	useWindowDimensions: () => ({ height: 800, width: 375 }),
+}));
+jest.mock('react-native-safe-area-context', () => ({
+	useSafeAreaInsets: () => ({ top: 0, bottom: 20, left: 0, right: 0 }),
+}));
+jest.mock('./christian-reading.styles', () => ({
+	ChristianReadingAction: 'reading-action',
+	ChristianReadingCopy: 'reading-copy',
+	ChristianReadingHeading: 'reading-heading',
+	ChristianReadingIcon: 'reading-icon',
+	ChristianReadingRow: 'reading-row',
+	ChristianReadingSections: 'reading-sections',
+}));
+jest.mock('./memorization.styles', () => ({
+	MemorizationAction: 'memorization-action',
+	MemorizationCopy: 'memorization-copy',
+	MemorizationHeading: 'memorization-heading',
+	MemorizationIconCircle: 'memorization-icon',
+	MemorizationRow: 'memorization-row',
+	MemorizationSections: 'memorization-sections',
 }));
 jest.mock('./movement.styles', () => ({
 	MovementCopy: 'copy',
@@ -148,13 +235,40 @@ it.each(setupPractices)(
 			dayNumber: 12,
 			practiceId: definition.practiceId,
 		});
-		expect(textOf(renderer.root)).toContain(definition.name);
-		if (definition.practiceId !== 'ServeOrEncourage') {
-			expect(textOf(renderer.root)).toContain('Begin here');
+		expect(textOf(renderer.root).replace(/\s+/g, ' ')).toContain(
+			definition.name,
+		);
+		if (definition.practiceId === 'Generosity') {
+			expect(textOf(renderer.root)).toContain(
+				'Giving to 77Faithful is never expected.',
+			);
+			expect(textOf(renderer.root).endsWith('Complete')).toBe(true);
+		}
+		if (
+			definition.practiceId !== 'IntentionalWitness' &&
+			definition.practiceId !== 'ServeOrEncourage' &&
+			definition.practiceId !== 'Generosity' &&
+			definition.practiceId !== 'ChristianReading' &&
+			definition.practiceId !== 'FamilyOrHouseholdDevotion'
+		) {
+			expect(textOf(renderer.root)).toContain(
+				definition.practiceId === 'ScriptureMemorization' ||
+					definition.practiceId === 'IntentionalDiscipline'
+					? 'How to begin'
+					: 'Begin here',
+			);
 		}
 		expect(complete).not.toHaveBeenCalled();
-		expect(button('Mark complete').props['disabled']).toBe(false);
-		await act(async () => button('Mark complete').props['onPress']());
+		const label =
+			definition.practiceId === 'IntentionalWitness' ||
+			definition.practiceId === 'ChristianReading' ||
+			definition.practiceId === 'Generosity' ||
+			definition.practiceId === 'Gratitude' ||
+			definition.practiceId === 'FamilyOrHouseholdDevotion'
+				? 'Complete'
+				: 'Mark complete';
+		expect(button(label).props['disabled']).toBe(false);
+		await act(async () => button(label).props['onPress']());
 		expect(complete).toHaveBeenCalledTimes(1);
 	},
 );
@@ -253,19 +367,41 @@ it('offers refresh without exposing unavailable practice content', async () => {
 	expect(refresh).toHaveBeenCalledTimes(1);
 	expect(complete).not.toHaveBeenCalled();
 });
-it('opens household Scripture for the routed day without completing either practice', async () => {
+it('shows approved household guidance and completes only the routed practice', async () => {
 	mockPracticeId = 'FamilyOrHouseholdDevotion';
 	await render();
-	expect(textOf(renderer.root)).toContain('John 15:1–5');
-	await act(async () => button('Open assigned Scripture').props['onPress']());
-	expect(mockPush).toHaveBeenCalledWith({
-		pathname: '/journeys/[journeyId]/days/[dayNumber]/scripture',
-		params: { journeyId: 'journey', dayNumber: '12' },
+	expect(useJourneyPractice).toHaveBeenLastCalledWith({
+		journeyId: 'journey',
+		dayNumber: 12,
+		practiceId: 'FamilyOrHouseholdDevotion',
 	});
+	const text = textOf(renderer.root);
+	expect(text).toContain('Family or\nHousehold Devotion');
+	expect(text).toContain(
+		'Set aside time with your family or household to read Scripture, pray, and seek Jesus together.',
+	);
+	expect(text).toContain(
+		'Begin with a short passage of Scripture. Read it together, talk about what it shows you about God and following Jesus, and pray together.',
+	);
+	expect(text).toContain(
+		'On a shorter day, read a brief passage and pray for one another.',
+	);
+	expect(text).not.toContain('Begin here');
+	expect(text).not.toContain('Open assigned Scripture');
+	await act(async () => button('Complete').props['onPress']());
+	expect(complete).toHaveBeenCalledTimes(1);
+	expect(mockPush).not.toHaveBeenCalled();
+});
+it('keeps household preview completion disabled', async () => {
+	mockPracticeId = 'FamilyOrHouseholdDevotion';
+	mockPreview = '1';
+	await render();
+	expect(button('Preview only').props['disabled']).toBe(true);
+	await act(async () => button('Preview only').props['onPress']());
 	expect(complete).not.toHaveBeenCalled();
 });
 
-it('shows the approved Movement preview copy without enabling completion', async () => {
+it('omits the Movement preview notice without enabling completion', async () => {
 	mockPreview = '1';
 	await render();
 	expect(useJourneyPractice).toHaveBeenLastCalledWith({
@@ -273,9 +409,7 @@ it('shows the approved Movement preview copy without enabling completion', async
 		dayNumber: 12,
 		practiceId: 'ReadScripture',
 	});
-	expect(textOf(renderer.root)).toContain(
-		'Practice preview. This does not change your chosen practices.',
-	);
+	expect(textOf(renderer.root)).not.toContain('Practice preview');
 	expect(button('Preview only').props['disabled']).toBe(true);
 	await act(async () => button('Preview only').props['onPress']());
 	expect(complete).not.toHaveBeenCalled();
@@ -291,7 +425,7 @@ it('opens an unselected practice preview using authorized day access and never s
 		practiceId: 'ReadScripture',
 	});
 	expect(textOf(renderer.root)).toContain('Intentional Witness');
-	expect(textOf(renderer.root)).toContain('Practice preview');
+	expect(textOf(renderer.root)).not.toContain('Practice preview');
 	expect(button('Preview only').props['disabled']).toBe(true);
 	await act(async () => button('Preview only').props['onPress']());
 	expect(complete).not.toHaveBeenCalled();
@@ -329,4 +463,55 @@ it('keeps the service preview completion action disabled', async () => {
 	expect(button('Preview only').props['disabled']).toBe(true);
 	await act(async () => button('Preview only').props['onPress']());
 	expect(complete).not.toHaveBeenCalled();
+});
+
+it('keeps memorization completion deliberate and after the guidance', async () => {
+	mockPracticeId = 'ScriptureMemorization';
+	await render();
+	expect(complete).not.toHaveBeenCalled();
+	expect(textOf(renderer.root).endsWith('Mark complete')).toBe(true);
+	expect(button('Mark complete').props['disabled']).toBe(false);
+	await act(async () => button('Mark complete').props['onPress']());
+	expect(complete).toHaveBeenCalledTimes(1);
+});
+
+it('keeps memorization previews from saving completion', async () => {
+	mockPracticeId = 'ScriptureMemorization';
+	mockPreview = '1';
+	await render();
+	expect(textOf(renderer.root)).toContain('Scripture Memorization');
+	expect(button('Preview only').props['disabled']).toBe(true);
+	await act(async () => button('Preview only').props['onPress']());
+	expect(complete).not.toHaveBeenCalled();
+});
+
+it('opens Christian Reading with its approved guidance cards and completion action', async () => {
+	mockPracticeId = 'ChristianReading';
+	await render();
+	const text = textOf(renderer.root);
+	expect(text).toContain('Ways to practice');
+	expect(text).toContain('For example');
+	expect(text).not.toContain('Begin here');
+	expect(text).toContain('There is no required page count or reading time.');
+	expect(renderer.root.findAllByType(Card)).toHaveLength(2);
+	expect(button('Complete').props['disabled']).toBe(false);
+	await act(async () => button('Complete').props['onPress']());
+	expect(complete).toHaveBeenCalledTimes(1);
+});
+
+it('shows Witness guidance and boundaries before manually completing the practice', async () => {
+	mockPracticeId = 'IntentionalWitness';
+	await render();
+	const text = textOf(renderer.root);
+	expect(text).toContain(
+		'Share your faith in Jesus through respectful words and conduct.',
+	);
+	expect(text).toContain('Their response does not determine completion.');
+	expect(text).toContain(
+		'A particular response from the other person is not required for completion.',
+	);
+	expect(text.endsWith('Complete')).toBe(true);
+	expect(complete).not.toHaveBeenCalled();
+	await act(async () => button('Complete').props['onPress']());
+	expect(complete).toHaveBeenCalledTimes(1);
 });

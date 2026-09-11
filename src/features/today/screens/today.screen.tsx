@@ -331,9 +331,6 @@ export const TodayScreen = () => {
 													weight='Semibold'
 												>
 													{practice.title}
-													{practice.preview
-														? ' (Preview)'
-														: ''}
 												</Typography>
 												<Typography
 													tone='Muted'

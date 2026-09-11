@@ -26,6 +26,14 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId);
       allow create: if isOwner(userId) && isValidProfile(request.resource.data);
+      allow update: if isOwner(userId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['preferredName', 'revision', 'updatedAt'])
+        && isValidRevision(request.resource.data)
+        && isNextRevision(request.resource.data)
+        && (request.resource.data.preferredName == null
+          || (request.resource.data.preferredName is string
+            && request.resource.data.preferredName.size() <= 80));
     }
 
     match /users/{userId}/journeys/{journeyId} {

@@ -10,11 +10,18 @@ import {
 	OptionalPracticeId,
 } from '@td/types/formation/practice.types';
 import { PracticeCompletionStatus } from '@td/types/journey/journey-day.types';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
-import { getPracticeHref, parsePracticeRoute } from '../journey-practice-route';
+import { parsePracticeRoute } from '../journey-practice-route';
 import { useJourneyPractice } from '../use-journey-practice.hook';
 import { chosenPracticeContent } from './chosen-practice-content';
+import { ChristianReadingContent } from './christian-reading-content';
+import { GenerosityContent } from './generosity-content';
+import { GratitudeContent } from './gratitude-content';
+import { HouseholdDevotionContent } from './household-devotion-content';
+import { IntentionalDisciplineContent } from './intentional-discipline-content';
+import { IntentionalWitnessContent } from './intentional-witness-content';
+import { MemorizationContent } from './memorization-content';
 import { MovementExamples, MovementGuidance } from './movement-guidance';
 import {
 	movementColumnStyle,
@@ -29,11 +36,11 @@ import {
 	scriptureTitleStyle,
 } from './scripture.styles';
 import { ServeOrEncourageContent } from './serve-or-encourage-content';
+import { WorshipContent } from './worship-content';
 
 export const ChosenPracticeScreen = () => {
 	const headerHeight = useHeaderHeight();
 	const params = useLocalSearchParams();
-	const router = useRouter();
 	const practiceId = Object.values(OptionalPracticeId).find(
 		(id) => id === params['practiceId'],
 	);
@@ -65,7 +72,20 @@ export const ChosenPracticeScreen = () => {
 	const guidance = practiceId ? chosenPracticeContent[practiceId] : null;
 	const isComplete =
 		!isPreview && completion?.status === PracticeCompletionStatus.Complete;
+	const isMemorization =
+		practiceId === OptionalPracticeId.ScriptureMemorization;
+	const isChristianReading =
+		practiceId === OptionalPracticeId.ChristianReading;
 	const isMovement = practiceId === OptionalPracticeId.Movement;
+	const isIntentionalDiscipline =
+		practiceId === OptionalPracticeId.IntentionalDiscipline;
+	const isIntentionalWitness =
+		practiceId === OptionalPracticeId.IntentionalWitness;
+	const isGratitude = practiceId === OptionalPracticeId.Gratitude;
+	const isGenerosity = practiceId === OptionalPracticeId.Generosity;
+	const isHouseholdDevotion =
+		practiceId === OptionalPracticeId.FamilyOrHouseholdDevotion;
+	const isWorship = practiceId === OptionalPracticeId.Worship;
 	const isServeOrEncourage =
 		practiceId === OptionalPracticeId.ServeOrEncourage;
 	const completionLabel = isPreview
@@ -74,7 +94,13 @@ export const ChosenPracticeScreen = () => {
 			? 'Marking complete…'
 			: isComplete
 				? 'Completed'
-				: 'Mark complete';
+				: isIntentionalWitness ||
+					  isChristianReading ||
+					  isGratitude ||
+					  isGenerosity ||
+					  isHouseholdDevotion
+					? 'Complete'
+					: 'Mark complete';
 	const completionAccessibilityLabel =
 		!isMovement || isPreview
 			? undefined
@@ -100,12 +126,32 @@ export const ChosenPracticeScreen = () => {
 	return (
 		<TurndownScrollScreen
 			backgroundColor={
-				isMovement || isServeOrEncourage
+				isMovement ||
+				isIntentionalWitness ||
+				isIntentionalDiscipline ||
+				isServeOrEncourage ||
+				isMemorization ||
+				isGratitude ||
+				isHouseholdDevotion ||
+				isWorship
 					? SurfaceColors.Card
 					: SurfaceColors.Screen
 			}
-			contentPadding={isMovement ? Spacing.Small : Spacing.Medium}
-			bottomSpacing={Spacing.Large}
+			horizontalPadding={Spacing.Medium}
+			verticalPadding={
+				isChristianReading || isWorship || isGenerosity
+					? Spacing.XSmall
+					: isIntentionalWitness ||
+						  isMovement ||
+						  isGratitude ||
+						  isHouseholdDevotion ||
+						  isIntentionalDiscipline
+						? Spacing.Small
+						: Spacing.Medium
+			}
+			bottomSpacing={
+				isChristianReading || isHouseholdDevotion ? 0 : Spacing.Large
+			}
 			safeAreaEdges={['right', 'bottom', 'left']}
 			testID='chosen-practice-screen'
 		>
@@ -139,14 +185,37 @@ export const ChosenPracticeScreen = () => {
 				)}
 				{route && session && practice && guidance && (
 					<>
-						{isPreview && (
-							<Typography tone='Muted'>
-								{isMovement
-									? 'Practice preview. This does not change your chosen practices.'
-									: 'Practice preview · This does not change your chosen practices.'}
-							</Typography>
-						)}
-						{isServeOrEncourage ? (
+						{isIntentionalWitness ? (
+							<IntentionalWitnessContent>
+								{completionButton}
+							</IntentionalWitnessContent>
+						) : isIntentionalDiscipline ? (
+							<IntentionalDisciplineContent>
+								{completionButton}
+							</IntentionalDisciplineContent>
+						) : isHouseholdDevotion ? (
+							<HouseholdDevotionContent>
+								{completionButton}
+							</HouseholdDevotionContent>
+						) : isGenerosity ? (
+							<GenerosityContent>
+								{completionButton}
+							</GenerosityContent>
+						) : isWorship ? (
+							<WorshipContent>{completionButton}</WorshipContent>
+						) : isChristianReading ? (
+							<ChristianReadingContent>
+								{completionButton}
+							</ChristianReadingContent>
+						) : isGratitude ? (
+							<GratitudeContent>
+								{completionButton}
+							</GratitudeContent>
+						) : isMemorization ? (
+							<MemorizationContent>
+								{completionButton}
+							</MemorizationContent>
+						) : isServeOrEncourage ? (
 							<ServeOrEncourageContent>
 								{completionButton}
 							</ServeOrEncourageContent>
@@ -235,30 +304,6 @@ export const ChosenPracticeScreen = () => {
 												{example}
 											</Typography>
 										))}
-									</PassageSection>
-								)}
-								{practiceId ===
-									OptionalPracticeId.FamilyOrHouseholdDevotion && (
-									<PassageSection>
-										<Typography tone='Secondary'>
-											You can use this day’s assigned
-											Scripture:{' '}
-											{session.scriptureReference}.
-										</Typography>
-										<TurndownButton
-											variant='Outline'
-											onPress={() =>
-												router.push(
-													getPracticeHref(
-														session.day.journeyId,
-														session.day.dayNumber,
-														FoundationalPracticeId.ReadScripture,
-													),
-												)
-											}
-										>
-											Open assigned Scripture
-										</TurndownButton>
 									</PassageSection>
 								)}
 							</>

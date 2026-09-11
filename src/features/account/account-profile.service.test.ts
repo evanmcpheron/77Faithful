@@ -4,7 +4,12 @@ import {
 	runTransaction,
 	serverTimestamp,
 } from 'firebase/firestore';
-import { ensureAccountProfile } from './account-profile.service';
+import {
+	AccountProfileConflictError,
+	ensureAccountProfile,
+	loadAccountProfile,
+	savePreferredName,
+} from './account-profile.service';
 
 jest.mock('@td/services/firebase/firebase.instance', () => ({ db: {} }));
 jest.mock('firebase/firestore', () => ({
@@ -16,7 +21,7 @@ jest.mock('firebase/firestore', () => ({
 
 const reference = { path: 'users/account-1' };
 const timestamp = { serverTimestamp: true };
-const transaction = { get: jest.fn(), set: jest.fn() };
+const transaction = { get: jest.fn(), set: jest.fn(), update: jest.fn() };
 beforeEach(() => {
 	jest.resetAllMocks();
 	jest.mocked(doc).mockReturnValue(
@@ -77,4 +82,62 @@ it('rejects oversized names before accessing Firestore', async () => {
 		ensureAccountProfile('account-1', 'x'.repeat(81)),
 	).rejects.toThrow('80 characters');
 	expect(getDoc).not.toHaveBeenCalled();
+});
+
+const existingProfile = {
+	schemaVersion: 1,
+	revision: 3,
+	preferredName: 'Reader',
+};
+it('loads only the validated editable profile fields', async () => {
+	jest.mocked(getDoc).mockResolvedValue({
+		data: () => ({ ...existingProfile, privateExtra: 'excluded' }),
+	} as unknown as Awaited<ReturnType<typeof getDoc>>);
+	await expect(loadAccountProfile('account-1')).resolves.toEqual({
+		revision: 3,
+		preferredName: 'Reader',
+	});
+});
+it.each([
+	undefined,
+	{},
+	{ ...existingProfile, revision: -1 },
+	{ ...existingProfile, preferredName: 42 },
+])('rejects an invalid profile %j', async (data) => {
+	jest.mocked(getDoc).mockResolvedValue({
+		data: () => data,
+	} as unknown as Awaited<ReturnType<typeof getDoc>>);
+	await expect(loadAccountProfile('account-1')).rejects.toThrow(
+		'could not be read',
+	);
+});
+it.each([
+	['  Evan  ', 'Evan'],
+	['  ', null],
+])('saves normalized name %s with a new revision', async (name, expected) => {
+	transaction.get.mockResolvedValue({ data: () => existingProfile });
+	await expect(
+		savePreferredName('account-1', { preferredName: name, revision: 3 }),
+	).resolves.toEqual({ preferredName: expected, revision: 4 });
+	expect(transaction.update).toHaveBeenCalledWith(reference, {
+		preferredName: expected,
+		revision: 4,
+		updatedAt: timestamp,
+	});
+});
+it('does not overwrite a name changed on another device', async () => {
+	transaction.get.mockResolvedValue({ data: () => existingProfile });
+	await expect(
+		savePreferredName('account-1', { preferredName: 'New', revision: 2 }),
+	).rejects.toBeInstanceOf(AccountProfileConflictError);
+	expect(transaction.update).not.toHaveBeenCalled();
+});
+it('rejects oversized updates without a write', async () => {
+	await expect(
+		savePreferredName('account-1', {
+			preferredName: 'x'.repeat(81),
+			revision: 3,
+		}),
+	).rejects.toThrow('80 characters');
+	expect(runTransaction).not.toHaveBeenCalled();
 });

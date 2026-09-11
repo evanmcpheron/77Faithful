@@ -1,12 +1,12 @@
 /** A settled timestamp; compatible with both Firestore SDKs, without importing either. */
 export interface IPersistedTimestamp {
-  readonly seconds: number;
-  readonly nanoseconds: number;
+	readonly seconds: number;
+	readonly nanoseconds: number;
 }
 
 export interface IDocumentTimestamps {
-  readonly createdAt: IPersistedTimestamp;
-  readonly updatedAt: IPersistedTimestamp;
+	readonly createdAt: IPersistedTimestamp;
+	readonly updatedAt: IPersistedTimestamp;
 }
 
 // Validate Gregorian YYYY-MM-DD and HH:mm at boundaries; templates alone cannot do so.
@@ -17,7 +17,8 @@ export type TLocalClockTime = `${number}:${number}`;
 export type TIanaTimeZoneId = string;
 
 export const DomainSchemaVersion = {
-  Current: 1,
+	Current: 1,
 } as const;
 
-export type TDomainSchemaVersion = (typeof DomainSchemaVersion)[keyof typeof DomainSchemaVersion];
+export type TDomainSchemaVersion =
+	(typeof DomainSchemaVersion)[keyof typeof DomainSchemaVersion];

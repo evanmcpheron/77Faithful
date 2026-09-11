@@ -1,251 +1,477 @@
-# 77Faithful screen route map
+# 77Faithful Screen and Route Map
 
-**Delivered status: Account entry, journey setup, Today, and shared main navigation; remaining V1 workflows are still in progress.**
+## Status
 
-The product requirements in [product/README.md](../product/README.md) and its numbered documents describe the eventual experience. Dynamic routes are reusable screens, not individual journey, day, practice, community, or post records.
+This is the target V1 navigation specification. It describes the route tree and
+access rules that should be created. It does not assume that any route file,
+navigator, screen component, or route guard already exists.
 
-## What exists now
+Product behavior in `product/11-pages-and-navigation.md` is authoritative. This
+document translates that behavior into an Expo Router-oriented route plan.
 
-The authenticated area uses a shared bottom tab bar with **Today**, **Journey**, and **Settings**, with Today as the default. Each tab has an icon and visible label. Journey and Settings contain their own stacks, so child screens retain the bottom navigation and a back path. Route groups preserve existing URLs such as `/today`, `/journey`, `/reflections`, and `/settings`.
+## Navigation model
 
-Today displays the latest saved journey. Journey shows its dates, lifecycle state, and eleven weekly themes, with access to saved reflections. The saved-reflections screen currently displays the latest journey's starting motivation; daily reflection writing and history remain unimplemented. Settings displays account identity, device-following appearance, app version, and sign-out. These screens use Tamagui, the existing theme, and safe-area spacing. Remaining placeholder routes do not imply their workflows are functional.
+V1 should use three primary signed-in destinations:
 
-The root layout retains the existing Tamagui configuration and device-following light/dark selection. Account guards require sign-in, email confirmation, and a committed journey before entering `(app)`. Communities sits between Journey and Settings in the tab group. Its tab is hidden while `featureFlags.areCommunitiesEnabled` is false, and its layout redirects direct visits to Today. Enabling the flag exposes the existing community scaffold without changing its URLs. Server-side data access still requires ownership checks and Firebase Security Rules; a client route guard or feature flag is not a security boundary.
+- **Today**
+- **Journey**
+- **Settings**
 
-## Actual route tree
+**Reflections** is a child destination within Journey.
 
-```text
-src/app/
-├── _layout.tsx
-├── (app)/
-│   ├── _layout.tsx
-│   └── (tabs)/
-│       ├── _layout.tsx
-│       ├── (journey)/
-│       │   ├── _layout.tsx
-│       │   ├── journey.tsx
-│       │   ├── journeys/
-│       │   │   └── [journeyId]/
-│       │   │       ├── days/
-│       │   │       │   └── [dayNumber]/
-│       │   │       │       ├── index.tsx
-│       │   │       │       ├── practices/
-│       │   │       │       │   └── [practiceId].tsx
-│       │   │       │       ├── prayer.tsx
-│       │   │       │       ├── reflection.tsx
-│       │   │       │       └── scripture.tsx
-│       │   │       └── summary.tsx
-│       │   └── reflections.tsx
-│       ├── communities/
-│       │   ├── _layout.tsx
-│       │   ├── [communityId]/
-│       │   │   ├── index.tsx
-│       │   │   ├── members.tsx
-│       │   │   ├── posts/
-│       │   │   │   ├── [postId].tsx
-│       │   │   │   └── compose.tsx
-│       │   │   └── settings.tsx
-│       │   ├── create.tsx
-│       │   ├── index.tsx
-│       │   └── join.tsx
-│       ├── settings/
-│       │   ├── _layout.tsx
-│       │   ├── account/
-│       │   │   ├── delete.tsx
-│       │   │   └── index.tsx
-│       │   ├── index.tsx
-│       │   └── practices.tsx
-│       └── today.tsx
-├── +not-found.tsx
-├── about.tsx
-├── confirm-email.tsx
-├── index.tsx
-├── onboarding.tsx
-├── privacy.tsx
-├── recover-access.tsx
-├── register.tsx
-├── scripture-acknowledgments.tsx
-├── sign-in.tsx
-├── terms.tsx
-└── themes.tsx
-```
+Private Communities are a future direction and must not be visible as a V1 tab,
+drawer item, disabled teaser, or fake feed.
 
-## Exact personal-product titles and later responsibilities
+## Route groups
 
-The table below records the original scaffold titles and planned responsibilities. Delivered behavior is described above; a reserved route does not mean its full workflow is implemented.
+A maintainable Expo Router structure should distinguish:
 
-| URL                                                             | Exact title               | Later responsibility                                                                                     |
-| --------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `/`                                                             | Sign In                   | Returning account access, registration/recovery entry points, and brief product context.                 |
-| `/register`                                                     | Create Account            | Account creation without starting a journey.                                                             |
-| `/confirm-email`                                                | Confirm Email             | Pending, expired, resend, correction, and completion states.                                             |
-| `/recover-access`                                               | Recover Access            | Chosen recovery method, request, and outcome states. No assumed password flow.                           |
-| `/about`                                                        | About & Help              | Introduction, practical help, support/content reporting, and public information links.                   |
-| `/privacy`                                                      | Privacy                   | Privacy information and accurate deletion/retention disclosures.                                         |
-| `/scripture-acknowledgments`                                    | Scripture Acknowledgments | Credits for translations actually offered.                                                               |
-| `/themes`                                                       | Weekly Themes             | Eleven-theme overview and eligible weekly introductions.                                                 |
-| `/onboarding`                                                   | Set Up Your Journey       | Guided setup, saved steps, review, and deliberate start.                                                 |
-| `/today`                                                        | Today                     | Actual current day, no-active-journey, final-day, and ended-period home states.                          |
-| `/journey`                                                      | Journey                   | Active/previous selection, calendar/list history, secondary statistics, and journey motivation.          |
-| `/reflections`                                                  | Reflections               | Private saved day-based intentions/reflections with a journey filter.                                    |
-| `/journeys/[journeyId]/days/[dayNumber]`                        | Journey Day               | A specific reached day's context and practices, including historical review.                             |
-| `/journeys/[journeyId]/days/[dayNumber]/scripture`              | Scripture                 | Assigned passage and clearly separated devotional.                                                       |
-| `/journeys/[journeyId]/days/[dayNumber]/prayer`                 | Prayer                    | Focused prayer prompt and independent completion.                                                        |
-| `/journeys/[journeyId]/days/[dayNumber]/reflection`             | Reflection                | Reflection question, separate optional intention/reflection writing, and independent Reflect completion. |
-| `/journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]` | Practice Guidance         | One catalog practice assigned to this day.                                                               |
-| `/journeys/[journeyId]/summary`                                 | Journey Summary           | Preliminary final-day, completed-period, and early-ended summary states.                                 |
-| `/settings`                                                     | Settings                  | Translation, reminders, appearance, and practices/account/information access.                            |
-| `/settings/practices`                                           | My Practices              | Current/pending selections and next-day replacement review.                                              |
-| `/settings/account`                                             | Account                   | Preferred name, contact/access management, sign-out, and deletion access.                                |
-| `/settings/account/delete`                                      | Delete Account            | Deliberate deletion, identity confirmation, consequences, and accurate request status.                   |
+1. public/account routes;
+2. authenticated application routes;
+3. primary tabs;
+4. Journey child routes;
+5. Settings child routes;
+6. future community routes that are not registered in V1 release navigation.
 
-## Exact future-community titles and later responsibilities
+The exact folder grouping can follow Expo Router conventions, but public URLs
+and participant behavior should remain stable.
 
-All eight routes share one disabled subtree. These files do not deliver community features or make them part of V1.
+## Target public routes
 
-| URL                                         | Exact title        | Later responsibility                                                                                                         |
-| ------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| `/communities`                              | Communities        | Participant's private communities, creation, and joining entry points.                                                       |
-| `/communities/create`                       | Create Community   | Deliberate creation flow.                                                                                                    |
-| `/communities/join`                         | Join Community     | Invitation entry/preview, explicit acceptance, cancellation, invalid/expired states.                                         |
-| `/communities/[communityId]`                | Community          | Shared schedule, announcements, prayer/discussion sections, enrollment, and permitted high-level progress.                   |
-| `/communities/[communityId]/members`        | Community Members  | Membership, organizer invitation controls, and member-specific safety actions.                                               |
-| `/communities/[communityId]/settings`       | Community Settings | Member preferences, organizer controls, shared-journey configuration, private safety/moderation controls.                    |
-| `/communities/[communityId]/posts/compose`  | Write a Post       | Shared composer for creating/editing prayer requests, discussions, and announcements, with deliberate audience confirmation. |
-| `/communities/[communityId]/posts/[postId]` | Community Post     | Shared post/thread detail, replies, author actions, and safety actions.                                                      |
+| Path                         | Surface                   | Purpose                                                                |
+| ---------------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| `/`                          | Account Entry             | Explain 77Faithful briefly and offer Create account / Sign in.         |
+| `/register`                  | Create Account            | Create a personal account.                                             |
+| `/confirm-email`             | Confirm Email             | Explain and complete email confirmation.                               |
+| `/recover-access`            | Recover Access            | Restore access to an existing account.                                 |
+| `/about`                     | About & Help              | Explain the product and provide support/contact information when real. |
+| `/privacy`                   | Privacy                   | Explain participant privacy and data handling truthfully.              |
+| `/scripture-acknowledgments` | Scripture Acknowledgments | Show required edition and publisher acknowledgments.                   |
+| `/themes`                    | Weekly Themes             | Show the eleven-theme overview without exposing future daily content.  |
 
-Unknown URLs use `+not-found.tsx`, whose only visible title is **Page Not Found**. Fixed community `create`, `join`, and post `compose` paths identify their dedicated screens rather than dynamic resource detail.
+Terms or other legal surfaces may be added when a real release requirement
+exists, but their existence should not be invented solely for navigation
+completeness.
 
-## Product-ID coverage and consolidation
+## Target authenticated routes
 
-P01–P27 identify product destinations and interactions in [Document 11](../product/11-pages-and-navigation.md), not one file per identifier. Consolidation preserves their information, actions, and states for later implementation.
+| Path                                                            | Surface           | Purpose                                                                          |
+| --------------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------- |
+| `/onboarding`                                                   | Journey Setup     | Resume the setup workflow until the participant deliberately starts.             |
+| `/today`                                                        | Today             | Show the actual current reached journey day and assigned practices.              |
+| `/journey`                                                      | Journey           | Show active/previous journey context, calendar/list, themes, and summary access. |
+| `/reflections`                                                  | Reflections       | Show private saved motivation, intentions, and reflections within Journey.       |
+| `/journeys/[journeyId]/days/[dayNumber]`                        | Journey Day       | Review one reached day in context.                                               |
+| `/journeys/[journeyId]/days/[dayNumber]/scripture`              | Scripture         | Read the assigned passage and devotional.                                        |
+| `/journeys/[journeyId]/days/[dayNumber]/prayer`                 | Prayer            | Use the day's prayer prompt and authored prayer.                                 |
+| `/journeys/[journeyId]/days/[dayNumber]/reflection`             | Reflection        | Review/save intention and reflection and separately manage Reflect completion.   |
+| `/journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]` | Chosen Practice   | Read guidance for one assigned additional practice.                              |
+| `/journeys/[journeyId]/summary`                                 | Journey Summary   | Review a completed or early-ended journey accurately.                            |
+| `/settings`                                                     | Settings          | Entry point for preferences and account controls.                                |
+| `/settings/practices`                                           | Practice Settings | Review current selection and prepare a next-day change.                          |
+| `/settings/account`                                             | Account           | Manage profile/contact state, sign-out, and deletion access.                     |
+| `/settings/account/delete`                                      | Delete Account    | Explicit destructive-account confirmation workflow.                              |
 
-| Product coverage                                                                                         | Assigned destination or interaction                                                                                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P01 introduction; P02 account entry                                                                      | Sign In and Create Account retain concise context and access to About & Help / Weekly Themes. Introduction remains available before commitment; no compulsory Welcome route.                                                      |
-| P03 confirmation                                                                                         | One Confirm Email screen contains pending, expired, resend, correction, and success states.                                                                                                                                       |
-| P04 recovery                                                                                             | One Recover Access screen; provider-specific details wait for the chosen access method. No speculative reset, OAuth-callback, or magic-link routes.                                                                               |
-| P05 commitment; P06 practice selection; P07 translation; P08 motivation; P09 reminders; P10 review/start | Internal steps within `/onboarding`, including two to four distinct catalog practices, optional motivation/reminders, and deliberate review/start. Authentication uses account routes, not a duplicate onboarding account screen. |
-| P07 after setup                                                                                          | Reusable focused translation selector over Settings or Scripture; reused within onboarding. No translations/settings-translation route.                                                                                           |
-| P08 after setup                                                                                          | Editable section in the selected Journey, accessible from its summary. Separate from day-based writing and Reflections statistics; no motivation route.                                                                           |
-| P09 after setup                                                                                          | Independent morning/evening preferences in Settings; optional shared controls in onboarding. No reminder inbox or notification-settings route.                                                                                    |
-| P11 Today                                                                                                | Normal, no-active-journey, final-day, ended-period, and completion-count states share `/today`.                                                                                                                                   |
-| P12–P16 day/practice detail                                                                              | Journey Day, Scripture, Prayer, Reflection, and Practice Guidance are the five canonical day-related files. Today and history reuse them; no parallel today/history reader routes.                                                |
-| P17 history                                                                                              | Journey includes selected-journey context, previous journeys, calendar/list, secondary statistics, and motivation. No Past Journeys, statistics, or duplicate details screen.                                                     |
-| P18 themes                                                                                               | `/themes` combines overview and expandable/focused eligible introductions. No eleven weekly files or mandatory separate introduction screen.                                                                                      |
-| P19 writing                                                                                              | Reflections collection opens the existing day Reflection editor, including intention-only entries. No second journal app.                                                                                                         |
-| P20 summaries                                                                                            | One journey-scoped summary with accurate status; no congratulations, certificate, or early-ending screen.                                                                                                                         |
-| P21–P23 settings                                                                                         | Secondary Settings with My Practices and Account as substantial children. Settings is not a fourth V1 primary destination.                                                                                                        |
-| P24 appearance                                                                                           | Settings controls and a focused reader control/sheet; no appearance route.                                                                                                                                                        |
-| P25 information                                                                                          | Combined About & Help plus independently referenceable Privacy and Scripture Acknowledgments.                                                                                                                                     |
-| P26 ending                                                                                               | Selected Journey owns a confirmation dialog, followed by its summary after successful connected confirmation. No end-journey route.                                                                                               |
-| P27 deletion                                                                                             | Dedicated Account child for identity, scope, consequences, and truthful request status.                                                                                                                                           |
-| Save/discard, delete writing, sign-out warnings, conflicting drafts                                      | Local states/dialogs in the responsible screen. No confirmation center, sync dashboard, or error collection.                                                                                                                      |
-| Community prayer/discussion/announcements                                                                | Community sections/filters and shared post detail/composer. Writing and audience confirmation justify one focused composer, not one per post type.                                                                                |
-| Community shared journey                                                                                 | Configuration in Community Settings; presentation/enrollment/progress in Community. Eligible participants reuse personal journey/day routes after explicit start.                                                                 |
-| Community reporting, leaving, removal, organizer transfer/closure                                        | Contextual controls and confirmations in post, members, or settings. Reports stay private with a path independent of a reported organizer; no public moderation feed.                                                             |
+Unknown paths should resolve to a clear not-found experience.
 
-## Planned account flow and main navigation
+## Product screen mapping
 
-None of the following routing or controls are wired in this phase.
+The product specification describes conceptual pages P01–P27. They do not all
+require separate URLs.
 
-Signed-out entry begins at Sign In, with Create Account, Recover Access, About & Help, Privacy, Scripture Acknowledgments, and Weekly Themes available as appropriate. Registration and confirmation alone never begin Day 1. Sign-out and completed deletion eventually return to Sign In with public information accessible and former private context removed.
+### P01 — Product Introduction
 
-After real account access exists, incomplete confirmation goes to Confirm Email; unfinished setup resumes its saved step; an active-journey participant goes to Today. Ended history remains accessible without forcing another start. Successful access and recovery must not create another journey. The underlying sign-in method is not settled by Firebase's presence.
+Integrate the concise product introduction into the signed-out account-entry
+surface.
 
-Onboarding is one internal stepper. Repeat participants reuse it with a shorter introduction and review their selections. Only explicit, connected confirmation of **Start my journey** creates a journey; that action is implemented by the `startJourney` callable and opens Today after server confirmation; see [journey start](journey-start.md).
+It should explain:
 
-V1's primary destinations are **Today, Journey, and Reflections**, with consistent labeled Settings access. No navigation bar, buttons, links, or tabs render now. A future released community feature can add Communities as a conditional fourth destination. Changing the local flag alone does not authorize launching communities or satisfy their release prerequisites.
+- the 77-day calendar;
+- the three foundational practices;
+- two to four additional practices;
+- faithfulness rather than perfection;
+- private reflection;
+- permanent free access.
 
-## Planned origin and return context
+The introduction must not suggest that creating an account starts Day 1.
 
-Today will open Scripture, Prayer, Reflection, and Practice Guidance with the real current `journeyId` and `dayNumber`. Journey opens a reached day and then those same focused screens. Reflections opens the correct journey/day's existing Reflection screen.
+### P02 — Account Access
 
-Ordinary back navigation must preserve the actual stack. Scripture opened from a historical reflection returns to that reflection, then its collection, rather than losing context at Today. A cold link to a focused day screen falls back to its own Journey Day; the day or summary falls back to Journey with the same journey selected. No generic `returnTo` URL scheme, navigation context store, or custom back handler exists now.
+Use `/`, `/register`, and `/recover-access`.
 
-## Planned parameter contracts
+Do not choose sign-in methods based on assumptions in documentation. The release
+should use the account methods deliberately selected and configured for the
+application.
 
-| Parameter     | Meaning and later checks                                                                        |
-| ------------- | ----------------------------------------------------------------------------------------------- |
-| `journeyId`   | A particular personal journey; establish session and ownership before private loading.          |
-| `dayNumber`   | Numbered day, eventually validated as an integer from 1 through 77 and checked for eligibility. |
-| `practiceId`  | One of that day's assigned catalog practices, not unrestricted custom content.                  |
-| `communityId` | A future community resource requiring appropriate membership/access checks.                     |
-| `postId`      | A future post resource requiring appropriate community and post permissions.                    |
+### P03 — Confirm Email
 
-Optional query contracts for later use: `/journey?journeyId=…` selects a journey; `/reflections?journeyId=…` filters its collection; `/themes` may receive `journeyId` and `weekNumber` to retain the source course and focus an eligible week. `/communities/join` may receive an invitation identifier, and the composer may receive `postId` to edit an existing post.
+Use `/confirm-email`.
 
-The title-only components do not read or validate parameters, infer a default journey, or display identifiers. Future code must validate parameters and ownership before loading private content. Email addresses, private writing, motivations, and serialized records do not belong in URLs. Invitation and recovery credentials must not be logged or included in example data.
+A participant whose account requires confirmation should not reach private
+journey data until confirmation is complete.
 
-## Essential boundaries for later implementation
+### P04 — Recover Access
 
-Future and not-reached days remain unavailable; Today never becomes Day 78. Historical screens remain attached to their original journey/day across midnight and later journey starts. Optional-practice guidance before a journey exists stays inline in setup rather than inventing an identifier for a historical route. The calendar follows the phone’s current time zone. Reached-day rules, next-day practice replacement, and the one-active-journey requirement remain unchanged.
+Use `/recover-access`.
 
-Public Themes shows only the permitted broad overview. Full introductions require an eligible journey context with authentication and ownership checked before private loading; arbitrary query parameters grant no access.
+Recovery restores an existing identity. It must not create a new journey or
+silently create a second account.
 
-Daily intention and reflection share one screen but remain distinct optional fields. Writing is not required for Reflect; saving is not completion. The devotional stays within Scripture and does not become a sixth practice or obligatory separate stop. Journey-level motivation stays separate from day-based writing.
+### P05–P10 — Journey setup
 
-Community membership, group enrollment, and personal journey start are distinct. Joining must not expose journals, silently end a personal journey, backdate records, or create a second active journey. A shared post is separate from the original private writing. Direct messages, public profiles, competitive progress, and unrestricted discovery are outside this scaffold and the defined community direction. Privacy, safety, moderation, conduct, and appropriate permissions must be established before community release.
+Use one `/onboarding` workflow with internal steps rather than creating a
+permanent public URL for every answer.
 
-## Community flag and inspection
+Recommended conceptual steps:
 
-`src/constants/feature-flags.ts` exports `featureFlags.areCommunitiesEnabled`, defaulting to **false**. `src/app/(app)/communities/_layout.tsx` imports it and returns declarative `<Redirect href="/today" />` while disabled, without rendering children. The root and app navigators are already mounted. This single gate covers the hub and every defined direct child URL. With the flag temporarily true, a headerless stack exposes all eight title placeholders for local inspection. Restore false afterward; the delivered value is false.
+1. understand the commitment;
+2. review the foundational practices;
+3. choose two to four additional practices;
+4. choose an actually available Bible translation;
+5. optionally record a starting motivation;
+6. optionally configure reminders;
+7. review the start date, Day 77 date, time-zone behavior, and all practices;
+8. deliberately choose **Start my journey**.
 
-Run the existing `npm run web` command and use the address it actually prints. Append these direct paths; no preview menu or navigation links are part of the app:
+Progress should be resumable until the start is confirmed.
 
-```text
-/
-/register
-/confirm-email
-/recover-access
-/about
-/privacy
-/scripture-acknowledgments
-/themes
-/onboarding
-/today
-/journey
-/reflections
-/journeys/preview-journey/days/1
-/journeys/preview-journey/days/1/scripture
-/journeys/preview-journey/days/1/prayer
-/journeys/preview-journey/days/1/reflection
-/journeys/preview-journey/days/1/practices/preview-practice
-/journeys/preview-journey/summary
-/settings
-/settings/practices
-/settings/account
-/settings/account/delete
-/communities
-/communities/create
-/communities/join
-/communities/preview-community
-/communities/preview-community/members
-/communities/preview-community/settings
-/communities/preview-community/posts/compose
-/communities/preview-community/posts/preview-post
-/this-route-does-not-exist
-```
+The practice-selection step must show **N selected · Choose 2–4**. Fewer than
+two is incomplete. Two, three, or four are valid. A fifth or duplicate selection
+is invalid.
 
-Preview identifiers are artificial URL examples only. They create no resources, load no data, and prove no authorization. Use the development server for dynamic inspection. Production static-host/deep-link behavior is a separate deployment check; the existing static output mode is unchanged and no fictional static journeys are generated.
+### P11 — Today
 
-## Validation record
+Use `/today`.
 
-Checks performed on September 9, 2026:
+Today must be derived from the active journey and the phone's current local
+calendar date/time zone.
 
-- Inspected the initially clean working tree, all repository instructions, every numbered product document, current routes/demo/text exports, configuration, relevant lockfile entries, and installed package sources. Baseline lint and TypeScript checks passed. No application test suite or test script was present.
-- A local inventory assertion verified the exact 31 screen files and three layouts, named default exports, literal titles, eight community files, single root owner, and absence of helpers/configuration inside `src/app`. Generated route types were refreshed by the installed Expo development server, not edited or committed.
-- `npm run format` completed successfully. Comparing tracked files with a snapshot from immediately before formatting found no unrelated formatting changes.
-- `npm run lint` and `npx --no-install tsc --noEmit` passed. Expo reports the existing advisory about legacy ESLint configuration; no unrelated baseline failures were found.
-- `npm run web` encountered the existing server on port 8081 and was declined without stopping it. `npm run web -- --port 8082` started the separate development server and printed `http://localhost:8082`. A direct HTTP request to `/` returned 200 with only Sign In in the rendered body.
-- The in-app browser tool failed to connect with `codex/sandbox-state-meta: missing field sandboxPolicy`. The fallback used already-installed headless Chrome, an isolated temporary profile, and a temporary smoke script outside the repository; no tooling was installed.
-- Chrome directly opened all 22 personal URLs and the unknown URL. Each had exactly the expected visible heading and body text, no visible navigation/controls, no horizontal overflow, and horizontal/vertical centering at a 390 × 844 viewport. No session, private data, or fixtures were supplied. An initial check exposed Tamagui v2's use of `role` rather than `accessibilityRole`; the shared title was corrected to `role="heading"` with level 1, and the checks then passed.
-- With the flag false, all eight community URLs resolved to `/today`; a DOM observer saw no community heading during those loads. With the flag temporarily true, all eight displayed their specified titles, including fixed `create`, `join`, and `compose` paths. The flag was restored to false.
-- Light and dark modes were inspected through screenshots and computed styles. The existing theme produced text/background colors `#050505` / `#f7f7f7` in light and `#ffffff` / `#141414` in dark. Scripture Acknowledgments remained centered and unclipped when browser text was enlarged from the existing 26px heading to 60px with 72px line height at 320 × 640; it wrapped to three lines. This is a browser layout stress check, not a native font-scaling certification.
-- No uncaught browser runtime exceptions occurred in the successful smoke checks. Package manifests/lockfiles, Expo and TypeScript configuration, the demo, native projects, and backend integration remain unchanged.
+It should not be driven by:
 
-Not tested: physical iOS/Android safe-area behavior, native system text scaling, screen-reader speech, production static hosting/deep links, or offline native launch. Safe-area handling was checked against the installed provider context and component source; the browser used zero insets. These checks do not establish functional V1, authentication, data authorization, privacy enforcement, community readiness, or all-platform release readiness.
+- count of complete days;
+- last opened day;
+- last complete day;
+- a fake demo value.
 
-## Technical references
+### P12 — Historical Day
 
-The structure follows Expo Router's [file-routing concepts](https://docs.expo.dev/router/basics/core-concepts/), [route notation](https://docs.expo.dev/router/basics/notation/), and [navigation layouts](https://docs.expo.dev/router/basics/navigation-layouts/). The installed package's exports and types were inspected alongside the [Router API](https://docs.expo.dev/versions/latest/sdk/router/). [Protected routes](https://docs.expo.dev/router/advanced/protected/) concern the later access implementation; none is simulated here. Tamagui's [stacks](https://tamagui.dev/ui/stacks) supply the reusable layout primitives.
+Use `/journeys/[journeyId]/days/[dayNumber]`.
+
+Historical navigation should preserve the original journey/day context. A
+participant can update eligible history without shifting the current journey
+date.
+
+### P13 — Scripture
+
+Use the Scripture child route.
+
+The page should contain:
+
+- assigned reference;
+- selected approved translation;
+- full text when prepared and available;
+- required acknowledgment;
+- short devotional clearly distinguished from Scripture;
+- manual completion action;
+- clear return path.
+
+### P14 — Prayer
+
+Use the Prayer child route.
+
+No writing is required. Prayer completion is manual.
+
+### P15 — Reflection and Intention
+
+Use the Reflection child route.
+
+The day may contain both optional private intention writing and optional private
+reflection writing. Saving text and marking Reflect complete are separate
+operations.
+
+### P16 — Chosen Practice guidance
+
+Use the dynamic practice route.
+
+The route must resolve only to a practice actually assigned to that day.
+
+### P17 — Journey
+
+Use `/journey`.
+
+This is the home for calendar/list history, journey selection, theme overview
+access, Reflections access, and summary access.
+
+### P18 — Theme Overview
+
+Use `/themes` for the overview.
+
+For a signed-in participant, a query such as `journeyId` and `weekNumber` may
+identify the relevant reached weekly introduction when needed. Future full
+introductions remain unavailable.
+
+### P19 — Reflections
+
+Use `/reflections` as a Journey child destination.
+
+It should provide chronological private writing and a journey filter. Search and
+favorites are outside V1.
+
+### P20 — Journey Summary
+
+Use the journey summary route.
+
+Completed and early-ended journeys require different factual labels.
+
+### P21 — Settings
+
+Use `/settings`.
+
+### P22 — Practices
+
+Use `/settings/practices`.
+
+### P23 — Account
+
+Use `/settings/account`.
+
+### P24 — Appearance and reading preferences
+
+These can be sections within Settings rather than separate routes unless the
+final design benefits from a dedicated screen.
+
+### P25 — About, Privacy, and Scripture acknowledgment
+
+Use the public informational routes and link to them from Settings.
+
+### P26 — End Journey
+
+Use an explicit confirmation flow launched from Journey/Settings. It does not
+need a permanent route if a modal or sheet provides clear, accessible
+confirmation.
+
+### P27 — Delete Account
+
+Use `/settings/account/delete`.
+
+Account deletion must remain separate from ending a journey or deleting one
+reflection.
+
+## Route access state
+
+Navigation should be derived from a small set of meaningful product state:
+
+- authentication state;
+- email-confirmation state;
+- account/setup state;
+- active-journey state;
+- requested journey/day ownership and access;
+- network state only when a connected action requires it.
+
+### Signed out
+
+Allow:
+
+- account entry;
+- registration;
+- sign-in;
+- recovery;
+- About;
+- Privacy;
+- Scripture acknowledgments;
+- broad theme overview if intentionally public.
+
+Do not expose private journey records.
+
+### Signed in but email not confirmed
+
+Direct the participant to Confirm Email while preserving a reasonable path to
+sign out or change account information.
+
+### Confirmed account with no active journey and incomplete setup
+
+Open/resume Journey Setup.
+
+Previous journey history may remain accessible for a returning participant.
+Setup should not erase it.
+
+### Confirmed account with one active journey
+
+Primary entry should be Today.
+
+Journey and Settings remain available.
+
+### Confirmed account with no active journey but prior history
+
+Journey should expose previous journeys and a deliberate **Start another
+journey** action.
+
+Do not fabricate an active Today state.
+
+## Account creation is not journey start
+
+These are separate boundaries:
+
+1. create account;
+2. confirm account as required;
+3. complete setup choices;
+4. review today's start date;
+5. call the trusted journey-start operation;
+6. receive confirmation;
+7. enter Day 1.
+
+No earlier step should make a participant's 77-day calendar begin.
+
+## Journey origin and back behavior
+
+A day can be opened from Today, Journey, or Reflections.
+
+When feasible, preserve meaningful origin:
+
+- from Today → return to Today;
+- from Journey history → return to Journey;
+- from Reflections → return to Reflections.
+
+A cold deep link should return to the logical parent rather than depend on a
+missing navigation history.
+
+Do not put private writing or sensitive account information in a `returnTo`
+query string.
+
+## Route parameters
+
+### `journeyId`
+
+Requirements:
+
+- must identify a journey owned by the signed-in participant;
+- must not grant access merely because the ID is known;
+- must be validated against access rules;
+- may reference an active, completed, or early-ended journey.
+
+### `dayNumber`
+
+Requirements:
+
+- integer `1–77`;
+- available only when reached under that journey's lifecycle;
+- a future active-journey day must remain unavailable;
+- an early-ended journey cannot expose days after its last reached day;
+- a completed journey may expose all 77.
+
+### `practiceId`
+
+Requirements:
+
+- must be a valid catalog practice ID;
+- must actually be assigned to the referenced day;
+- opening an unassigned catalog ID should not create an assignment.
+
+## Suggested query parameters
+
+Use query parameters only when they improve navigation without exposing private
+content.
+
+Examples:
+
+- `/journey?journeyId=...`
+- `/reflections?journeyId=...`
+- `/themes?journeyId=...&weekNumber=...`
+
+Never place:
+
+- reflection text;
+- motivation text;
+- email addresses;
+- authentication credentials;
+- invitation secrets;
+- private message bodies
+
+in a URL or analytics event.
+
+## Future community route plan
+
+The following routes describe a possible later private-community structure. They
+must not be exposed in V1:
+
+- `/communities`
+- `/communities/create`
+- `/communities/join`
+- `/communities/[communityId]`
+- `/communities/[communityId]/members`
+- `/communities/[communityId]/settings`
+- `/communities/[communityId]/posts/compose`
+- `/communities/[communityId]/posts/[postId]`
+
+Future community access must depend on active membership and privacy rules.
+
+An invitation URL may carry an opaque invitation token, but the token must not
+reveal email addresses, member lists, or private data.
+
+## Future-content boundaries
+
+The route tree must not accidentally unlock future formation content.
+
+From the beginning, a participant may see:
+
+- all eleven theme names;
+- day ranges;
+- short overview descriptions.
+
+Before a future day/week is reached, do not show:
+
+- daily Scripture references/text;
+- daily devotional;
+- daily prayer prompt;
+- daily reflection question;
+- full future weekly introduction;
+- completion controls.
+
+Routing should enforce the same boundary as UI buttons.
+
+## Practice-change routing
+
+A practice change affects the next journey day only.
+
+The Settings flow should show:
+
+- current selection;
+- proposed selection;
+- exact effective day/date;
+- pending confirmation state;
+- ability to revise/cancel before it takes effect.
+
+A current/historical day route must continue resolving its original assignments.
+
+## Not-found and unavailable states
+
+Distinguish:
+
+- invalid route;
+- signed-out access attempt;
+- unauthorized journey;
+- future day;
+- not-reached early-ended day;
+- missing content;
+- offline data not prepared;
+- temporarily unavailable account state.
+
+Do not collapse all of these into “Not found.”
+
+## Expo Router implementation guidance
+
+Use current Expo Router conventions for:
+
+- route groups;
+- layouts;
+- tabs;
+- nested stacks;
+- dynamic segments;
+- protected navigation;
+- deep links.
+
+Keep route files thin. Product access checks should be reusable and testable
+rather than duplicated in every route module.
+
+Official Expo Router behavior may shape file organization, but it must not
+change the participant product rules above.

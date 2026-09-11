@@ -1,44 +1,349 @@
-# Journey start and Today
+# Journey Start — Trusted Backend Contract
 
-The final onboarding action is **Start my journey**. It saves the latest setup and calls `startJourney` using the existing start request/result contracts. The account route guard opens Today when its server-backed journey subscription confirms a journey. A failed start keeps the setup available; a stale revision requires loading and reviewing the saved setup. A changed date requires another deliberate start action.
+## Status
 
-The callable requires a signed-in account with confirmed email and an existing profile. It derives Day 1 in the reviewed phone time zone, checks the setup revision and published content, and transactionally creates `users/{userId}/journeys/{journeyId}`. That record fixes the start date, course version, and initial practices. Its `timeZoneId` records the phone zone at start; current days follow the phone’s current zone. Day 77 completion is evaluated in the current phone zone supplied to the start request. Once confirmed, completion remains terminal. Reminder preferences retain local clock times; notification scheduling is not yet implemented. Account Bible translation preferences are saved at `users/{userId}/preferences/current`; device reminder preferences remain unchanged.
+This document defines the server-authoritative journey-start boundary that
+should be built. It does not assume that a Cloud Function, client service,
+Firestore transaction, collection, rule, or test already exists.
 
-`users/{userId}/journeyControl/current` serializes starts across devices. Actor-scoped receipts at `users/{userId}/journeyStartOperations/{operationId}` retain the original result, including after the original journey ends. A different operation returns an existing active journey. An elapsed active period is reconciled to Completed before a new start commits. Firestore rules continue to prohibit client writes to journeys and default-deny access to these server-only control records.
+## Why journey start is trusted
 
-The draft and its writing history are retained. Starting motivation also receives an initial journey writing revision with the existing text and provenance. No `isSaved` or `isStarted` field is added to the draft or profile.
+Starting establishes the participant's immutable calendar and creates the one
+active journey allowed by V1.
 
-Today reads the newest journey and shows its actual calendar day, current phone time zone, weekly theme, foundational practices, initial Chosen Practices, and starting motivation. It handles loading, errors, clock discrepancies, ended journeys, and the end of Day 77. This first screen does not yet implement daily reading views, practice completion, practice changes, or daily writing.
+A client should not be able to create an active journey by directly writing
+arbitrary Firestore documents because the start operation must atomically
+validate:
 
-## Publishing prerequisites
+- authenticated identity;
+- required email confirmation;
+- setup ownership and readiness;
+- valid practice selection;
+- formation-course availability;
+- selected Scripture-edition availability;
+- today's reviewed calendar date;
+- one-active-journey invariant;
+- idempotency for repeated requests.
 
-Starting is intentionally unavailable until a real complete course and the selected translation are published. The [provisional course importer](../content/provisional-course/README.md) supplies 77 candidate readings with exact WEB text and working devotional content. It creates versioned content without changing existing journeys. Other translations require their own released text.
+The target implementation should use a Firebase callable Cloud Function or
+another equivalent authenticated trusted server boundary.
 
-The server expects the following admin-managed documents:
+## Suggested operation
 
-- `formationConfiguration/current`: `courseId`, `courseVersionId`, and `bibleTextEditionIds` mapping each available `TBibleVersionId` to its exact edition ID.
-- `formationCourses/{courseId}/versions/{courseVersionId}`: the shared published course-version contract.
-- `formationCourses/{courseId}/versions/{courseVersionId}/days/{dayContentId}`: all 77 shared day-content records, with unique day numbers, matching week/theme, and authored guidance.
-- `formationCourses/{courseId}/versions/{courseVersionId}/weekIntroductions/{weekIntroductionId}`: all 11 shared introduction records.
-- `scriptureAssignments/{scriptureAssignmentId}`: the shared assignment contract.
-- `bibleTextEditions/{bibleTextEditionId}`: a released edition with acknowledgments and source revision.
-- `bibleTextEditions/{bibleTextEditionId}/assignmentTexts/{scriptureAssignmentId}`: the complete assigned passages in that edition for each of the 77 days.
+A clear name is:
 
-These paths are server-only in the current rules. Reader access and content publishing are separate work. A publication status must only be set after editorial and translation-release review; runtime structural validation cannot establish those approvals.
+`startJourney`
 
-## Build and verification
+The final exported name can differ if project conventions require it, but the
+semantics should remain stable.
 
-`scripts/prepare-functions.cjs` copies the read-only canonical contracts and shared calendar implementation into ignored `functions/generated/`. Functions compiles its own source plus those generated inputs into `functions/lib/`; its entry point is `lib/src/index.js`. This keeps the Firebase upload self-contained without a second hand-maintained contract layer or new dependency. Run Functions commands from the repository checkout, where the canonical sources are available; Firebase predeploy runs preparation before upload.
+## Suggested request
 
-```sh
-npm --prefix functions run build
-node --test tests/start-journey.test.cjs tests/journey-setup.test.cjs tests/journey-access.test.cjs tests/route-access.test.cjs
-npm --prefix functions run lint
-npx --no-install tsc --noEmit
-npm run format
-npm run lint
+A request should contain only the participant-controlled and concurrency values
+the server needs.
+
+Example target shape:
+
+```ts
+interface IStartJourneyRequest {
+	setupRevision: number;
+	reviewedStartDate: TCalendarDate;
+	reviewedTimeZoneId: TIanaTimeZoneId;
+	deviceOperationId: string;
+}
 ```
 
-The start tests use a local transaction double with optimistic-conflict retries and atomic commits. They cover start, retry receipts, competing requests, stale setup and dates, unavailable content, failed commits, motivation transfer, authentication, time zones, and elapsed periods. They do not replace live/emulator integration tests.
+The server should resolve authoritative setup selections, course/version, and
+account identity rather than trust duplicate client-supplied copies of those
+values.
 
-Deploy `startJourney` after verifying the intended Firebase project and publishing eligible content. Local implementation does not deploy the callable or publish content.
+If the setup model requires explicit IDs in the request, validate them against
+the owned setup record.
+
+## Authentication
+
+Reject the request when:
+
+- no Firebase Authentication user is present;
+- the authenticated account is not eligible to start;
+- required email confirmation is not complete.
+
+Do not accept a user ID supplied by the client as proof of ownership.
+
+## Setup readiness
+
+The setup used for start must:
+
+- belong to the authenticated participant;
+- be in a ready state;
+- match the expected setup revision;
+- contain two to four distinct valid additional practice IDs;
+- contain an actually available selected Bible edition/version;
+- reference the intended released course/version;
+- contain only optional motivation/reminder data permitted by the product.
+
+A stale setup revision should produce a conflict/review response rather than
+starting with unseen choices.
+
+## Practice validation
+
+The backend must enforce:
+
+- three foundational practices are implicit and fixed;
+- selected additional practices are distinct;
+- selected count is 2–4;
+- every ID exists in the approved optional-practice catalog.
+
+Do not trust UI disabled states as validation.
+
+## Formation content readiness
+
+Before the start is confirmed, the selected course/version must be suitable for
+a 77-day journey.
+
+At minimum:
+
+- the course/version is released for new journeys;
+- all 77 days and 11 weekly themes required by the release exist;
+- the selected Bible edition is released;
+- every assigned passage required for that edition is available;
+- required edition metadata/acknowledgments are resolvable.
+
+A catalog label alone is insufficient.
+
+## Date review
+
+The participant should see today's proposed start date and projected Day 77 date
+before submitting Start.
+
+The server should verify that:
+
+- `reviewedTimeZoneId` is a valid IANA time-zone ID;
+- `reviewedStartDate` equals the current calendar date derived for that zone at
+  the trusted server check;
+- the setup review is not stale.
+
+If midnight has passed between review and confirmation, reject with a specific
+review-outdated result and require the UI to show the new Day 1 / Day 77 dates.
+
+Do not silently start on a date the participant did not review.
+
+## One active journey
+
+The operation must atomically enforce no more than one active journey for the
+participant.
+
+Two devices starting at nearly the same time must not create two active
+journeys.
+
+Use a transaction, lock/sentinel record, or another Firestore-safe invariant
+pattern that can be covered by automated tests.
+
+Do not rely on a client query followed by a client write.
+
+## Idempotency
+
+`deviceOperationId` should make a repeated request safe.
+
+If the same authenticated participant retries the same start operation because a
+response was lost, return the same confirmed result rather than creating another
+journey.
+
+Idempotency records must not become an unbounded source of sensitive history.
+Define a practical retention strategy consistent with the final privacy
+architecture before release.
+
+## Atomic write set
+
+A successful transaction should establish the minimum durable records needed for
+the active journey.
+
+Potential write responsibilities include:
+
+- create the journey identity/lifecycle record;
+- establish the one-active-journey ownership marker;
+- pin the released course/version;
+- pin the initial selected practices;
+- record start date and starting time zone;
+- copy the optional starting motivation into journey ownership where the product
+  model requires it;
+- mark or archive setup as consumed/started;
+- preserve an auditable start operation result for idempotency.
+
+Do not pre-mark any daily practice complete.
+
+Do not create future participant completion records merely to fill a 77-row
+structure.
+
+## Suggested response
+
+Return enough information for the client to navigate safely:
+
+```ts
+interface IStartJourneyResponse {
+	journeyId: string;
+	status: 'active';
+	startDate: TCalendarDate;
+	day77Date: TCalendarDate;
+	courseId: string;
+	courseVersionId: string;
+}
+```
+
+The response should reflect committed server state.
+
+## Failure categories
+
+Prefer stable domain error categories rather than leaking raw Firebase errors.
+
+Useful categories include:
+
+- `unauthenticated`
+- `email_not_confirmed`
+- `setup_not_found`
+- `setup_not_ready`
+- `setup_conflict`
+- `invalid_practice_selection`
+- `course_unavailable`
+- `bible_edition_unavailable`
+- `review_outdated`
+- `active_journey_exists`
+- `temporarily_unavailable`
+
+Participant-facing text belongs in the client voice layer.
+
+## Existing active journey at request time
+
+If an active journey already exists:
+
+- never create a second one;
+- if the request is a known retry of the operation that created it, return the
+  idempotent result;
+- otherwise return a typed active-journey conflict that lets the app navigate to
+  the real journey.
+
+Do not end or replace an active journey automatically.
+
+## Starting motivation
+
+The motivation is optional.
+
+If present:
+
+- preserve the participant's exact text;
+- transfer/copy it into the new journey's private writing scope as defined by
+  the domain model;
+- do not make motivation nonempty as a start condition;
+- do not publish it to future community data.
+
+## Reminder settings
+
+Reminder choices do not determine journey eligibility.
+
+If setup collects them, persist them through the device-preferences workflow
+rather than making the journey transaction depend on local notification
+permission.
+
+A participant can start with reminders disabled.
+
+## Offline behavior
+
+Journey start requires connection.
+
+If the request has not been confirmed by the trusted backend, the client must
+not display a definitive active journey.
+
+After confirmation, content preparation for offline use is a separate state. The
+UI should distinguish:
+
+- journey confirmed;
+- content preparing;
+- content prepared.
+
+Do not call the journey start failed merely because local content preparation is
+still running.
+
+## Security Rules
+
+Security Rules should prevent a client from bypassing the trusted start
+operation with equivalent direct writes.
+
+Rules should also protect:
+
+- participant ownership;
+- immutable journey identity fields;
+- terminal lifecycle fields where only trusted operations may change them;
+- private motivation/writing.
+
+The exact collection layout may vary, but the invariant must be testable.
+
+## Tests to establish
+
+### Authentication
+
+- unauthenticated request is rejected;
+- required unconfirmed email is rejected;
+- another user's setup cannot be started.
+
+### Setup
+
+- incomplete setup is rejected;
+- stale revision is rejected;
+- one selected optional practice is rejected;
+- five selected optional practices are rejected;
+- duplicate or unknown practice IDs are rejected;
+- valid 2, 3, and 4 selections are accepted.
+
+### Content
+
+- unavailable course/version is rejected;
+- unavailable/withdrawn Bible edition is rejected;
+- an edition missing an assigned passage is rejected.
+
+### Dates
+
+- reviewed local date starts as Day 1;
+- Day 77 is 76 calendar days later;
+- stale review across midnight is rejected;
+- daylight-saving boundaries do not change the calendar-day count.
+
+### Concurrency
+
+- repeated operation ID is idempotent;
+- two concurrent devices create no more than one active journey;
+- stale setup revision cannot start after another setup update.
+
+### Data
+
+- foundational practices are present in day assignment semantics;
+- no practice starts as complete;
+- starting motivation is preserved exactly when supplied;
+- empty motivation does not block start;
+- journey pins the released course/version and selected Bible edition preference
+  correctly.
+
+### Security
+
+- client cannot directly create an equivalent active journey in Firestore;
+- one user cannot read/write another user's private start/setup records.
+
+## Client behavior after success
+
+After a confirmed response:
+
+1. update local account/journey state;
+2. navigate to Day 1 / Today;
+3. begin or continue full-course local content preparation;
+4. display preparation status without blocking ordinary connected use;
+5. never repeat onboarding solely because local cache preparation is incomplete.
+
+## Client behavior after uncertain failure
+
+If the network drops after the request may have reached the server:
+
+1. keep the `deviceOperationId`;
+2. retry safely with the same operation ID;
+3. query/resolve the actual active-journey state if needed;
+4. do not offer a new start until uncertainty is resolved.
+
+This prevents a connectivity problem from becoming a duplicate journey.

@@ -1,19 +1,17 @@
 const { getDefaultConfig } = require('expo/metro-config');
+const {
+	withStorybook,
+} = require('@storybook/react-native/metro/withStorybook');
 
 const config = getDefaultConfig(__dirname);
-const tamaguiEntryPath = require.resolve('tamagui');
 
-config.resolver.resolveRequest = (context, moduleName, platform) => {
-  // Nested portal copies create separate contexts from TamaguiProvider's context.
-  if (moduleName === '@tamagui/portal') {
-    return context.resolveRequest(
-      { ...context, originModulePath: tamaguiEntryPath },
-      moduleName,
-      platform,
-    );
-  }
+config.transformer.babelTransformerPath =
+	require.resolve('react-native-svg-transformer/expo');
+config.resolver.assetExts = config.resolver.assetExts.filter(
+	(ext) => ext !== 'svg',
+);
+config.resolver.sourceExts = [...config.resolver.sourceExts, 'svg'];
 
-  return context.resolveRequest(context, moduleName, platform);
-};
-
-module.exports = config;
+module.exports = withStorybook(config, {
+	enabled: process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true',
+});

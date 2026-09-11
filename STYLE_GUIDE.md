@@ -1,641 +1,450 @@
-# TypeScript Coding Style Guide
+# 77Faithful Code Style Guide
 
-> Use this guide when generating or modifying TypeScript or React code for my projects.
->
-> The goal is not to enforce formatting rules. The goal is for generated code to match the way I prefer to structure, name, type, and reason about code.
+## Goal
 
-## 1. Core Philosophy
+Write TypeScript and React Native code that is easy to understand, safe to
+modify, and unsurprising to another engineer or coding agent.
 
-Write code that is straightforward to read and maintain.
+Clarity is more important than cleverness. The codebase should look
+intentionally maintained rather than generated from a collection of unrelated
+patterns.
+
+## Core philosophy
 
 Prefer:
 
-- clarity over cleverness;
 - explicit behavior over hidden behavior;
-- strong, expressive types;
-- small focused functions and components;
+- descriptive names over short names;
+- strong types over assertions;
+- small focused functions over long procedures;
+- small focused components over all-purpose screens;
 - composition over inheritance;
-- simple solutions over unnecessary abstractions;
-- existing patterns over introducing a new architectural idea;
-- descriptive names over abbreviations.
+- straightforward control flow over abstraction for its own sake;
+- existing project patterns over a new pattern introduced for one task;
+- a small amount of duplication over a premature abstraction;
+- a shared abstraction once repetition has a stable meaning.
 
-Do not overengineer. Do not introduce a reusable abstraction until there is a real reason for it.
+Do not optimize for the fewest lines of code.
 
-Code should look like it was written for the current application, not like generic framework sample code.
+## Naming
 
----
+Use names that explain intent.
 
-## 2. Naming and Casing
+### Variables and functions
 
-Use consistent, descriptive names.
+Use `camelCase`.
 
-### General casing
-
-- Variables: `camelCase`
-- Functions and methods: `camelCase`
-- Object properties: `camelCase`
-- React components: `PascalCase`
-- Classes: `PascalCase`
-- Interfaces: `PascalCase` with an `I` prefix
-- Type aliases: `PascalCase` with a `T` prefix
-- Enum-like constant objects: `PascalCase` by default
-- Files and folders: `kebab-case`
+Good:
 
 ```ts
-interface IPropertyCardProps {
-  propertyId: string;
-  isSelected?: boolean;
-}
+const selectedPracticeIds = [];
+const calculateJourneyDayNumber = () => {};
+const hasConfirmedEmail = true;
+```
 
-type TPropertyStatus = 'Active' | 'Inactive';
+Avoid names such as:
 
-const getPropertyDisplayName = (property: IProperty): string => {
-  return property.displayName;
+```ts
+const x = [];
+const d = 12;
+const doThing = () => {};
+```
+
+Short names are acceptable only when the abbreviation is universally understood
+in context.
+
+### Components, classes, and types
+
+Use `PascalCase`.
+
+```ts
+interface IJourneyDayProps {}
+type TJourneyStatus = 'active' | 'completed' | 'endedEarly';
+class JourneyRepository {}
+```
+
+### Constants
+
+Use descriptive immutable names. Use `SCREAMING_SNAKE_CASE` for true
+module-level constants when that improves recognition.
+
+```ts
+const JOURNEY_DAY_COUNT = 77;
+```
+
+Do not use constant-style names for ordinary local values.
+
+## Types and interfaces
+
+### Prefer precise domain types
+
+Do not use `string` when a narrow union or branded domain value materially
+improves correctness.
+
+```ts
+type TJourneyStatus = 'active' | 'completed' | 'endedEarly';
+type TPracticeId =
+	'readScripture' | 'pray' | 'reflect' | 'movement' | 'serveOrEncourage';
+```
+
+Do not invent a narrow type that provides no practical safety.
+
+### Interface and type naming
+
+For project domain contracts, use the established `I` / `T` convention
+consistently:
+
+```ts
+interface IJourneyDocument {}
+type TCalendarDate = string;
+```
+
+Do not mix conventions within the same domain.
+
+### Avoid `any`
+
+Use `unknown` at untrusted boundaries and narrow it.
+
+```ts
+const parsePayload = (payload: unknown): IStartJourneyRequest => {
+	// validate and return
 };
 ```
 
-### Name things by what they mean
+Use `any` only when an external library genuinely makes a safer type
+impractical, and isolate it.
 
-Avoid vague names such as:
+### Avoid casual assertions
+
+An assertion should not be used to silence a compiler error caused by missing
+validation.
+
+Bad:
 
 ```ts
-const data = ...;
-const item = ...;
-const obj = ...;
-const temp = ...;
-const value = ...;
+const request = payload as IStartJourneyRequest;
 ```
+
+Prefer runtime validation at external boundaries.
+
+### Use `as const` deliberately
+
+Use immutable literal collections when they define a stable domain catalog.
+
+```ts
+const FOUNDATIONAL_PRACTICE_IDS = ['readScripture', 'pray', 'reflect'] as const;
+```
+
+## Functions
+
+Prefer arrow functions for module functions and callbacks unless a declaration
+meaningfully improves the file.
+
+Keep functions focused. A function should have one coherent reason to change.
+
+Prefer early returns when they make invalid states obvious:
+
+```ts
+const getDayAccess = (dayNumber: number, reachedDayNumber: number) => {
+	if (dayNumber < 1 || dayNumber > 77) {
+		return 'invalid';
+	}
+
+	if (dayNumber > reachedDayNumber) {
+		return 'future';
+	}
+
+	return 'available';
+};
+```
+
+Do not compress meaningful branches into nested ternaries.
+
+### Parameters
+
+Prefer a single object parameter when a function has several related arguments
+or when positional meaning is not obvious.
+
+```ts
+interface ICreateJourneyDateRangeInput {
+	startDate: TCalendarDate;
+	timeZoneId: TIanaTimeZoneId;
+}
+
+const createJourneyDateRange = ({
+	startDate,
+	timeZoneId,
+}: ICreateJourneyDateRangeInput) => {};
+```
+
+Avoid parameter objects for trivial two-argument utilities when positional
+meaning is already clear.
+
+## React and React Native
+
+Use functional components and hooks.
+
+Keep route modules thin. A route should usually resolve route-specific
+parameters and compose a feature screen rather than contain substantial domain
+behavior.
+
+Keep domain calculations outside presentation components.
 
 Prefer:
 
-```ts
-const propertyResponse = ...;
-const selectedProperty = ...;
-const propertyFormValues = ...;
-const authenticatedUser = ...;
-const formattedPhoneNumber = ...;
+```tsx
+const TodayScreen = () => {
+	const journeyDay = useJourneyDay();
+
+	return <TodayView journeyDay={journeyDay} />;
+};
 ```
 
-Do not shorten names unless the abbreviation is standard and obvious, such as `id`, `url`, `api`, or `http`.
+over a screen that combines navigation, Firestore access, date calculations,
+business rules, and rendering in one file.
 
-### Boolean names
+### Component responsibilities
 
-Boolean names should read like a condition.
+A component should primarily own one of:
 
-Prefer:
+- presentation;
+- local interaction state;
+- a focused workflow;
+- orchestration of a small number of child components.
+
+If a component becomes difficult to name without `And`, review its
+responsibilities.
+
+### Props
+
+Define explicit props types. Pass the narrowest data required.
+
+Do not pass entire account, journey, or Firestore documents into a leaf
+component that needs two fields.
+
+### Hooks
+
+Hooks should expose behavior or state with a clear domain meaning.
+
+Avoid hooks that hide large amounts of mutation and navigation behind vague
+names.
+
+Good:
 
 ```ts
-isLoading;
-isSelected;
-hasPermission;
-hasError;
-canEdit;
-shouldRefresh;
+useJourneyDay();
+useStartJourney();
+useAccountAccessState();
 ```
 
 Avoid:
 
 ```ts
-loadingFlag;
-selected;
-permission;
-errorState;
+useEverything();
+useAppStuff();
 ```
 
-### Event handlers
+## Services and repositories
 
-Public callback props use `on...` names. Internal handler functions use `handle...` names.
+Use a class only when state, lifecycle, substitution, or dependency injection
+makes it useful. Do not create classes as static utility containers.
 
-```ts
-interface IButtonProps {
-  onPress: () => void;
-}
+Keep Firebase SDK concerns behind focused adapters or repositories where doing
+so prevents SDK-specific types from spreading through the application.
 
-const handlePress = () => {
-  onPress();
-};
-```
+A service may coordinate a workflow; it should not become a global dumping
+ground.
 
----
+## Async code
 
-## 3. Comments
+Use `async` / `await` for sequential asynchronous workflows.
 
-Comments should be uncommon.
+Handle expected errors at the layer that can make a useful decision.
 
-Code should explain **what it does** through naming, types, and structure. Comments should explain **why something non-obvious exists**.
-
-### Good comments
-
-Use a comment when there is important context that cannot be reasonably expressed by the code itself.
-
-```ts
-// Keep the previous session until refresh fails so concurrent requests can reuse it.
-const refreshSession = async () => {
- ...
-};
-```
-
-```ts
-// The provider returns 404 for both missing and expired invitations.
-if (response.status === 404) {
-  return null;
-}
-```
-
-A short comment is also acceptable around a strange platform limitation, security decision, compatibility workaround, or intentional exception.
-
-### Bad comments
-
-Do not narrate the code.
-
-```ts
-// Set loading to true
-setIsLoading(true);
-
-// Get the user
-const user = await getUser();
-
-// Return the property
-return property;
-```
-
-Do not add section-by-section commentary inside normal functions.
-
-```ts
-// Validate input
-...
-
-// Fetch data
-...
-
-// Process response
-...
-
-// Return result
-...
-```
-
-If a function requires that much narration, the function probably needs clearer names or better decomposition.
-
-### Comment rules
-
-- Explain **why**, not **what**.
-- Do not comment obvious syntax.
-- Do not add comments just because code was generated by AI.
-- Do not leave commented-out code.
-- Do not write large prose blocks above straightforward functions.
-- Use JSDoc for public APIs, reusable library functions, or genuinely non-obvious behavior when it adds useful information.
-- Do not repeat TypeScript types in JSDoc when the type signature already communicates them.
-
----
-
-## 4. TypeScript Types
-
-Types are part of the design and documentation of the code.
-
-### Avoid `any`
-
-Do not use `any` unless there is no practical alternative at an external boundary.
-
-Prefer defining the actual shape.
-
-```ts
-interface IPropertyResponse {
-  property: IProperty;
-}
-```
-
-If an external value is genuinely unknown, use `unknown` and narrow it immediately.
-
-### Interfaces vs. type aliases
-
-Use **interfaces for object-shaped contracts**.
-
-```ts
-interface IUser {
-  id: string;
-  email: string;
-}
-```
-
-Use **type aliases for unions, derived types, utility types, and compositions**.
-
-```ts
-type TUserStatus = 'Active' | 'Disabled';
-
-type TEditableUser = Pick<IUser, 'email' | 'firstName' | 'lastName'>;
-```
-
-Do not use complex type-level programming when a simple explicit type is easier to understand.
-
-### Type-only imports
-
-Use `import type` when an import is only used by TypeScript.
-
-```ts
-import type { IUser } from './user.types';
-```
-
-### Avoid unsafe casts
-
-Do not use `as SomeType` to make a type error disappear.
-
-Prefer fixing the type at the boundary where the value is created or received.
-
-Casts are acceptable when the runtime invariant is known but cannot reasonably be represented by a third-party type. Keep those casts narrow and local.
-
-### Null and optional values
-
-Be intentional about absence.
-
-- Use optional properties when a value may be omitted.
-- Use `null` when absence is an explicit meaningful value.
-- Do not mix `null`, `undefined`, empty strings, and sentinel values arbitrarily.
-
----
-
-## 5. Enum-Like Values
-
-Do not use TypeScript `enum` by default.
-
-Use an `as const` object and derive the union type from it.
-
-```ts
-export const PropertyStatus = {
-  Active: 'Active',
-  Inactive: 'Inactive',
-  Archived: 'Archived',
-} as const;
-
-export type TPropertyStatus = (typeof PropertyStatus)[keyof typeof PropertyStatus];
-```
-
-This keeps the runtime value and TypeScript type tied together without TypeScript enum behavior.
-
-### Casing enum-like values
-
-For application-owned values, prefer readable PascalCase keys and values:
-
-```ts
-export const ButtonVariant = {
-  Primary: 'Primary',
-  Secondary: 'Secondary',
-  Ghost: 'Ghost',
-} as const;
-```
-
-When a value is part of an external API, database protocol, or established wire contract, preserve the required casing instead of converting it for style reasons.
-
-```ts
-export const InvitationStatus = {
-  Pending: 'PENDING',
-  Accepted: 'ACCEPTED',
-  Expired: 'EXPIRED',
-} as const;
-```
-
-Do not maintain a separate manually written union that can drift from the constant object.
-
----
-
-## 6. Functions
-
-Standalone functions should generally be `const` arrow functions.
-
-```ts
-export const getPropertyDisplayName = (property: IProperty): string => {
-  return property.displayName.trim();
-};
-```
-
-Class methods use normal method syntax.
-
-```ts
-class PropertyService {
- async getProperty(propertyId: string): Promise<IProperty> {
-  ...
- }
-}
-```
-
-### Function design
-
-Functions should do one clear thing.
-
-Prefer:
-
-- explicit parameters;
-- explicit domain names;
-- guard clauses;
-- early returns;
-- direct control flow;
-- pure functions where reasonable.
-
-Avoid deep nesting.
-
-```ts
-const saveProperty = async (property: IProperty): Promise<void> => {
-  if (!property.id) {
-    return;
-  }
-
-  if (!canEditProperty(property)) {
-    throw new Error('Property cannot be edited');
-  }
-
-  await propertyService.save(property);
-};
-```
-
-Prefer this over wrapping the entire function in several levels of `if` statements.
-
-Do not extract tiny one-line helpers simply to make a function appear shorter. Extract logic when the helper has a meaningful responsibility or improves reuse/testability.
-
----
-
-## 7. React Components
-
-Use functional components with named exports.
-
-```tsx
-interface IPropertyCardProps {
-  property: IProperty;
-  onPress: (propertyId: string) => void;
-}
-
-export const PropertyCard = ({ property, onPress }: IPropertyCardProps) => {
-  const handlePress = () => {
-    onPress(property.id);
-  };
-
-  return (
-    <Card onPress={handlePress}>
-      <Text>{property.displayName}</Text>
-    </Card>
-  );
-};
-```
-
-### Component rules
-
-- Components should have one clear UI responsibility.
-- Props should be explicitly typed.
-- Prefer destructuring props in the function signature.
-- Give optional props defaults during destructuring when appropriate.
-- Keep JSX readable and mostly declarative.
-- Move non-trivial event logic into named handlers.
-- Do not place large business workflows directly inside JSX callbacks.
-- Do not create a component just to wrap a single element unless it represents a real reusable concept.
-- Prefer composition over large components with many mode flags.
-- Do not use `React.FC` unless the surrounding codebase specifically prefers it.
-- Do not use `React.memo`, `useMemo`, or `useCallback` automatically. Use them when they solve a real rendering or identity problem.
-
-### Props should describe behavior, not implementation
-
-Prefer semantic props:
-
-```ts
-variant = 'Primary';
-isSelected;
-hasError;
-fullWidth;
-```
-
-Avoid exposing arbitrary implementation details unless the component is intentionally low-level:
-
-```ts
-backgroundColor='#ffffff'
-padding={17}
-borderRadius={11}
-```
-
-### Keep state close to where it is used
-
-Use local state for local behavior.
-
-Move state into context, a provider, or another shared state mechanism only when multiple unrelated parts of the application genuinely need it.
-
-Do not introduce global state to avoid passing a prop through one or two levels.
-
----
-
-## 8. Hooks
-
-Custom hooks start with `use` and describe the behavior they provide.
-
-```ts
-useAuth;
-usePropertyDetails;
-useScreenScrollOffset;
-```
-
-Avoid vague hook names such as:
-
-```ts
-useData;
-useThing;
-useStuff;
-```
-
-A hook should represent meaningful reusable React behavior, not simply wrap one line of code.
-
-Do not hide surprising side effects inside a hook. Its name and API should make its responsibility clear.
-
----
-
-## 9. Classes and Services
-
-Use classes when the code naturally represents a service, repository, provider, or stateful dependency boundary.
-
-Do not use classes merely to organize unrelated functions.
-
-Constructor injection is preferred when a class depends on another service or repository and testability benefits from replacing that dependency.
-
-```ts
-export class PropertyService {
-  constructor(private readonly repository: PropertyRepository) {}
-
-  async getProperty(propertyId: string): Promise<IProperty> {
-    return this.repository.findById(propertyId);
-  }
-}
-```
-
-Keep public methods focused on the class responsibility. Keep implementation details private.
-
-Prefer composition over inheritance.
-
----
-
-## 10. Error Handling
-
-Do not silently swallow errors.
-
-Catch an error only when the code can do something meaningful with it, such as:
-
-- recover;
-- translate it into a domain error;
-- add useful context;
-- perform cleanup;
-- intentionally return a fallback.
+Do not catch an error merely to log it and rethrow it unless the added context
+is materially useful.
 
 Bad:
 
 ```ts
 try {
-  await saveProperty();
-} catch {
-  return;
-}
-```
-
-Better:
-
-```ts
-try {
-  await saveProperty();
+	return await saveReflection();
 } catch (error) {
-  log.error('Failed to save property', { error, propertyId });
-  throw error;
+	console.error(error);
+	throw error;
 }
 ```
 
-Prefer guard clauses for expected invalid states and exceptions for genuinely exceptional failures.
+Prefer either letting the error propagate or converting it to a meaningful
+domain result.
 
-Do not use exceptions as normal branching logic.
+## Error handling
 
----
+Differentiate:
 
-## 11. Abstractions and Reuse
+- validation errors;
+- authentication/authorization errors;
+- unavailable network;
+- conflict/concurrency errors;
+- not-found states;
+- unexpected server errors.
 
-Do not abstract code simply because two pieces look similar.
+Do not show raw Firebase error strings to participants.
 
-Create a shared abstraction when:
+Participant-facing errors must follow the voice guide and should explain the
+next useful action when one exists.
 
-- the behavior represents the same concept;
-- the duplication is likely to evolve together;
-- the abstraction makes the calling code easier to understand;
-- it has a clear name and responsibility.
+## State and data flow
 
-Duplication is sometimes better than a vague generic abstraction.
+Prefer the smallest owner of state.
 
-Avoid generic names such as:
+Do not duplicate the same server-backed value in several state containers unless
+each copy has a clear lifecycle and reconciliation rule.
 
-```ts
-BaseManager;
-GenericService;
-CommonHelper;
-UtilityProcessor;
-DataHandler;
-```
+Derived values should normally be calculated rather than persisted.
 
-Prefer domain-specific abstractions.
+Examples of values that should usually be derived:
 
-Keep code local until reuse is demonstrated.
+- current journey day number;
+- completed-practice count;
+- complete-day status;
+- week number;
+- current streak;
+- Day 77 date.
 
----
+Persist a derived value only when there is a clear performance, audit, or query
+requirement and a defined source of truth.
 
-## 12. Object and Data Handling
+## Object handling
 
-Prefer immutable transformations unless mutation is clearly simpler and local.
+Prefer explicit object construction at trust boundaries.
 
-```ts
-const updatedProperty = {
-  ...property,
-  displayName: nextDisplayName,
-};
-```
-
-Do not mutate input parameters unless the API explicitly exists to mutate them.
-
-Prefer explicit object construction at system boundaries. It makes transformations and security-sensitive fields visible.
+Avoid spreading large untrusted or persistent objects into outward-facing DTOs:
 
 ```ts
 return {
-  id: row.id,
-  displayName: row.display_name,
-  createdAt: toDateTimeString(row.created_at),
+	journeyId,
+	dayNumber,
+	status,
 };
 ```
 
-Do not spread unknown database/API objects directly into public models when fields should be controlled.
+instead of:
 
----
-
-## 13. File Organization
-
-Keep related code together and use descriptive file names.
-
-Folders and files generally use `kebab-case`.
-
-Use role suffixes when they make ownership obvious:
-
-```text
-property-card.component.tsx
-property-card.types.ts
-property-card.styles.ts
-use-property-details.hook.ts
-property-api.service.ts
-property.repository.ts
-property.utils.ts
+```ts
+return {
+	...firestoreDocument,
+};
 ```
 
-Do not create files merely to satisfy a rigid template. A small component does not automatically need five supporting files.
+This reduces accidental data exposure and contract drift.
 
-Split code when the separation has a real responsibility boundary.
+## Files and modules
 
----
+Organize by domain and responsibility rather than by arbitrary file size.
 
-## 14. What AI-Generated Code Should Avoid
+A practical target structure may include:
 
-Do not generate:
+```text
+src/
+  app/
+  components/
+  features/
+  lib/
+  providers/
+  types/
+```
 
-- excessive comments;
-- comments that narrate obvious code;
-- TypeScript `enum` unless required by an existing API;
-- `any` as a shortcut;
-- large unsafe casts;
-- vague names;
-- unnecessary base classes;
-- generic helper layers;
-- speculative abstractions;
-- automatic memoization everywhere;
-- global state for local problems;
-- deeply nested conditionals;
-- clever one-liners that reduce readability;
-- unrelated refactors;
-- new patterns when the existing code already has a reasonable pattern;
-- implementation changes that were not requested.
+This is an intended organization, not proof that those directories exist.
 
-Do not optimize for the fewest lines of code. Optimize for code that is easy to understand and change.
+Keep shared components genuinely shared. Keep feature-specific components near
+the feature until their reuse is established.
 
----
+Avoid generic `utils.ts` files containing unrelated functions. Name utility
+modules after the concept they own.
 
-## 15. AI Generation Checklist
+## Comments
 
-Before returning code, verify that it follows these expectations:
+Comments should explain intent, constraints, or non-obvious tradeoffs.
 
-- Names are descriptive and use the expected casing.
-- Interfaces use `I`; type aliases use `T`.
-- `as const` objects are used instead of TypeScript enums.
-- Types are explicit without becoming overly clever.
-- No unnecessary `any` or unsafe casts were added.
-- Functions and components have one clear responsibility.
-- Guard clauses are used instead of unnecessary nesting.
-- React components are functional, typed, and readable.
-- Handlers use `handle...`; callback props use `on...`.
-- Memoization is only used when justified.
-- Comments are limited to non-obvious **why** information.
-- No obvious code is narrated with comments.
-- Errors are not silently swallowed.
-- New abstractions have a clear concrete reason to exist.
-- The solution stays within the requested scope.
-- The result looks like normal production code, not AI-generated tutorial code.
+Good:
 
----
+```ts
+// A day is calendar-based. Do not calculate this as elapsed 24-hour blocks.
+```
 
-## Short Version for an AI
+Avoid comments that restate syntax:
 
-If context is limited, use these rules:
+```ts
+// Increment the count
+count += 1;
+```
 
-> Write clear, explicit, strongly typed TypeScript. Use descriptive `camelCase` names for values/functions, `PascalCase` for components/classes, `I`-prefixed interfaces, and `T`-prefixed type aliases. Prefer `as const` objects with derived union types instead of TypeScript enums. Use standalone arrow functions and functional React components with named exports. Keep components and functions focused, use guard clauses, and avoid unnecessary abstractions, memoization, global state, casts, and `any`. Comments should be rare and should explain only non-obvious reasons, constraints, workarounds, or intent; never narrate what the code is doing. Prefer composition, explicit data transformations, and existing project patterns. Do not overengineer or introduce unrelated changes.
+Remove comments that no longer match the code.
+
+## Reuse and abstraction
+
+Create an abstraction when repeated code represents the same concept and is
+likely to change together.
+
+Do not create a component factory, generic repository base class, registry, or
+configuration-driven mini-framework for a single use case.
+
+When two implementations are similar but have different domain rules,
+duplication can be safer than forcing them behind a false shared abstraction.
+
+## Testing
+
+Tests should protect product behavior, not merely execute lines.
+
+Prioritize:
+
+- permanent product invariants;
+- date and time-zone rules;
+- route access;
+- authentication and authorization;
+- concurrency/idempotency;
+- writing conflict protection;
+- Firestore Security Rules;
+- destructive actions;
+- offline reconciliation behavior;
+- accessibility-critical state where practical.
+
+Use descriptive test names:
+
+```ts
+it('does not create a second active journey for a repeated start request', ...)
+```
+
+Avoid vague names such as `works` or `handles case`.
+
+## Generated-code warning signs
+
+Review code that contains:
+
+- unnecessary commentary on obvious syntax;
+- multiple abstraction layers introduced together without a concrete need;
+- generic names such as `Manager`, `Processor`, or `Handler` with broad
+  responsibilities;
+- repeated type assertions;
+- defensive branches for impossible states without a documented reason;
+- several helper functions used only once where direct code is clearer;
+- inconsistent naming between adjacent files;
+- UI components with arbitrary one-off styling instead of shared tokens.
+
+## Completion checklist
+
+Before considering a code change ready:
+
+- behavior matches the owning product document;
+- names describe intent;
+- domain rules are not duplicated unnecessarily;
+- new persistent data has an explicit contract;
+- external inputs are validated;
+- private fields are not leaked;
+- expected error states are handled;
+- UI text follows the voice guide;
+- UI follows the visual guide;
+- formatter, linter, type checks, and relevant tests have been run when
+  configured;
+- the work report distinguishes local code from deployed behavior.

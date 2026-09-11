@@ -1,137 +1,875 @@
-# Canonical domain contracts
+# 77Faithful Target Domain Type System
 
-`src/types/index.ts` is the `@77/types` application surface. Internal domain files use relative imports and do not import the barrel. These dependency-free contracts describe records and operations; they do not implement persistence, validation, authorization, synchronization, notifications, or application workflows.
+## Status
 
-The product authority remains [product/README.md](../product/README.md). The principal sources for these decisions are [calendar](../product/04-journey-and-calendar.md), [practices](../product/05-daily-practices.md), [content](../product/06-scripture-and-daily-content.md), [setup](../product/08-onboarding-and-account-experience.md), [statistics and writing](../product/10-progress-history-and-reflections.md), [reliable use](../product/12-reminders-and-reliable-use.md), [privacy](../product/13-privacy-safety-and-accessibility.md), and [communities](../product/14-communities-and-future-vision.md). The owner's domain-contract task explicitly authorizes future community text-messaging types; it does not authorize launching messaging or unrestricted direct messages.
+This document defines the domain contracts and persistence rules that should be
+established before broad feature work. It does not assume that `src/types/**`,
+Firestore collections, indexes, Cloud Functions, repositories, validators, or
+tests already exist.
 
-## Organization and record identity
+The purpose is to give client code, server code, Security Rules design, offline
+state, and future community work one coherent vocabulary.
 
-`shared` contains only time, schema, and cross-domain save concepts. `account`, `formation`, and `journey` define V1. `community` and `messaging` define future boundaries. `severity.types.ts` remains unchanged. The old `bible-version.types.ts` location forwards to the canonical formation module, preserving its existing display exports without a second definition.
+Product documents remain authoritative for behavior.
 
-An `I...Document` describes a persisted document **body**, not a Firestore snapshot. Its own path ID is omitted. Scope/ownership fields and references to other records are explicit persisted fields even when a future parent path may repeat that scope. Document names do not finalize collection paths or indexes.
+## 1. Design goals
 
-`IJourneyDayDocument.dayNumber` is deliberately persisted even if used as its path key: it is a domain ordinal needed for ordering, validation, and calendar calculations. Memberships, enrollments, read positions, and sharing preferences retain their descriptive `userId` and community/conversation references. A document's path must agree with these fields wherever duplicated. Profile and account preference bodies use the account's `userId` only in their path.
+The domain layer should be:
 
-Hydrated projections/results introduce path IDs deliberately, for example `IJourneyDetails { journeyId, journey, day77Date }`, `ICommunityMemberSummary`, and `IConversationSummary`. Do not spread an SDK snapshot or private profile into an outward response. TypeScript is structurally typed: omission from an interface is not a runtime field filter.
+- dependency-light;
+- explicit at trust boundaries;
+- usable by both client and server TypeScript;
+- independent of Firebase snapshot classes;
+- stable enough to prevent screens and services from inventing incompatible
+  shapes;
+- organized around product concepts rather than database convenience.
 
-| Major entity                            | Path identity / scope                                         | Responsibility                                                                                      |
-| --------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Authenticated account identity          | Auth `userId`; not an application document                    | Private contact email and email confirmation supplied by the auth provider                          |
-| User profile / preferences              | `userId`                                                      | Optional preferred name; translation, appearance, and reading size                                  |
-| Setup draft                             | `setupDraftId`, private `userId`                              | Saved unfinished choices and optional motivation, with no committed schedule                        |
-| Device preferences                      | `deviceId`, private `userId`                                  | Independently optional morning/evening reminders on that phone                                      |
-| Deletion process                        | `deletionRequestId`, private `userId`                         | Server-managed requested/in-progress/failed/completed outcome independent of profile survival       |
-| Formation course / version              | `courseId` / `courseVersionId`                                | Authored course identity and published, version-pinned content                                      |
-| Week overview / introduction            | Version-scoped week identity                                  | Public overview separated from the full introduction gated by reached week                          |
-| Daily formation content                 | `dayContentId`, course/version                                | Title, assignment, devotional, both forms of prayer guidance, reflection, intention invitation      |
-| Scripture assignment / assignment text  | `scriptureAssignmentId` / `scriptureAssignmentTextId`         | One primary plus optional supporting passage; accurate edition-specific text                        |
-| Bible text edition / content correction | `bibleTextEditionId` / `correctionId`                         | Release/withdrawal and acknowledgments; explicit correction or unavailability notice                |
-| Personal journey                        | `journeyId`, private `userId`                                 | Immutable start/zone/course and initial practice choices; current lifecycle; motivation             |
-| Practice change                         | `practiceChangeId`, private journey/user scope                | Confirmed effective schedule history, including pending, canceled, and superseded changes           |
-| Journey day                             | `dayNumber`, private journey/user scope                       | Original date/content/assignments, five to seven completion states, separate optional writing heads |
-| Writing revision / conflict             | `revisionId` / `conflictId`, private user and target          | Recoverable saved text versions, deletion tombstones, and explicit conflict resolution              |
-| Community / membership                  | `communityId` / community-user membership identity            | Private group, organizer/member roles, and accepted membership lifecycle                            |
-| Invitation / secret                     | `invitationId`, community scope                               | Single-use invitation lifecycle; separately restricted token digest                                 |
-| Coordinated journey / enrollment        | `communityJourneyId` / `communityJourneyEnrollmentId`         | Shared schedule and private pre-start commitment leading to an individual journey                   |
-| Progress-sharing preference             | Community journey and `userId`                                | Independent consent for individual and aggregate high-level information                             |
-| Post / reply                            | `postId` / `replyId`, community/thread scope                  | Prayer requests, discussion, announcements, shared reflection copies, and separate replies          |
-| Report / moderation action              | `reportId` / `moderationActionId`, restricted community scope | Private reports and safety decisions, separate from visible content                                 |
-| Conversation / participant              | `conversationId` / conversation-user identity                 | Community text conversation and private per-participant last-read cursor                            |
-| Message                                 | `messageId`, community/conversation scope                     | Text, server-established sender, revision/edit time, and truthful removal tombstone                 |
+A target location is `src/types/**`, with `src/types/index.ts` as the deliberate
+public export surface.
 
-## Time and persistence boundaries
+## 2. Separation of concerns
 
-- `TCalendarDate` is a Gregorian `YYYY-MM-DD` string. `TLocalClockTime` is a phone-local `HH:mm` string. Their simple templates help distinguish them from timestamp objects but do not validate padding, real dates, or ranges. `TIanaTimeZoneId` is a validated IANA identifier, never a UTC offset.
-- `IPersistedTimestamp` has settled `seconds` and `nanoseconds`, structurally accepted from both installed Firebase client and Admin timestamp classes. Validate integer seconds and nanoseconds in their supported ranges. No `Date | string | number | Timestamp` union or pending server-timestamp sentinel enters a read contract.
-- The intended Firestore representation for audit instants is a native timestamp. A future adapter must convert a plain `{ seconds, nanoseconds }` wire/local value to that SDK's `Timestamp` before writing; writing the plain object directly would create a map. Callable JSON and local serialization use the explicit seconds/nanoseconds shape and must not rely on SDK class serialization. Server timestamp sentinels belong only in the future persistence adapter.
-- Server audit times and participant-device observation times are distinct. `recordedOnDeviceAt` is advisory and cannot authorize eligibility or settle a conflicting action by itself.
-- Important document boundaries use schema version `1`; nested objects are not independently versioned. Course versions and Bible text editions describe content identity, not database migrations.
-- `null` represents explicit absence or a writing deletion tombstone. Optional properties in future community contracts may be omitted; adapters must not write `undefined`.
+Keep these concepts distinct:
 
-## Journey, practice, and content rules
+- persisted document body;
+- path/document identity;
+- hydrated application projection;
+- function request DTO;
+- function response DTO;
+- device-local state;
+- authored content;
+- derived statistics.
 
-There is no persisted not-started journey. Setup choices may be incomplete or ready for review; readiness only proves that the required choice fields are present. The connected start operation must authenticate the participant, require confirmed email, check available complete course/translation content, compare the reviewed date with the server-derived date in the observed phone zone, and transactionally enforce at most one active personal journey. An uncertain or repeated operation must recover its established result rather than create another journey. A stale review produces a new review, not yesterday's start.
+Do not spread raw Firestore snapshots into participant-facing or
+function-response objects.
 
-`IJourneyDocument` fixes its owner, course/version, start date, starting phone zone, and initial optional selection. The stored zone is context only; current days follow the phone’s current zone. Its state is Active, Completed, or EndedEarly. Ending early requires ending metadata; it is terminal. Completion is evaluated when the Day 77 date ends in the current phone zone, independently of markers. The server records that boundary when confirming completion; confirmed completion remains terminal. Day 77 is start date plus 76 calendar dates, so `day77Date` belongs in a derived result. Reconcile elapsed status before permitting any consequential transition or another start.
+## 3. Suggested domain organization
 
-Validate all day numbers as integers 1–77 and week numbers as 1–11, with week `ceil(dayNumber / 7)`. `FormationStructure` and `FormationThemeOrder` hold the settled duration, daily-practice count bounds, and theme sequence. A numeric alias cannot reject Day 78; validators, calendar logic, Rules, and server operations must do so. Day numbers stay attached to their assigned calendar dates. Travel can move the current day forward or backward as the phone’s local date changes; daylight-saving changes do not alter the date-to-day mapping. Only reached days can become authoritative participation records. Completed journeys permit all 77; early-ended journeys permit only their frozen reached portion.
+```text
+src/types/
+  account/
+  formation/
+  journey/
+  shared/
+  community/      # future
+  messaging/      # future only if explicitly approved
+  index.ts
+```
 
-`IDailyPractices` must represent five to seven assigned practices. `readScripture`, `pray`, and `reflect` identify the three foundational IDs. Each optional slot pairs its immutable practice ID with its own completion state. Optional selections must contain two to four practice IDs, and `TAssignedDailyPracticeIds` must contain the foundational three followed by those selections; distinctness remains runtime validation. Completion writes address a **practice ID**, not an optional slot, and modify only that declaration. Writing never marks Reflect; deleting writing never clears it.
+### Account
 
-The journey stores its initial selection and a schedule revision, not a mutable selection to reinterpret all history. Independent practice-change records retain each confirmed selection and its effective day. There can be only one pending replacement. Revising a pending selection supersedes its previous record; cancellation retains that history. Neither is allowed after the effective boundary. A confirmed Pending change is authoritative from its effective date even if a background worker has not yet set Applied. Ending early cancels unused changes.
+Target contracts:
 
-Materialize a reached day lazily from the initial selection plus the effective, non-canceled schedule history. This is essential when someone never opened an earlier day. Do not reconstruct old assignments from today's selection. A replacement can affect only the next journey day, never Day 78, today, or historical assignments. Expected schedule revision and reviewed effective day/date protect confirmation across another device's edit or midnight.
+- `IUserDocument`
+- `IDevicePreferencesDocument`
+- `IJourneySetupDocument`
+- account-deletion request/status contracts
 
-Content is authored separately. A journey pins the course/version, and a day pins its immutable day content ID. References, Scripture text, devotional, prayer prompt, written prayer, reflection question, and optional intention invitation remain separate concepts. Weekly overviews exclude full introductions. Scripture paragraphs and text runs preserve publisher wording, edition-specific labels, and versification notes, without introducing whole-Bible navigation or a vendor API identity.
+### Formation
 
-`BibleVersionId` is the persisted preference identity; `BibleVersion`/`TBibleVersion` remain display metadata. All nine desired translations are represented, with NASB 2020 explicit. Text edition records separately describe pending review, released, or withdrawn content. No catalog constant certifies publication rights. Runtime publication checks require the exact reviewed edition and all 77 assigned readings for every offered translation. Material correction records point to an identified replacement or withdrawal and explain the change; original participant words are not rewritten. Ordinary edits create a new content version.
+Target contracts:
 
-## Writing and offline reliability
+- practice catalog
+- Bible version/edition catalog
+- Scripture reference/text
+- course/version
+- weekly introduction
+- daily formation content
 
-Writing targets distinguish setup motivation, journey starting motivation, daily intention, and daily reflection. Targets are addresses; they do not confer eligibility. Each bounded writing head stores the current revision ID, text or deletion tombstone, and confirmed update time. Revision and conflict documents grow independently, never inside an array on a day or journey.
+### Journey
 
-Save/delete operations carry the expected revision plus a device operation identity. A future synchronization transaction must preserve an incompatible incoming revision and link it through a conflict before acknowledging a save. It must not silently replace the head or merge sentences. Resolution selects a retained revision or explicitly composed text, checks the expected current revision again, and records the chosen result. More than two competing devices create separate conflict records; a result resolving one conflict does not imply all conflicts are resolved.
+Target contracts:
 
-Revisions support recovery, not an indefinitely retained hidden journal archive. Confirmed deletion must remove the relevant superseded saved text under the adopted privacy policy, leaving a text-free tombstone/lineage where needed to prevent stale resurrection. A competing saved edit, including edit-versus-delete, must be preserved and visibly reconciled before claiming removal is complete. Resolution and deletion need cleanup of obsolete revision/conflict text. Never promise deletion merely because the visible head disappeared. Account deletion additionally prevents replay, removes private recoveries when learned, and cannot be undone by an older device's outbox. No retention period is invented here.
+- `IJourneyDocument`
+- `IJourneyDayDocument`
+- practice-selection changes
+- private writing
+- journey statistics projections
+- function request/response contracts
+- device-local journey state
 
-Starting a personal journey must transfer setup motivation and preserved revisions/conflicts coherently; disposing of setup cannot orphan competing text. Future enrollment snapshots likewise retain their private source revisions through setup cancellation, then transfer them to the eventual personal journey. The setup source must remain resolvable while such a snapshot depends on it.
+### Shared
 
-`journey-local.types.ts` is explicitly local storage: recoverable editor drafts, durable unsynchronized saves/deletions, practice conflicts, unreached-day writing recovery, and per-phone course preparation. Account and device identity must namespace all of it. A recovered draft is not saved writing; a phone-only save is not an account acknowledgment. `SavedToAccount` requires its acknowledgment timestamp. Visible unsaved text and UI loading/errors stay outside persisted contracts.
+Target contracts:
 
-Preparation is Ready only after all 77 days of course guidance and assigned Scripture for the exact text edition are durable on that phone. Cache readiness does not unlock future content. Preserve the currently readable translation until its replacement is prepared. Missing cache/history is unavailable information, not proof of an empty account. Learn content corrections and deletion/ending state on reconnection before replaying pending changes.
+- persisted timestamp representation;
+- calendar date;
+- local clock time;
+- IANA time-zone ID;
+- revision/version fields;
+- sync/save-state types.
 
-A stale optional-practice marker remains tied to its recorded practice ID. Preserve it for review when it no longer matches the authoritative assignment; never transfer completion to the replacement. If two declarations/settings disagree and reliable order is unknown, surface the disagreement instead of reviving an older choice. Writing saved locally beyond a newly learned early-ending cutoff is offered privately for recovery; it cannot create an eligible day. Signing out must either protect phone-only work for the correct account or obtain deliberate discard, and stop that phone's reminders.
+### Future community
 
-## Derived results and device settings
+Keep future community types physically and conceptually isolated so V1 code does
+not accidentally treat them as released behavior.
 
-Current journey position, Day 77 date, day-grid access state, completion counts, summaries, live/current selection, and late-update indication are derived. No future-day grid row requires a fake Firestore document. `lastParticipantUpdateAt` records confirmed participant changes separately from administrative materialization, so creating a missing historical record does not falsely imply the participant edited it. Compare that instant's calendar date in the phone’s current zone with the assigned date to derive the late-update indication; device-recorded time is not proof of when the practice occurred.
+## 4. Persistent record identity
 
-Statistics describe the current personal record and recalculate after corrections. Written-reflection count includes only saved nonempty daily reflections, excluding intentions, motivations, drafts, and competing revisions not chosen as the head. Fully completed days require a completion declaration for every practice assigned to that day. The current streak exists only while active: if today is incomplete, count the complete run ending yesterday; if today is complete, count the run ending today. An incomplete yesterday breaks it. Historical corrections recalculate both current and longest runs. Early-ended denominators use reached days; a full period has 77 days and 385–539 possible markers, calculated by summing each day’s assigned total. No cross-journey streak or spiritual score exists.
+A persisted document-body interface should normally omit the Firestore path ID.
 
-Reminder schedules belong to `IDevicePreferencesDocument`, not to the journey or account-wide preferences. Each reminder independently holds enablement and local clock time. The derived phone schedule combines equal times, respects OS permission and known completion, and applies only to an active journey. Another signed-in phone must enable its own reminders. Notification tokens are deliberately not modeled because local reminders do not currently require server push infrastructure.
+Example:
 
-## Future communities and messaging
+```ts
+interface IJourneyDocument {
+	ownerUserId: string;
+	status: TJourneyStatus;
+	startDate: TCalendarDate;
+}
+```
 
-Communities remain disabled. A community is private and invitation-based, with Organizer and Member roles. The initial contract has one responsible organizer, matching its organizer membership; deliberate transfer must keep the two consistent. Membership does not confer any private personal-record access. Pending invitations are not memberships. Invitations are single-use; the backend controls expiry, token generation/digest validation, acceptance, and revocation. Ordinary previews contain no bearer token, digest, recipient account email, or membership list.
+A hydrated application projection can add a `journeyId` deliberately:
 
-A coordinated journey is a schedule/content coordinator. Initial enrollment occurs before its shared start and captures a private commitment, not a future-dated personal journey. Enrollment checks the reviewed community-journey revision as well as setup revision, so a changed schedule cannot be silently accepted. Start must recheck membership, email/content eligibility, schedule, and the one-active-personal-journey invariant. If another active journey blocks start, report the blocked enrollment; never end it, backdate a late enrollment, or merge histories. Activation requires a deliberate server scheduling/idempotency design when this future feature is implemented. Once a personal journey has started, leaving/removal/community closure cannot delete or reschedule it; it continues privately.
+```ts
+interface IJourney extends IJourneyDocument {
+	journeyId: string;
+}
+```
 
-Individual progress and aggregate contribution have separate explicit, revocable consent. Shared results contain only high-level journey stage and safe identity. Aggregate counts include only consenting contributors and must be suppressed where small-group inference defeats privacy. They are derived projections, not public rankings or authoritative private statistics. Membership lists and organizers cannot see optional choices, exact markers, streaks, writing, motivation, or contact information. Enrollment documents and sharing preferences require participant/server-private access.
+Do not rely on `documentId` appearing inside every record unless the data model
+deliberately requires it.
 
-Posts distinguish prayer request, discussion, organizer announcement, and shared reflection copy. Shared copies contain only deliberately selected text and the community audience—no private original ID, pointer, or revision metadata. Later private edits/deletion cannot silently update or withdraw an already shared copy. Posts and replies have individual records. Author deletion and moderator removal retain identity/time tombstones with no readable body; a moderator cannot rewrite the author's words as if the author edited them.
+Ownership references should be explicit fields where needed for Security Rules,
+queries, and server validation.
 
-Reports and moderation actions are restricted records separate from member-visible content. Mere membership or organizer role does not grant report access. Reports about an organizer require an independent authorized safety path. Validate target community, content type, current revision, and the reviewer authority before acting. No public moderation feed, automated spiritual interpretation, or trust scoring is modeled.
+## 5. Time types
 
-Messaging is a separate future text system. Its only conversation kind is Community; every conversation and message has community scope. Creation/join/send must be authorized against the active community, and participation alone cannot bypass membership checks. Additional kinds can later be introduced explicitly without reinterpreting existing records. No arbitrary recipient list, global chat, user discovery, or direct-message kind exists.
+### Calendar date
 
-Each conversation participant owns one private last-read cursor in `(messageCreatedAt, messageId)` order. The server validates the requested message and advances the cursor monotonically; no every-reader map is stored on a message. Each message has a safe sender summary, its own revision and edit time, and a sent/deleted/removed union. Removal does not silently rewrite conversation history. Community reports can target messages; their private review remains in the safety domain.
+Use a validated ISO local calendar date:
 
-## Consequential operations and future backend work
+```ts
+type TCalendarDate = `${number}-${number}-${number}`;
+```
 
-Request/result contracts are operation-specific. Actor IDs, ownership, roles, generated IDs, audit timestamps, lifecycle decisions, invitation security fields, and computed statistics come from authorized server context. Client-provided target IDs, observed phone zones, reviewed dates, expected revisions, and deduplication IDs are inputs to validate, never proof of authority. Auth provider contact changes remain at the provider boundary, not an unrestricted profile update.
+The semantic format is `YYYY-MM-DD`.
 
-Validate finite fields and sizes, reject unexpected fields, scope idempotency to actor and operation, and check path/field agreement. A start ID deduplicates its original result even if a later retry occurs after the journey ended. Compare-and-set revisions must protect unrelated fields from stale replacement; Rules and Functions must reject full-document mass updates that these requests intentionally avoid. Daily writes and settings contracts do not prescribe that every operation be a callable Function. Server implementations may choose transactions, bounded direct writes, or callables consistent with these guarantees.
+Do not use an instant timestamp as a substitute for the journey's assigned local
+date.
 
-The most important later server/Rules checks are: ownership and deletion state; one active journey across devices/enrollments; legal terminal transitions; real calendar and reached-day bounds; immutable schedule/content/assignments; distinct optional practices; per-field revision/conflict behavior; translation readiness and content corrections; invitation security and organizer authority; enrollment privacy; consent revocation; and post/message/report access boundaries. TypeScript `readonly`, finite unions, and projections assist those checks but cannot secure untrusted JSON or Firestore writes.
+### Local clock time
 
-No Rules, collections, indexes, functions, repositories, screens, or release flags are changed by this type layer. No dependency is installed. Deliberately omitted concepts include public profiles/communities, DMs/discovery, attachments/calls/presence, reaction rankings, scheduled personal starts, custom practices, prayer journals, AI/mood analysis, export, payments, youth-account policy, retention periods, and a migration framework.
+Use a validated local clock value such as `HH:mm`.
 
-## App / Functions build boundary
+```ts
+type TLocalClockTime = `${number}:${number}`;
+```
 
-Expo resolves `@77/*` to `src/*` using bundler resolution. Functions uses NodeNext and compiles its own source plus generated inputs into `functions/lib`, with `lib/src/index.js` as its entry point. Firebase deploys only `functions/`.
+Runtime validation must still verify ranges.
 
-The journey-start implementation creates JavaScript and declaration build artifacts from the single source in `src/types`; see [journey start](journey-start.md). `scripts/prepare-functions.cjs` copies the contracts and shared calendar source into ignored `functions/generated/` before lint/build. Generated inputs stay inside the Firebase upload. The original contracts remain read-only, and Functions does not import application files outside its upload or maintain duplicate interfaces.
+### Time zone
 
-## Verification
+Use an IANA time-zone identifier, for example:
 
-`type-tests/domain-contracts.typecheck.ts` contains compile-only contract regression checks without mock records or a runtime test framework. Expected type errors protect dangerous boundaries; making one permissive produces an unused-expect-error failure. The repository's `npx tsc --noEmit` includes this file. These checks do not pretend to validate server authorization or numeric calendar rules.
+- `America/New_York`
+- `Europe/London`
 
-Before delivering a change, run `npm run format`, `npm run lint`, and `npx tsc --noEmit`. For changes to the Functions integration, additionally run `npm --prefix functions run lint` and `npm --prefix functions run build`. Functions lint follows the repository’s TypeScript style without the scaffold’s conflicting Google formatting rules.
+Do not persist a fixed UTC offset as the primary time-zone identity because
+offsets change with daylight-saving rules.
 
-## Setup persistence and practice selections
+### Persisted timestamps
 
-`TOptionalPracticeSelection` contains two to four distinct Chosen Practice IDs. Setup drafts also allow zero or one choice while incomplete. Journey selections, replacements, community enrollment, daily optional practice tuples, and compile-only assertions share these bounds. Statistics sum the assignments for each reached day instead of assuming five markers per day.
+For cross-boundary DTOs that must not depend on a Firebase SDK class, use a
+structural representation:
 
-Setup saves use one transaction for `users/{userId}/journeySetupDrafts/current` and `users/{userId}/devicePreferences/{deviceId}`. Missing documents represent a fresh setup. Ownership, confirmed email, and an existing profile are required even for these initial reads. New drafts and device preferences begin at revision zero; stale revisions are rejected without replacing current choices. The weekly overview is a persisted setup step.
+```ts
+interface IPersistedTimestamp {
+	seconds: number;
+	nanoseconds: number;
+}
+```
 
-Motivation edits create immutable `writingRevisions` beneath the draft and update its head atomically. Other setup changes preserve that head. Reminder preferences belong to a persistent installation ID and start disabled on another device. The screen autosaves and waits for acknowledgment before advancing. Saving setup does not create a journey, fix dates, or schedule notifications.
+At the Firestore persistence layer, audit timestamps should be native Firestore
+timestamps. Adapters can convert to/from the dependency-light representation
+where a shared DTO needs it.
+
+Server audit time and participant-device observation time are not the same
+concept.
+
+A field such as `recordedOnDeviceAt` is advisory and must not authorize access,
+decide journey eligibility, or settle a conflict by itself.
+
+## 6. Schema versions and nullability
+
+Important persistent document boundaries may include a numeric `schemaVersion`.
+
+Use the version to validate the document shape and support deliberate future
+evolution.
+
+`null` should represent explicit absence when the distinction matters, including
+writing-deletion tombstones.
+
+Do not write `undefined` to persistent records. Normalize optional fields
+deliberately in persistence adapters.
+
+## 7. User and account records
+
+`IUserDocument` should contain only private account/profile information required
+by the product.
+
+V1 profile data should remain minimal:
+
+- owner identity;
+- optional preferred name;
+- account/contact state needed for the application;
+- created/updated audit fields;
+- schema version.
+
+Do not add public biography, follower counts, denomination, spiritual score, or
+profile photo fields because they are not part of V1.
+
+Authentication credentials belong to Firebase Authentication, not duplicated
+inside Firestore.
+
+## 8. Device preferences
+
+`IDevicePreferencesDocument` should represent settings that are intentionally
+device-specific.
+
+Examples:
+
+- morning reminder enabled/time;
+- evening reminder enabled/time;
+- device identifier;
+- notification preference metadata;
+- local appearance preference when the chosen product behavior is
+  device-specific.
+
+Each phone can have independent reminder choices. Do not assume one device's
+local notification permission applies to another.
+
+## 9. Journey setup
+
+Setup exists before an active journey.
+
+A target `IJourneySetupDocument` should hold resumable choices such as:
+
+- selected additional practice IDs;
+- selected Bible version/edition ID;
+- optional starting motivation draft or saved setup motivation;
+- reminder choices if those are persisted at setup;
+- readiness state;
+- updated timestamp;
+- revision/version used for concurrency.
+
+Suggested state:
+
+```ts
+type TJourneySetupStatus = 'incomplete' | 'ready';
+```
+
+Do not create a persisted active journey merely because setup is complete.
+
+The start date is not reserved by a setup document.
+
+## 10. Journey identity and lifecycle
+
+`IJourneyDocument` should capture immutable journey identity and schedule plus a
+small set of lifecycle fields.
+
+Core immutable fields should include:
+
+- owner user ID;
+- course ID;
+- course version ID;
+- start calendar date;
+- starting time-zone ID as context;
+- initial selected additional practices;
+- created/start audit timestamp.
+
+Lifecycle:
+
+```ts
+type TJourneyStatus = 'active' | 'completed' | 'endedEarly';
+```
+
+Ending early and completion are terminal.
+
+Do not add paused, frozen, scheduled, or restarted states to V1.
+
+A participant can have many historical journeys but only one active journey.
+
+## 11. Calendar rules
+
+Day 1 is the confirmed start date.
+
+Day 77 is `startDate + 76 calendar days`.
+
+Do not calculate the journey as `77 * 24 hours`.
+
+Use calendar arithmetic so daylight-saving transitions do not alter day
+numbering.
+
+Target formation constants:
+
+```ts
+const FormationStructure = {
+	journeyDayCount: 77,
+	weekCount: 11,
+	daysPerWeek: 7,
+} as const;
+```
+
+Derived week number:
+
+```text
+ceil(dayNumber / 7)
+```
+
+Valid day numbers are `1–77`.
+
+## 12. Current position
+
+Current position should be derived from:
+
+- immutable start date;
+- current phone local calendar date;
+- current phone IANA time zone;
+- terminal journey status.
+
+The starting time zone is retained for context, but travel does not lock the
+participant into that zone.
+
+Do not persist `currentDayNumber` as the authoritative truth unless there is a
+specifically documented synchronization reason. It is normally derived.
+
+## 13. Journey completion
+
+A journey becomes completed after the Day 77 calendar date ends in the phone's
+current zone and an authoritative check records that terminal state.
+
+Completion of the 77-day period is independent of complete-day count.
+
+Completing all Day 77 practices early completes that day, not the period.
+
+Once a journey is terminal, later travel must not reopen it.
+
+## 14. Early ending
+
+An early ending should record at least:
+
+- terminal status;
+- ending calendar date;
+- last reached day;
+- trusted audit timestamp.
+
+After ending:
+
+- future unused days remain not reached;
+- historical reached days remain available under product rules;
+- unapplied practice changes are canceled;
+- the journey cannot resume.
+
+## 15. Journey-day records
+
+A journey-day record should preserve the assignment and participation state for
+that numbered day.
+
+Important fields may include:
+
+- journey owner/reference;
+- day number;
+- assigned calendar date;
+- course/day content reference;
+- assigned practice IDs;
+- per-practice completion state;
+- participant-update audit fields.
+
+Do not materialize a future day merely so it can appear in a grid.
+
+If days are created lazily, the app still must not interpret “missing record” as
+“no practices happened.” Missing data and zero marked completions are different
+states.
+
+## 16. Practice IDs
+
+Foundational IDs:
+
+- `readScripture`
+- `pray`
+- `reflect`
+
+Additional catalog IDs should be stable identifiers independent of display
+labels.
+
+The V1 additional catalog contains:
+
+- Movement;
+- Serve or Encourage;
+- Scripture Memorization;
+- Gratitude;
+- Christian Reading;
+- Worship;
+- Generosity;
+- Family or Household Devotion;
+- Intentional Discipline;
+- Intentional Witness.
+
+A valid day has:
+
+- all three foundational practices;
+- two to four distinct additional practices;
+- five to seven total distinct practice IDs.
+
+## 17. Practice completion
+
+Completion is explicit participant state keyed by the practice assigned to that
+day.
+
+Opening a practice does not complete it.
+
+Saving reflection text does not complete Reflect.
+
+Deleting reflection text does not clear Reflect.
+
+Never transfer a completion marker from an old optional practice to a
+replacement optional practice.
+
+## 18. Practice-selection changes
+
+The initial selected additional practices belong to the journey's start.
+
+Later changes should be represented as dated/revisioned selection changes rather
+than mutating historical day assignments.
+
+A pending change should capture:
+
+- owner/journey;
+- current selection;
+- proposed selection;
+- effective day number;
+- effective calendar date;
+- revision;
+- status;
+- trusted timestamps.
+
+Suggested statuses:
+
+- `pending`;
+- `canceled`;
+- `superseded`;
+- `applied`.
+
+Only one upcoming selection should exist in V1.
+
+The new selection must remain two to four distinct catalog practices.
+
+A change:
+
+- never affects the current day;
+- never rewrites history;
+- never targets Day 78;
+- can be revised/canceled before it takes effect;
+- is canceled if the journey ends before application.
+
+Concurrency checks should use expected revision/effective day values so a stale
+phone cannot confirm a different next-day selection after midnight or after
+another device changed it.
+
+## 19. Authored formation content
+
+Formation content should be separate from participant records and versioned.
+
+A journey pins a specific:
+
+- course ID;
+- course version.
+
+Each day can then resolve:
+
+- week/theme;
+- working/published title;
+- primary Scripture assignment;
+- optional supporting Scripture assignment;
+- devotional;
+- prayer prompt;
+- authored written prayer;
+- reflection question;
+- intention invitation;
+- weekly introduction where applicable.
+
+Routine editorial edits should produce a new content version for future journeys
+rather than silently rewriting the context of older private writing.
+
+Rights, safety, or serious theological corrections can require replacing or
+withdrawing content under an explicit correction process.
+
+## 20. Scripture editions
+
+A Bible version ID is a participant preference; a Bible edition record
+identifies the exact text that can be displayed.
+
+Desired catalog:
+
+- NASB 2020;
+- NIV;
+- NLT;
+- MSG;
+- KJV;
+- NKJV;
+- CSB;
+- WEB.
+
+The existence of a catalog constant must not imply that an edition is cleared or
+complete.
+
+Suggested edition availability:
+
+```ts
+type TBibleEditionStatus = 'pending' | 'released' | 'withdrawn';
+```
+
+Before a version can be selected as working, the exact edition and every
+assigned passage needed by the course must be prepared and approved.
+
+Never substitute a different translation under a requested label.
+
+## 21. Course/version stability
+
+A journey should continue resolving the course version it began with.
+
+A later course version should not alter prior journey titles, devotional
+context, prayer prompts, or reflection questions merely because the app has
+newer content.
+
+Participant-authored words must never be rewritten by an editorial update.
+
+## 22. Private writing
+
+V1 private writing includes:
+
+- optional starting motivation;
+- daily intention;
+- daily reflection.
+
+Prayer does not require a separate V1 prayer journal.
+
+Writing and practice completion remain separate.
+
+A useful model is:
+
+- a current writing head;
+- immutable or auditable revisions as needed;
+- explicit conflict records;
+- deletion tombstones where required.
+
+## 23. Writing concurrency
+
+Writing is intimate data. Silent last-write-wins loss is unacceptable.
+
+A save/delete operation should carry:
+
+- expected revision;
+- device operation ID;
+- new text or deletion intent.
+
+If the expected revision is stale:
+
+- preserve the account version;
+- preserve the participant's competing version;
+- return a conflict state;
+- let the participant review and resolve it.
+
+Do not automatically line-merge personal reflections.
+
+A conflict resolution may select one version or a participant-composed
+replacement, but should recheck the current revision before committing.
+
+## 24. Local drafts and save states
+
+Device-local state should distinguish:
+
+- editing draft;
+- saved on this phone;
+- confirmed for the account;
+- waiting to sync;
+- conflict;
+- failed save;
+- deletion waiting to sync.
+
+A draft is not a server save.
+
+Namespace local data by account, journey, day, and device context as needed so
+signing into a different account cannot inherit another person's private
+writing.
+
+## 25. Offline content preparation
+
+A journey should be called prepared for offline use only after the phone durably
+holds:
+
+- all 77 days of the pinned formation guidance needed for that journey;
+- the exact selected released Scripture edition text for all assigned readings;
+- required acknowledgments and identifiers;
+- sufficient metadata to detect stale/withdrawn content.
+
+Caching future content does not unlock future content.
+
+A newly selected translation should not replace the current readable one until
+the replacement has been prepared successfully.
+
+## 26. Offline participation
+
+Daily participant actions may be recorded locally during ordinary connection
+gaps when the product has a defined reconciliation path.
+
+However, consequential server-authoritative operations should require
+connection, including:
+
+- starting a journey;
+- ending early;
+- confirming a next-day practice-selection change;
+- account-wide destructive actions.
+
+The UI must communicate what is local and what has been confirmed.
+
+## 27. Reconciliation order
+
+When returning online, reconciliation should learn authoritative state before
+replaying queued participant changes.
+
+This prevents stale local work from:
+
+- writing to a journey that ended elsewhere;
+- applying a superseded practice choice;
+- resurrecting deleted writing;
+- creating a second active journey.
+
+If locally drafted writing belongs to a day later discovered to be not reached
+because the journey ended elsewhere, preserve it for participant recovery/copy
+rather than silently accepting it as valid journey history.
+
+## 28. Derived progress and statistics
+
+Prefer derived statistics.
+
+Potential projections include:
+
+- practice completion count for a day;
+- complete-day state;
+- journey complete-day count;
+- total completed-practice markers;
+- current complete-day streak;
+- longest complete-day streak;
+- count of nonempty saved daily reflections;
+- reached-day denominator for early-ended journeys.
+
+Do not persist a cross-journey spiritual score.
+
+### Complete day
+
+A day is complete when every practice actually assigned to that day is marked
+complete.
+
+### Current streak
+
+For an active journey:
+
+- if Today is complete, the current streak may end on Today;
+- if Today is unfinished, do not break the streak during the day; calculate
+  backward from yesterday;
+- when historical completion changes, recalculate from the underlying record.
+
+### Early-ended denominator
+
+Use only the reached portion of the journey. Do not count unreached future days
+as ordinary incomplete days.
+
+### Completed denominator
+
+A completed journey has 77 reached days and between 385 and 539 assigned
+practice markers depending on selected-practice history.
+
+## 29. Participant-update timestamps
+
+If a field such as `lastParticipantUpdateAt` is used, it should change only when
+the participant changes meaningful state.
+
+Do not update it merely because a backend lazily creates a missing projection or
+recalculates a derived value.
+
+This preserves the meaning of “Updated after this day.”
+
+## 30. Reminders
+
+Reminder data should remain device-aware.
+
+Target settings:
+
+- morning reminder enabled;
+- morning local time;
+- evening reminder enabled;
+- evening local time.
+
+Local notification permission is device-specific.
+
+A reminder engine should suppress a notification when the phone reliably knows
+it is no longer useful, but should not claim certainty about actions that may
+have occurred on another offline phone.
+
+## 31. Security boundary
+
+Firestore Security Rules must enforce participant ownership and prevent direct
+access to records that the client should not read/write.
+
+Trusted Cloud Functions should enforce cross-document invariants and operations
+that Security Rules cannot express safely.
+
+Never make privacy depend only on the client hiding a button.
+
+## 32. Future private communities
+
+Future community types should be designed around invitation-based private
+membership.
+
+Target roles:
+
+- Organizer
+- Member
+
+Membership must not grant access to:
+
+- private personal reflections;
+- private intentions;
+- starting motivation;
+- detailed private practice records;
+- account contact information beyond explicitly shared profile information.
+
+### Invitations
+
+Invitations should be:
+
+- opaque;
+- single-use or explicitly limited;
+- revocable;
+- server-authoritative for expiry;
+- safe under accept/revoke concurrency.
+
+Do not expose invitation secrets, token digests, full member lists, or invitee
+email information in a public preview.
+
+### Shared journeys
+
+A future community may coordinate a shared 77-day schedule and course.
+
+Enrollment before the shared start should not create a future-dated personal
+journey.
+
+At the real start boundary, the backend should recheck:
+
+- active membership;
+- confirmed account eligibility;
+- content readiness;
+- schedule;
+- one-active-personal-journey invariant.
+
+If the participant already has an active personal journey, block or prompt
+explicitly. Never end, merge, backdate, or overwrite the existing journey
+silently.
+
+Once a personal shared journey starts, later removal from the group must not
+delete or reschedule that participant's private journey.
+
+### Progress sharing
+
+Progress sharing should be explicit and revocable.
+
+High-level group progress must avoid exposing:
+
+- exact private practice markers;
+- private writing;
+- optional practice choices;
+- streak rankings;
+- motivation;
+- contact information.
+
+Aggregate progress should include only participants whose sharing choice allows
+it. Small groups may require suppression or coarser reporting when an aggregate
+would reveal one person's state.
+
+### Shared posts
+
+A shared prayer request, discussion post, announcement, or deliberately shared
+reflection should be a separate shared record.
+
+Do not store a pointer that gives the group live access to the participant's
+private writing document.
+
+If a participant chooses to share text derived from a private reflection, copy
+only the text they deliberately submit to the stated audience.
+
+Later editing/deleting the private source must not silently edit the group copy.
+Shared content needs its own edit/delete controls.
+
+Deleted shared content should not leave the readable body in ordinary member
+access.
+
+### Moderation
+
+Future moderation data should support reports and accountable actions without
+giving every organizer unrestricted access to private content.
+
+Reporting an organizer needs an independent route.
+
+A moderation action should identify the target record/revision and reviewer so
+stale content is not accidentally actioned after meaningful edits.
+
+## 33. Future messaging
+
+Standalone direct messaging is not a committed product requirement.
+
+If a later product decision adds messaging, model it separately from community
+posts and require explicit recipient/member authorization.
+
+Do not create unrestricted public direct messages, discovery, calls, presence,
+attachment transfer, or contact-list exposure by default.
+
+## 34. Deliberately omitted concepts
+
+Do not add domain contracts merely because they are common in social or habit
+applications.
+
+The baseline does not require:
+
+- public profiles;
+- followers;
+- public activity feeds;
+- spiritual scores;
+- achievement systems;
+- custom user-created practices;
+- scheduled future personal starts;
+- prayer journals;
+- mood scoring;
+- AI interpretation of private spiritual writing;
+- paid access;
+- advertisements;
+- export;
+- attachments;
+- youth account structures;
+- arbitrary retention numbers.
+
+A later product decision can add an approved concept with its own privacy and
+lifecycle rules.
+
+## 35. Validation and tests to establish
+
+The domain layer should be backed by runtime validation and tests covering at
+minimum:
+
+- date format and calendar arithmetic;
+- IANA time zones;
+- day range `1–77`;
+- practice selection `2–4`;
+- foundational practice invariants;
+- one active journey;
+- lifecycle terminality;
+- content-version pinning;
+- Bible edition availability;
+- expected-revision writing saves;
+- no silent conflict overwrite;
+- next-day practice-change semantics;
+- ownership and Security Rules;
+- future-community privacy boundaries if that feature is later built.
+
+Types help developers reason about the system. They do not replace runtime
+validation or backend authorization.

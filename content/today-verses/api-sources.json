@@ -1,0 +1,6226 @@
+{
+	"Nasb2020": {
+		"bibleVersionId": "Nasb2020",
+		"bibleId": "a761ca71e0b3ddcf-01",
+		"fetchedAt": "2026-09-11T01:01:21.967Z",
+		"copyright": "NEW AMERICAN STANDARD BIBLE® NASB® Copyright © 1960, 1971, 1977,1995, 2020 by The Lockman Foundation A Corporation Not for Profit La Habra, CA All Rights Reserved www.lockman.org",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "1 Thessalonians 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalm 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Philippians 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zechariah 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "2 Corinthians 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Philippians 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Hebrews 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Genesis 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Hebrews 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalm 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalm 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Genesis 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "1 Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalm 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "1 Thessalonians 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Philippians 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "2 Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "1 John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Proverbs 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalm 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Proverbs 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deuteronomy 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalm 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalm 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Hebrews 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalm 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "2 Corinthians 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "1 Corinthians 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalm 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "1 Corinthians 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalm 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matthew 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalm 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matthew 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Philippians 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Hebrews 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalm 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalm 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalm 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalm 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "1 John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalm 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "1 Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalm 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Habakkuk 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matthew 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalm 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalm 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalm 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "2 Corinthians 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalm 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jeremiah 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Philippians 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Philippians 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalm 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Hebrews 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "1 Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matthew 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8",
+				"sourceReference": "Ephesians 2:8"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "2 Corinthians 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jeremiah 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalm 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalm 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalm 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "1 Thessalonians 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "1 Chronicles 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Proverbs 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "1 Chronicles 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "2 Timothy 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matthew 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Philippians 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deuteronomy 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jeremiah 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezekiel 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "1 John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matthew 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "2 Thessalonians 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalm 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalm 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalm 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelation 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "1 Chronicles 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalm 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	},
+	"Csb": {
+		"bibleVersionId": "Csb",
+		"bibleId": "a556c5305ee15c3f-01",
+		"fetchedAt": "2026-09-11T01:01:23.592Z",
+		"copyright": "© 2017 Holman Bible Publishers",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "1 Thessalonians 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalms 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Philippians 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zechariah 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "2 Corinthians 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Philippians 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Hebrews 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Genesis 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Hebrews 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalms 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalms 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Genesis 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "1 Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalms 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "1 Thessalonians 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Philippians 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "2 Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "1 John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Proverbs 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalms 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Proverbs 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deuteronomy 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalms 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalms 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Hebrews 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalms 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "2 Corinthians 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "1 Corinthians 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalms 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "1 Corinthians 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalms 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matthew 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalms 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matthew 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Philippians 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Hebrews 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalms 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalms 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalms 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalms 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "1 John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalms 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "1 Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalms 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Habakkuk 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matthew 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalms 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalms 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalms 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "2 Corinthians 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalms 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jeremiah 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Philippians 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Philippians 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalms 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Hebrews 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "1 Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matthew 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8",
+				"sourceReference": "Ephesians 2:8"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "2 Corinthians 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jeremiah 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalms 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalms 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalms 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "1 Thessalonians 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "1 Chronicles 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Proverbs 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "1 Chronicles 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "2 Timothy 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matthew 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Philippians 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deuteronomy 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jeremiah 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezekiel 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "1 John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matthew 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "2 Thessalonians 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalms 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalms 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalms 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelation 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "1 Chronicles 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalms 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	},
+	"Msg": {
+		"bibleVersionId": "Msg",
+		"bibleId": "6f11a7de016f942e-01",
+		"fetchedAt": "2026-09-11T01:03:19.343Z",
+		"copyright": "THE MESSAGE: The Bible in Contemporary Language copyright © 1993, 2002, 2018 by Eugene H. Peterson. All rights reserved. Used by permission of NavPress. Represented by Tyndale House Publishers.",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16-1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:16-18"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.8-PSA.46.10",
+				"sourceReference": "Psalms 46:8-10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.6-PHP.4.7",
+				"sourceReference": "Philippians 4:6-7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.16-JAS.1.18",
+				"sourceReference": "James 1:16-18"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.5-ZEC.4.7",
+				"sourceReference": "Zechariah 4:5-7"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.16-2CO.5.20",
+				"sourceReference": "2 Corinthians 5:16-20"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.7-ROM.15.13",
+				"sourceReference": "Romans 15:7-13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.26-ROM.8.28",
+				"sourceReference": "Romans 8:26-28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8-PHP.4.9",
+				"sourceReference": "Philippians 4:8-9"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5-HEB.13.6",
+				"sourceReference": "Hebrews 13:5-6"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15-COL.3.17",
+				"sourceReference": "Colossians 3:15-17"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.19-GEN.50.21",
+				"sourceReference": "Genesis 50:19-21"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.22-HEB.10.25",
+				"sourceReference": "Hebrews 10:22-25"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalms 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.25-PSA.73.28",
+				"sourceReference": "Psalms 73:25-28"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.13-GEN.28.15",
+				"sourceReference": "Genesis 28:13-15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.11-ISA.41.13",
+				"sourceReference": "Isaiah 41:11-13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.56-1KI.8.58",
+				"sourceReference": "1 Kings 8:56-58"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.12-PSA.90.17",
+				"sourceReference": "Psalms 90:12-17"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.16-1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:16-18"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.27-ISA.40.31",
+				"sourceReference": "Isaiah 40:27-31"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.27-ISA.40.31",
+				"sourceReference": "Isaiah 40:27-31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.10-PHP.4.14",
+				"sourceReference": "Philippians 4:10-14"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.29-2SA.22.31",
+				"sourceReference": "2 Samuel 22:29-31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11-JHN.15.15",
+				"sourceReference": "John 15:11-15"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.16-ZEP.3.17",
+				"sourceReference": "Zephaniah 3:16-17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.13-1JN.4.16",
+				"sourceReference": "1 John 4:13-16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.20-ROM.12.21",
+				"sourceReference": "Romans 12:20-21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.5-PRO.3.12",
+				"sourceReference": "Proverbs 3:5-12"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.6-JHN.10.10",
+				"sourceReference": "John 10:6-10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalms 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23-PRO.4.27",
+				"sourceReference": "Proverbs 4:23-27"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.7-DEU.31.8",
+				"sourceReference": "Deuteronomy 31:7-8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18-ROM.8.21",
+				"sourceReference": "Romans 8:18-21"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16-JHN.3.18",
+				"sourceReference": "John 3:16-18"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalms 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1-PSA.91.13",
+				"sourceReference": "Psalms 91:1-13"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.14-HEB.4.16",
+				"sourceReference": "Hebrews 4:14-16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.29-LUK.12.32",
+				"sourceReference": "Luke 12:29-32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalms 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.6-2CO.5.8",
+				"sourceReference": "2 Corinthians 5:6-8"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.22-LAM.3.24",
+				"sourceReference": "Lamentations 3:22-24"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.13-1CO.16.14",
+				"sourceReference": "1 Corinthians 16:13-14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.33-ACT.20.35",
+				"sourceReference": "Acts 20:33-35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5-JAS.1.8",
+				"sourceReference": "James 1:5-8"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.31-ROM.8.39",
+				"sourceReference": "Romans 8:31-39"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.13-PSA.139.16",
+				"sourceReference": "Psalms 139:13-16"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.51-1CO.15.57",
+				"sourceReference": "1 Corinthians 15:51-57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.7-EPH.2.10",
+				"sourceReference": "Ephesians 2:7-10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.2-PSA.147.6",
+				"sourceReference": "Psalms 147:2-6"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28-MAT.11.30",
+				"sourceReference": "Matthew 11:28-30"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22-PSA.55.23",
+				"sourceReference": "Psalms 55:22-23"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.25-MAT.6.26",
+				"sourceReference": "Matthew 6:25-26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.18-PHP.4.20",
+				"sourceReference": "Philippians 4:18-20"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1-HEB.11.2",
+				"sourceReference": "Hebrews 11:1-2"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.7-ACT.1.8",
+				"sourceReference": "Acts 1:7-8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.3-JHN.1.5",
+				"sourceReference": "John 1:3-5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1-PSA.46.3",
+				"sourceReference": "Psalms 46:1-3"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.4-PSA.30.5",
+				"sourceReference": "Psalms 30:4-5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.3-ROM.5.5",
+				"sourceReference": "Romans 5:3-5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5-PSA.62.6",
+				"sourceReference": "Psalms 62:5-6"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.1-EXO.15.8",
+				"sourceReference": "Exodus 15:1-8"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalms 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.8-1JN.1.10",
+				"sourceReference": "1 John 1:8-10"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.11-ROM.12.13",
+				"sourceReference": "Romans 12:11-13"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.5-PSA.118.16",
+				"sourceReference": "Psalms 118:5-16"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.8-1PE.5.11",
+				"sourceReference": "1 Peter 5:8-11"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalms 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.17-HAB.3.19",
+				"sourceReference": "Habakkuk 3:17-19"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7-MAT.7.11",
+				"sourceReference": "Matthew 7:7-11"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.1-JOB.42.6",
+				"sourceReference": "Job 42:1-6"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5-PSA.37.6",
+				"sourceReference": "Psalms 37:5-6"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9-GAL.6.10",
+				"sourceReference": "Galatians 6:9-10"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1-PSA.23.3",
+				"sourceReference": "Psalms 23:1-3"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.15-COL.3.17",
+				"sourceReference": "Colossians 3:15-17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24-JUD.1.25",
+				"sourceReference": "Jude 1:24-25"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.10-PSA.84.12",
+				"sourceReference": "Psalms 84:10-12"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.7-2CO.12.10",
+				"sourceReference": "2 Corinthians 12:7-10"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.31-EPH.4.32",
+				"sourceReference": "Ephesians 4:31-32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.21-PSA.118.25",
+				"sourceReference": "Psalms 118:21-25"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.10-JER.29.11",
+				"sourceReference": "Jeremiah 29:10-11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4-PHP.4.5",
+				"sourceReference": "Philippians 4:4-5"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.8-ISA.41.10",
+				"sourceReference": "Isaiah 41:8-10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.3-PHP.1.6",
+				"sourceReference": "Philippians 1:3-6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.3-PSA.37.4",
+				"sourceReference": "Psalms 37:3-4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.7-HEB.13.8",
+				"sourceReference": "Hebrews 13:7-8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.6-1PE.5.7",
+				"sourceReference": "1 Peter 5:6-7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.14-MAT.5.16",
+				"sourceReference": "Matthew 5:14-16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22-LAM.3.24",
+				"sourceReference": "Lamentations 3:22-24"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.31-JHN.16.33",
+				"sourceReference": "John 16:31-33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.7-EPH.2.10",
+				"sourceReference": "Ephesians 2:7-10"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16-2CO.4.18",
+				"sourceReference": "2 Corinthians 4:16-18"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7-JER.17.8",
+				"sourceReference": "Jeremiah 17:7-8"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1-ROM.8.2",
+				"sourceReference": "Romans 8:1-2"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalms 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.1-PSA.121.2",
+				"sourceReference": "Psalms 121:1-2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalms 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.25-JHN.14.27",
+				"sourceReference": "John 14:25-27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.9-1TH.5.11",
+				"sourceReference": "1 Thessalonians 5:9-11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20-1CH.28.21",
+				"sourceReference": "1 Chronicles 28:20-21"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5-PRO.3.12",
+				"sourceReference": "Proverbs 3:5-12"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.8-1CH.16.19",
+				"sourceReference": "1 Chronicles 16:8-19"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31-ROM.8.39",
+				"sourceReference": "Romans 8:31-39"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.1-JOS.1.9",
+				"sourceReference": "Joshua 1:1-9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.9b-ISA.58.12",
+				"sourceReference": "Isaiah 58:9b-12"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.5-2TI.1.7",
+				"sourceReference": "2 Timothy 1:5-7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20-EPH.3.21",
+				"sourceReference": "Ephesians 3:20-21"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.16-1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:16-18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.30-MAT.6.33",
+				"sourceReference": "Matthew 6:30-33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10-EPH.6.12",
+				"sourceReference": "Ephesians 6:10-12"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6-PHP.4.7",
+				"sourceReference": "Philippians 4:6-7"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.7-DEU.7.10",
+				"sourceReference": "Deuteronomy 7:7-10"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.9-ISA.54.10",
+				"sourceReference": "Isaiah 54:9-10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.1-JOS.1.9",
+				"sourceReference": "Joshua 1:1-9"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.2-JER.31.6",
+				"sourceReference": "Jeremiah 31:2-6"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.24-EZK.36.28",
+				"sourceReference": "Ezekiel 36:24-28"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5-JHN.15.8",
+				"sourceReference": "John 15:5-8"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25-JHN.11.26",
+				"sourceReference": "John 11:25-26"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4-1JN.4.6",
+				"sourceReference": "1 John 4:4-6"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.18-MAT.28.20",
+				"sourceReference": "Matthew 28:18-20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1-JHN.14.4",
+				"sourceReference": "John 14:1-4"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.1-ISA.26.6",
+				"sourceReference": "Isaiah 26:1-6"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.1-ISA.43.4",
+				"sourceReference": "Isaiah 43:1-4"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31-LUK.6.34",
+				"sourceReference": "Luke 6:31-34"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.1-2TH.3.3",
+				"sourceReference": "2 Thessalonians 3:1-3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalms 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.6-PSA.28.7",
+				"sourceReference": "Psalms 28:6-7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.1-PSA.56.4",
+				"sourceReference": "Psalms 56:1-4"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.23-JOB.19.27",
+				"sourceReference": "Job 19:23-27"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.3-REV.21.5",
+				"sourceReference": "Revelation 21:3-5"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34-1CH.16.36",
+				"sourceReference": "1 Chronicles 16:34-36"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.16-PSA.94.19",
+				"sourceReference": "Psalms 94:16-19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.36-LUK.1.38",
+				"sourceReference": "Luke 1:36-38"
+			}
+		]
+	},
+	"Nkjv": {
+		"bibleVersionId": "Nkjv",
+		"bibleId": "63097d2a0a2f7db3-01",
+		"fetchedAt": "2026-09-11T01:21:03.144Z",
+		"copyright": "New King James Version®, Copyright© 1982, Thomas Nelson. All rights reserved.",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "I Thessalonians 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalms 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "I Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Philippians 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zechariah 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "II Corinthians 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Philippians 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Hebrews 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Genesis 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Hebrews 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalms 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalms 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Genesis 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "I Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalms 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "I Thessalonians 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Philippians 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "II Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "I John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Proverbs 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalms 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Proverbs 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deuteronomy 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalms 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalms 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Hebrews 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalms 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "II Corinthians 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "I Corinthians 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalms 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "I Corinthians 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalms 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matthew 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalms 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matthew 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Philippians 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Hebrews 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalms 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalms 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalms 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "I Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalms 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "I John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalms 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "I Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalms 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Habakkuk 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matthew 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalms 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalms 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalms 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "II Corinthians 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "I Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalms 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jeremiah 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Philippians 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Philippians 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalms 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Hebrews 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "I Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matthew 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8",
+				"sourceReference": "Ephesians 2:8"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "II Corinthians 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jeremiah 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalms 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalms 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalms 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "I Thessalonians 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "I Chronicles 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Proverbs 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "I Chronicles 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "II Timothy 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "I Thessalonians 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matthew 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Philippians 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deuteronomy 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jeremiah 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezekiel 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "I John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matthew 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "II Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "II Thessalonians 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalms 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalms 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalms 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelations 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "I Chronicles 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalms 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	},
+	"Niv": {
+		"bibleVersionId": "Niv",
+		"bibleId": "78a9f6124f344018-01",
+		"fetchedAt": "2026-09-11T01:18:54.721Z",
+		"copyright": "The Holy Bible, New International Version® NIV® Copyright © 1973, 1978, 1984, 2011 by Biblica, Inc.® Used by Permission of Biblica, Inc.® All rights reserved worldwide.",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "1 Thes. 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalm 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Cor. 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Phil. 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zech. 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Gen. 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "2 Cor. 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Phil. 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Heb. 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Gen. 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Heb. 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalm 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalm 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Gen. 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deut. 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "1 Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalm 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "1 Thes. 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Phil. 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "2 Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "1 John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Prov. 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalm 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Prov. 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deut. 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalm 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalm 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Heb. 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalm 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "2 Cor. 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "1 Cor. 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalm 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "1 Cor. 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalm 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matt. 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalm 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matt. 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Phil. 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Heb. 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalm 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalm 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalm 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Cor. 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalm 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "1 John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalm 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "1 Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalm 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Prov. 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Hab. 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matt. 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matt. 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Num. 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalm 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalm 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalm 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "2 Cor. 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalm 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jer. 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Phil. 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Phil. 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalm 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Prov. 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Heb. 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "1 Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matt. 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8",
+				"sourceReference": "Ephesians 2:8"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "2 Cor. 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jer. 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalm 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalm 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalm 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "1 Thes. 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "1 Chron. 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Neh. 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Num. 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Prov. 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "1 Chron. 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "2 Tim. 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "1 Thes. 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Prov. 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matt. 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Phil. 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deut. 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jer. 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezek. 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "1 John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matt. 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chron. 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "2 Thes. 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalm 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalm 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalm 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelation 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Num. 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "1 Chron. 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalm 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	},
+	"Kjv": {
+		"bibleVersionId": "Kjv",
+		"bibleId": "a6aee10bb058511c-02",
+		"fetchedAt": "2026-09-11T01:22:42.166Z",
+		"copyright": "King James Version 1611, spelling, punctuation, and text formatting modernized by ABS in 1962; typesetting © 2010 American Bible Society. ABS KJV territory exclusions: ABS grants no licence to the the KJV (aka Authorized Version) within the United Kingdom (GB), the Isle of Man (IM), Jersey (JE), Guernsey (GG), or the British Overseas Territories of Anguilla (AI), Bermuda (BM), the British Indian Ocean Territory (IO), the British Virgin Islands (VG), the Cayman Islands (KY), the Falkland Islands (FK), Gibraltar (GI), Montserrat (MS), the Pitcairn Islands (PN), Saint Helena, Ascension and Tristan da Cunha (SH), South Georgia and the South Sandwich Islands (GS), or the Turks and Caicos Islands (TC) (the \"Restricted Territory\"). This applies irrespective of whether your use is Commercial Use or Non-Commercial Use, whether any fee is charged, whether the content is identified as Public Domain, and irrespective of format.",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "1 Thessalonians 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalm 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Philippians 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zechariah 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "2 Corinthians 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Philippians 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Hebrews 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Genesis 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Hebrews 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalm 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalm 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Genesis 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "1 Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalm 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "1 Thessalonians 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Philippians 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "2 Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "1 John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Proverbs 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalm 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Proverbs 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deuteronomy 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalm 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalm 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Hebrews 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalm 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "2 Corinthians 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "1 Corinthians 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalm 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "1 Corinthians 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalm 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matthew 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalm 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matthew 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Philippians 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Hebrews 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalm 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalm 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalm 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalm 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "1 John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalm 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "1 Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalm 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Habakkuk 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matthew 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalm 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalm 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalm 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "2 Corinthians 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalm 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jeremiah 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Philippians 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Philippians 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalm 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Hebrews 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "1 Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matthew 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8",
+				"sourceReference": "Ephesians 2:8"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "2 Corinthians 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jeremiah 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalm 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalm 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalm 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "1 Thessalonians 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "1 Chronicles 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Proverbs 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "1 Chronicles 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "2 Timothy 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matthew 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Philippians 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deuteronomy 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jeremiah 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezekiel 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "1 John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matthew 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "2 Thessalonians 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalm 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalm 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalm 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelation 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "1 Chronicles 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalm 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	},
+	"Amp": {
+		"bibleVersionId": "Amp",
+		"bibleId": "a81b73293d3080c9-01",
+		"fetchedAt": "2026-09-11T01:53:27.668Z",
+		"copyright": "Amplified® Bible Copyright © 2015 by The Lockman Foundation, La Habra, CA 90631 All rights reserved. http://www.lockman.org",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "1 Thessalonians 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalms 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Philippians 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zechariah 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "2 Corinthians 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Philippians 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Hebrews 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Genesis 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Hebrews 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalms 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalms 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Genesis 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "1 Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalms 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "1 Thessalonians 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Philippians 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "2 Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "1 John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Proverbs 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalms 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Proverbs 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deuteronomy 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalms 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalms 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Hebrews 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalms 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "2 Corinthians 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "1 Corinthians 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalms 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "1 Corinthians 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalms 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matthew 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalms 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matthew 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Philippians 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Hebrews 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalms 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalms 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalms 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalms 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "1 John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalms 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "1 Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalms 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Habakkuk 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matthew 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalms 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalms 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalms 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "2 Corinthians 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalms 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jeremiah 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Philippians 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Philippians 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalms 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Hebrews 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "1 Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matthew 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8",
+				"sourceReference": "Ephesians 2:8"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "2 Corinthians 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jeremiah 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalms 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalms 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalms 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "1 Thessalonians 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "1 Chronicles 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Proverbs 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "1 Chronicles 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "2 Timothy 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matthew 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Philippians 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deuteronomy 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jeremiah 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezekiel 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "1 John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matthew 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "2 Thessalonians 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalms 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalms 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalms 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelation 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "1 Chronicles 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalms 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	},
+	"Gnt": {
+		"bibleVersionId": "Gnt",
+		"bibleId": "61fd76eafa1577c2-01",
+		"fetchedAt": "2026-09-11T01:53:27.668Z",
+		"copyright": "Good News Translation® (Today’s English Version, Second Edition) © 1992 American Bible Society. All rights reserved. Bible text from the Good News Translation (GNT) is not to be reproduced in copies or otherwise by any means except as permitted in writing by American Bible Society, 101 North Independence Mall East, Floor 8, Philadelphia, PA 19106-2155 (www.americanbible.org). LICENSEE shall reproduce the following trademark and trademark notice on the copyright page of each copy of the Licensed Products: ®",
+		"passages": [
+			{
+				"verse": "1 Thessalonians 5:16",
+				"sourceId": "1TH.5.16",
+				"sourceReference": "1 Thessalonians 5:16"
+			},
+			{
+				"verse": "Psalms 46:10",
+				"sourceId": "PSA.46.10",
+				"sourceReference": "Psalm 46:10"
+			},
+			{
+				"verse": "1 Corinthians 10:13",
+				"sourceId": "1CO.10.13",
+				"sourceReference": "1 Corinthians 10:13"
+			},
+			{
+				"verse": "Philippians 4:7",
+				"sourceId": "PHP.4.7",
+				"sourceReference": "Philippians 4:7"
+			},
+			{
+				"verse": "James 1:17",
+				"sourceId": "JAS.1.17",
+				"sourceReference": "James 1:17"
+			},
+			{
+				"verse": "Zechariah 4:6",
+				"sourceId": "ZEC.4.6",
+				"sourceReference": "Zechariah 4:6"
+			},
+			{
+				"verse": "Genesis 1:31",
+				"sourceId": "GEN.1.31",
+				"sourceReference": "Genesis 1:31"
+			},
+			{
+				"verse": "2 Corinthians 5:17",
+				"sourceId": "2CO.5.17",
+				"sourceReference": "2 Corinthians 5:17"
+			},
+			{
+				"verse": "Romans 15:13",
+				"sourceId": "ROM.15.13",
+				"sourceReference": "Romans 15:13"
+			},
+			{
+				"verse": "Romans 8:28",
+				"sourceId": "ROM.8.28",
+				"sourceReference": "Romans 8:28"
+			},
+			{
+				"verse": "Philippians 4:8",
+				"sourceId": "PHP.4.8",
+				"sourceReference": "Philippians 4:8"
+			},
+			{
+				"verse": "Mark 10:27",
+				"sourceId": "MRK.10.27",
+				"sourceReference": "Mark 10:27"
+			},
+			{
+				"verse": "Hebrews 13:5",
+				"sourceId": "HEB.13.5",
+				"sourceReference": "Hebrews 13:5"
+			},
+			{
+				"verse": "Colossians 3:15",
+				"sourceId": "COL.3.15",
+				"sourceReference": "Colossians 3:15"
+			},
+			{
+				"verse": "Genesis 50:20",
+				"sourceId": "GEN.50.20",
+				"sourceReference": "Genesis 50:20"
+			},
+			{
+				"verse": "Hebrews 10:23",
+				"sourceId": "HEB.10.23",
+				"sourceReference": "Hebrews 10:23"
+			},
+			{
+				"verse": "Psalms 34:18",
+				"sourceId": "PSA.34.18",
+				"sourceReference": "Psalm 34:18"
+			},
+			{
+				"verse": "Psalms 73:26",
+				"sourceId": "PSA.73.26",
+				"sourceReference": "Psalm 73:26"
+			},
+			{
+				"verse": "Genesis 28:15",
+				"sourceId": "GEN.28.15",
+				"sourceReference": "Genesis 28:15"
+			},
+			{
+				"verse": "Deuteronomy 31:6",
+				"sourceId": "DEU.31.6",
+				"sourceReference": "Deuteronomy 31:6"
+			},
+			{
+				"verse": "Isaiah 41:13",
+				"sourceId": "ISA.41.13",
+				"sourceReference": "Isaiah 41:13"
+			},
+			{
+				"verse": "1 Kings 8:57",
+				"sourceId": "1KI.8.57",
+				"sourceReference": "1 Kings 8:57"
+			},
+			{
+				"verse": "Psalms 90:14",
+				"sourceId": "PSA.90.14",
+				"sourceReference": "Psalm 90:14"
+			},
+			{
+				"verse": "1 Thessalonians 5:17",
+				"sourceId": "1TH.5.17",
+				"sourceReference": "1 Thessalonians 5:17"
+			},
+			{
+				"verse": "Isaiah 40:29",
+				"sourceId": "ISA.40.29",
+				"sourceReference": "Isaiah 40:29"
+			},
+			{
+				"verse": "Isaiah 40:31",
+				"sourceId": "ISA.40.31",
+				"sourceReference": "Isaiah 40:31"
+			},
+			{
+				"verse": "Philippians 4:13",
+				"sourceId": "PHP.4.13",
+				"sourceReference": "Philippians 4:13"
+			},
+			{
+				"verse": "2 Samuel 22:31",
+				"sourceId": "2SA.22.31",
+				"sourceReference": "2 Samuel 22:31"
+			},
+			{
+				"verse": "John 15:11",
+				"sourceId": "JHN.15.11",
+				"sourceReference": "John 15:11"
+			},
+			{
+				"verse": "Zephaniah 3:17",
+				"sourceId": "ZEP.3.17",
+				"sourceReference": "Zephaniah 3:17"
+			},
+			{
+				"verse": "1 John 4:16",
+				"sourceId": "1JN.4.16",
+				"sourceReference": "1 John 4:16"
+			},
+			{
+				"verse": "Romans 12:21",
+				"sourceId": "ROM.12.21",
+				"sourceReference": "Romans 12:21"
+			},
+			{
+				"verse": "Proverbs 3:6",
+				"sourceId": "PRO.3.6",
+				"sourceReference": "Proverbs 3:6"
+			},
+			{
+				"verse": "John 10:10",
+				"sourceId": "JHN.10.10",
+				"sourceReference": "John 10:10"
+			},
+			{
+				"verse": "Psalms 31:24",
+				"sourceId": "PSA.31.24",
+				"sourceReference": "Psalm 31:24"
+			},
+			{
+				"verse": "Proverbs 4:23",
+				"sourceId": "PRO.4.23",
+				"sourceReference": "Proverbs 4:23"
+			},
+			{
+				"verse": "Deuteronomy 31:8",
+				"sourceId": "DEU.31.8",
+				"sourceReference": "Deuteronomy 31:8"
+			},
+			{
+				"verse": "Romans 8:18",
+				"sourceId": "ROM.8.18",
+				"sourceReference": "Romans 8:18"
+			},
+			{
+				"verse": "John 3:16",
+				"sourceId": "JHN.3.16",
+				"sourceReference": "John 3:16"
+			},
+			{
+				"verse": "Psalms 27:1",
+				"sourceId": "PSA.27.1",
+				"sourceReference": "Psalm 27:1"
+			},
+			{
+				"verse": "Psalms 91:1",
+				"sourceId": "PSA.91.1",
+				"sourceReference": "Psalm 91:1"
+			},
+			{
+				"verse": "Hebrews 4:16",
+				"sourceId": "HEB.4.16",
+				"sourceReference": "Hebrews 4:16"
+			},
+			{
+				"verse": "Luke 12:32",
+				"sourceId": "LUK.12.32",
+				"sourceReference": "Luke 12:32"
+			},
+			{
+				"verse": "Psalms 34:4",
+				"sourceId": "PSA.34.4",
+				"sourceReference": "Psalm 34:4"
+			},
+			{
+				"verse": "2 Corinthians 5:7",
+				"sourceId": "2CO.5.7",
+				"sourceReference": "2 Corinthians 5:7"
+			},
+			{
+				"verse": "Lamentations 3:23",
+				"sourceId": "LAM.3.23",
+				"sourceReference": "Lamentations 3:23"
+			},
+			{
+				"verse": "1 Corinthians 16:14",
+				"sourceId": "1CO.16.14",
+				"sourceReference": "1 Corinthians 16:14"
+			},
+			{
+				"verse": "Acts of the Apostles 20:35",
+				"sourceId": "ACT.20.35",
+				"sourceReference": "Acts 20:35"
+			},
+			{
+				"verse": "James 1:5",
+				"sourceId": "JAS.1.5",
+				"sourceReference": "James 1:5"
+			},
+			{
+				"verse": "Romans 8:37",
+				"sourceId": "ROM.8.37",
+				"sourceReference": "Romans 8:37"
+			},
+			{
+				"verse": "Psalms 139:14",
+				"sourceId": "PSA.139.14",
+				"sourceReference": "Psalm 139:14"
+			},
+			{
+				"verse": "1 Corinthians 15:57",
+				"sourceId": "1CO.15.57",
+				"sourceReference": "1 Corinthians 15:57"
+			},
+			{
+				"verse": "Ephesians 2:10",
+				"sourceId": "EPH.2.10",
+				"sourceReference": "Ephesians 2:10"
+			},
+			{
+				"verse": "Mark 9:23",
+				"sourceId": "MRK.9.23",
+				"sourceReference": "Mark 9:23"
+			},
+			{
+				"verse": "Psalms 147:3",
+				"sourceId": "PSA.147.3",
+				"sourceReference": "Psalm 147:3"
+			},
+			{
+				"verse": "Matthew 11:28",
+				"sourceId": "MAT.11.28",
+				"sourceReference": "Matthew 11:28"
+			},
+			{
+				"verse": "Psalms 55:22",
+				"sourceId": "PSA.55.22",
+				"sourceReference": "Psalm 55:22"
+			},
+			{
+				"verse": "Matthew 6:26",
+				"sourceId": "MAT.6.26",
+				"sourceReference": "Matthew 6:26"
+			},
+			{
+				"verse": "Philippians 4:19",
+				"sourceId": "PHP.4.19",
+				"sourceReference": "Philippians 4:19"
+			},
+			{
+				"verse": "Hebrews 11:1",
+				"sourceId": "HEB.11.1",
+				"sourceReference": "Hebrews 11:1"
+			},
+			{
+				"verse": "Acts of the Apostles 1:8",
+				"sourceId": "ACT.1.8",
+				"sourceReference": "Acts 1:8"
+			},
+			{
+				"verse": "John 1:5",
+				"sourceId": "JHN.1.5",
+				"sourceReference": "John 1:5"
+			},
+			{
+				"verse": "Psalms 46:1",
+				"sourceId": "PSA.46.1",
+				"sourceReference": "Psalm 46:1"
+			},
+			{
+				"verse": "Psalms 30:5",
+				"sourceId": "PSA.30.5",
+				"sourceReference": "Psalm 30:5"
+			},
+			{
+				"verse": "Romans 5:5",
+				"sourceId": "ROM.5.5",
+				"sourceReference": "Romans 5:5"
+			},
+			{
+				"verse": "Psalms 62:5",
+				"sourceId": "PSA.62.5",
+				"sourceReference": "Psalm 62:5"
+			},
+			{
+				"verse": "1 Corinthians 13:13",
+				"sourceId": "1CO.13.13",
+				"sourceReference": "1 Corinthians 13:13"
+			},
+			{
+				"verse": "Exodus 15:2",
+				"sourceId": "EXO.15.2",
+				"sourceReference": "Exodus 15:2"
+			},
+			{
+				"verse": "Psalms 32:7",
+				"sourceId": "PSA.32.7",
+				"sourceReference": "Psalm 32:7"
+			},
+			{
+				"verse": "1 John 1:9",
+				"sourceId": "1JN.1.9",
+				"sourceReference": "1 John 1:9"
+			},
+			{
+				"verse": "Romans 12:12",
+				"sourceId": "ROM.12.12",
+				"sourceReference": "Romans 12:12"
+			},
+			{
+				"verse": "Psalms 118:6",
+				"sourceId": "PSA.118.6",
+				"sourceReference": "Psalm 118:6"
+			},
+			{
+				"verse": "1 Peter 5:10",
+				"sourceId": "1PE.5.10",
+				"sourceReference": "1 Peter 5:10"
+			},
+			{
+				"verse": "Psalms 23:4",
+				"sourceId": "PSA.23.4",
+				"sourceReference": "Psalm 23:4"
+			},
+			{
+				"verse": "Proverbs 17:22",
+				"sourceId": "PRO.17.22",
+				"sourceReference": "Proverbs 17:22"
+			},
+			{
+				"verse": "Habakkuk 3:18",
+				"sourceId": "HAB.3.18",
+				"sourceReference": "Habakkuk 3:18"
+			},
+			{
+				"verse": "Matthew 7:7",
+				"sourceId": "MAT.7.7",
+				"sourceReference": "Matthew 7:7"
+			},
+			{
+				"verse": "Job 42:2",
+				"sourceId": "JOB.42.2",
+				"sourceReference": "Job 42:2"
+			},
+			{
+				"verse": "Matthew 19:26",
+				"sourceId": "MAT.19.26",
+				"sourceReference": "Matthew 19:26"
+			},
+			{
+				"verse": "Numbers 6:24",
+				"sourceId": "NUM.6.24",
+				"sourceReference": "Numbers 6:24"
+			},
+			{
+				"verse": "Psalms 37:5",
+				"sourceId": "PSA.37.5",
+				"sourceReference": "Psalm 37:5"
+			},
+			{
+				"verse": "Galatians 6:9",
+				"sourceId": "GAL.6.9",
+				"sourceReference": "Galatians 6:9"
+			},
+			{
+				"verse": "Psalms 23:1",
+				"sourceId": "PSA.23.1",
+				"sourceReference": "Psalm 23:1"
+			},
+			{
+				"verse": "Colossians 3:17",
+				"sourceId": "COL.3.17",
+				"sourceReference": "Colossians 3:17"
+			},
+			{
+				"verse": "Jude 1:24",
+				"sourceId": "JUD.1.24",
+				"sourceReference": "Jude 1:24"
+			},
+			{
+				"verse": "Psalms 84:11",
+				"sourceId": "PSA.84.11",
+				"sourceReference": "Psalm 84:11"
+			},
+			{
+				"verse": "2 Corinthians 12:9",
+				"sourceId": "2CO.12.9",
+				"sourceReference": "2 Corinthians 12:9"
+			},
+			{
+				"verse": "Ephesians 4:32",
+				"sourceId": "EPH.4.32",
+				"sourceReference": "Ephesians 4:32"
+			},
+			{
+				"verse": "1 Samuel 16:7",
+				"sourceId": "1SA.16.7",
+				"sourceReference": "1 Samuel 16:7"
+			},
+			{
+				"verse": "Psalms 118:24",
+				"sourceId": "PSA.118.24",
+				"sourceReference": "Psalm 118:24"
+			},
+			{
+				"verse": "Jeremiah 29:11",
+				"sourceId": "JER.29.11",
+				"sourceReference": "Jeremiah 29:11"
+			},
+			{
+				"verse": "Philippians 4:4",
+				"sourceId": "PHP.4.4",
+				"sourceReference": "Philippians 4:4"
+			},
+			{
+				"verse": "Galatians 5:1",
+				"sourceId": "GAL.5.1",
+				"sourceReference": "Galatians 5:1"
+			},
+			{
+				"verse": "Isaiah 41:10",
+				"sourceId": "ISA.41.10",
+				"sourceReference": "Isaiah 41:10"
+			},
+			{
+				"verse": "Philippians 1:6",
+				"sourceId": "PHP.1.6",
+				"sourceReference": "Philippians 1:6"
+			},
+			{
+				"verse": "Psalms 37:4",
+				"sourceId": "PSA.37.4",
+				"sourceReference": "Psalm 37:4"
+			},
+			{
+				"verse": "Proverbs 16:3",
+				"sourceId": "PRO.16.3",
+				"sourceReference": "Proverbs 16:3"
+			},
+			{
+				"verse": "Hebrews 13:8",
+				"sourceId": "HEB.13.8",
+				"sourceReference": "Hebrews 13:8"
+			},
+			{
+				"verse": "1 Peter 5:7",
+				"sourceId": "1PE.5.7",
+				"sourceReference": "1 Peter 5:7"
+			},
+			{
+				"verse": "Matthew 5:16",
+				"sourceId": "MAT.5.16",
+				"sourceReference": "Matthew 5:16"
+			},
+			{
+				"verse": "Lamentations 3:22",
+				"sourceId": "LAM.3.22",
+				"sourceReference": "Lamentations 3:22"
+			},
+			{
+				"verse": "John 16:33",
+				"sourceId": "JHN.16.33",
+				"sourceReference": "John 16:33"
+			},
+			{
+				"verse": "Ephesians 2:8",
+				"sourceId": "EPH.2.8-EPH.2.9",
+				"sourceReference": "Ephesians 2:8-9"
+			},
+			{
+				"verse": "2 Corinthians 4:16",
+				"sourceId": "2CO.4.16",
+				"sourceReference": "2 Corinthians 4:16"
+			},
+			{
+				"verse": "Jeremiah 17:7",
+				"sourceId": "JER.17.7",
+				"sourceReference": "Jeremiah 17:7"
+			},
+			{
+				"verse": "Romans 8:1",
+				"sourceId": "ROM.8.1",
+				"sourceReference": "Romans 8:1"
+			},
+			{
+				"verse": "Psalms 100:5",
+				"sourceId": "PSA.100.5",
+				"sourceReference": "Psalm 100:5"
+			},
+			{
+				"verse": "Psalms 121:2",
+				"sourceId": "PSA.121.2",
+				"sourceReference": "Psalm 121:2"
+			},
+			{
+				"verse": "Psalms 34:8",
+				"sourceId": "PSA.34.8",
+				"sourceReference": "Psalm 34:8"
+			},
+			{
+				"verse": "John 14:27",
+				"sourceId": "JHN.14.27",
+				"sourceReference": "John 14:27"
+			},
+			{
+				"verse": "1 Thessalonians 5:11",
+				"sourceId": "1TH.5.11",
+				"sourceReference": "1 Thessalonians 5:11"
+			},
+			{
+				"verse": "1 Chronicles 28:20",
+				"sourceId": "1CH.28.20",
+				"sourceReference": "1 Chronicles 28:20"
+			},
+			{
+				"verse": "Nehemiah 8:10",
+				"sourceId": "NEH.8.10",
+				"sourceReference": "Nehemiah 8:10"
+			},
+			{
+				"verse": "Numbers 6:25",
+				"sourceId": "NUM.6.25",
+				"sourceReference": "Numbers 6:25"
+			},
+			{
+				"verse": "Proverbs 3:5",
+				"sourceId": "PRO.3.5",
+				"sourceReference": "Proverbs 3:5"
+			},
+			{
+				"verse": "1 Chronicles 16:11",
+				"sourceId": "1CH.16.11",
+				"sourceReference": "1 Chronicles 16:11"
+			},
+			{
+				"verse": "Romans 8:31",
+				"sourceId": "ROM.8.31",
+				"sourceReference": "Romans 8:31"
+			},
+			{
+				"verse": "Joshua 1:9",
+				"sourceId": "JOS.1.9",
+				"sourceReference": "Joshua 1:9"
+			},
+			{
+				"verse": "Isaiah 58:11",
+				"sourceId": "ISA.58.11",
+				"sourceReference": "Isaiah 58:11"
+			},
+			{
+				"verse": "2 Timothy 1:7",
+				"sourceId": "2TI.1.7",
+				"sourceReference": "2 Timothy 1:7"
+			},
+			{
+				"verse": "Ephesians 3:20",
+				"sourceId": "EPH.3.20",
+				"sourceReference": "Ephesians 3:20"
+			},
+			{
+				"verse": "1 Thessalonians 5:18",
+				"sourceId": "1TH.5.18",
+				"sourceReference": "1 Thessalonians 5:18"
+			},
+			{
+				"verse": "Proverbs 18:10",
+				"sourceId": "PRO.18.10",
+				"sourceReference": "Proverbs 18:10"
+			},
+			{
+				"verse": "Matthew 6:33",
+				"sourceId": "MAT.6.33",
+				"sourceReference": "Matthew 6:33"
+			},
+			{
+				"verse": "Ephesians 6:10",
+				"sourceId": "EPH.6.10",
+				"sourceReference": "Ephesians 6:10"
+			},
+			{
+				"verse": "Philippians 4:6",
+				"sourceId": "PHP.4.6",
+				"sourceReference": "Philippians 4:6"
+			},
+			{
+				"verse": "Deuteronomy 7:9",
+				"sourceId": "DEU.7.9",
+				"sourceReference": "Deuteronomy 7:9"
+			},
+			{
+				"verse": "Isaiah 54:10",
+				"sourceId": "ISA.54.10",
+				"sourceReference": "Isaiah 54:10"
+			},
+			{
+				"verse": "Joshua 1:5",
+				"sourceId": "JOS.1.5",
+				"sourceReference": "Joshua 1:5"
+			},
+			{
+				"verse": "Jeremiah 31:3",
+				"sourceId": "JER.31.3",
+				"sourceReference": "Jeremiah 31:3"
+			},
+			{
+				"verse": "Ezekiel 36:26",
+				"sourceId": "EZK.36.26",
+				"sourceReference": "Ezekiel 36:26"
+			},
+			{
+				"verse": "John 15:5",
+				"sourceId": "JHN.15.5",
+				"sourceReference": "John 15:5"
+			},
+			{
+				"verse": "John 11:25",
+				"sourceId": "JHN.11.25",
+				"sourceReference": "John 11:25"
+			},
+			{
+				"verse": "Exodus 33:14",
+				"sourceId": "EXO.33.14",
+				"sourceReference": "Exodus 33:14"
+			},
+			{
+				"verse": "1 John 4:4",
+				"sourceId": "1JN.4.4",
+				"sourceReference": "1 John 4:4"
+			},
+			{
+				"verse": "Matthew 28:20",
+				"sourceId": "MAT.28.20",
+				"sourceReference": "Matthew 28:20"
+			},
+			{
+				"verse": "2 Chronicles 15:7",
+				"sourceId": "2CH.15.7",
+				"sourceReference": "2 Chronicles 15:7"
+			},
+			{
+				"verse": "John 14:1",
+				"sourceId": "JHN.14.1",
+				"sourceReference": "John 14:1"
+			},
+			{
+				"verse": "Micah 6:8",
+				"sourceId": "MIC.6.8",
+				"sourceReference": "Micah 6:8"
+			},
+			{
+				"verse": "Isaiah 26:3",
+				"sourceId": "ISA.26.3",
+				"sourceReference": "Isaiah 26:3"
+			},
+			{
+				"verse": "Exodus 14:14",
+				"sourceId": "EXO.14.14",
+				"sourceReference": "Exodus 14:14"
+			},
+			{
+				"verse": "Isaiah 43:2",
+				"sourceId": "ISA.43.2",
+				"sourceReference": "Isaiah 43:2"
+			},
+			{
+				"verse": "Luke 6:31",
+				"sourceId": "LUK.6.31",
+				"sourceReference": "Luke 6:31"
+			},
+			{
+				"verse": "2 Thessalonians 3:3",
+				"sourceId": "2TH.3.3",
+				"sourceReference": "2 Thessalonians 3:3"
+			},
+			{
+				"verse": "Psalms 42:11",
+				"sourceId": "PSA.42.11",
+				"sourceReference": "Psalm 42:11"
+			},
+			{
+				"verse": "Psalms 28:7",
+				"sourceId": "PSA.28.7",
+				"sourceReference": "Psalm 28:7"
+			},
+			{
+				"verse": "John 8:12",
+				"sourceId": "JHN.8.12",
+				"sourceReference": "John 8:12"
+			},
+			{
+				"verse": "Psalms 56:3",
+				"sourceId": "PSA.56.3",
+				"sourceReference": "Psalm 56:3"
+			},
+			{
+				"verse": "Job 19:25",
+				"sourceId": "JOB.19.25",
+				"sourceReference": "Job 19:25"
+			},
+			{
+				"verse": "Revelation 21:4",
+				"sourceId": "REV.21.4",
+				"sourceReference": "Revelation 21:4"
+			},
+			{
+				"verse": "Numbers 6:26",
+				"sourceId": "NUM.6.26",
+				"sourceReference": "Numbers 6:26"
+			},
+			{
+				"verse": "1 Chronicles 16:34",
+				"sourceId": "1CH.16.34",
+				"sourceReference": "1 Chronicles 16:34"
+			},
+			{
+				"verse": "Psalms 94:19",
+				"sourceId": "PSA.94.19",
+				"sourceReference": "Psalm 94:19"
+			},
+			{
+				"verse": "Luke 1:37",
+				"sourceId": "LUK.1.37",
+				"sourceReference": "Luke 1:37"
+			}
+		]
+	}
+}

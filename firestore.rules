@@ -72,7 +72,7 @@ service cloud.firestore {
           'IntentionalDiscipline', 'IntentionalWitness'
         ])
         && (choices.bibleVersionId == null || choices.bibleVersionId in [
-          'Nasb2020', 'Niv', 'Nlt', 'Esv', 'Msg', 'Kjv', 'Nkjv', 'Csb', 'Web'
+          'Nasb2020', 'Niv', 'Nlt', 'Msg', 'Kjv', 'Nkjv', 'Csb', 'Web', 'Amp', 'Gnt'
         ])
         && choices.readiness == (isReady ? 'ReadyForReview' : 'Incomplete');
     }

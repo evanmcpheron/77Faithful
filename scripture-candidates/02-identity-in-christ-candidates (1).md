@@ -1,4 +1,4 @@
-Week 5 — Identity in Christ
+Week 2 — Identity in Christ
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7

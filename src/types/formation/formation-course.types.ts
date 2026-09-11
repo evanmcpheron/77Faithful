@@ -31,14 +31,14 @@ export type TFormationThemeId =
 
 export const FormationThemeOrder = [
 	FormationThemeId.AbidingInChrist,
+	FormationThemeId.Identity,
 	FormationThemeId.Scripture,
 	FormationThemeId.Prayer,
 	FormationThemeId.Renewal,
-	FormationThemeId.Identity,
 	FormationThemeId.Love,
+	FormationThemeId.ChristianCommunity,
 	FormationThemeId.Service,
 	FormationThemeId.Stewardship,
-	FormationThemeId.ChristianCommunity,
 	FormationThemeId.Mission,
 	FormationThemeId.Perseverance,
 ] as const;

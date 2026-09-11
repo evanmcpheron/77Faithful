@@ -130,6 +130,41 @@ const reflectionRequest = (id, text, expectedRevisionId = null) => ({
 	observedPhoneTimeZoneId: 'UTC',
 });
 
+test('seeded weeks and days follow the revised weekly theme order', () => {
+	const expectedThemes = [
+		'AbidingInChrist',
+		'Identity',
+		'Scripture',
+		'Prayer',
+		'Renewal',
+		'Love',
+		'ChristianCommunity',
+		'Service',
+		'Stewardship',
+		'Mission',
+		'Perseverance',
+	];
+	const documents = buildProvisionalCourse(Timestamp.now());
+	const versionPath = `formationCourses/${courseId}/versions/${courseVersionId}`;
+	for (const [index, themeId] of expectedThemes.entries()) {
+		const weekNumber = index + 1;
+		for (const collection of ['weekOverviews', 'weekIntroductions']) {
+			const week = documents.get(
+				`${versionPath}/${collection}/${weekNumber}`,
+			);
+			assert.equal(week.weekNumber, weekNumber);
+			assert.equal(week.themeId, themeId);
+		}
+		for (let offset = 1; offset <= 7; offset++) {
+			const dayNumber = index * 7 + offset;
+			const day = documents.get(`${versionPath}/days/${dayNumber}`);
+			assert.equal(day.dayNumber, dayNumber);
+			assert.equal(day.weekNumber, weekNumber);
+			assert.equal(day.themeId, themeId);
+		}
+	}
+});
+
 test('all 77 readings retain their full source text and actual translation', async () => {
 	const { database, documents } = createDatabase();
 	documents.get('users/owner/journeys/current').state = {

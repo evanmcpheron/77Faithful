@@ -1,4 +1,4 @@
-Week 8 — Stewardship
+Week 9 — Stewardship
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7

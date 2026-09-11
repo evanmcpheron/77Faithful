@@ -1,11 +1,11 @@
-Week 2 — Scripture
+Week 3 — Scripture
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7
 
 > **Cross-Week Exclusion Note:** No Week 1 candidate file was available in the
 > conversation or found in the project repository during this run. Internal Week
-> 2 duplication has been checked, but duplication against the exact Week 1
+> 3 duplication has been checked, but duplication against the exact Week 1
 > candidate pool cannot be independently certified.
 
 ## Recommended Seven-Day Progression

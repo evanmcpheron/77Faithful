@@ -29,14 +29,14 @@ usefulness are more important than speed.
 The complete thematic progression of 77Faithful is:
 
 1. Abiding in Christ
-2. Scripture
-3. Prayer
-4. Renewal
-5. Identity in Christ
+2. Identity in Christ
+3. Scripture
+4. Prayer
+5. Renewal
 6. Love
-7. Service
-8. Stewardship
-9. Christian Community
+7. Christian Community
+8. Service
+9. Stewardship
 10. Mission
 11. Perseverance
 

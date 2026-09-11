@@ -114,14 +114,14 @@ export const setupPractices = [
 
 export const weeklyThemes = [
 	'Abiding in Christ',
+	'Identity in Christ',
 	'Scripture',
 	'Prayer',
 	'Renewal',
-	'Identity',
 	'Love',
+	'Christian Community',
 	'Service',
 	'Stewardship',
-	'Christian Community',
 	'Mission',
 	'Perseverance',
 ];

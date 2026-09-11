@@ -1,4 +1,4 @@
-# Week 3 — Prayer
+# Week 4 — Prayer
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7

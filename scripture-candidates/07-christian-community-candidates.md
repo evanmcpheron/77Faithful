@@ -1,4 +1,4 @@
-Week 9 — Christian Community
+Week 7 — Christian Community
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7

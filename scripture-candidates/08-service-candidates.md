@@ -1,4 +1,4 @@
-Week 7 — Service
+Week 8 — Service
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7
@@ -6,7 +6,7 @@ Needed: 7
 > **Cross-week QA note:** No previous-week candidate files were attached, found
 > in the 77Faithful repository, or available through project file search during
 > this run. This file has been checked for internal overlap, but references
-> cannot be certified against Weeks 1–6 until those candidate files are
+> cannot be certified against Weeks 1–7 until those candidate files are
 > available.
 
 ## Recommended Seven-Day Progression

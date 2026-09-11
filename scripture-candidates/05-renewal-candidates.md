@@ -1,4 +1,4 @@
-Week 4 — Renewal
+Week 5 — Renewal
 
 Translation: World English Bible (WEB) Candidate Count: 70 Final Passages
 Needed: 7

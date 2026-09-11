@@ -7,13 +7,13 @@ import {
 export const chosenPracticeContent = {
 	[OptionalPracticeId.Movement]: {
 		purpose:
-			'Care for the body God has given you, with attention to your abilities and circumstances.',
+			'Care for the body God has given you through movement that fits your abilities and circumstances.',
 		invitation:
-			'Choose a way to move that is accessible and comfortable for you today.',
+			'Choose a way to move that fits your abilities and circumstances today. No distance, duration, pace, or intensity is required.',
 		examples: [
 			'Take a walk indoors or outside.',
 			'Try gentle stretching or seated movement.',
-			'Return to another activity suited to your abilities.',
+			'Choose another activity suited to your abilities and circumstances.',
 		],
 	},
 	[OptionalPracticeId.ServeOrEncourage]: {

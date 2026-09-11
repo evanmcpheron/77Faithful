@@ -15,6 +15,13 @@ import { useHeaderHeight } from 'expo-router/react-navigation';
 import { getPracticeHref, parsePracticeRoute } from '../journey-practice-route';
 import { useJourneyPractice } from '../use-journey-practice.hook';
 import { chosenPracticeContent } from './chosen-practice-content';
+import { MovementExamples, MovementGuidance } from './movement-guidance';
+import {
+	movementColumnStyle,
+	movementHeadingStyle,
+	movementPurposeStyle,
+	movementTitleStyle,
+} from './movement.styles';
 import {
 	PassageSection,
 	ReadingColumn,
@@ -57,15 +64,52 @@ export const ChosenPracticeScreen = () => {
 	const guidance = practiceId ? chosenPracticeContent[practiceId] : null;
 	const isComplete =
 		!isPreview && completion?.status === PracticeCompletionStatus.Complete;
+	const isMovement = practiceId === OptionalPracticeId.Movement;
+	const completionLabel = isPreview
+		? 'Preview only'
+		: isMovement && isSaving
+			? 'Marking complete…'
+			: isComplete
+				? 'Completed'
+				: 'Mark complete';
+	const completionAccessibilityLabel =
+		!isMovement || isPreview
+			? undefined
+			: isComplete
+				? 'Movement completed'
+				: isSaving
+					? 'Marking Movement complete'
+					: 'Mark Movement complete';
+	const completionButton = (
+		<TurndownButton
+			fullWidth
+			size='Large'
+			loading={isSaving}
+			accessibilityLabel={completionAccessibilityLabel ?? completionLabel}
+			disabled={isPreview || loading || isSaving || !!error || isComplete}
+			onPress={() => {
+				if (!isPreview) void complete();
+			}}
+		>
+			{completionLabel}
+		</TurndownButton>
+	);
 	return (
 		<TurndownScrollScreen
-			backgroundColor={SurfaceColors.Screen}
-			contentPadding={Spacing.Medium}
+			backgroundColor={
+				isMovement ? SurfaceColors.Card : SurfaceColors.Screen
+			}
+			contentPadding={isMovement ? Spacing.Small : Spacing.Medium}
 			bottomSpacing={Spacing.Large}
 			safeAreaEdges={['right', 'bottom', 'left']}
 			testID='chosen-practice-screen'
 		>
-			<ReadingColumn style={{ paddingTop: headerHeight }}>
+			<ReadingColumn
+				style={[
+					{ paddingTop: headerHeight },
+					isMovement && movementColumnStyle,
+				]}
+			>
 				{!route && (
 					<Typography>This practice link isn’t available.</Typography>
 				)}
@@ -77,6 +121,11 @@ export const ChosenPracticeScreen = () => {
 						<Typography>{error}</Typography>
 						<TurndownButton
 							disabled={loading || isSaving}
+							accessibilityLabel={
+								isMovement
+									? 'Refresh Movement practice'
+									: 'Refresh practice'
+							}
 							onPress={() => void refresh()}
 						>
 							Refresh practice
@@ -87,77 +136,90 @@ export const ChosenPracticeScreen = () => {
 					<>
 						{isPreview && (
 							<Typography tone='Muted'>
-								Practice preview · This does not change your
-								chosen practices.
+								{isMovement
+									? 'Practice preview. This does not change your chosen practices.'
+									: 'Practice preview · This does not change your chosen practices.'}
 							</Typography>
 						)}
-						<ReadingTitle>
+						<ReadingTitle
+							style={
+								isMovement ? movementHeadingStyle : undefined
+							}
+						>
 							<PassageSection
 								accessible
 								accessibilityRole='header'
 							>
 								<Typography
 									size='Display'
-									align='center'
+									align={isMovement ? 'left' : 'center'}
 									weight='Regular'
-									style={scriptureTitleStyle}
+									style={
+										isMovement
+											? movementTitleStyle
+											: scriptureTitleStyle
+									}
 								>
-									{previewDefinition?.name ?? practice.title}
+									{isMovement
+										? 'Movement'
+										: (previewDefinition?.name ??
+											practice.title)}
 								</Typography>
 							</PassageSection>
 							<Typography
-								align='center'
+								align={isMovement ? 'left' : 'center'}
+								weight={isMovement ? 'Regular' : 'Bold'}
 								tone='Secondary'
+								style={
+									isMovement
+										? movementPurposeStyle
+										: undefined
+								}
 							>
 								{guidance.purpose}
 							</Typography>
 						</ReadingTitle>
-						<PassageSection>
-							<Typography
-								size='H1'
-								style={scriptureTitleStyle}
-							>
-								Begin here
-							</Typography>
-							<Typography>{guidance.invitation}</Typography>
-						</PassageSection>
-						<TurndownButton
-							fullWidth
-							size='Large'
-							loading={isSaving}
-							disabled={
-								isPreview ||
-								loading ||
-								isSaving ||
-								!!error ||
-								isComplete
-							}
-							onPress={() => {
-								if (!isPreview) void complete();
-							}}
-						>
-							{isPreview
-								? 'Preview only'
-								: isComplete
-									? 'Completed'
-									: 'Mark complete'}
-						</TurndownButton>
-						<PassageSection>
-							<Typography
-								size='H1'
-								style={scriptureTitleStyle}
-							>
-								Ways to practice
-							</Typography>
-							{guidance.examples.map((example) => (
+						{isMovement ? (
+							<MovementGuidance
+								invitation={guidance.invitation}
+							/>
+						) : (
+							<PassageSection>
 								<Typography
-									key={example}
-									tone='Secondary'
+									size='H1'
+									style={scriptureTitleStyle}
 								>
-									{example}
+									Begin here
 								</Typography>
-							))}
-						</PassageSection>
+								<Typography>{guidance.invitation}</Typography>
+							</PassageSection>
+						)}
+						{!isMovement && completionButton}
+						{isMovement ? (
+							<>
+								<MovementExamples
+									examples={guidance.examples}
+								/>
+								{completionButton}
+							</>
+						) : (
+							<PassageSection>
+								<Typography
+									size='H1'
+									style={scriptureTitleStyle}
+								>
+									Ways to practice
+								</Typography>
+								{guidance.examples.map((example) => (
+									<Typography
+										key={example}
+										tone='Secondary'
+									>
+										{example}
+									</Typography>
+								))}
+							</PassageSection>
+						)}
 						{practiceId ===
 							OptionalPracticeId.FamilyOrHouseholdDevotion && (
 							<PassageSection>

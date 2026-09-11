@@ -37,6 +37,22 @@ jest.mock('@td/components/ui/card/card.component', () => ({ Card: 'card' }));
 jest.mock('@td/components/ui/typography/typography.component', () => ({
 	Typography: 'text',
 }));
+jest.mock('react-native-svg', () => ({
+	__esModule: true,
+	default: 'svg',
+	Circle: 'circle',
+	Path: 'path',
+}));
+jest.mock('@td/components/ui/divider/divider.component', () => ({
+	Divider: 'divider',
+}));
+jest.mock('./movement.styles', () => ({
+	MovementCopy: 'copy',
+	MovementExamplesSection: 'examples',
+	MovementIllustrationCircle: 'illustration',
+	MovementIntroduction: 'introduction',
+	MovementRow: 'row',
+}));
 jest.mock('./scripture.styles', () => ({
 	ReadingColumn: 'column',
 	ReadingTitle: 'title',
@@ -131,22 +147,68 @@ it.each(setupPractices)(
 	},
 );
 
+it('renders the approved Movement copy and accessible completion action', async () => {
+	await render();
+	const text = textOf(renderer.root);
+	expect(text).toContain('Movement');
+	expect(text).toContain(
+		'Care for the body God has given you through movement that fits your abilities and circumstances.',
+	);
+	expect(text).toContain(
+		'Choose a way to move that fits your abilities and circumstances today. No distance, duration, pace, or intensity is required.',
+	);
+	expect(text).toContain('Take a walk indoors or outside.');
+	expect(text).toContain('Try gentle stretching or seated movement.');
+	expect(text).toContain(
+		'Choose another activity suited to your abilities and circumstances.',
+	);
+	expect(button('Mark complete').props['accessibilityLabel']).toBe(
+		'Mark Movement complete',
+	);
+});
+
 it.each([
-	{ loading: true },
-	{ isSaving: true },
-	{ error: 'Unable to confirm completion.' },
-	{ completion: { ...completion, status: 'Complete' as const } },
-])('disables completion for %j', async (state) => {
+	{ state: { loading: true }, label: 'Mark complete' },
+	{ state: { isSaving: true }, label: 'Marking complete…' },
+	{
+		state: {
+			error: 'We couldn’t confirm completion. Refresh this practice before trying again.',
+		},
+		label: 'Mark complete',
+	},
+	{
+		state: { completion: { ...completion, status: 'Complete' as const } },
+		label: 'Completed',
+	},
+])('disables Movement completion for $state', async ({ state, label }) => {
 	jest.mocked(useJourneyPractice).mockReturnValue({
 		...jest.mocked(useJourneyPractice)(null),
 		...state,
 	});
 	await render();
-	expect(
-		button(state.completion ? 'Completed' : 'Mark complete').props[
-			'disabled'
-		],
-	).toBe(true);
+	expect(button(label).props['disabled']).toBe(true);
+});
+
+it('uses the approved Movement accessibility copy while saving', async () => {
+	jest.mocked(useJourneyPractice).mockReturnValue({
+		...jest.mocked(useJourneyPractice)(null),
+		isSaving: true,
+	});
+	await render();
+	expect(button('Marking complete…').props['accessibilityLabel']).toBe(
+		'Marking Movement complete',
+	);
+});
+
+it('uses the approved Movement accessibility copy when complete', async () => {
+	jest.mocked(useJourneyPractice).mockReturnValue({
+		...jest.mocked(useJourneyPractice)(null),
+		completion: { ...completion, status: 'Complete' as const },
+	});
+	await render();
+	expect(button('Completed').props['accessibilityLabel']).toBe(
+		'Movement completed',
+	);
 });
 it.each(['Pray', 'unknown', ['Movement']])(
 	'rejects invalid chosen-practice route %s',
@@ -167,11 +229,15 @@ it('offers refresh without exposing unavailable practice content', async () => {
 		...jest.mocked(useJourneyPractice)(null),
 		session: null,
 		practice: undefined,
-		error: 'Unable to load this practice.',
+		error: 'We couldn’t load this practice. Check your connection and try again.',
 	});
 	await render();
 	expect(textOf(renderer.root)).not.toContain('Begin here');
-	await act(async () => button('Refresh practice').props['onPress']());
+	const refreshButton = button('Refresh practice');
+	expect(refreshButton.props['accessibilityLabel']).toBe(
+		'Refresh Movement practice',
+	);
+	await act(async () => refreshButton.props['onPress']());
 	expect(refresh).toHaveBeenCalledTimes(1);
 	expect(complete).not.toHaveBeenCalled();
 });
@@ -184,6 +250,22 @@ it('opens household Scripture for the routed day without completing either pract
 		pathname: '/journeys/[journeyId]/days/[dayNumber]/scripture',
 		params: { journeyId: 'journey', dayNumber: '12' },
 	});
+	expect(complete).not.toHaveBeenCalled();
+});
+
+it('shows the approved Movement preview copy without enabling completion', async () => {
+	mockPreview = '1';
+	await render();
+	expect(useJourneyPractice).toHaveBeenLastCalledWith({
+		journeyId: 'journey',
+		dayNumber: 12,
+		practiceId: 'ReadScripture',
+	});
+	expect(textOf(renderer.root)).toContain(
+		'Practice preview. This does not change your chosen practices.',
+	);
+	expect(button('Preview only').props['disabled']).toBe(true);
+	await act(async () => button('Preview only').props['onPress']());
 	expect(complete).not.toHaveBeenCalled();
 });
 

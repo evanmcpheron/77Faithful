@@ -274,6 +274,14 @@ export const parseStoredInvitation = (
 	};
 };
 
+const serializeTimestamp = (timestamp: {
+	seconds: number;
+	nanoseconds: number;
+}): { seconds: number; nanoseconds: number } => ({
+	seconds: timestamp.seconds,
+	nanoseconds: timestamp.nanoseconds,
+});
+
 const decryptInvitation = (
 	document: ICommunityInvitationDocument,
 	configuration: TCommunityInvitationEncryptionConfiguration,
@@ -298,7 +306,7 @@ const decryptInvitation = (
 		communityId: document.communityId,
 		invitationId: document.invitationId,
 		code,
-		expiresAt: document.expiresAt,
+		expiresAt: serializeTimestamp(document.expiresAt),
 	};
 };
 
@@ -573,7 +581,7 @@ const createInvitationMutation = async (
 				communityId: input.communityId,
 				invitationId: candidate.document.invitationId,
 				code: candidate.code,
-				expiresAt: candidate.document.expiresAt,
+				expiresAt: serializeTimestamp(candidate.document.expiresAt),
 			},
 		};
 	});
@@ -673,7 +681,7 @@ export const revokeCommunityInvitationForAccount = async (
 			return {
 				communityId: input.communityId,
 				invitationId: input.invitationId,
-				revokedAt: previousReceipt.revokedAt,
+				revokedAt: serializeTimestamp(previousReceipt.revokedAt),
 			};
 		}
 		if (community.activeInvitationId !== input.invitationId)
@@ -708,7 +716,7 @@ export const revokeCommunityInvitationForAccount = async (
 		return {
 			communityId: input.communityId,
 			invitationId: input.invitationId,
-			revokedAt: now,
+			revokedAt: serializeTimestamp(now),
 		};
 	});
 };

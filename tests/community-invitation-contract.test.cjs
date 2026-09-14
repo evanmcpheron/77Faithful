@@ -8,6 +8,7 @@ const {
 	parseIssueCommunityInvitationRequest,
 	parseIssueCommunityInvitationResult,
 	parseRevokeCommunityInvitationRequest,
+	parseRevokeCommunityInvitationResult,
 } = require('../functions/lib/generated/features/communities/community-invitation');
 const {
 	decryptCommunityInvitationCode,
@@ -232,6 +233,11 @@ test('executes issue, stable read, rotation, retry, and revocation without plain
 		issueRequest,
 		dependencies,
 	);
+	assert.deepEqual(parseIssueCommunityInvitationResult(issued), issued);
+	assert.deepEqual(Object.keys(issued.invitation.expiresAt), [
+		'seconds',
+		'nanoseconds',
+	]);
 	assert.deepEqual(
 		await issueCommunityInvitationForAccount(
 			'owner',
@@ -307,6 +313,11 @@ test('executes issue, stable read, rotation, retry, and revocation without plain
 		revokeRequest,
 		{ database, now: expiryNow },
 	);
+	assert.deepEqual(parseRevokeCommunityInvitationResult(revoked), revoked);
+	assert.deepEqual(Object.keys(revoked.revokedAt), [
+		'seconds',
+		'nanoseconds',
+	]);
 	assert.deepEqual(
 		await revokeCommunityInvitationForAccount('owner', revokeRequest, {
 			database,

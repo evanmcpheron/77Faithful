@@ -58,7 +58,15 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityInvitationAcceptOperations/{operationId} {
+      allow read, write: if false;
+    }
+
     match /communityInvitationDigests/{digest} {
+      allow read, write: if false;
+    }
+
+    match /communityInvitationRateLimits/{limitId} {
       allow read, write: if false;
     }
 

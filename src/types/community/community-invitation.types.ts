@@ -1,10 +1,12 @@
+import type { IFormationCourseReference } from '../formation/formation-course.types';
 import type {
 	DomainSchemaVersion,
 	IDocumentTimestamps,
 	IPersistedTimestamp,
+	TCalendarDate,
+	TIanaTimeZoneId,
 } from '../shared/persistence.types';
-import type { ICommunityJourneyPreview } from './community-journey.types';
-import type { ICommunitySummary } from './community.types';
+import type { TCommunityJourneyStatus } from './community-journey.types';
 
 export const CommunityInvitationStatus = {
 	Active: 'Active',
@@ -73,8 +75,18 @@ export interface IOrganizerCommunityInvitation {
 }
 
 export interface ICommunityInvitationPreview {
-	invitationId: string;
-	community: ICommunitySummary;
+	communityName: string;
+	communityPurpose: string;
+	organizerDisplayName: string;
+	participationExpectations?: string;
 	expiresAt: IPersistedTimestamp;
-	coordinatedJourney?: ICommunityJourneyPreview;
+	coordinatedJourney?: ICommunityInvitationJourneyPreview;
+}
+
+export interface ICommunityInvitationJourneyPreview {
+	course: IFormationCourseReference;
+	startDate: TCalendarDate;
+	timeZoneId: TIanaTimeZoneId;
+	status: TCommunityJourneyStatus;
+	canEnroll: boolean;
 }

@@ -15,6 +15,8 @@ const {
 	parseCommunityInvitationEncryptionConfiguration,
 } = require('../functions/lib/src/community/community-invitation-crypto');
 const invitations = require('../functions/lib/src/community/community-invitation');
+const redemptions = require('../functions/lib/src/community/community-invitation-redemption');
+const readers = require('../functions/lib/src/community/read-community-context');
 
 const projectId = 'faithful-community-invitations-test';
 const testNow = Timestamp.fromMillis(Date.UTC(2026, 8, 14, 12));
@@ -47,7 +49,13 @@ const seedOrganizer = async ({
 	includePointer = true,
 	status = 'Active',
 } = {}) => {
-	await database.doc(`users/${userId}`).set({ preferredName: 'Organizer' });
+	await database.doc(`users/${userId}`).set({
+		schemaVersion: 1,
+		revision: 0,
+		preferredName: 'Organizer',
+		createdAt: testNow,
+		updatedAt: testNow,
+	});
 	await database.doc(`communities/${communityId}`).set({
 		schemaVersion: 1,
 		name: 'Community',
@@ -87,6 +95,30 @@ const retrieve = (communityId = 'alpha', now = testNow) =>
 		'owner',
 		{ communityId },
 		dependencies(now),
+	);
+
+const seedAccount = async (userId, preferredName = null) => {
+	await database.doc(`users/${userId}`).set({
+		schemaVersion: 1,
+		revision: 0,
+		preferredName,
+		createdAt: testNow,
+		updatedAt: testNow,
+	});
+};
+
+const redemptionDependencies = (scopeCharacter, attemptLimits) => ({
+	database,
+	now: testNow,
+	requestScopeDigest: scopeCharacter.repeat(64),
+	...(attemptLimits ? { attemptLimits } : {}),
+});
+
+const accept = (userId, code, operationId, displayName, scopeCharacter = 'a') =>
+	redemptions.acceptCommunityInvitationForAccount(
+		userId,
+		{ invitationCode: code, operationId, displayName },
+		redemptionDependencies(scopeCharacter),
 	);
 
 before(async () => {
@@ -418,5 +450,265 @@ test('serializes concurrent issue, rotation, and revocation without two redeemab
 	assert.equal(
 		finalCommunity.activeInvitationId,
 		active.length === 1 ? active[0].id : null,
+	);
+});
+
+test('previews safely and lets two accounts accept one code exactly once without journey or consent side effects', async () => {
+	await seedOrganizer();
+	await Promise.all([
+		seedAccount('member-a'),
+		seedAccount('member-b', 'Member B'),
+	]);
+	const issued = await issue();
+	const preview = await redemptions.previewCommunityInvitationForAccount(
+		'member-a',
+		{ invitationCode: issued.invitation.code },
+		redemptionDependencies('a'),
+	);
+	assert.deepEqual(preview, {
+		preview: {
+			communityName: 'Community',
+			communityPurpose: '',
+			organizerDisplayName: 'Organizer',
+			expiresAt: issued.invitation.expiresAt,
+		},
+	});
+	const [first, second] = await Promise.all([
+		accept('member-a', issued.invitation.code, 'accept-a', 'Member A', 'b'),
+		accept('member-b', issued.invitation.code, 'accept-b', 'Member B', 'c'),
+	]);
+	assert.equal(first.outcome, 'Accepted');
+	assert.equal(second.outcome, 'Accepted');
+	assert.deepEqual(
+		(
+			await readers.getCommunityContextForAccount(
+				'owner',
+				{
+					communityId: 'alpha',
+				},
+				database,
+			)
+		).context.activeMemberCount,
+		{ value: 3, isExact: true },
+	);
+	assert.deepEqual(
+		await accept(
+			'member-a',
+			issued.invitation.code,
+			'accept-a',
+			'Member A',
+			'b',
+		),
+		first,
+	);
+	for (const userId of ['member-a', 'member-b']) {
+		const authoritative = (
+			await database.doc(`communities/alpha/members/${userId}`).get()
+		).data();
+		assert.equal(authoritative.lifecycle.status, 'Active');
+		assert.deepEqual(
+			(
+				await database
+					.doc(`users/${userId}/communityMemberships/alpha`)
+					.get()
+			).data(),
+			authoritative,
+		);
+		assert.equal(
+			(
+				await database
+					.doc(
+						`communities/alpha/invitations/${issued.invitation.invitationId}/redemptions/${userId}`,
+					)
+					.get()
+			).exists,
+			true,
+		);
+		assert.equal(
+			(await database.collection(`users/${userId}/journeys`).get()).empty,
+			true,
+		);
+	}
+	assert.equal(
+		(await database.collection('communityProgressConsents').get()).empty,
+		true,
+	);
+});
+
+test('returns already-member, reactivates Left, denies Removed, and permits a verified account with no journey', async () => {
+	await seedOrganizer();
+	for (const userId of ['left', 'removed', 'no-journey'])
+		await seedAccount(userId);
+	const issued = await issue();
+	assert.equal(
+		(
+			await accept(
+				'owner',
+				issued.invitation.code,
+				'owner-accept',
+				'Organizer',
+				'a',
+			)
+		).outcome,
+		'AlreadyMember',
+	);
+	for (const [userId, lifecycle] of [
+		['left', { status: 'Left', leftAt: testNow }],
+		['removed', { status: 'Removed', removedAt: testNow }],
+	]) {
+		await database.doc(`communities/alpha/members/${userId}`).set({
+			schemaVersion: 1,
+			communityId: 'alpha',
+			userId,
+			role: 'Member',
+			joinedAt: testNow,
+			lifecycle,
+			createdAt: testNow,
+			updatedAt: testNow,
+		});
+	}
+	assert.equal(
+		(
+			await accept(
+				'left',
+				issued.invitation.code,
+				'left-rejoin',
+				'Left Member',
+				'b',
+			)
+		).outcome,
+		'Rejoined',
+	);
+	await assert.rejects(
+		accept(
+			'removed',
+			issued.invitation.code,
+			'removed-rejoin',
+			'Removed Member',
+			'c',
+		),
+		(error) => error.details.reason === 'MembershipRemoved',
+	);
+	assert.equal(
+		(
+			await accept(
+				'no-journey',
+				issued.invitation.code,
+				'no-journey-accept',
+				'No Journey',
+				'd',
+			)
+		).outcome,
+		'Accepted',
+	);
+	assert.equal(
+		(await database.collection('users/no-journey/journeys').get()).empty,
+		true,
+	);
+});
+
+test('serializes acceptance against revoke, rotate, and closure', async () => {
+	for (const operation of ['revoke', 'rotate', 'close']) {
+		await clearFirestore();
+		await seedOrganizer();
+		await seedAccount('member');
+		const issued = await issue(`issue-${operation}`);
+		let invalidation;
+		if (operation === 'revoke')
+			invalidation = invitations.revokeCommunityInvitationForAccount(
+				'owner',
+				{
+					communityId: 'alpha',
+					invitationId: issued.invitation.invitationId,
+					operationId: 'revoke-race',
+				},
+				{ database, now: testNow },
+			);
+		else if (operation === 'rotate')
+			invalidation = invitations.rotateCommunityInvitationForAccount(
+				'owner',
+				{ communityId: 'alpha', operationId: 'rotate-race' },
+				dependencies(),
+			);
+		else
+			invalidation = database.runTransaction(async (transaction) => {
+				const reference = database.doc('communities/alpha');
+				const snapshot = await transaction.get(reference);
+				transaction.update(reference, {
+					lifecycle: { status: 'Closed', closedAt: testNow },
+					revision: snapshot.data().revision + 1,
+					updatedAt: testNow,
+				});
+			});
+		const results = await Promise.allSettled([
+			accept(
+				'member',
+				issued.invitation.code,
+				`accept-${operation}`,
+				'Member',
+				'e',
+			),
+			invalidation,
+		]);
+		assert.equal(results[1].status, 'fulfilled');
+		const member = await database
+			.doc('communities/alpha/members/member')
+			.get();
+		assert.equal(member.exists, results[0].status === 'fulfilled');
+		await assert.rejects(
+			redemptions.previewCommunityInvitationForAccount(
+				'member',
+				{ invitationCode: issued.invitation.code },
+				redemptionDependencies('f'),
+			),
+			(error) => error.details.reason === 'InvitationUnavailable',
+		);
+	}
+});
+
+test('persists bounded preview and acceptance rate limits and rejects payload changes', async () => {
+	await seedOrganizer();
+	await seedAccount('member');
+	const issued = await issue();
+	const limited = redemptionDependencies('a', {
+		preview: { account: 1, requestScope: 1 },
+		accept: { account: 2, requestScope: 2 },
+	});
+	await assert.rejects(
+		redemptions.previewCommunityInvitationForAccount(
+			'member',
+			{ invitationCode: 'x'.repeat(1000) },
+			limited,
+		),
+		(error) => error.details.reason === 'InvalidInput',
+	);
+	await assert.rejects(
+		redemptions.previewCommunityInvitationForAccount(
+			'member',
+			{ invitationCode: issued.invitation.code },
+			limited,
+		),
+		(error) => error.details.reason === 'RateLimited',
+	);
+	await redemptions.acceptCommunityInvitationForAccount(
+		'member',
+		{
+			invitationCode: issued.invitation.code,
+			displayName: 'Member',
+			operationId: 'same-operation',
+		},
+		limited,
+	);
+	await assert.rejects(
+		redemptions.acceptCommunityInvitationForAccount(
+			'member',
+			{
+				invitationCode: issued.invitation.code,
+				displayName: 'Changed',
+				operationId: 'same-operation',
+			},
+			limited,
+		),
+		(error) => error.details.reason === 'OperationPayloadMismatch',
 	);
 });

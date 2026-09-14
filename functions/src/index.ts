@@ -145,6 +145,10 @@ export {
 	revokeCommunityInvitation,
 	rotateCommunityInvitation,
 } from './community/community-invitation';
+export {
+	acceptCommunityInvitation,
+	previewCommunityInvitation,
+} from './community/community-invitation-redemption';
 export { getCommunity, listCommunities } from './community/read-community';
 export {
 	getCommunityContext,

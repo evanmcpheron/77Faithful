@@ -447,3 +447,65 @@ Checks run locally on 2026-09-14:
   paths.
 - Security Rules evaluation was attempted but did not run because the configured
   Firebase CLI credentials require reauthentication.
+
+## Ticket 05 operational notes
+
+Ticket 05 exports `previewCommunityInvitation` and `acceptCommunityInvitation`
+through the existing callable-only Functions boundary. Canonical DTOs and
+reasons live in `src/types/community/community-function.types.ts`; the strictly
+limited preview projection lives in
+`src/types/community/community-invitation.types.ts`. Runtime request/result
+validators remain in `src/features/communities/community-invitation.ts` and are
+copied only by `scripts/prepare-functions.cjs`.
+
+Preview requires an authenticated, email-verified, available account and returns
+no identifier or group content: only name, purpose, safe Organizer preferred
+name, optional participation expectations, trusted expiry, and an optional
+public coordinated-journey summary. The invitation digest lookup, model version,
+exact digest, expiry, Active lifecycle, community pointer, and Active community
+are rechecked together. Invalid, expired, revoked, rotated, and closed cases use
+one generic unavailable result to limit enumeration.
+
+Acceptance requires explicit code, normalized public display name, and
+actor-scoped operation ID. Its transaction rereads the same invitation authority
+plus the current membership. It returns `Accepted`, `AlreadyMember`, or
+`Rejoined`, denies Removed, and waits out Leaving. It writes matching
+authoritative member and account-index records, one private
+per-invitation/account redemption, and a private digest-bound operation receipt.
+The submitted display name updates the existing preferred-name projection
+atomically. No raw code is persisted or logged. No journey, enrollment,
+progress-sharing consent, private writing, or practice state is read or created.
+
+Preview and acceptance attempts use separate fixed ten-minute rate windows for
+both actor and SHA-256 request-scope digest. Preview limits are 20 per actor and
+40 per request scope; acceptance limits are 10 and 20. Malformed input consumes
+an attempt before validation. Direct client access to rate records, acceptance
+receipts, redemptions, memberships, and invitations remains denied. No new
+composite index is required.
+
+The optional coordinated-journey DTO validator is implemented, but there is no
+canonical persisted current-public-schedule pointer or schedule operation in
+this checkout. Preview omits the optional summary until its owning backend
+ticket supplies that record; Ticket 05 does not invent schedule selection.
+
+Checks run locally on 2026-09-14:
+
+- Functions contract preparation and TypeScript build passed.
+- Functions ESLint and scoped root ESLint passed.
+- The invitation redemption, invitation administration, community reader, and
+  create-community non-emulator suites passed: 28 tests total.
+- Scoped Prettier formatting completed; a final scoped check is recorded at
+  handoff.
+- The repository-wide root TypeScript check was run and still fails in
+  pre-existing protected shared components and unrelated utilities. One Ticket
+  05 validator issue found by that check was corrected; the final output has no
+  Ticket 05 file error.
+- Firestore-emulator coverage for two-account redemption, repeated operations,
+  existing/Left/Removed membership, no-journey accounts, membership count,
+  accept-versus-revoke/rotate/close, rate limits, and no journey/consent side
+  effects is prepared in `tests/community-invitations.emulator.test.cjs` but was
+  not run because this machine has no Java runtime.
+- Security Rules evaluation was attempted but did not run because the configured
+  Firebase CLI credentials require reauthentication.
+- No production configuration, migration, secret provisioning, deployment, or
+  device check was performed.

@@ -36,7 +36,13 @@ export type TCommunityInvitationReasonCode =
 	| 'InvitationMigrationRequired'
 	| 'InvitationConfigurationUnavailable'
 	| 'InvitationDataUnavailable'
-	| 'OperationPayloadMismatch';
+	| 'OperationPayloadMismatch'
+	| 'MembershipRemoved'
+	| 'MembershipUnavailable'
+	| 'RateLimited';
+
+export type TCommunityInvitationAcceptanceOutcome =
+	'Accepted' | 'AlreadyMember' | 'Rejoined';
 
 // All caller identity, roles, generated IDs, lifecycle transitions, and audit times are server-owned.
 export interface ICreateCommunityRequest {
@@ -126,13 +132,22 @@ export interface ICreateCommunityInvitationResult {
 	invitationToken: string;
 }
 
+export interface IPreviewCommunityInvitationRequest {
+	invitationCode: string;
+}
+
+export interface IPreviewCommunityInvitationResult {
+	preview: ICommunityInvitationPreview;
+}
+
 export interface IAcceptCommunityInvitationRequest {
-	invitationToken: string;
+	invitationCode: string;
 	displayName: string;
 	operationId: string;
 }
 
 export interface IAcceptCommunityInvitationResult {
+	outcome: TCommunityInvitationAcceptanceOutcome;
 	community: ICommunitySummary;
 	membership: ICommunityMemberSummary;
 }

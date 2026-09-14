@@ -227,7 +227,7 @@ const parseEncryptedCode = (
 	};
 };
 
-const parseStoredInvitation = (
+export const parseStoredInvitation = (
 	value: FirebaseFirestore.DocumentData | undefined,
 	communityId: string,
 	invitationId: string,
@@ -332,7 +332,7 @@ const isUsable = (
 	document.lifecycle.status === 'Active' &&
 	timestampMilliseconds(document.expiresAt) > now.toMillis();
 
-const timestampMilliseconds = (timestamp: {
+export const timestampMilliseconds = (timestamp: {
 	seconds: number;
 	nanoseconds: number;
 }): number => timestamp.seconds * 1000 + timestamp.nanoseconds / 1_000_000;

@@ -107,6 +107,64 @@ reauthentication. Firestore-emulator tests are prepared in
 `tests/community-invitations.emulator.test.cjs`; they were not run because this
 machine has no Java runtime.
 
+### Ticket 05 — invitation preview and membership acceptance
+
+| Operation                    | Transport         | Canonical request                    | Canonical result                    | Authorization and lifecycle                                                                                                                                                                                                                             | Idempotency/errors                                                                                                                                                                                                                | Evidence                                                                                                                                                                                     |
+| ---------------------------- | ----------------- | ------------------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `previewCommunityInvitation` | Firebase callable | `IPreviewCommunityInvitationRequest` | `IPreviewCommunityInvitationResult` | Authenticated, email-verified, available account. Exact digest resolution must match a model-version-2 Active invitation, its current community pointer, its expiry after trusted time, and an Active community. No membership is required for preview. | Read-only apart from rate-limit accounting. Invalid, missing, expired, revoked, rotated, and closed invitations use the generic `InvitationUnavailable` reason after syntactically invalid input is rejected as `InvalidInput`.   | Export and implementation in `functions/src/community/community-invitation-redemption.ts`; contract tests in `tests/community-invitation-redemption.test.cjs`; emulator cases prepared.      |
+| `acceptCommunityInvitation`  | Firebase callable | `IAcceptCommunityInvitationRequest`  | `IAcceptCommunityInvitationResult`  | Same invitation checks, plus server-derived caller identity and authoritative membership lifecycle. Active returns `AlreadyMember`; missing returns `Accepted`; Left returns `Rejoined`; Leaving is unavailable; Removed is denied.                     | `operationId` is scoped to actor and Accept and binds the invitation digest plus normalized display name. Replays recheck the live invitation, community, and membership. A different payload returns `OperationPayloadMismatch`. | Export and implementation in `functions/src/community/community-invitation-redemption.ts`; unit retry/privacy tests pass; Firestore-emulator acceptance and invalidation races are prepared. |
+
+Preview input is one `invitationCode`. Acceptance input is exactly
+`invitationCode`, `displayName`, and `operationId`; caller-supplied account ID,
+role, lifecycle, `createdAt`, or `joinedAt` fields are rejected. Codes retain
+Ticket 04's 20-character normalized and 23-character grouped limits.
+`displayName` is trimmed, required, limited to 80 characters, and rejects ASCII
+control characters. Operation IDs retain the 128-character identifier limit.
+Neither operation has a cursor.
+
+The preview projection contains only `communityName`, `communityPurpose`,
+`organizerDisplayName`, optional `participationExpectations`, `expiresAt`, and
+an optional canonical public coordinated-journey summary. It contains no
+community or invitation identifier, code, digest, contact data, member list,
+post, enrollment, notification, or private participant state. The Organizer name
+and accepted member name use the adopted `users/{uid}.preferredName` projection;
+acceptance atomically updates that profile field and revision to the explicitly
+submitted public name when it differs.
+
+Acceptance transacts against the digest lookup, community pointer and lifecycle,
+invitation lifecycle and expiry, caller membership, per-account membership
+index, per-invitation/account redemption, and actor-scoped operation receipt.
+The authoritative member and discovery-index documents receive the same Active
+membership body. Rejoin replaces `joinedAt` with trusted acceptance time while
+preserving `createdAt`; an active member preserves both. A private
+`communities/{communityId}/invitations/{invitationId}/redemptions/{uid}` record
+is created once, and the operation receipt stores only digest/name matching
+metadata and identifiers, never the raw code. Acceptance creates no journey,
+enrollment, progress consent, writing reference, or practice state.
+
+Both operations consume a server-side fixed ten-minute attempt window before
+input parsing. Preview permits 20 attempts per actor and 40 per hashed request
+scope; acceptance permits 10 per actor and 20 per hashed request scope. Only a
+SHA-256 request-scope digest is persisted under `communityInvitationRateLimits`;
+raw network addresses and codes are not stored. Exhaustion returns
+`RateLimited`. Additional stable reasons introduced for this ticket are
+`MembershipRemoved` and `MembershipUnavailable`; the existing authentication,
+verification, account, invitation-data, and operation reasons remain applicable.
+
+No new Firestore composite index is required: all acceptance reads are exact
+document reads and the existing member readers continue to use Ticket 01's
+indexes. Updated Rules explicitly deny direct client access to acceptance
+receipts and rate-limit records; redemption records remain under the existing
+deny-all `communities/**` boundary. Deployment still requires Ticket 04's
+invitation migration and encryption-secret configuration. No migration, secret
+provisioning, deployment, or launch was performed.
+
+The shared optional coordinated-journey response type and runtime validator are
+ready, but this checkout has no canonical persisted current-public-schedule
+pointer or implemented scheduling operation. Preview therefore omits that
+optional field until the schedule-owning ticket establishes and populates that
+contract; Ticket 05 does not guess a collection or select among schedules.
+
 ## Currently implemented operations (not adopted future ledger entries)
 
 These names exist in this checkout and may be retained, revised, or superseded

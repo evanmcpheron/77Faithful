@@ -1,15 +1,25 @@
 import type {
+	IAcceptCommunityInvitationRequest,
+	IAcceptCommunityInvitationResult,
 	IGetCurrentCommunityInvitationRequest,
 	IGetCurrentCommunityInvitationResult,
 	IIssueCommunityInvitationRequest,
 	IIssueCommunityInvitationResult,
+	IPreviewCommunityInvitationRequest,
+	IPreviewCommunityInvitationResult,
 	IRevokeCommunityInvitationRequest,
 	IRevokeCommunityInvitationResult,
 	IRotateCommunityInvitationRequest,
 	IRotateCommunityInvitationResult,
 } from '../../types/community/community-function.types';
-import type { IOrganizerCommunityInvitation } from '../../types/community/community-invitation.types';
+import type {
+	ICommunityInvitationJourneyPreview,
+	ICommunityInvitationPreview,
+	IOrganizerCommunityInvitation,
+} from '../../types/community/community-invitation.types';
+import type { ICommunityMemberSummary } from '../../types/community/community-membership.types';
 import type { IPersistedTimestamp } from '../../types/shared/persistence.types';
+import { parseCreateCommunityResult } from './community-creation';
 
 export const CommunityInvitationLimits = {
 	communityId: 128,
@@ -17,6 +27,7 @@ export const CommunityInvitationLimits = {
 	invitationId: 128,
 	codeCharacters: 20,
 	formattedCodeLength: 23,
+	displayName: 80,
 } as const;
 
 const identifierPattern = /^[a-zA-Z0-9_-]+$/;
@@ -33,13 +44,14 @@ const record = (value: unknown): Record<string, unknown> => {
 const hasOnlyKeys = (value: Record<string, unknown>, keys: string[]): boolean =>
 	Object.keys(value).every((key) => keys.includes(key));
 
+const isIdentifier = (value: unknown, max: number): value is string =>
+	typeof value === 'string' &&
+	value.length >= 1 &&
+	value.length <= max &&
+	identifierPattern.test(value);
+
 const identifier = (value: unknown, max: number): string => {
-	if (
-		typeof value !== 'string' ||
-		value.length < 1 ||
-		value.length > max ||
-		!identifierPattern.test(value)
-	)
+	if (!isIdentifier(value, max))
 		throw new Error('Invalid community invitation identifier.');
 	return value;
 };
@@ -52,6 +64,19 @@ const operationId = (value: unknown): string =>
 
 const invitationId = (value: unknown): string =>
 	identifier(value, CommunityInvitationLimits.invitationId);
+
+const displayName = (value: unknown): string => {
+	if (typeof value !== 'string')
+		throw new Error('Invalid community display name.');
+	const normalized = value.trim();
+	if (
+		normalized.length < 1 ||
+		normalized.length > CommunityInvitationLimits.displayName ||
+		/[\u0000-\u001f\u007f]/.test(normalized)
+	)
+		throw new Error('Invalid community display name.');
+	return normalized;
+};
 
 const timestamp = (value: unknown): IPersistedTimestamp => {
 	const parsed = record(value);
@@ -68,6 +93,71 @@ const timestamp = (value: unknown): IPersistedTimestamp => {
 	return {
 		seconds: parsed['seconds'],
 		nanoseconds: parsed['nanoseconds'],
+	};
+};
+
+const isCalendarDate = (
+	value: unknown,
+): value is `${number}-${number}-${number}` => {
+	if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value))
+		return false;
+	const year = Number(value.slice(0, 4));
+	const month = Number(value.slice(5, 7));
+	const day = Number(value.slice(8, 10));
+	const parsed = new Date(Date.UTC(year, month - 1, day));
+	return (
+		parsed.getUTCFullYear() === year &&
+		parsed.getUTCMonth() === month - 1 &&
+		parsed.getUTCDate() === day
+	);
+};
+
+const isTimeZoneId = (value: unknown): value is string => {
+	if (typeof value !== 'string' || value.length < 1 || value.length > 128)
+		return false;
+	try {
+		new Intl.DateTimeFormat('en-US', { timeZone: value }).format();
+		return true;
+	} catch {
+		return false;
+	}
+};
+
+const coordinatedJourney = (
+	value: unknown,
+): ICommunityInvitationJourneyPreview => {
+	const journey = record(value);
+	const course = record(journey['course']);
+	if (
+		!hasOnlyKeys(journey, [
+			'course',
+			'startDate',
+			'timeZoneId',
+			'status',
+			'canEnroll',
+		]) ||
+		!hasOnlyKeys(course, ['courseId', 'courseVersionId']) ||
+		!isIdentifier(course['courseId'], 128) ||
+		!isIdentifier(course['courseVersionId'], 128) ||
+		!isCalendarDate(journey['startDate']) ||
+		!isTimeZoneId(journey['timeZoneId']) ||
+		!['Scheduled', 'Active', 'Completed', 'Canceled'].includes(
+			String(journey['status']),
+		) ||
+		typeof journey['canEnroll'] !== 'boolean'
+	)
+		throw new Error('Invalid coordinated journey preview.');
+	return {
+		course: {
+			courseId: course['courseId'],
+			courseVersionId: course['courseVersionId'],
+		},
+		startDate: journey['startDate'],
+		timeZoneId: journey['timeZoneId'],
+		status: journey[
+			'status'
+		] as ICommunityInvitationJourneyPreview['status'],
+		canEnroll: journey['canEnroll'],
 	};
 };
 
@@ -173,6 +263,39 @@ export const parseRevokeCommunityInvitationRequest = (
 	};
 };
 
+export const parsePreviewCommunityInvitationRequest = (
+	value: unknown,
+): IPreviewCommunityInvitationRequest => {
+	const input = record(value);
+	if (!hasOnlyKeys(input, ['invitationCode']) || !('invitationCode' in input))
+		throw new Error('Invalid community invitation preview request.');
+	return {
+		invitationCode: normalizeCommunityInvitationCode(
+			input['invitationCode'],
+		),
+	};
+};
+
+export const parseAcceptCommunityInvitationRequest = (
+	value: unknown,
+): IAcceptCommunityInvitationRequest => {
+	const input = record(value);
+	if (
+		!hasOnlyKeys(input, ['invitationCode', 'displayName', 'operationId']) ||
+		!('invitationCode' in input) ||
+		!('displayName' in input) ||
+		!('operationId' in input)
+	)
+		throw new Error('Invalid community invitation acceptance request.');
+	return {
+		invitationCode: normalizeCommunityInvitationCode(
+			input['invitationCode'],
+		),
+		displayName: displayName(input['displayName']),
+		operationId: operationId(input['operationId']),
+	};
+};
+
 export const parseIssueCommunityInvitationResult = (
 	value: unknown,
 ): IIssueCommunityInvitationResult => {
@@ -211,5 +334,103 @@ export const parseRevokeCommunityInvitationResult = (
 		communityId: communityId(result['communityId']),
 		invitationId: invitationId(result['invitationId']),
 		revokedAt: timestamp(result['revokedAt']),
+	};
+};
+
+const parseInvitationPreview = (
+	value: unknown,
+): ICommunityInvitationPreview => {
+	const preview = record(value);
+	if (
+		!hasOnlyKeys(preview, [
+			'communityName',
+			'communityPurpose',
+			'organizerDisplayName',
+			'participationExpectations',
+			'expiresAt',
+			'coordinatedJourney',
+		]) ||
+		typeof preview['communityName'] !== 'string' ||
+		preview['communityName'].length < 1 ||
+		preview['communityName'].length > 100 ||
+		typeof preview['communityPurpose'] !== 'string' ||
+		preview['communityPurpose'].length > 2000 ||
+		typeof preview['organizerDisplayName'] !== 'string' ||
+		preview['organizerDisplayName'].length > 80 ||
+		(preview['participationExpectations'] !== undefined &&
+			(typeof preview['participationExpectations'] !== 'string' ||
+				preview['participationExpectations'].length > 2000))
+	)
+		throw new Error('Invalid community invitation preview response.');
+	return {
+		communityName: preview['communityName'],
+		communityPurpose: preview['communityPurpose'],
+		organizerDisplayName: preview['organizerDisplayName'].trim(),
+		...(preview['participationExpectations'] === undefined
+			? {}
+			: {
+					participationExpectations:
+						preview['participationExpectations'],
+				}),
+		expiresAt: timestamp(preview['expiresAt']),
+		...(preview['coordinatedJourney'] === undefined
+			? {}
+			: {
+					coordinatedJourney: coordinatedJourney(
+						preview['coordinatedJourney'],
+					),
+				}),
+	};
+};
+
+export const parsePreviewCommunityInvitationResult = (
+	value: unknown,
+): IPreviewCommunityInvitationResult => {
+	const result = record(value);
+	if (!hasOnlyKeys(result, ['preview']))
+		throw new Error('Invalid community invitation preview response.');
+	return { preview: parseInvitationPreview(result['preview']) };
+};
+
+export const parseAcceptCommunityInvitationResult = (
+	value: unknown,
+): IAcceptCommunityInvitationResult => {
+	const result = record(value);
+	if (
+		!hasOnlyKeys(result, ['outcome', 'community', 'membership']) ||
+		!['Accepted', 'AlreadyMember', 'Rejoined'].includes(
+			String(result['outcome']),
+		)
+	)
+		throw new Error('Invalid community invitation acceptance response.');
+	const parsedCommunity = parseCreateCommunityResult({
+		community: result['community'],
+	}).community;
+	const member = record(result['membership']);
+	if (
+		!hasOnlyKeys(member, [
+			'communityId',
+			'userId',
+			'displayName',
+			'role',
+		]) ||
+		member['communityId'] !== parsedCommunity.communityId ||
+		!isIdentifier(member['userId'], 128) ||
+		typeof member['displayName'] !== 'string' ||
+		member['displayName'].length > CommunityInvitationLimits.displayName ||
+		(member['role'] !== 'Organizer' && member['role'] !== 'Member')
+	)
+		throw new Error('Invalid community invitation acceptance response.');
+	return {
+		outcome: result[
+			'outcome'
+		] as IAcceptCommunityInvitationResult['outcome'],
+		community: parsedCommunity,
+		membership: {
+			communityId: parsedCommunity.communityId,
+			userId: member['userId'],
+			displayName: member['displayName'].trim(),
+			role: member['role'] as ICommunityMemberSummary['role'],
+		},
 	};
 };

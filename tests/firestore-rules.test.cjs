@@ -157,7 +157,10 @@ for (const path of [
 	'users/owner/communityInvitationIssueOperations/operation-1',
 	'users/owner/communityInvitationRotateOperations/operation-1',
 	'users/owner/communityInvitationRevokeOperations/operation-1',
+	'users/owner/communityInvitationAcceptOperations/operation-1',
 	'communityInvitationDigests/digest-1',
+	'communityInvitationRateLimits/limit-1',
+	'communities/community-1/invitations/invitation-1/redemptions/owner',
 ]) {
 	for (const method of ['get', 'list', 'create', 'update', 'delete']) {
 		add(

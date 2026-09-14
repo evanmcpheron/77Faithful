@@ -139,6 +139,12 @@ export { listReflections } from './journey/list-reflections';
 
 export { createCommunity } from './community/create-community';
 
+export {
+	getCurrentCommunityInvitation,
+	issueCommunityInvitation,
+	revokeCommunityInvitation,
+	rotateCommunityInvitation,
+} from './community/community-invitation';
 export { getCommunity, listCommunities } from './community/read-community';
 export {
 	getCommunityContext,

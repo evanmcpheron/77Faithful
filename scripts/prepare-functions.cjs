@@ -35,3 +35,7 @@ cpSync(
 	path.join(root, 'src/features/communities/community-reader.ts'),
 	path.join(generated, 'features/communities/community-reader.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-invitation.ts'),
+	path.join(generated, 'features/communities/community-invitation.ts'),
+);

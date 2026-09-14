@@ -85,6 +85,7 @@ export const createCommunityForAccount = async (
 			organizerUserId: userId,
 			settings: input.settings,
 			lifecycle: { status: 'Active' },
+			activeInvitationId: null,
 			revision: 0,
 			createdAt: now,
 			updatedAt: now,

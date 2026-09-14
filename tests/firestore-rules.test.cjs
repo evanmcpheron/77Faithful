@@ -154,6 +154,10 @@ for (const path of [
 	'communities/community-1/posts/post-1/replies/reply-1',
 	'users/owner/communityMemberships/community-1',
 	'users/owner/communityCreateOperations/operation-1',
+	'users/owner/communityInvitationIssueOperations/operation-1',
+	'users/owner/communityInvitationRotateOperations/operation-1',
+	'users/owner/communityInvitationRevokeOperations/operation-1',
+	'communityInvitationDigests/digest-1',
 ]) {
 	for (const method of ['get', 'list', 'create', 'update', 'delete']) {
 		add(

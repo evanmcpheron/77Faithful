@@ -185,6 +185,34 @@ test('denies verified clients direct community and private-index reads and write
 			}),
 			{ code: 'permission-denied' },
 		),
+		assert.rejects(
+			getDoc(
+				doc(
+					clientDatabase,
+					'communities/alpha/invitations/invitation-1',
+				),
+			),
+			{ code: 'permission-denied' },
+		),
+		assert.rejects(
+			getDoc(
+				doc(
+					clientDatabase,
+					'communityInvitationDigests/private-digest',
+				),
+			),
+			{ code: 'permission-denied' },
+		),
+		assert.rejects(
+			setDoc(
+				doc(
+					clientDatabase,
+					`users/${credential.user.uid}/communityInvitationIssueOperations/forged`,
+				),
+				{ invitationId: 'forged' },
+			),
+			{ code: 'permission-denied' },
+		),
 	]);
 });
 

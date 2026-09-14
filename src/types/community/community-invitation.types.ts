@@ -7,8 +7,7 @@ import type { ICommunityJourneyPreview } from './community-journey.types';
 import type { ICommunitySummary } from './community.types';
 
 export const CommunityInvitationStatus = {
-	Pending: 'Pending',
-	Accepted: 'Accepted',
+	Active: 'Active',
 	Revoked: 'Revoked',
 	Expired: 'Expired',
 } as const;
@@ -17,32 +16,60 @@ export type TCommunityInvitationStatus =
 	(typeof CommunityInvitationStatus)[keyof typeof CommunityInvitationStatus];
 
 export type TCommunityInvitationLifecycle =
-	| { status: typeof CommunityInvitationStatus.Pending }
-	| {
-			status: typeof CommunityInvitationStatus.Accepted;
-			acceptedByUserId: string;
-			acceptedAt: IPersistedTimestamp;
-	  }
+	| { status: typeof CommunityInvitationStatus.Active }
 	| {
 			status: typeof CommunityInvitationStatus.Revoked;
 			revokedAt: IPersistedTimestamp;
 	  }
 	| { status: typeof CommunityInvitationStatus.Expired };
 
-// Invitation administration is private; a pending invitation grants no membership.
+export const CommunityInvitationEncryptionAlgorithm = {
+	Aes256Gcm: 'Aes256Gcm',
+} as const;
+
+export interface IEncryptedCommunityInvitationCode {
+	algorithm: typeof CommunityInvitationEncryptionAlgorithm.Aes256Gcm;
+	keyVersion: string;
+	nonce: string;
+	ciphertext: string;
+	authenticationTag: string;
+}
+
+// Invitation administration is private; an active invitation grants no membership.
 export interface ICommunityInvitationDocument extends IDocumentTimestamps {
 	schemaVersion: typeof DomainSchemaVersion.Current;
+	invitationModelVersion: 2;
+	invitationId: string;
 	communityId: string;
 	createdByUserId: string;
 	expiresAt: IPersistedTimestamp;
 	lifecycle: TCommunityInvitationLifecycle;
+	tokenDigest: string;
+	encryptedCode: IEncryptedCommunityInvitationCode;
 }
 
-// Backend-only. Never return the digest or store the bearer token in member-readable data.
-export interface ICommunityInvitationSecretDocument {
+// Backend-only. Never return this lookup or store the plaintext code in Firestore.
+export interface ICommunityInvitationDigestLookupDocument {
+	invitationModelVersion: 2;
 	communityId: string;
 	invitationId: string;
-	tokenDigest: string;
+	expiresAt: IPersistedTimestamp;
+}
+
+// Acceptance creates one private redemption per member; it never terminates the reusable invitation.
+export interface ICommunityInvitationRedemptionDocument {
+	schemaVersion: typeof DomainSchemaVersion.Current;
+	communityId: string;
+	invitationId: string;
+	memberUserId: string;
+	redeemedAt: IPersistedTimestamp;
+}
+
+export interface IOrganizerCommunityInvitation {
+	communityId: string;
+	invitationId: string;
+	code: string;
+	expiresAt: IPersistedTimestamp;
 }
 
 export interface ICommunityInvitationPreview {

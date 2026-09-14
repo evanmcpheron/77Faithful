@@ -383,3 +383,67 @@ Checks run locally on 2026-09-14:
   `tests/community-readers.emulator.test.cjs`.
 - Security Rules evaluation was attempted but not run because the configured
   Firebase CLI credentials require reauthentication.
+
+## Ticket 04 operational notes
+
+Reusable invitation rollout has an explicit migration gate. New community
+documents are created with `activeInvitationId: null`. Invitation operations
+fail with `InvitationMigrationRequired` when that field is absent, so an older
+single-use Pending or Accepted invitation cannot become reusable by accident.
+
+Before deploying these callables, an authorized operator must inventory every
+existing `communities/{communityId}/invitations/{invitationId}` record and any
+legacy digest lookup using trusted administrative tooling. For every community
+created before Ticket 04:
+
+1. Classify all legacy Pending, Accepted, Revoked, and Expired records; do not
+   infer plaintext from a digest and do not treat Accepted as reusable.
+2. Invalidate every legacy redeemable lookup and record an administrative audit
+   timestamp outside member-readable data. Preserve an Accepted record as
+   historical single-use evidence or revoke it under the reviewed retention
+   policy; never rewrite it as invitation model version 2.
+3. In the same controlled migration, set the community's `activeInvitationId` to
+   `null`. Do not point it at a legacy record.
+4. Verify callable-only Rules denial for invitation records, digest lookups, and
+   actor-scoped Issue/Rotate/Revoke operation receipts. No new composite index
+   is needed because digest resolution is an exact document lookup.
+5. Provision the Secret Manager parameter `COMMUNITY_INVITATION_ENCRYPTION_KEYS`
+   with a reviewed versioned JSON keyring containing real independently
+   generated 32-byte keys, deploy the bound functions, and have Organizers
+   deliberately issue new invitations.
+
+Do not commit a key, `.secret.local`, secret output, plaintext invitation, or a
+migration export. A local emulator may inject a test-only key through test
+dependencies or an uncommitted `.secret.local`; production execution fails
+closed when the secret is missing, malformed, or lacks a ciphertext's retained
+key version. Key rotation adds a new key version and changes `activeVersion`
+while retaining required old versions; invitation rotation remains a separate,
+deliberate Organizer operation.
+
+Rotation, revocation, and future acceptance must all transact against the
+community's `activeInvitationId` and the pointed invitation. Future acceptance
+must additionally recheck digest lookup, expiry using trusted time, Active
+community state, and invitation model version 2 in the same membership
+transaction. Expiry is never delegated to TTL cleanup. The Ticket 04 code does
+not implement preview or acceptance and does not launch community invitations.
+
+The exact callables, canonical DTOs, validation limits, reason codes, and secret
+shape are recorded in `docs/community-api-contract.md`. No production secret,
+migration, deployment, or `.secret.local` file was created. No Firestore index
+is added because all new reads are direct document reads.
+
+Checks run locally on 2026-09-14:
+
+- Functions contract preparation and TypeScript build passed.
+- Functions ESLint passed.
+- `tests/community-invitation-contract.test.cjs` passed: 9 tests. The existing
+  create-community and community-reader contract suites also passed: 11 tests.
+- The repository-wide root TypeScript check was run and failed on pre-existing
+  protected component and unrelated utility errors; it reported no Ticket 04
+  file error.
+- The Firestore emulator suite was not run because no Java runtime is installed.
+  The suite is prepared in `tests/community-invitations.emulator.test.cjs`, and
+  the existing reader emulator suite now includes the new direct-access denial
+  paths.
+- Security Rules evaluation was attempted but did not run because the configured
+  Firebase CLI credentials require reauthentication.

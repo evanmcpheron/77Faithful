@@ -46,6 +46,22 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityInvitationIssueOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityInvitationRotateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityInvitationRevokeOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /communityInvitationDigests/{digest} {
+      allow read, write: if false;
+    }
+
     match /communities/{communityPath=**} {
       allow read, write: if false;
     }

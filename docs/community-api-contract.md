@@ -50,6 +50,63 @@ resolved safely from profiles so pre-snapshot Organizer memberships work without
 backfill. Cursors are traversal positions, not authorization evidence; every
 page reauthorizes current membership.
 
+### Ticket 04 — reusable invitation administration
+
+| Operation                       | Transport         | Canonical request                       | Canonical result                       | Authorization and lifecycle                                                                                                                                                                      | Idempotency/errors                                                                                                                                                  | Evidence                                                                                                                                                                            |
+| ------------------------------- | ----------------- | --------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `issueCommunityInvitation`      | Firebase callable | `IIssueCommunityInvitationRequest`      | `IIssueCommunityInvitationResult`      | Authenticated, email-verified, available current Organizer of an Active community. Returns the current usable invitation, or atomically issues a new 30-day invitation when none is usable.      | Mutation `operationId` is scoped to actor and Issue. Same payload recovers the encrypted invitation; changed payload is rejected.                                   | Export and implementation in `functions/src/community/community-invitation.ts`; contract/crypto tests and prepared Firestore-emulator transaction tests.                            |
+| `getCurrentCommunityInvitation` | Firebase callable | `IGetCurrentCommunityInvitationRequest` | `IGetCurrentCommunityInvitationResult` | Same current-Organizer authorization. Read-only and does not extend expiry. Returns `invitation: null` for no pointer, expiry at or before trusted server time, or a recognized revoked state.   | No operation ID because it is read-only. Decryption revalidates authenticated ciphertext, context, canonical code form, and digest.                                 | Export and implementation in `functions/src/community/community-invitation.ts`; contract/crypto tests and prepared Firestore-emulator stable-read, expiry, and authorization tests. |
+| `rotateCommunityInvitation`     | Firebase callable | `IRotateCommunityInvitationRequest`     | `IRotateCommunityInvitationResult`     | Same current-Organizer authorization. Atomically revokes the pointed invitation, removes its digest lookup, installs one new invitation pointer, and leaves existing members unchanged.          | Mutation `operationId` is scoped to actor and Rotate. Same-payload replay recovers the same still-usable encrypted code; payload mismatch is rejected.              | Export and implementation in `functions/src/community/community-invitation.ts`; prepared Firestore-emulator retry and contention tests.                                             |
+| `revokeCommunityInvitation`     | Firebase callable | `IRevokeCommunityInvitationRequest`     | `IRevokeCommunityInvitationResult`     | Same current-Organizer authorization. The request names the expected current `invitationId`; revocation atomically clears the pointer and digest lookup and does not affect existing membership. | Mutation `operationId` is scoped to actor and Revoke. Same-payload replay returns the stored text-free receipt; a stale invitation or payload mismatch is rejected. | Export and implementation in `functions/src/community/community-invitation.ts`; prepared Firestore-emulator retry, membership, and contention tests.                                |
+
+Invitation request limits are 128 characters for community, invitation, and
+operation identifiers, using only ASCII letters, digits, underscore, and hyphen.
+The canonical code has 20 characters in four five-character groups, uses
+`23456789ABCDEFGHJKMNPQRSTUVWXYZ`, and therefore carries more than 99 bits of
+randomness. Input normalization accepts either the exact grouped form or the
+ungrouped form, case-insensitively; whitespace, misplaced separators, ambiguous
+characters, illegal characters, and oversized input are rejected. These four
+operations have no list cursor.
+
+Stable reason codes are `AuthenticationRequired`, `EmailVerificationRequired`,
+`InvalidInput`, `AccountUnavailable`, `CommunityUnavailable`,
+`OrganizerRequired`, `CommunityClosed`, `InvitationUnavailable`,
+`InvitationMigrationRequired`, `InvitationConfigurationUnavailable`,
+`InvitationDataUnavailable`, and `OperationPayloadMismatch`. Authorization and
+Active-community state are rechecked before any operation receipt is replayed,
+so ownership transfer, membership changes, and closure take effect on retries.
+
+The canonical persisted lifecycle is reusable `Active`, `Revoked`, or `Expired`.
+Acceptance is a separate per-member redemption and never changes the whole
+invitation to Accepted. The private invitation document carries a SHA-256 digest
+and AES-256-GCM ciphertext with a fresh 96-bit nonce, 128-bit authentication
+tag, authenticated community/invitation/key-version context, and key-version
+metadata. `communityInvitationDigests/{digest}` is an exact private lookup; no
+composite Firestore index is required. Community summaries explicitly omit
+`activeInvitationId`, invitation metadata, digests, and ciphertext.
+
+The required Secret Manager parameter is `COMMUNITY_INVITATION_ENCRYPTION_KEYS`.
+Its value is JSON with exactly `activeVersion` and `keys`, where `keys` maps
+each retained version name to a canonical Base64 encoding of exactly 32
+cryptographically random bytes, for example the shape
+`{"activeVersion":"v1","keys":{"v1":"<base64-encoded 32-byte key>"}}`. The
+placeholder is not a key and must not be provisioned. Issue, retrieve, and
+rotate bind the secret; revoke does not. Provision with
+`firebase functions:secrets:set COMMUNITY_INVITATION_ENCRYPTION_KEYS`, then
+deploy only after the migration gate in `docs/community-implementation-plan.md`
+is complete. Retain old key versions until every invitation encrypted under them
+has expired or been revoked and the corresponding functions have been
+redeployed.
+
+No production secret, deployment, or migration was performed. Local Functions
+build and lint and the non-emulator invitation contract/cryptography tests pass.
+The root TypeScript check remains blocked by pre-existing errors in protected
+shared components and unrelated utilities. The configured Security Rules test
+was attempted but did not run because the existing Firebase login requires
+reauthentication. Firestore-emulator tests are prepared in
+`tests/community-invitations.emulator.test.cjs`; they were not run because this
+machine has no Java runtime.
+
 ## Currently implemented operations (not adopted future ledger entries)
 
 These names exist in this checkout and may be retained, revised, or superseded

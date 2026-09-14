@@ -4,7 +4,10 @@ import type {
 	TCalendarDate,
 	TIanaTimeZoneId,
 } from '../shared/persistence.types';
-import type { ICommunityInvitationPreview } from './community-invitation.types';
+import type {
+	ICommunityInvitationPreview,
+	IOrganizerCommunityInvitation,
+} from './community-invitation.types';
 import type { ICommunityJourneyPreview } from './community-journey.types';
 import type { ICommunityMemberSummary } from './community-membership.types';
 import type {
@@ -20,6 +23,20 @@ export type TCommunityReaderReasonCode =
 	| 'InvalidCursor'
 	| 'AccountUnavailable'
 	| 'CommunityUnavailable';
+
+export type TCommunityInvitationReasonCode =
+	| 'AuthenticationRequired'
+	| 'EmailVerificationRequired'
+	| 'InvalidInput'
+	| 'AccountUnavailable'
+	| 'CommunityUnavailable'
+	| 'OrganizerRequired'
+	| 'CommunityClosed'
+	| 'InvitationUnavailable'
+	| 'InvitationMigrationRequired'
+	| 'InvitationConfigurationUnavailable'
+	| 'InvitationDataUnavailable'
+	| 'OperationPayloadMismatch';
 
 // All caller identity, roles, generated IDs, lifecycle transitions, and audit times are server-owned.
 export interface ICreateCommunityRequest {
@@ -62,15 +79,30 @@ export interface IListCommunityMembersResult {
 	nextCursor: string | null;
 }
 
-export interface ICreateCommunityInvitationRequest {
+export interface IIssueCommunityInvitationRequest {
 	communityId: string;
 	operationId: string;
 }
 
-export interface ICreateCommunityInvitationResult {
-	invitation: ICommunityInvitationPreview;
-	// Return once to the authorized inviter; never include it in a general community projection.
-	invitationToken: string;
+export interface IIssueCommunityInvitationResult {
+	invitation: IOrganizerCommunityInvitation;
+}
+
+export interface IGetCurrentCommunityInvitationRequest {
+	communityId: string;
+}
+
+export interface IGetCurrentCommunityInvitationResult {
+	invitation: IOrganizerCommunityInvitation | null;
+}
+
+export interface IRotateCommunityInvitationRequest {
+	communityId: string;
+	operationId: string;
+}
+
+export interface IRotateCommunityInvitationResult {
+	invitation: IOrganizerCommunityInvitation;
 }
 
 export interface IRevokeCommunityInvitationRequest {
@@ -80,8 +112,18 @@ export interface IRevokeCommunityInvitationRequest {
 }
 
 export interface IRevokeCommunityInvitationResult {
+	communityId: string;
 	invitationId: string;
 	revokedAt: IPersistedTimestamp;
+}
+
+// Legacy, unregistered compatibility shape. The implemented organizer operation is Issue.
+export type ICreateCommunityInvitationRequest =
+	IIssueCommunityInvitationRequest;
+export interface ICreateCommunityInvitationResult {
+	invitation: ICommunityInvitationPreview;
+	// This would be the reusable code, not a return-once or single-use secret.
+	invitationToken: string;
 }
 
 export interface IAcceptCommunityInvitationRequest {

@@ -32,6 +32,7 @@ export interface ICommunityDocument extends IDocumentTimestamps {
 	organizerUserId: string;
 	settings: ICommunitySettings;
 	lifecycle: TCommunityLifecycle;
+	activeInvitationId: string | null;
 	revision: number;
 }
 

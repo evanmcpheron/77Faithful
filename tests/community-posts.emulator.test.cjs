@@ -12,6 +12,7 @@ const { getFirestore, Timestamp } = require(
 	}),
 );
 const posts = require('../functions/lib/src/community/community-post');
+const threads = require('../functions/lib/src/community/community-thread');
 
 const projectId = 'faithful-community-posts-test';
 const baseNow = Timestamp.fromMillis(Date.UTC(2026, 8, 14, 15));
@@ -567,5 +568,600 @@ test('author deletion is body-free everywhere and independent from a private sou
 			),
 		).includes('submitted'),
 		false,
+	);
+});
+
+test('replies are one-level, oldest-first, retry-safe, author-controlled, and retained under a deleted parent', async () => {
+	await seedCommunity();
+	await seedCommunity('beta');
+	const privatePracticePath =
+		'users/member-a/journeys/private/days/1/practices/pray';
+	const privatePractice = { isComplete: false, privateChoice: true };
+	await database.doc(privatePracticePath).set(privatePractice);
+	const parent = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest('Discussion', 'reply-parent'),
+		dependencies(atSecond(1)),
+	);
+	const createdReplies = [];
+	for (let index = 1; index <= 3; index += 1)
+		createdReplies.push(
+			await threads.createCommunityReplyForAccount(
+				'member-a',
+				{
+					communityId: 'alpha',
+					postId: parent.postId,
+					text: `Reply ${index}`,
+					operationId: `reply-${index}`,
+				},
+				dependencies(atSecond(index + 1)),
+			),
+		);
+	assert.deepEqual(
+		await threads.createCommunityReplyForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: parent.postId,
+				text: 'Reply 1',
+				operationId: 'reply-1',
+			},
+			dependencies(atSecond(8)),
+		),
+		createdReplies[0],
+	);
+	await assert.rejects(
+		threads.createCommunityReplyForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: parent.postId,
+				text: 'Changed retry body',
+				operationId: 'reply-1',
+			},
+			dependencies(atSecond(9)),
+		),
+		(error) => error.details.reason === 'OperationPayloadMismatch',
+	);
+	const firstPage = await threads.listCommunityRepliesForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: parent.postId, pageSize: 2 },
+		database,
+	);
+	assert.deepEqual(
+		firstPage.replies.map((reply) => reply.publication.text),
+		['Reply 1', 'Reply 2'],
+	);
+	assert.equal(firstPage.replyCount, 3);
+	assert.ok(firstPage.nextCursor);
+	const secondPage = await threads.listCommunityRepliesForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: parent.postId,
+			pageSize: 2,
+			cursor: firstPage.nextCursor,
+		},
+		database,
+	);
+	assert.deepEqual(
+		secondPage.replies.map((reply) => reply.publication.text),
+		['Reply 3'],
+	);
+	await assert.rejects(
+		threads.listCommunityRepliesForAccount(
+			'member-a',
+			{
+				communityId: 'beta',
+				postId: parent.postId,
+				cursor: firstPage.nextCursor,
+			},
+			database,
+		),
+		(error) =>
+			['InvalidCursor', 'PostUnavailable'].includes(error.details.reason),
+	);
+	await assert.rejects(
+		threads.createCommunityReplyForAccount(
+			'member-a',
+			{
+				communityId: 'beta',
+				postId: parent.postId,
+				text: 'Wrong parent community',
+				operationId: 'reply-parent-community-mismatch',
+			},
+			dependencies(atSecond(9)),
+		),
+		(error) => error.details.reason === 'PostUnavailable',
+	);
+	await assert.rejects(
+		threads.editCommunityReplyForAccount(
+			'owner',
+			{
+				communityId: 'alpha',
+				postId: parent.postId,
+				replyId: createdReplies[0].replyId,
+				text: 'Organizer rewrite',
+				expectedRevision: 0,
+				operationId: 'organizer-rewrite-reply',
+			},
+			dependencies(atSecond(10)),
+		),
+		(error) => error.details.reason === 'ReplyAuthorRequired',
+	);
+	const edited = await threads.editCommunityReplyForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: parent.postId,
+			replyId: createdReplies[0].replyId,
+			text: 'Edited reply',
+			expectedRevision: 0,
+			operationId: 'edit-own-reply',
+		},
+		dependencies(atSecond(11)),
+	);
+	assert.equal(edited.revision, 1);
+	await assert.rejects(
+		threads.editCommunityReplyForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: parent.postId,
+				replyId: createdReplies[0].replyId,
+				text: 'Stale edit',
+				expectedRevision: 0,
+				operationId: 'stale-reply-edit',
+			},
+			dependencies(atSecond(12)),
+		),
+		(error) => error.details.reason === 'RevisionConflict',
+	);
+	await posts.deleteCommunityPostForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: parent.postId,
+			expectedRevision: 0,
+			operationId: 'delete-reply-parent',
+		},
+		dependencies(atSecond(13)),
+	);
+	assert.equal(
+		(
+			await threads.listCommunityRepliesForAccount(
+				'member-a',
+				{ communityId: 'alpha', postId: parent.postId },
+				database,
+			)
+		).replyCount,
+		3,
+	);
+	await assert.rejects(
+		threads.createCommunityReplyForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: parent.postId,
+				text: 'Too late',
+				operationId: 'reply-after-parent-delete',
+			},
+			dependencies(atSecond(14)),
+		),
+		(error) => error.details.reason === 'PostUnavailable',
+	);
+	await seedMembership('alpha', 'member-a', 'Member', 'Removed');
+	const deletedReply = await threads.deleteCommunityReplyForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: parent.postId,
+			replyId: createdReplies[0].replyId,
+			expectedRevision: 1,
+			operationId: 'delete-own-reply-after-removal',
+		},
+		dependencies(atSecond(15)),
+	);
+	assert.equal(deletedReply.replyId, createdReplies[0].replyId);
+	assert.deepEqual(
+		(await database.doc(privatePracticePath).get()).data(),
+		privatePractice,
+	);
+});
+
+test('prayer status is author-reported, revision-protected, and never changes practice completion', async () => {
+	await seedCommunity();
+	const privatePracticePath =
+		'users/member-a/journeys/private/days/1/practices/pray';
+	const privatePractice = { isComplete: false };
+	await database.doc(privatePracticePath).set(privatePractice);
+	const prayer = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest('PrayerRequest', 'status-parent'),
+		dependencies(atSecond(1)),
+	);
+	const noLongerCurrent =
+		await threads.setCommunityPrayerRequestStatusForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				prayerRequestStatus: 'NoLongerCurrent',
+				expectedRevision: 0,
+				operationId: 'status-no-longer-current',
+			},
+			dependencies(atSecond(2)),
+		);
+	assert.equal(noLongerCurrent.revision, 1);
+	assert.deepEqual(
+		await threads.setCommunityPrayerRequestStatusForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				prayerRequestStatus: 'NoLongerCurrent',
+				expectedRevision: 0,
+				operationId: 'status-no-longer-current',
+			},
+			dependencies(atSecond(3)),
+		),
+		noLongerCurrent,
+	);
+	await assert.rejects(
+		threads.setCommunityPrayerRequestStatusForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				prayerRequestStatus: 'Answered',
+				expectedRevision: 0,
+				operationId: 'stale-prayer-status',
+			},
+			dependencies(atSecond(4)),
+		),
+		(error) => error.details.reason === 'RevisionConflict',
+	);
+	await assert.rejects(
+		threads.setCommunityPrayerRequestStatusForAccount(
+			'owner',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				prayerRequestStatus: 'Answered',
+				expectedRevision: 1,
+				operationId: 'other-author-status',
+			},
+			dependencies(atSecond(5)),
+		),
+		(error) => error.details.reason === 'PostAuthorRequired',
+	);
+	const answered = await threads.setCommunityPrayerRequestStatusForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			prayerRequestStatus: 'Answered',
+			expectedRevision: 1,
+			operationId: 'status-answered',
+		},
+		dependencies(atSecond(6)),
+	);
+	assert.equal(answered.revision, 2);
+	assert.deepEqual(
+		(await database.doc(privatePracticePath).get()).data(),
+		privatePractice,
+	);
+	await database.doc('communities/alpha').update({
+		lifecycle: { status: 'Closed', closedAt: atSecond(7) },
+	});
+	await assert.rejects(
+		threads.setCommunityPrayerRequestStatusForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				prayerRequestStatus: 'Current',
+				expectedRevision: 2,
+				operationId: 'status-after-close',
+			},
+			dependencies(atSecond(8)),
+		),
+		(error) => error.details.reason === 'CommunityClosed',
+	);
+});
+
+test('prayer support is desired-state, reversible, retry-safe, membership-filtered, and first-notification stable', async () => {
+	await seedCommunity();
+	const prayer = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest('PrayerRequest', 'support-parent'),
+		dependencies(atSecond(1)),
+	);
+	const supportRequest = {
+		communityId: 'alpha',
+		postId: prayer.postId,
+		isPraying: true,
+		operationId: 'support-owner',
+	};
+	const [first, concurrent] = await Promise.all([
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'owner',
+			supportRequest,
+			dependencies(atSecond(2)),
+		),
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'owner',
+			{ ...supportRequest, operationId: 'support-owner-concurrent' },
+			dependencies(atSecond(3)),
+		),
+	]);
+	assert.equal(first.isPraying, true);
+	assert.equal(concurrent.isPraying, true);
+	assert.equal(
+		(
+			await database
+				.collection(
+					`communities/alpha/posts/${prayer.postId}/prayerAcknowledgments`,
+				)
+				.get()
+		).size,
+		1,
+	);
+	const initialDocument = (
+		await database
+			.doc(
+				`communities/alpha/posts/${prayer.postId}/prayerAcknowledgments/owner`,
+			)
+			.get()
+	).data();
+	const firstNotificationEligibleAt =
+		initialDocument.firstNotificationEligibleAt;
+	let support = await threads.listCommunityPrayerSupportForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: prayer.postId, pageSize: 1 },
+		database,
+	);
+	assert.equal(support.supportCount, 1);
+	assert.equal(support.supporters[0].displayName, 'Organizer');
+	assert.equal(support.viewerIsPraying, false);
+	await seedMembership('alpha', 'member-b');
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'member-a',
+		{
+			...supportRequest,
+			operationId: 'support-member-a',
+		},
+		dependencies(atSecond(4)),
+	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'member-b',
+		{
+			...supportRequest,
+			operationId: 'support-member-b',
+		},
+		dependencies(atSecond(5)),
+	);
+	support = await threads.listCommunityPrayerSupportForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: prayer.postId, pageSize: 1 },
+		database,
+	);
+	assert.equal(support.supportCount, 3);
+	assert.equal(support.viewerIsPraying, true);
+	assert.ok(support.nextCursor);
+	const secondSupportPage =
+		await threads.listCommunityPrayerSupportForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				pageSize: 1,
+				cursor: support.nextCursor,
+			},
+			database,
+		);
+	assert.equal(secondSupportPage.supportCount, 3);
+	assert.equal(secondSupportPage.supporters.length, 1);
+	const withdrawn = await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			isPraying: false,
+			operationId: 'withdraw-owner',
+		},
+		dependencies(atSecond(6)),
+	);
+	assert.equal(withdrawn.isPraying, false);
+	assert.deepEqual(
+		await threads.setCommunityPrayerAcknowledgmentForAccount(
+			'owner',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				isPraying: false,
+				operationId: 'withdraw-owner',
+			},
+			dependencies(atSecond(7)),
+		),
+		withdrawn,
+	);
+	support = await threads.listCommunityPrayerSupportForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: prayer.postId },
+		database,
+	);
+	assert.equal(support.supportCount, 2);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{ ...supportRequest, operationId: 'support-owner-again' },
+		dependencies(atSecond(8)),
+	);
+	const reactivatedDocument = (
+		await database
+			.doc(
+				`communities/alpha/posts/${prayer.postId}/prayerAcknowledgments/owner`,
+			)
+			.get()
+	).data();
+	assert.deepEqual(
+		reactivatedDocument.firstNotificationEligibleAt,
+		firstNotificationEligibleAt,
+	);
+	await seedMembership('alpha', 'owner', 'Organizer', 'Removed');
+	support = await threads.listCommunityPrayerSupportForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: prayer.postId },
+		database,
+	);
+	assert.equal(support.supportCount, 2);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			isPraying: false,
+			operationId: 'withdraw-after-removal',
+		},
+		dependencies(atSecond(9)),
+	);
+	await assert.rejects(
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'owner',
+			{ ...supportRequest, operationId: 'support-after-removal' },
+			dependencies(atSecond(10)),
+		),
+		(error) => error.details.reason === 'MembershipUnavailable',
+	);
+});
+
+test('non-current, answered, deleted, and closed prayer requests reject new support while withdrawal remains available', async () => {
+	await seedCommunity();
+	const prayer = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest('PrayerRequest', 'support-lifecycle-parent'),
+		dependencies(atSecond(1)),
+	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			isPraying: true,
+			operationId: 'initial-support',
+		},
+		dependencies(atSecond(2)),
+	);
+	await threads.setCommunityPrayerRequestStatusForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			prayerRequestStatus: 'NoLongerCurrent',
+			expectedRevision: 0,
+			operationId: 'make-non-current',
+		},
+		dependencies(atSecond(3)),
+	);
+	await assert.rejects(
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				isPraying: true,
+				operationId: 'support-non-current',
+			},
+			dependencies(atSecond(4)),
+		),
+		(error) => error.details.reason === 'PrayerRequestRequired',
+	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			isPraying: false,
+			operationId: 'withdraw-non-current',
+		},
+		dependencies(atSecond(5)),
+	);
+	await threads.setCommunityPrayerRequestStatusForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			prayerRequestStatus: 'Answered',
+			expectedRevision: 1,
+			operationId: 'make-answered',
+		},
+		dependencies(atSecond(6)),
+	);
+	await assert.rejects(
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'owner',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				isPraying: true,
+				operationId: 'support-answered',
+			},
+			dependencies(atSecond(7)),
+		),
+		(error) => error.details.reason === 'PrayerRequestRequired',
+	);
+	await posts.deleteCommunityPostForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			expectedRevision: 2,
+			operationId: 'delete-prayer',
+		},
+		dependencies(atSecond(8)),
+	);
+	await assert.rejects(
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: prayer.postId,
+				isPraying: true,
+				operationId: 'support-deleted',
+			},
+			dependencies(atSecond(9)),
+		),
+		(error) => error.details.reason === 'PrayerRequestRequired',
+	);
+	const currentAtClosure = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest('PrayerRequest', 'current-at-close'),
+		dependencies(atSecond(10)),
+	);
+	await database.doc('communities/alpha').update({
+		lifecycle: { status: 'Closed', closedAt: atSecond(11) },
+	});
+	await assert.rejects(
+		threads.setCommunityPrayerAcknowledgmentForAccount(
+			'owner',
+			{
+				communityId: 'alpha',
+				postId: currentAtClosure.postId,
+				isPraying: true,
+				operationId: 'support-after-close',
+			},
+			dependencies(atSecond(12)),
+		),
+		(error) => error.details.reason === 'CommunityClosed',
+	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: prayer.postId,
+			isPraying: false,
+			operationId: 'withdraw-closed',
+		},
+		dependencies(atSecond(13)),
 	);
 });

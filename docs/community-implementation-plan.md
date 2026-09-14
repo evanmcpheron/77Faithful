@@ -434,6 +434,41 @@ exited nonzero because the project's Functions artifact repository has no
 cleanup policy. Setting that billing/retention policy remains an explicit
 operational decision; it was not changed by this ticket.
 
+## Ticket 13 operational notes
+
+Ticket 13 adds the callable-only reply and prayer operations
+`listCommunityReplies`, `createCommunityReply`, `editCommunityReply`,
+`deleteCommunityReply`, `setCommunityPrayerRequestStatus`,
+`setCommunityPrayerAcknowledgment`, and `listCommunityPrayerSupport`. Their
+canonical request/result names, limits, cursors, authorization, lifecycle,
+reason codes, storage paths, and retry behavior are recorded in the Ticket 13
+section of `docs/community-api-contract.md`.
+
+Replies are separate one-level records ordered oldest-first. Creation requires
+an Active community and Published parent; existing replies remain readable
+beneath a parent tombstone to retained current members. Authors alone edit or
+delete their replies. Edits require current Active access, while author deletion
+remains available after membership exit, parent deletion, or closure. Reply
+creation increments a transactionally maintained record count, and reply
+contributions reuse the body-free Ticket 12 author index.
+
+Prayer status is a revision-checked, author-reported value with exactly Current,
+NoLongerCurrent, and Answered. The desired-state “I'm praying” record is keyed
+by account identity. True requires a published Current request in an Active
+accessible community; false remains available for withdrawal after lifecycle
+changes. Withdrawal/reactivation retains the first-notification eligibility
+timestamp, and this ticket sends no notifications. The bounded reader derives
+exact support from at most 500 currently Active memberships, so former, removed,
+or deleted membership records stop contributing immediately without waiting for
+cleanup. No popularity ordering or account-wide total is introduced.
+
+No composite index, dependency, secret, or record migration is required.
+Deployment requires the updated callable exports and Firestore Rules. On
+2026-09-14, the Functions build and lint passed, 8 focused contract tests
+passed, and all 312 configured Security Rules API cases passed. The prepared
+Firestore-emulator transaction suite did not run because this machine has no
+Java runtime. No functions or Rules deployment was performed by this ticket.
+
 ## Ticket 01 operational notes
 
 Ticket 01 implements callable-only current-member readers without changing the

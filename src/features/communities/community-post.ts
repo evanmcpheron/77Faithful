@@ -1,9 +1,16 @@
 import type {
 	ICreateCommunityPostRequest,
+	ICreateCommunityReplyRequest,
 	IDeleteCommunityPostRequest,
+	IDeleteCommunityReplyRequest,
 	IEditCommunityPostRequest,
+	IEditCommunityReplyRequest,
 	IGetCommunityPostRequest,
 	IListCommunityPostsRequest,
+	IListCommunityPrayerSupportRequest,
+	IListCommunityRepliesRequest,
+	ISetCommunityPrayerAcknowledgmentRequest,
+	ISetCommunityPrayerRequestStatusRequest,
 } from '../../types/community/community-post-function.types';
 import type { TCommunityPostContent } from '../../types/community/community-post.types';
 
@@ -14,6 +21,7 @@ export const CommunityPostLimits = {
 	maxPageSize: 50,
 	cursor: 512,
 	maxRevision: 2_147_483_646,
+	maxActiveMembers: 500,
 } as const;
 
 const identifierPattern = /^[a-zA-Z0-9_-]+$/;
@@ -204,3 +212,164 @@ export const parseDeleteCommunityPostRequest = (
 		operationId: identifier(input['operationId']),
 	};
 };
+
+const parseReplyTarget = (
+	value: unknown,
+): { communityId: string; postId: string } => {
+	const input = record(value);
+	return {
+		communityId: identifier(input['communityId']),
+		postId: identifier(input['postId']),
+	};
+};
+
+export const parseListCommunityRepliesRequest = (
+	value: unknown,
+): IListCommunityRepliesRequest => {
+	const input = record(value);
+	if (
+		!hasOnlyKeys(input, ['communityId', 'postId', 'pageSize', 'cursor']) ||
+		!('communityId' in input) ||
+		!('postId' in input)
+	)
+		throw new Error('Invalid community reply list request.');
+	const target = parseReplyTarget(input);
+	const pageSize = input['pageSize'];
+	if (
+		pageSize !== undefined &&
+		(typeof pageSize !== 'number' ||
+			!Number.isInteger(pageSize) ||
+			pageSize < 1 ||
+			pageSize > CommunityPostLimits.maxPageSize)
+	)
+		throw new Error('Invalid community reply page size.');
+	const cursor = input['cursor'];
+	if (
+		cursor !== undefined &&
+		(typeof cursor !== 'string' ||
+			cursor.length < 1 ||
+			cursor.length > CommunityPostLimits.cursor ||
+			!cursorPattern.test(cursor))
+	)
+		throw new Error('Invalid community reply cursor.');
+	return {
+		...target,
+		pageSize:
+			pageSize === undefined
+				? CommunityPostLimits.defaultPageSize
+				: pageSize,
+		...(cursor === undefined ? {} : { cursor }),
+	};
+};
+
+export const parseCreateCommunityReplyRequest = (
+	value: unknown,
+): ICreateCommunityReplyRequest => {
+	const input = record(value);
+	if (!hasExactKeys(input, ['communityId', 'postId', 'text', 'operationId']))
+		throw new Error('Invalid community reply creation request.');
+	return {
+		...parseReplyTarget(input),
+		text: text(input['text']),
+		operationId: identifier(input['operationId']),
+	};
+};
+
+export const parseEditCommunityReplyRequest = (
+	value: unknown,
+): IEditCommunityReplyRequest => {
+	const input = record(value);
+	if (
+		!hasExactKeys(input, [
+			'communityId',
+			'postId',
+			'replyId',
+			'text',
+			'expectedRevision',
+			'operationId',
+		])
+	)
+		throw new Error('Invalid community reply edit request.');
+	return {
+		...parseReplyTarget(input),
+		replyId: identifier(input['replyId']),
+		text: text(input['text']),
+		expectedRevision: revision(input['expectedRevision']),
+		operationId: identifier(input['operationId']),
+	};
+};
+
+export const parseDeleteCommunityReplyRequest = (
+	value: unknown,
+): IDeleteCommunityReplyRequest => {
+	const input = record(value);
+	if (
+		!hasExactKeys(input, [
+			'communityId',
+			'postId',
+			'replyId',
+			'expectedRevision',
+			'operationId',
+		])
+	)
+		throw new Error('Invalid community reply deletion request.');
+	return {
+		...parseReplyTarget(input),
+		replyId: identifier(input['replyId']),
+		expectedRevision: revision(input['expectedRevision']),
+		operationId: identifier(input['operationId']),
+	};
+};
+
+export const parseSetCommunityPrayerRequestStatusRequest = (
+	value: unknown,
+): ISetCommunityPrayerRequestStatusRequest => {
+	const input = record(value);
+	if (
+		!hasExactKeys(input, [
+			'communityId',
+			'postId',
+			'prayerRequestStatus',
+			'expectedRevision',
+			'operationId',
+		]) ||
+		!['Current', 'NoLongerCurrent', 'Answered'].includes(
+			input['prayerRequestStatus'] as string,
+		)
+	)
+		throw new Error('Invalid community prayer status request.');
+	return {
+		...parseReplyTarget(input),
+		prayerRequestStatus: input[
+			'prayerRequestStatus'
+		] as ISetCommunityPrayerRequestStatusRequest['prayerRequestStatus'],
+		expectedRevision: revision(input['expectedRevision']),
+		operationId: identifier(input['operationId']),
+	};
+};
+
+export const parseSetCommunityPrayerAcknowledgmentRequest = (
+	value: unknown,
+): ISetCommunityPrayerAcknowledgmentRequest => {
+	const input = record(value);
+	if (
+		!hasExactKeys(input, [
+			'communityId',
+			'postId',
+			'isPraying',
+			'operationId',
+		]) ||
+		typeof input['isPraying'] !== 'boolean'
+	)
+		throw new Error('Invalid community prayer acknowledgment request.');
+	return {
+		...parseReplyTarget(input),
+		isPraying: input['isPraying'],
+		operationId: identifier(input['operationId']),
+	};
+};
+
+export const parseListCommunityPrayerSupportRequest = (
+	value: unknown,
+): IListCommunityPrayerSupportRequest =>
+	parseListCommunityRepliesRequest(value);

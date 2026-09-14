@@ -43,12 +43,12 @@ import type {
 } from '../../generated/types/community/community-post.types';
 import { resolveCommunityDisplayName } from './read-community';
 
-interface ICommunityPostDependencies {
+export interface ICommunityPostDependencies {
 	database?: Firestore;
 	now?: Timestamp;
 }
 
-interface ICommunityAccess {
+export interface ICommunityAccess {
 	community: DocumentData;
 	displayName: string;
 	isOrganizer: boolean;
@@ -81,20 +81,20 @@ const prayerStatuses: readonly TPrayerRequestStatus[] = [
 	'Answered',
 ];
 
-const postError = (
+export const postError = (
 	code: ConstructorParameters<typeof HttpsError>[0],
 	message: string,
 	reason: TCommunityPostReasonCode,
 ): HttpsError => new HttpsError(code, message, { reason });
 
-const dataUnavailable = (): HttpsError =>
+export const dataUnavailable = (): HttpsError =>
 	postError(
 		'internal',
 		'This community post request could not be completed.',
 		'PostDataUnavailable',
 	);
 
-const requirePostAccount = (auth: CallableRequest['auth']): string => {
+export const requirePostAccount = (auth: CallableRequest['auth']): string => {
 	if (!auth)
 		throw postError(
 			'unauthenticated',
@@ -110,7 +110,10 @@ const requirePostAccount = (auth: CallableRequest['auth']): string => {
 	return auth.uid;
 };
 
-const parseInput = <T>(parser: (value: unknown) => T, value: unknown): T => {
+export const parseInput = <T>(
+	parser: (value: unknown) => T,
+	value: unknown,
+): T => {
 	try {
 		return parser(value);
 	} catch {
@@ -122,15 +125,15 @@ const parseInput = <T>(parser: (value: unknown) => T, value: unknown): T => {
 	}
 };
 
-const isIdentifier = (value: unknown): value is string =>
+export const isIdentifier = (value: unknown): value is string =>
 	typeof value === 'string' && identifierPattern.test(value);
 
-const requireTimestamp = (value: unknown): Timestamp => {
+export const requireTimestamp = (value: unknown): Timestamp => {
 	if (!(value instanceof Timestamp)) throw dataUnavailable();
 	return value;
 };
 
-const requireRevision = (value: unknown): number => {
+export const requireRevision = (value: unknown): number => {
 	if (
 		typeof value !== 'number' ||
 		!Number.isInteger(value) ||
@@ -162,7 +165,7 @@ const requireCommunity = (
 	return community;
 };
 
-const requireAccountAndCommunity = async (
+export const requireAccountAndCommunity = async (
 	transaction: Transaction,
 	database: Firestore,
 	userId: string,
@@ -223,7 +226,7 @@ const requireActiveMembership = async (
 	};
 };
 
-const getCommunityAccess = async (
+export const getCommunityAccess = async (
 	transaction: Transaction,
 	database: Firestore,
 	userId: string,
@@ -242,7 +245,7 @@ const getCommunityAccess = async (
 	);
 };
 
-const requireActiveCommunity = (community: DocumentData): void => {
+export const requireActiveCommunity = (community: DocumentData): void => {
 	if (community.lifecycle.status === 'Closed')
 		throw postError(
 			'failed-precondition',
@@ -288,7 +291,7 @@ const parsePostContent = (value: unknown): TCommunityPostContent => {
 	};
 };
 
-const postProjection = (
+export const postProjection = (
 	snapshot: DocumentSnapshot,
 	communityId: string,
 ): ICommunityPost => {

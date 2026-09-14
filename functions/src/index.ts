@@ -164,6 +164,15 @@ export {
 	getCommunityPost,
 	listCommunityPosts,
 } from './community/community-post';
+export {
+	createCommunityReply,
+	deleteCommunityReply,
+	editCommunityReply,
+	listCommunityPrayerSupport,
+	listCommunityReplies,
+	setCommunityPrayerAcknowledgment,
+	setCommunityPrayerRequestStatus,
+} from './community/community-thread';
 export { getCommunity, listCommunities } from './community/read-community';
 export {
 	getCommunityContext,

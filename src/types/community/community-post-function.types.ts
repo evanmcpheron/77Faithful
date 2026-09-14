@@ -1,6 +1,8 @@
 import type { IPersistedTimestamp } from '../shared/persistence.types';
 import type {
 	ICommunityPost,
+	ICommunityPrayerSupporter,
+	ICommunityReply,
 	TCommunityPostContent,
 	TPrayerRequestStatus,
 } from './community-post.types';
@@ -17,6 +19,9 @@ export type TCommunityPostReasonCode =
 	| 'OrganizerRequired'
 	| 'PostUnavailable'
 	| 'PostAuthorRequired'
+	| 'ReplyUnavailable'
+	| 'ReplyAuthorRequired'
+	| 'PrayerRequestRequired'
 	| 'RevisionConflict'
 	| 'OperationPayloadMismatch'
 	| 'PostDataUnavailable';
@@ -135,4 +140,46 @@ export interface IDeleteCommunityReplyRequest {
 export interface IDeleteCommunityReplyResult {
 	replyId: string;
 	deletedAt: IPersistedTimestamp;
+}
+
+export interface IListCommunityRepliesRequest {
+	communityId: string;
+	postId: string;
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IListCommunityRepliesResult {
+	replies: ICommunityReply[];
+	replyCount: number;
+	nextCursor: string | null;
+}
+
+export interface ISetCommunityPrayerAcknowledgmentRequest {
+	communityId: string;
+	postId: string;
+	isPraying: boolean;
+	operationId: string;
+}
+
+export interface ISetCommunityPrayerAcknowledgmentResult {
+	postId: string;
+	isPraying: boolean;
+	revision: number | null;
+	updatedAt: IPersistedTimestamp;
+}
+
+export interface IListCommunityPrayerSupportRequest {
+	communityId: string;
+	postId: string;
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IListCommunityPrayerSupportResult {
+	postId: string;
+	supporters: ICommunityPrayerSupporter[];
+	supportCount: number;
+	viewerIsPraying: boolean;
+	nextCursor: string | null;
 }

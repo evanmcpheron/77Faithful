@@ -98,6 +98,26 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityReplyCreateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReplyEditOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReplyDeleteOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPrayerStatusOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPrayerAcknowledgmentOperations/{operationId} {
+      allow read, write: if false;
+    }
+
     match /communityInvitationDigests/{digest} {
       allow read, write: if false;
     }

@@ -295,6 +295,74 @@ type files, and request validators in
 pagination, tombstone, and private-separation coverage is prepared in
 `tests/community-posts.emulator.test.cjs`.
 
+### Ticket 13 — threaded replies and prayer support
+
+| Exported operation                 | Canonical request / result                                                             | Authorization and transaction behavior                                                                                                                                                                                                                         |
+| ---------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `listCommunityReplies`             | `IListCommunityRepliesRequest` / `IListCommunityRepliesResult`                         | A current active member may read oldest-first replies beneath a matching post in an Active or Closed community. Published and tombstoned parents retain their thread.                                                                                          |
+| `createCommunityReply`             | `ICreateCommunityReplyRequest` / `ICreateCommunityReplyResult`                         | A current active member may add one non-nested reply only while the community and matching parent post are Active/Published. The server derives author identity, display name, timestamps, revision, and audience.                                             |
+| `editCommunityReply`               | `IEditCommunityReplyRequest` / `IEditCommunityReplyResult`                             | The current active reply author may replace its published text in an Active community at `expectedRevision`. Organizer authority does not permit rewriting another author's reply. Parent tombstones do not prevent an existing reply author from editing.     |
+| `deleteCommunityReply`             | `IDeleteCommunityReplyRequest` / `IDeleteCommunityReplyResult`                         | The authenticated reply author may create a text-free AuthorDeleted tombstone at `expectedRevision`, including after leaving/removal, parent deletion, or community closure. This does not restore group-read access.                                          |
+| `setCommunityPrayerRequestStatus`  | `ISetCommunityPrayerRequestStatusRequest` / `ISetCommunityPrayerRequestStatusResult`   | The current active author of a published PrayerRequest in an Active community may explicitly set Current, NoLongerCurrent, or Answered at `expectedRevision`. Status is never inferred and causes no practice completion or testimony.                         |
+| `setCommunityPrayerAcknowledgment` | `ISetCommunityPrayerAcknowledgmentRequest` / `ISetCommunityPrayerAcknowledgmentResult` | Desired-state `isPraying` mutation. Setting true requires a current active member, Active community, and published Current PrayerRequest. Setting false remains available to the authenticated account after status, membership, parent, or lifecycle changes. |
+| `listCommunityPrayerSupport`       | `IListCommunityPrayerSupportRequest` / `IListCommunityPrayerSupportResult`             | A current active member may read bounded oldest-first supporter summaries, exact eligible count, and their own desired state under the same Active/Closed archive audience as the parent prayer thread. Only currently Active membership records are counted.  |
+
+Reply and prayer requests reject unexpected fields. IDs retain the 1–128 safe
+identifier limit; reply text is trimmed, required, rejects ASCII control
+characters, and is limited to 10,000 characters. Reply/support pages default to
+20 and permit 1–50 records. Opaque cursors are limited to 512 base64url
+characters and bind version, operation kind, community ID, post ID, timestamp,
+and reply/supporter identity. Reply order is `createdAt` ascending then reply ID
+ascending. Support order is the current `acknowledgedAt` ascending then account
+ID ascending; support is never popularity-sorted.
+
+All five mutations use actor-and-operation-scoped IDs and SHA-256 request
+digests in body-free private receipts. Reused operation IDs with changed
+normalized payloads return `OperationPayloadMismatch`. Creation retries cannot
+duplicate replies, and desired-state support retries/concurrent sets cannot
+inflate support. Reply edits/deletes and prayer status changes use
+`RevisionConflict` for stale revisions. Additional stable reasons are
+`ReplyUnavailable`, `ReplyAuthorRequired`, and `PrayerRequestRequired`; Ticket
+12's authentication, verification, input/cursor, account, community, membership,
+post, revision, operation, and data reasons remain applicable.
+
+Replies persist as separate
+`communities/{communityId}/posts/{postId}/replies/{replyId}` records. Creation
+increments a transactional post `replyCount`; author deletion retains the
+reply/tombstone, so the thread count remains the number of reply records. Reply
+contributions use Ticket 12's body-free
+`users/{userId}/communityPostContributions/{digest}` index with reply identity
+and contribution kind. No text is copied to indexes, receipts, counters, or
+private retry metadata.
+
+Prayer acknowledgments persist one record per stable account at
+`communities/{communityId}/posts/{postId}/prayerAcknowledgments/{userId}`.
+Withdrawal retains the record with `isPraying: false`, a null current
+acknowledgment time, and the original `firstNotificationEligibleAt`. Later
+false-to-true changes therefore cannot create repeated first-notification
+eligibility; no notification is sent by this ticket. The support reader derives
+names/counts from at most 500 currently Active membership records and exact
+per-member acknowledgment reads, immediately excluding missing, Left, Removed,
+or otherwise non-active members. More than 500 active records is an explicit
+data-unavailable condition rather than an unbounded scan.
+
+Existing callable-only Rules deny all direct access below `communities/**` and
+explicitly deny the five new receipt collections. Reply ordering uses built-in
+single-field indexes and support reads use exact document paths, so no new
+composite index or data migration is required. Deploy the seven new callable
+exports and updated Rules before a client treats the operations as available.
+
+Implementation is in `functions/src/community/community-thread.ts`, with exports
+in `functions/src/index.ts`. Canonical types are in the authorized community
+post type files; runtime request validators remain in the canonical community
+post validator copied by `scripts/prepare-functions.cjs`. On 2026-09-14,
+Functions build and lint, 8 focused post/thread contract tests, and 312
+configured Security Rules API cases passed. Emulator transaction coverage for
+ordering/pagination, retry/concurrency, author/lifecycle, revision, membership
+filtering, stable notification eligibility, and private-practice separation is
+in `tests/community-posts.emulator.test.cjs`; it was not run because this
+machine has no Java runtime.
+
 ## Currently implemented operations (not adopted future ledger entries)
 
 These names exist in this checkout and may be retained, revised, or superseded

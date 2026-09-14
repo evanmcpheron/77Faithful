@@ -4,12 +4,20 @@ const { test } = require('node:test');
 const {
 	CommunityPostLimits,
 	parseCreateCommunityPostRequest,
+	parseCreateCommunityReplyRequest,
 	parseDeleteCommunityPostRequest,
+	parseDeleteCommunityReplyRequest,
 	parseEditCommunityPostRequest,
+	parseEditCommunityReplyRequest,
 	parseGetCommunityPostRequest,
+	parseListCommunityPrayerSupportRequest,
 	parseListCommunityPostsRequest,
+	parseListCommunityRepliesRequest,
+	parseSetCommunityPrayerAcknowledgmentRequest,
+	parseSetCommunityPrayerRequestStatusRequest,
 } = require('../functions/lib/generated/features/communities/community-post');
 const posts = require('../functions/lib/src/community/community-post');
+const threads = require('../functions/lib/src/community/community-thread');
 
 const contentByType = {
 	PrayerRequest: {
@@ -177,6 +185,13 @@ test('post callables reject missing and unverified authentication', async () => 
 		posts.listCommunityPosts,
 		posts.editCommunityPost,
 		posts.deleteCommunityPost,
+		threads.createCommunityReply,
+		threads.listCommunityReplies,
+		threads.editCommunityReply,
+		threads.deleteCommunityReply,
+		threads.setCommunityPrayerRequestStatus,
+		threads.setCommunityPrayerAcknowledgment,
+		threads.listCommunityPrayerSupport,
 	]) {
 		await assert.rejects(callable.run({ data: {} }), {
 			code: 'unauthenticated',
@@ -187,6 +202,156 @@ test('post callables reject missing and unverified authentication', async () => 
 				auth: { uid: 'member', token: { email_verified: false } },
 			}),
 			{ code: 'permission-denied' },
+		);
+	}
+});
+
+test('parses bounded reply operations and rejects nested or caller-owned data', () => {
+	assert.deepEqual(
+		parseListCommunityRepliesRequest({
+			communityId: 'alpha',
+			postId: 'post-1',
+		}),
+		{ communityId: 'alpha', postId: 'post-1', pageSize: 20 },
+	);
+	assert.deepEqual(
+		parseCreateCommunityReplyRequest({
+			communityId: 'alpha',
+			postId: 'post-1',
+			text: '  I am praying with you.  ',
+			operationId: 'reply-create-1',
+		}),
+		{
+			communityId: 'alpha',
+			postId: 'post-1',
+			text: 'I am praying with you.',
+			operationId: 'reply-create-1',
+		},
+	);
+	assert.deepEqual(
+		parseEditCommunityReplyRequest({
+			communityId: 'alpha',
+			postId: 'post-1',
+			replyId: 'reply-1',
+			text: 'Edited reply.',
+			expectedRevision: 2,
+			operationId: 'reply-edit-1',
+		}),
+		{
+			communityId: 'alpha',
+			postId: 'post-1',
+			replyId: 'reply-1',
+			text: 'Edited reply.',
+			expectedRevision: 2,
+			operationId: 'reply-edit-1',
+		},
+	);
+	assert.deepEqual(
+		parseDeleteCommunityReplyRequest({
+			communityId: 'alpha',
+			postId: 'post-1',
+			replyId: 'reply-1',
+			expectedRevision: 3,
+			operationId: 'reply-delete-1',
+		}),
+		{
+			communityId: 'alpha',
+			postId: 'post-1',
+			replyId: 'reply-1',
+			expectedRevision: 3,
+			operationId: 'reply-delete-1',
+		},
+	);
+	for (const invalid of [
+		{
+			communityId: 'alpha',
+			postId: 'post-1',
+			parentReplyId: 'reply-1',
+			text: 'Nested reply.',
+			operationId: 'nested',
+		},
+		{
+			communityId: 'alpha',
+			postId: 'post-1',
+			text: 'Forged reply.',
+			authorUserId: 'other',
+			operationId: 'forged',
+		},
+	])
+		assert.throws(() => parseCreateCommunityReplyRequest(invalid));
+});
+
+test('parses prayer status and desired-state acknowledgment requests exactly', () => {
+	for (const prayerRequestStatus of [
+		'Current',
+		'NoLongerCurrent',
+		'Answered',
+	])
+		assert.deepEqual(
+			parseSetCommunityPrayerRequestStatusRequest({
+				communityId: 'alpha',
+				postId: 'prayer-1',
+				prayerRequestStatus,
+				expectedRevision: 1,
+				operationId: `status-${prayerRequestStatus}`,
+			}),
+			{
+				communityId: 'alpha',
+				postId: 'prayer-1',
+				prayerRequestStatus,
+				expectedRevision: 1,
+				operationId: `status-${prayerRequestStatus}`,
+			},
+		);
+	for (const isPraying of [true, false])
+		assert.deepEqual(
+			parseSetCommunityPrayerAcknowledgmentRequest({
+				communityId: 'alpha',
+				postId: 'prayer-1',
+				isPraying,
+				operationId: `support-${isPraying}`,
+			}),
+			{
+				communityId: 'alpha',
+				postId: 'prayer-1',
+				isPraying,
+				operationId: `support-${isPraying}`,
+			},
+		);
+	assert.deepEqual(
+		parseListCommunityPrayerSupportRequest({
+			communityId: 'alpha',
+			postId: 'prayer-1',
+			pageSize: 10,
+			cursor: 'safe_cursor',
+		}),
+		{
+			communityId: 'alpha',
+			postId: 'prayer-1',
+			pageSize: 10,
+			cursor: 'safe_cursor',
+		},
+	);
+	for (const invalid of [
+		{
+			communityId: 'alpha',
+			postId: 'prayer-1',
+			prayerRequestStatus: 'AssumedAnswered',
+			expectedRevision: 1,
+			operationId: 'status-invalid',
+		},
+		{
+			communityId: 'alpha',
+			postId: 'prayer-1',
+			isPraying: true,
+			count: 4,
+			operationId: 'support-forged',
+		},
+	]) {
+		assert.throws(() =>
+			'prayerRequestStatus' in invalid
+				? parseSetCommunityPrayerRequestStatusRequest(invalid)
+				: parseSetCommunityPrayerAcknowledgmentRequest(invalid),
 		);
 	}
 });
@@ -203,4 +368,13 @@ test('post implementation has no logging or private-writing reader path', () => 
 	);
 	assert.match(source, /requestDigest/);
 	assert.doesNotMatch(source, /resultBody|bodyPreview|textPreview/);
+	const threadSource = readFileSync(
+		'functions/src/community/community-thread.ts',
+		'utf8',
+	);
+	assert.doesNotMatch(threadSource, /console\.|logger\.|functions\.logger/);
+	assert.doesNotMatch(
+		threadSource,
+		/journeySetupDrafts|writingRevisions|privateWriting|journeys\//,
+	);
 });

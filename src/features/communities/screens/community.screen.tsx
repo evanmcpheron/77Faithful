@@ -26,12 +26,14 @@ interface ICommunityHomeProps {
 	state: TCommunityContextState;
 	onRetry: () => void;
 	onReturn: () => void;
+	onInvite: (communityId: string) => void;
 }
 
 export const CommunityHome = ({
 	state,
 	onRetry,
 	onReturn,
+	onInvite,
 }: ICommunityHomeProps) => {
 	if (state.status === 'Loading') {
 		return (
@@ -108,8 +110,13 @@ export const CommunityHome = ({
 	const isOrganizerAlone =
 		community.status === 'Active' &&
 		membership.role === 'Organizer' &&
+		context.capabilities.canInviteMembers &&
 		context.activeMemberCount.isExact &&
 		context.activeMemberCount.value === 1;
+	const canInvite =
+		community.status === 'Active' &&
+		membership.role === 'Organizer' &&
+		context.capabilities.canInviteMembers;
 
 	return (
 		<View style={styles.content}>
@@ -188,8 +195,22 @@ export const CommunityHome = ({
 							You’re the only member. The next step is inviting
 							people you know.
 						</Typography>
+						<TurndownButton
+							onPress={() => onInvite(community.communityId)}
+						>
+							Invite people
+						</TurndownButton>
 					</View>
 				</Card>
+			) : null}
+
+			{canInvite && !isOrganizerAlone ? (
+				<TurndownButton
+					variant='Outline'
+					onPress={() => onInvite(community.communityId)}
+				>
+					Invite people
+				</TurndownButton>
 			) : null}
 
 			<Typography
@@ -223,6 +244,11 @@ const CommunityDetails = ({
 		useScreenScrollOffset();
 	const { state, retry } = useCommunityContext(userId, communityId);
 	const returnToCommunities = () => router.replace('/communities');
+	const openInvitations = (selectedCommunityId: string) =>
+		router.push({
+			pathname: '/communities/[communityId]/invite',
+			params: { communityId: selectedCommunityId },
+		});
 
 	return (
 		<TurndownScrollScreen
@@ -241,6 +267,7 @@ const CommunityDetails = ({
 					state={state}
 					onRetry={retry}
 					onReturn={returnToCommunities}
+					onInvite={openInvitations}
 				/>
 			</View>
 		</TurndownScrollScreen>

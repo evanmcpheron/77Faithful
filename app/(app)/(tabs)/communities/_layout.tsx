@@ -3,7 +3,7 @@ import type { IHeaderTopRowProps } from '@td/components/ui/main-header/component
 import { useHeaderScroll } from '@td/providers/header-scroll/header-scroll.hook';
 import { HeaderScrollProvider } from '@td/providers/header-scroll/header-scroll.provider';
 import { SurfaceColors } from '@td/theme/colors';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 
 export const unstable_settings = { initialRouteName: 'index' };
 
@@ -13,6 +13,32 @@ const ConnectedHeaderTopRow = (props: IHeaderTopRowProps) => {
 		<HeaderTopRow
 			{...props}
 			scrollOffset={scrollOffset}
+		/>
+	);
+};
+
+const InvitePeopleHeader = () => {
+	const router = useRouter();
+	const { communityId } = useLocalSearchParams<{ communityId?: string }>();
+	return (
+		<ConnectedHeaderTopRow
+			canGoBack
+			title='Invite people'
+			showNotifications={false}
+			onBackPress={() => {
+				if (router.canGoBack()) {
+					router.back();
+					return;
+				}
+				if (!communityId) {
+					router.replace('/communities');
+					return;
+				}
+				router.replace({
+					pathname: '/communities/[communityId]',
+					params: { communityId },
+				});
+			}}
 		/>
 	);
 };
@@ -49,6 +75,17 @@ const CommunitiesLayout = () => {
 								}
 							/>
 						),
+					}}
+				/>
+				<Stack.Screen
+					name='[communityId]/invite'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => <InvitePeopleHeader />,
 					}}
 				/>
 			</Stack>

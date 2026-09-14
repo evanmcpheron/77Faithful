@@ -12,6 +12,7 @@ jest.mock('expo-router', () => {
 	MockStack.Screen = 'StackScreen';
 	return {
 		Stack: MockStack,
+		useLocalSearchParams: () => ({ communityId: 'group' }),
 		useRouter: () => ({
 			canGoBack: () => mockCanGoBack,
 			back: mockBack,
@@ -61,5 +62,26 @@ it('provides an accessible detail back header with a cold-open list fallback', (
 	mockCanGoBack = true;
 	act(() => topRow.props['onBackPress']());
 	expect(mockBack).toHaveBeenCalledTimes(1);
+	act(() => header.unmount());
+});
+
+it('returns a cold-open invitation route to its community', () => {
+	const invitation = renderer.root.findByProps({
+		name: '[communityId]/invite',
+	});
+	let header!: ReactTestRenderer;
+	act(() => {
+		header = create(invitation.props['options'].header());
+	});
+	const topRow = header.root.find(
+		(node) => String(node.type) === 'HeaderTopRow',
+	);
+	expect(topRow.props['canGoBack']).toBe(true);
+	expect(topRow.props['title']).toBe('Invite people');
+	act(() => topRow.props['onBackPress']());
+	expect(mockReplace).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]',
+		params: { communityId: 'group' },
+	});
 	act(() => header.unmount());
 });

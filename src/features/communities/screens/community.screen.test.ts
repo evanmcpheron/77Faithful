@@ -80,12 +80,18 @@ let renderer: ReactTestRenderer;
 const mount = (state: React.ComponentProps<typeof CommunityHome>['state']) => {
 	const onRetry = jest.fn();
 	const onReturn = jest.fn();
+	const onInvite = jest.fn();
 	act(() => {
 		renderer = create(
-			createElement(CommunityHome, { state, onRetry, onReturn }),
+			createElement(CommunityHome, {
+				state,
+				onRetry,
+				onReturn,
+				onInvite,
+			}),
 		);
 	});
-	return { onRetry, onReturn };
+	return { onRetry, onReturn, onInvite };
 };
 const renderedText = () => JSON.stringify(renderer.toJSON());
 const press = (label: string) => {
@@ -97,8 +103,8 @@ const press = (label: string) => {
 };
 afterEach(() => act(() => renderer.unmount()));
 
-it('renders organizer context and the real alone-organizer next step without a dead action', () => {
-	mount({
+it('renders organizer context with a working, prominent invitation action', () => {
+	const actions = mount({
 		status: 'Ready',
 		context: communityContext({ role: 'Organizer', memberCount: 1 }),
 	});
@@ -109,7 +115,9 @@ it('renders organizer context and the real alone-organizer next step without a d
 		renderer.root
 			.findAll((node) => String(node.type) === 'Button')
 			.map((node) => node.props['children']),
-	).toEqual(['Your communities']);
+	).toEqual(['Invite people', 'Your communities']);
+	press('Invite people');
+	expect(actions.onInvite).toHaveBeenCalledWith('group');
 });
 
 it('renders member context, organizer identity, purpose, privacy, and bounded count', () => {
@@ -130,6 +138,17 @@ it('renders member context, organizer identity, purpose, privacy, and bounded co
 		'Membership does not share your private reflections',
 	);
 	expect(renderedText()).not.toContain('Invite people when you’re ready');
+	expect(renderedText()).not.toContain('Invite people');
+});
+
+it('keeps the organizer invitation action available after others join', () => {
+	const actions = mount({
+		status: 'Ready',
+		context: communityContext({ role: 'Organizer', memberCount: 4 }),
+	});
+	expect(renderedText()).not.toContain('You’re the only member');
+	press('Invite people');
+	expect(actions.onInvite).toHaveBeenCalledWith('group');
 });
 
 it('marks a closed community as a read-only archive without active actions', () => {
@@ -157,6 +176,7 @@ it('keeps transport retry and unavailable membership states distinct', () => {
 				state: { status: 'Unavailable' },
 				onRetry: actions.onRetry,
 				onReturn: actions.onReturn,
+				onInvite: actions.onInvite,
 			}),
 		),
 	);

@@ -48,7 +48,7 @@ export const RootNavigator = () => {
 			<Stack.Protected guard={isVerified && !journeyAccess.hasJourney}>
 				<Stack.Screen name='onboarding' />
 			</Stack.Protected>
-			<Stack.Protected guard={isVerified && journeyAccess.hasJourney}>
+			<Stack.Protected guard={isVerified}>
 				<Stack.Screen name='(app)' />
 			</Stack.Protected>
 			<Stack.Screen name='(public)' />

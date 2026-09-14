@@ -136,7 +136,7 @@ it('blocks private routes for a verified account until its profile is saved', ()
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
 });
 
-it('routes an eligible account without a journey into setup and opens the app after confirmation', () => {
+it('keeps setup available without a journey while allowing independent authenticated app routes', () => {
 	mockSession({
 		account: {
 			userId: 'owner',
@@ -154,7 +154,12 @@ it('routes an eligible account without a journey into setup and opens the app af
 		retry: jest.fn(),
 	});
 	render();
-	expect(renderer.toJSON()).toEqual(['onboarding', '(public)', '+not-found']);
+	expect(renderer.toJSON()).toEqual([
+		'onboarding',
+		'(app)',
+		'(public)',
+		'+not-found',
+	]);
 	jest.mocked(useJourneyAccess).mockReturnValue({
 		activeJourney: null,
 		hasJourney: true,

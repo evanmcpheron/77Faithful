@@ -1,6 +1,6 @@
 import { useAuth } from '@td/providers/auth/auth.hook';
-import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { CommunityCreationLimits } from '../community-creation';
 import {
@@ -41,12 +41,27 @@ const CreateCommunityForm = ({ userId }: { userId: string | null }) => {
 	const pending = useRef<ICreateCommunityRequest | null>(null);
 	const inFlight = useRef(false);
 	const mounted = useRef(true);
+	const focused = useRef(false);
+	const confirmedCommunityId = useRef<string | null>(null);
 	useEffect(() => {
 		mounted.current = true;
 		return () => {
 			mounted.current = false;
 		};
 	}, []);
+	useFocusEffect(
+		useCallback(() => {
+			focused.current = true;
+			if (confirmedCommunityId.current)
+				router.replace({
+					pathname: '/communities/[communityId]',
+					params: { communityId: confirmedCommunityId.current },
+				});
+			return () => {
+				focused.current = false;
+			};
+		}, [router]),
+	);
 	const nameError = !fields.name.trim()
 		? 'Enter a community name.'
 		: fields.name.length > CommunityCreationLimits.name
@@ -83,7 +98,8 @@ const CreateCommunityForm = ({ userId }: { userId: string | null }) => {
 			const result = await createCommunity(pending.current);
 			if (result.community.organizer.userId !== userId)
 				throw new Error('Unexpected organizer.');
-			if (mounted.current)
+			confirmedCommunityId.current = result.community.communityId;
+			if (mounted.current && focused.current)
 				router.replace({
 					pathname: '/communities/[communityId]',
 					params: { communityId: result.community.communityId },
@@ -106,14 +122,14 @@ const CreateCommunityForm = ({ userId }: { userId: string | null }) => {
 				setRequestStarted(false);
 				setMessage(
 					code === 'functions/invalid-argument'
-						? 'Check your community details and try again.'
-						: 'Sign in with a confirmed email and an available account to create a community.',
+						? 'We couldn’t create this community. Check the details and try again.'
+						: 'We couldn’t create this community. Sign in with a confirmed email and an available account, then try again.',
 				);
 				return;
 			}
 			if (mounted.current)
 				setMessage(
-					'We couldn’t confirm community creation. Your details are still here. Try again to confirm the same request.',
+					'We couldn’t confirm whether this community was created. Your details are still here. Try again to confirm the same request.',
 				);
 		} finally {
 			inFlight.current = false;
@@ -152,8 +168,7 @@ const CreateCommunityForm = ({ userId }: { userId: string | null }) => {
 						weight='Regular'
 						style={styles.description}
 					>
-						Give your community a name and (optional) description.
-						You can always change these later.
+						Give your community a name and an optional description.
 					</Typography>
 				</View>
 				<View>
@@ -198,7 +213,7 @@ const CreateCommunityForm = ({ userId }: { userId: string | null }) => {
 						variant='Outlined'
 						accessible
 						accessibilityRole='text'
-						accessibilityLabel='Invite only. Only people you invite can join.'
+						accessibilityLabel='Invitation required. People with a valid invitation can join, so share invitation codes carefully. Members see only content deliberately shared with the community, not private answers.'
 					>
 						<View style={styles.row}>
 							<View style={styles.icon}>
@@ -209,13 +224,16 @@ const CreateCommunityForm = ({ userId }: { userId: string | null }) => {
 							</View>
 							<View style={styles.cardCopy}>
 								<Typography weight='Semibold'>
-									Invite only
+									Invitation required
 								</Typography>
 								<Typography
 									tone='Secondary'
 									weight='Regular'
 								>
-									Only people you invite can join.
+									People with a valid invitation can join, so
+									share invitation codes carefully. Members
+									see only content deliberately shared with
+									the community, not private answers.
 								</Typography>
 							</View>
 						</View>

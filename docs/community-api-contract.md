@@ -165,6 +165,74 @@ pointer or implemented scheduling operation. Preview therefore omits that
 optional field until the schedule-owning ticket establishes and populates that
 contract; Ticket 05 does not guess a collection or select among schedules.
 
+### Ticket 09 — membership lifecycle, ownership, settings, and closure
+
+| Exported operation           | Canonical request / result                                                 | Authorization and transaction behavior                                                                                                                                                                                                                                                                     |
+| ---------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `updateCommunity`            | `IUpdateCommunityRequest` / `IUpdateCommunityResult`                       | The current active Organizer of an Active community may replace name, purpose, and participation expectations at `expectedRevision`. The transaction increments the community revision and returns the canonical summary.                                                                                  |
+| `leaveCommunity`             | `ILeaveCommunityRequest` / `ILeaveCommunityResult`                         | An active member may leave an Active or Closed community. The current Organizer cannot leave an Active community; transfer or closure is required first. The authoritative membership and account discovery index become Left atomically.                                                                  |
+| `removeCommunityMember`      | `IRemoveCommunityMemberRequest` / `IRemoveCommunityMemberResult`           | The current active Organizer of an Active community may remove an active Member, never the current Organizer. The authoritative membership and account discovery index become Removed atomically. The reason is stored only in restricted administration records and is never projected by member readers. |
+| `transferCommunityOrganizer` | `ITransferCommunityOrganizerRequest` / `ITransferCommunityOrganizerResult` | The current active Organizer of an Active community may transfer to one active Member at `expectedRevision`. Community ownership, both community memberships, and both account indexes change in one transaction; the former Organizer is immediately denied invitation administration.                    |
+| `closeCommunity`             | `ICloseCommunityRequest` / `ICloseCommunityResult`                         | The current active Organizer may terminally close an Active community at `expectedRevision`. The community becomes Closed, its invitation pointer is cleared, and a pointed active reusable invitation and digest are revoked in the same transaction. There is no reopen operation.                       |
+
+Every mutation requires an actor-scoped `operationId` of 1–128 identifier
+characters. Retry receipts live in operation-specific private account
+subcollections; payload reuse with different normalized input returns
+`OperationPayloadMismatch`. Authorization and lifecycle are reread inside every
+transaction, including receipt replays. A successful transfer therefore cannot
+be replayed by the former Organizer. Leave replay is available only while the
+same caller-owned membership remains the matching Left result; close replay
+requires the same retained Organizer authority in the Closed archive.
+
+Community IDs, member IDs, and operation IDs are limited to 128 characters and
+the existing safe identifier alphabet. Update text reuses the creation limits:
+name 100 characters and required, purpose 2,000 characters, and optional
+participation expectations 2,000 characters. A private removal reason is
+required and limited to 1,000 characters. Text is trimmed and rejects ASCII
+control characters. Revisions are integers from zero through 2,147,483,646.
+Unexpected fields, caller-owned roles, identities, timestamps, and lifecycle
+values are rejected.
+
+Stable administration reasons are `AuthenticationRequired`,
+`EmailVerificationRequired`, `InvalidInput`, `AccountUnavailable`,
+`CommunityUnavailable`, `CommunityClosed`, `OrganizerRequired`,
+`MemberUnavailable`, `OrganizerTransferRequired`, `RevisionConflict`,
+`OperationPayloadMismatch`, and `AdministrationDataUnavailable`. Closed
+community invitation acceptance retains the deliberately non-enumerating
+`InvitationUnavailable` result.
+
+Existing `getCommunityContext` remains the safe discoverable permission
+projection without changing its public response shape: authoritative role plus
+`canManageMembers`, `canEditCommunity`, `canCloseCommunity`, and
+`canLeaveCommunity` distinguish member, Organizer, and Closed archive behavior.
+Closed archives remain readable by retained active members; mutation and invite
+capabilities are false and leaving remains true. Leaving or removal immediately
+removes the caller from all current-member readers because those readers recheck
+the authoritative Active membership rather than trusting the account index.
+
+No new composite index is required for these exact-document transactions; the
+existing active-membership indexes continue to support member and community
+lists. Rules explicitly deny direct access to all new operation receipts, and
+the existing `communities/**` denial covers removal records. This checkout has
+no post, reply, acknowledgment, notification, progress, coordinated-enrollment,
+activation, or account-deletion Function to amend. Those later services must
+recheck Active community and membership state; Closed is already authoritative
+immediately and cannot be treated as awaiting cleanup. Closure does not query,
+write, cancel, or reschedule any private journey.
+
+Implementation and exports are in
+`functions/src/community/community-administration.ts` and
+`functions/src/index.ts`. Canonical contracts are in the authorized community
+type files; runtime validators are copied from
+`src/features/communities/community-administration.ts` by
+`scripts/prepare-functions.cjs`. Unit/contract coverage is in
+`tests/community-administration.test.cjs`; transaction, concurrency, archive,
+index, invitation-authority, and private-journey coverage is prepared in
+`tests/community-administration.emulator.test.cjs`. On 2026-09-14, Functions
+lint/build and 31 focused non-emulator community tests passed. The Firestore
+emulator suite was not run because no Java runtime is installed. Rules
+evaluation was not run because the Firebase CLI login had expired.
+
 ## Currently implemented operations (not adopted future ledger entries)
 
 These names exist in this checkout and may be retained, revised, or superseded

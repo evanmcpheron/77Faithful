@@ -332,6 +332,47 @@ Release remains blocked until all applicable items are evidenced:
 No emulator, credentials, device checks, deployment, or production configuration
 is performed by this documentation ticket.
 
+## Ticket 09 operational notes
+
+Ticket 09 implements the callable-only administration boundary named
+`updateCommunity`, `leaveCommunity`, `removeCommunityMember`,
+`transferCommunityOrganizer`, and `closeCommunity`. The exact DTOs, validation
+limits, authorization, retry behavior, reason codes, and storage effects are
+recorded in the Ticket 09 section of `docs/community-api-contract.md`.
+
+The current-member readers remain the permission-change boundary: both the
+community-owned membership and the account discovery index change atomically,
+while every read reauthorizes against the community-owned Active membership.
+Removed remains distinct from Left so invitation acceptance continues to deny
+Removed and permit a later explicit Left rejoin. Removal reasons are restricted
+administrative data and are absent from memberships, member lists, and public
+responses. Retry receipts retain only a digest of the reason rather than a
+second plaintext copy.
+
+Ownership transfer changes the community owner, old and new membership roles,
+and both account indexes in one revision-checked transaction. Invitation
+retrieval rechecks those records, so the former Organizer loses access as soon
+as transfer commits. Closure is terminal and atomically sets Closed, clears the
+active invitation pointer, and revokes/deletes the pointed reusable invitation
+digest when present. Retained active members keep archive reads while context
+mutation capabilities become false and leaving remains available.
+
+No post, reply, prayer acknowledgment, notification, progress, coordinated
+enrollment/activation, or account-deletion backend entry point exists in this
+checkout. Ticket 09 therefore could not add lifecycle checks to absent services
+or cleanup integration. The authoritative Closed and non-Active membership
+states are established for those later services to enforce; they must not defer
+access denial to cleanup. No composite index or data migration is introduced by
+the administration operations. Invitation deployment still depends on the
+adopted legacy-invitation migration gate and configured encryption secret.
+
+Verification on 2026-09-14: Functions lint and build passed; 31 focused
+community unit/contract tests passed. The new Firestore-emulator transaction
+suite is present but was not run because the workstation has no Java runtime.
+Rules evaluation was not run because Firebase CLI credentials require
+reauthentication. Deployment and push evidence must be recorded from their
+actual command outcomes and must not be inferred from compilation.
+
 ## Ticket 01 operational notes
 
 Ticket 01 implements callable-only current-member readers without changing the

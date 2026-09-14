@@ -44,6 +44,20 @@ export type TCommunityInvitationReasonCode =
 export type TCommunityInvitationAcceptanceOutcome =
 	'Accepted' | 'AlreadyMember' | 'Rejoined';
 
+export type TCommunityAdministrationReasonCode =
+	| 'AuthenticationRequired'
+	| 'EmailVerificationRequired'
+	| 'InvalidInput'
+	| 'AccountUnavailable'
+	| 'CommunityUnavailable'
+	| 'CommunityClosed'
+	| 'OrganizerRequired'
+	| 'MemberUnavailable'
+	| 'OrganizerTransferRequired'
+	| 'RevisionConflict'
+	| 'OperationPayloadMismatch'
+	| 'AdministrationDataUnavailable';
+
 // All caller identity, roles, generated IDs, lifecycle transitions, and audit times are server-owned.
 export interface ICreateCommunityRequest {
 	name: string;
@@ -150,6 +164,19 @@ export interface IAcceptCommunityInvitationResult {
 	outcome: TCommunityInvitationAcceptanceOutcome;
 	community: ICommunitySummary;
 	membership: ICommunityMemberSummary;
+}
+
+export interface IUpdateCommunityRequest {
+	communityId: string;
+	name: string;
+	purpose: string;
+	settings: ICommunitySettings;
+	expectedRevision: number;
+	operationId: string;
+}
+
+export interface IUpdateCommunityResult {
+	community: ICommunitySummary;
 }
 
 export interface ILeaveCommunityRequest {

@@ -158,9 +158,15 @@ for (const path of [
 	'users/owner/communityInvitationRotateOperations/operation-1',
 	'users/owner/communityInvitationRevokeOperations/operation-1',
 	'users/owner/communityInvitationAcceptOperations/operation-1',
+	'users/owner/communityUpdateOperations/operation-1',
+	'users/owner/communityLeaveOperations/operation-1',
+	'users/owner/communityRemoveMemberOperations/operation-1',
+	'users/owner/communityTransferOrganizerOperations/operation-1',
+	'users/owner/communityCloseOperations/operation-1',
 	'communityInvitationDigests/digest-1',
 	'communityInvitationRateLimits/limit-1',
 	'communities/community-1/invitations/invitation-1/redemptions/owner',
+	'communities/community-1/memberRemovals/member-1',
 ]) {
 	for (const method of ['get', 'list', 'create', 'update', 'delete']) {
 		add(

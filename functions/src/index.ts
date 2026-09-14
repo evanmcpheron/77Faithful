@@ -140,6 +140,14 @@ export { listReflections } from './journey/list-reflections';
 export { createCommunity } from './community/create-community';
 
 export {
+	closeCommunity,
+	leaveCommunity,
+	removeCommunityMember,
+	transferCommunityOrganizer,
+	updateCommunity,
+} from './community/community-administration';
+
+export {
 	getCurrentCommunityInvitation,
 	issueCommunityInvitation,
 	revokeCommunityInvitation,

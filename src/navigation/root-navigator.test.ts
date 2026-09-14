@@ -35,6 +35,7 @@ jest.mock('@td/providers/journey/journey-access.provider', () => ({
 }));
 beforeEach(() => {
 	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
 		hasJourney: true,
 		isLoading: false,
 		hasError: false,
@@ -146,6 +147,7 @@ it('routes an eligible account without a journey into setup and opens the app af
 		initializationError: null,
 	});
 	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
 		hasJourney: false,
 		isLoading: false,
 		hasError: false,
@@ -154,6 +156,7 @@ it('routes an eligible account without a journey into setup and opens the app af
 	render();
 	expect(renderer.toJSON()).toEqual(['onboarding', '(public)', '+not-found']);
 	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
 		hasJourney: true,
 		isLoading: false,
 		hasError: false,
@@ -173,6 +176,7 @@ it('does not infer missing setup while journey access is loading or failed', () 
 		initializationError: null,
 	});
 	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
 		hasJourney: false,
 		isLoading: true,
 		hasError: false,
@@ -181,6 +185,7 @@ it('does not infer missing setup while journey access is loading or failed', () 
 	render();
 	expect(renderer.toJSON()).toBe('account-loading');
 	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
 		hasJourney: false,
 		isLoading: false,
 		hasError: true,

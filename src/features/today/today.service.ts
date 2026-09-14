@@ -5,6 +5,10 @@ import {
 import type { IGetJourneyDayRequest } from '@td/features/journey/journey-day-session.types';
 import { db } from '@td/services/firebase/firebase.instance';
 import { FormationStructure } from '@td/types/formation/formation-course.types';
+import type {
+	IJourneyDetails,
+	IJourneyDocument,
+} from '@td/types/journey/journey.types';
 import { JourneyStatus } from '@td/types/journey/journey.types';
 import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 import {
@@ -33,28 +37,44 @@ export const loadToday = async (
 	userId: string,
 	instant = new Date(),
 	force = false,
+	resolvedJourney?: Pick<IJourneyDetails, 'journeyId' | 'journey'> | null,
 ) => {
 	const calendar = getDaySessionCalendar();
 	const generation = getDaySessionGeneration();
 	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	const snapshot = await getDocs(
-		query(
-			collection(db, 'users', userId, 'journeys'),
-			where('state.status', '==', JourneyStatus.Active),
-			limit(1),
-		),
-	);
+	let activeJourney = resolvedJourney;
+	// Standalone callers can still resolve the journey; Today supplies the provider result.
+	if (activeJourney === undefined) {
+		const snapshot = await getDocs(
+			query(
+				collection(db, 'users', userId, 'journeys'),
+				where('state.status', '==', JourneyStatus.Active),
+				limit(1),
+			),
+		);
+		const document = snapshot.docs[0];
+		activeJourney = document
+			? {
+					journeyId: document.id,
+					journey: document.data() as IJourneyDocument,
+				}
+			: null;
+	}
 	if (
 		generation !== getDaySessionGeneration() ||
 		calendar !== getDaySessionCalendar()
 	)
 		throw new Error('Day session changed.');
-	const activeJourney = snapshot.docs[0];
 	if (!activeJourney) {
 		lastToday = null;
 		return { status: 'NoActiveJourney' } as const;
 	}
-	const startDate: unknown = activeJourney.data()['startDate'];
+	if (
+		activeJourney.journey.userId !== userId ||
+		activeJourney.journey.state?.status !== JourneyStatus.Active
+	)
+		throw new Error('Unexpected active journey.');
+	const startDate: unknown = activeJourney.journey.startDate;
 	if (
 		typeof startDate !== 'string' ||
 		!/^\d{4}-\d{2}-\d{2}$/.test(startDate) ||
@@ -66,7 +86,7 @@ export const loadToday = async (
 		getJourneyCalendarDate(instant, timeZone),
 	);
 	if (
-		lastToday?.request.journeyId !== activeJourney.id ||
+		lastToday?.request.journeyId !== activeJourney.journeyId ||
 		lastToday.request.dayNumber !== dayNumber
 	)
 		lastToday = null;
@@ -74,13 +94,13 @@ export const loadToday = async (
 		return { status: 'Completed' } as const;
 	if (dayNumber < 1) return { status: 'NotStarted' } as const;
 	const request = {
-		journeyId: activeJourney.id,
+		journeyId: activeJourney.journeyId,
 		dayNumber,
 		observedPhoneTimeZoneId: timeZone,
 	};
 	const session = await loadPracticeDay(
 		userId,
-		activeJourney.id,
+		activeJourney.journeyId,
 		dayNumber,
 		force,
 	);

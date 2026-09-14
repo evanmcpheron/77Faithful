@@ -1,12 +1,16 @@
 import type { IJourneyDaySession } from '@td/features/journey/journey-day-session.types';
 import { useAuth } from '@td/providers/auth/auth.hook';
 import type { IAuthContextValue } from '@td/providers/auth/auth.types';
+import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
 import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { loadToday } from './today.service';
 import { useToday } from './use-today.hook';
 
 jest.mock('@td/providers/auth/auth.hook');
+jest.mock('@td/providers/journey/journey-access.provider', () => ({
+	useJourneyAccess: jest.fn(),
+}));
 jest.mock('./today.service', () => ({
 	loadToday: jest.fn(),
 	getCachedToday: jest.fn(() => null),
@@ -42,6 +46,13 @@ beforeEach(() => {
 	jest.clearAllMocks();
 	jest.mocked(loadToday).mockReset();
 	account('owner');
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
+		hasJourney: true,
+		hasError: false,
+		isLoading: false,
+		retry: jest.fn(),
+	});
 });
 afterEach(() => {
 	if (renderer) act(() => renderer.unmount());
@@ -126,4 +137,33 @@ it('keeps the loaded session mounted while refreshing the same day', async () =>
 		await refresh;
 	});
 	expect(current.session).toBe(session);
+});
+
+it('waits for the provider to resolve active-journey presence instead of issuing a fallback lookup', async () => {
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: undefined,
+		hasJourney: true,
+		hasError: false,
+		isLoading: false,
+		retry: jest.fn(),
+	});
+	await mount();
+	expect(loadToday).not.toHaveBeenCalled();
+	expect(current.data).toBeNull();
+	jest.mocked(useJourneyAccess).mockReturnValue({
+		activeJourney: null,
+		hasJourney: true,
+		hasError: false,
+		isLoading: false,
+		retry: jest.fn(),
+	});
+	jest.mocked(loadToday).mockResolvedValue({ status: 'NoActiveJourney' });
+	await act(async () => renderer.update(createElement(Consumer)));
+	expect(loadToday).toHaveBeenCalledWith(
+		'owner',
+		expect.any(Date),
+		false,
+		null,
+	);
+	expect(current.data).toEqual({ status: 'NoActiveJourney' });
 });

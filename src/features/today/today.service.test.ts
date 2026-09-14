@@ -1,4 +1,5 @@
 import type { IJourneyDaySession } from '@td/features/journey/journey-day-session.types';
+import type { IJourneyDetails } from '@td/types/journey/journey.types';
 import { getDocs } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import {
@@ -66,7 +67,16 @@ const session = (dayNumber = 1): IJourneyDaySession =>
 	}) as unknown as IJourneyDaySession;
 const journey = (startDate: string) =>
 	jest.mocked(getDocs).mockResolvedValue({
-		docs: [{ id: 'journey', data: () => ({ startDate }) }],
+		docs: [
+			{
+				id: 'journey',
+				data: () => ({
+					startDate,
+					userId: 'owner',
+					state: { status: 'Active' },
+				}),
+			},
+		],
 	} as never);
 beforeEach(() => {
 	setDaySessionAccount('owner');
@@ -111,7 +121,7 @@ it('does not fall back to sample data for an absent journey', async () => {
 it('rejects a response belonging to another account', async () => {
 	setDaySessionAccount('other');
 	await expect(loadToday('other', new Date(2026, 8, 10, 12))).rejects.toThrow(
-		'Unexpected journey day',
+		'Unexpected active journey',
 	);
 });
 it('shows foundational practices followed by the actual assignments and saved completion', () => {
@@ -204,4 +214,52 @@ it('applies a confirmed practice result to Today without another day load', asyn
 		result.completion,
 	);
 	expect(callable).toHaveBeenCalledTimes(2);
+});
+
+const resolvedJourney = () =>
+	({
+		journeyId: 'journey',
+		journey: {
+			userId: 'owner',
+			startDate: '2026-09-10',
+			state: { status: 'Active' },
+		},
+	}) as unknown as Pick<IJourneyDetails, 'journeyId' | 'journey'>;
+it('uses provider-resolved journey data without an extra active-journey query', async () => {
+	const result = await loadToday(
+		'owner',
+		new Date(2026, 8, 10, 12),
+		false,
+		resolvedJourney(),
+	);
+	expect(result.status).toBe('Ready');
+	expect(getDocs).not.toHaveBeenCalled();
+	expect(callable).toHaveBeenCalledTimes(1);
+});
+it('respects resolved active-journey absence without querying or requesting a day', async () => {
+	expect(await loadToday('owner', new Date(), false, null)).toEqual({
+		status: 'NoActiveJourney',
+	});
+	expect(getDocs).not.toHaveBeenCalled();
+	expect(callable).not.toHaveBeenCalled();
+});
+it('rejects a resolved journey from another account or a terminal journey', async () => {
+	const resolved = resolvedJourney();
+	await expect(
+		loadToday('other', new Date(), false, resolved),
+	).rejects.toThrow('Unexpected active journey');
+	await expect(
+		loadToday('owner', new Date(), false, {
+			...resolved,
+			journey: {
+				...resolved.journey,
+				state: {
+					status: 'Completed',
+					completedAt: { seconds: 1, nanoseconds: 0 },
+				},
+			},
+		}),
+	).rejects.toThrow('Unexpected active journey');
+	expect(getDocs).not.toHaveBeenCalled();
+	expect(callable).not.toHaveBeenCalled();
 });

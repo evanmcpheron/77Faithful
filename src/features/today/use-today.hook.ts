@@ -1,5 +1,6 @@
 import { getJourneyCalendarDate } from '@td/features/journey/journey-calendar';
 import { useAuth } from '@td/providers/auth/auth.hook';
+import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { AppState } from 'react-native';
@@ -10,6 +11,7 @@ import { getCachedToday, loadToday } from './today.service';
 
 export const useToday = () => {
 	const { account, isProfileReady } = useAuth();
+	const { activeJourney, hasError: journeyError } = useJourneyAccess();
 	const context = useDaySessionContext();
 	const userId =
 		account?.isEmailConfirmed && isProfileReady ? account.userId : null;
@@ -38,9 +40,14 @@ export const useToday = () => {
 					? previous
 					: null,
 			);
-			if (!userId) return;
+			if (!userId || activeJourney === undefined || journeyError) return;
 			try {
-				const data = await loadToday(userId, new Date(), force);
+				const data = await loadToday(
+					userId,
+					new Date(),
+					force,
+					activeJourney,
+				);
 				if (data.status === 'Ready') getTodayPractices(data.session);
 				if (request === generation.current)
 					setState({
@@ -58,7 +65,7 @@ export const useToday = () => {
 				}
 			}
 		},
-		[userId, context],
+		[userId, context, activeJourney, journeyError],
 	);
 	useFocusEffect(
 		useCallback(() => {
@@ -75,7 +82,7 @@ export const useToday = () => {
 			};
 		}, [refresh]),
 	);
-	const data =
+	const loadedData =
 		(userId ? getCachedToday(userId) : null) ??
 		(state?.userId === userId &&
 		state.context === context &&
@@ -83,6 +90,8 @@ export const useToday = () => {
 			state.revision === getDaySessionRevision())
 			? state.data
 			: null);
+	const data =
+		activeJourney === undefined || journeyError ? null : loadedData;
 	const session = data?.status === 'Ready' ? data.session : null;
 	const practices = session ? getTodayPractices(session) : [];
 	return { data, session, practices, error, refresh };

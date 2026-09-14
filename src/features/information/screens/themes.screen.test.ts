@@ -1,5 +1,4 @@
 import { Modal } from '@td/components/layout/modal/modal.component';
-import { TurndownButton } from '@td/components/ui/button/button.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
 import { createElement, type ReactNode } from 'react';
 import { Pressable } from 'react-native';
@@ -79,7 +78,7 @@ it('opens the matching overview and day range for every week, then closes', () =
 				'Renewal is not about trying harder to become a better person. Scripture calls us to be transformed as God renews our minds and forms us into the likeness of Christ.',
 			);
 		}
-		act(() => modal.findByType(TurndownButton).props['onPress']());
+		act(() => modal.props['onClose']());
 		expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
 	});
 });
@@ -90,12 +89,6 @@ it('dismisses through the shared modal close handler', () => {
 	expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
 });
 
-jest.mock('@td/components/ui/button/button.component', () => ({
-	TurndownButton: ({ children }: { children: ReactNode }) => children,
-}));
-jest.mock('@td/components/ui/divider/divider.component', () => ({
-	Divider: () => null,
-}));
 jest.mock('react-native-safe-area-context', () => ({
 	useSafeAreaInsets: () => ({ top: 44, bottom: 34 }),
 }));
@@ -103,8 +96,6 @@ jest.mock('./theme-overview-modal.styles', () => {
 	const wrapper = ({ children }: { children: ReactNode }) => children;
 	return {
 		StyledOverviewBody: wrapper,
-		StyledOverviewFooter: wrapper,
-		StyledOverviewHandle: wrapper,
 		StyledOverviewRule: wrapper,
 		StyledOverviewSection: wrapper,
 		overviewTextStyles: {},

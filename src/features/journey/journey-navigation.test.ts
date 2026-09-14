@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import JourneyLayout from '../../../app/(app)/(tabs)/(journey)/_layout';
+import AppLayout from '../../../app/(app)/_layout';
 const router = {
 	back: jest.fn(),
 	replace: jest.fn(),
@@ -23,7 +23,7 @@ beforeEach(async () => {
 	jest.clearAllMocks();
 	router.canGoBack.mockReturnValue(true);
 	await act(async () => {
-		renderer = create(createElement(JourneyLayout));
+		renderer = create(createElement(AppLayout));
 	});
 });
 afterEach(async () => {
@@ -48,7 +48,23 @@ it('falls back to Reflections when history is unavailable', () => {
 	back('reflections');
 	expect(router.replace).toHaveBeenCalledWith('/reflections');
 });
-it('preserves Today navigation for daily practice entries', () => {
+it('pops the practice rather than switching tabs when returning to Today', () => {
 	back();
-	expect(router.navigate).toHaveBeenCalledWith('/today');
+	expect(router.back).toHaveBeenCalledTimes(1);
+	expect(router.navigate).not.toHaveBeenCalled();
+});
+it('falls back to Today for a practice opened without history', () => {
+	router.canGoBack.mockReturnValue(false);
+	back();
+	expect(router.replace).toHaveBeenCalledWith('/today');
+});
+it('registers all practices beside the tabs in the same native stack', () => {
+	const screens = renderer.root.findAllByType('screen' as never);
+	expect(screens.map((screen) => screen.props['name'])).toEqual([
+		'(tabs)',
+		'journeys/[journeyId]/days/[dayNumber]/scripture',
+		'journeys/[journeyId]/days/[dayNumber]/prayer',
+		'journeys/[journeyId]/days/[dayNumber]/reflection',
+		'journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]',
+	]);
 });

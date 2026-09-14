@@ -1,5 +1,4 @@
 import { BorderColors, TextColors } from '@td/theme/colors';
-import { Radius } from '@td/theme/radius';
 import { Spacing } from '@td/theme/spacing';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
@@ -15,14 +14,6 @@ export const StyledOverviewRule = styled.View({
 	height: 1,
 	backgroundColor: BorderColors.Control,
 });
-export const StyledOverviewHandle = styled.View({
-	alignSelf: 'center',
-	width: Spacing.XLarge,
-	height: Spacing.XXSmall,
-	borderRadius: Radius.Full,
-	backgroundColor: BorderColors.Default,
-});
-export const StyledOverviewFooter = styled.View({ gap: Spacing.XSmall });
 export const overviewTextStyles = {
 	label: {
 		fontSize: 12,

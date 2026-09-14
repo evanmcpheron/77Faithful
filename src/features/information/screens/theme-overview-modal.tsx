@@ -1,6 +1,4 @@
 import { Modal } from '@td/components/layout/modal/modal.component';
-import { TurndownButton } from '@td/components/ui/button/button.component';
-import { Divider } from '@td/components/ui/divider/divider.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
 import { Spacing } from '@td/theme/spacing';
 import {
@@ -13,8 +11,6 @@ import { WEEKLY_THEME_OVERVIEWS } from '../weekly-theme-overviews';
 import { WEEKLY_THEMES } from '../weekly-themes';
 import {
 	StyledOverviewBody,
-	StyledOverviewFooter,
-	StyledOverviewHandle,
 	StyledOverviewRule,
 	StyledOverviewSection,
 	overviewTextStyles,
@@ -63,7 +59,6 @@ export const ThemeOverviewModal = ({
 					accessibilityViewIsModal
 					onAccessibilityEscape={onClose}
 				>
-					<StyledOverviewHandle accessible={false} />
 					<Typography
 						style={overviewTextStyles.label}
 						weight='Semibold'
@@ -109,17 +104,6 @@ export const ThemeOverviewModal = ({
 					</StyledOverviewSection>
 				</StyledOverviewBody>
 			</ScrollView>
-			<StyledOverviewFooter>
-				<Divider />
-				<TurndownButton
-					variant='Ghost'
-					size='Large'
-					fullWidth
-					onPress={onClose}
-				>
-					Close
-				</TurndownButton>
-			</StyledOverviewFooter>
 		</Modal>
 	);
 };

@@ -23,7 +23,6 @@ import {
 	StyledAuthHeaderContent,
 	StyledAuthHeaderSafeArea,
 } from '@td/features/auth/screens/auth.styles';
-import { setupPractices } from '@td/features/journey-setup/journey-setup-content';
 import { getPracticeHref } from '@td/features/journey/journey-practice-route';
 import { FeedbackColors, SurfaceColors } from '@td/theme/colors';
 import { Layout } from '@td/theme/layout';
@@ -56,24 +55,6 @@ export const TodayScreen = () => {
 	}));
 	const { data, session, practices, error, refresh } = useToday();
 	const [bodyHeight, setBodyHeight] = useState(0);
-	// Temporary review list: unassigned practices open read-only guidance.
-	const reviewPractices = [
-		...practices.map((practice) => ({ ...practice, preview: false })),
-		...setupPractices
-			.filter(
-				(definition) =>
-					!practices.some(
-						(practice) => practice.id === definition.practiceId,
-					),
-			)
-			.map((definition) => ({
-				id: definition.practiceId,
-				title: definition.name,
-				description: definition.purpose,
-				completion: null,
-				preview: true,
-			})),
-	];
 	const completedCount = practices.filter(
 		(practice) =>
 			practice.completion?.status === PracticeCompletionStatus.Complete,
@@ -273,36 +254,14 @@ export const TodayScreen = () => {
 									complete
 								</Typography>
 							</Row>
-							<Typography tone='Muted'>
-								Temporary review: all practices are shown.
-								Unselected practices open as previews.
-							</Typography>
-							{reviewPractices.map((practice) => (
+							{practices.map((practice) => (
 								<Link
 									key={practice.id}
-									href={
-										practice.preview
-											? {
-													pathname:
-														'/journeys/[journeyId]/days/[dayNumber]/practices/[practiceId]',
-													params: {
-														journeyId:
-															session.day
-																.journeyId,
-														dayNumber: String(
-															session.day
-																.dayNumber,
-														),
-														practiceId: practice.id,
-														preview: '1',
-													},
-												}
-											: getPracticeHref(
-													session.day.journeyId,
-													session.day.dayNumber,
-													practice.id,
-												)
-									}
+									href={getPracticeHref(
+										session.day.journeyId,
+										session.day.dayNumber,
+										practice.id,
+									)}
 									asChild
 								>
 									<StyledCard

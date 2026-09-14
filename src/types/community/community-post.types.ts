@@ -91,6 +91,11 @@ export interface ICommunityPostDocument extends IDocumentTimestamps {
 		| IModeratorRemovedCommunityPost;
 }
 
+// Safe callable projection. Tombstones retain identity and omit authored text.
+export interface ICommunityPost extends ICommunityPostDocument {
+	postId: string;
+}
+
 export interface IPublishedCommunityReply {
 	status: typeof CommunityContentStatus.Published;
 	text: string;

@@ -157,6 +157,13 @@ export {
 	acceptCommunityInvitation,
 	previewCommunityInvitation,
 } from './community/community-invitation-redemption';
+export {
+	createCommunityPost,
+	deleteCommunityPost,
+	editCommunityPost,
+	getCommunityPost,
+	listCommunityPosts,
+} from './community/community-post';
 export { getCommunity, listCommunities } from './community/read-community';
 export {
 	getCommunityContext,

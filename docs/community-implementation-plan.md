@@ -385,6 +385,55 @@ success. A cleanup retention policy remains unset because it is a separate
 destructive configuration choice. This is deployment evidence, not production
 launch or release-readiness evidence.
 
+## Ticket 12 operational notes
+
+Ticket 12 implements the callable-only post boundary named
+`createCommunityPost`, `getCommunityPost`, `listCommunityPosts`,
+`editCommunityPost`, and `deleteCommunityPost`. The exact DTOs, safe post
+projection, limits, cursor, authorization, idempotency, reason codes, and
+storage effects are recorded in the Ticket 12 section of
+`docs/community-api-contract.md`.
+
+The four accepted creation shapes are PrayerRequest, Discussion,
+OrganizerAnnouncement, and SharedReflectionCopy. SharedReflectionCopy receives
+only deliberately submitted text; the implementation contains no private journey
+or writing read path. Ordinary active members may create the other three member
+post types, while announcements require current Organizer authority. Editing
+requires current active author membership and an Active community; organizers
+cannot rewrite another author's words. Announcement authors must still be the
+current Organizer. Type, audience, author, and prayer state remain immutable
+during text edits.
+
+Current active members can read the complete earlier chronological history in
+Active communities and retained-member Closed archives. Every detail/feed read
+rereads the authoritative community-owned membership, and feed cursors bind the
+community plus created timestamp and post ID. Leaving/removal revokes those
+readers immediately. Author deletion is deliberately separate: an authenticated
+author may tombstone their own published post after exit or closure without
+receiving group content. The tombstone preserves thread identity, type, author,
+timestamps, and factual deleted status but contains no body.
+
+Creation and deletion transactionally maintain a minimal backend-only
+author-contribution index. It contains no submitted text and is not yet exposed
+by a callable; prompt 18 owns that reader. Mutation receipts contain only a
+normalized request digest and body-free result metadata. No post body is stored
+in a preview, counter, receipt, public history, or index. Direct client access
+to community records, contribution indexes, and operation receipts remains
+denied. Built-in single-field ordering supports the feed and author index, so no
+composite index, migration, secret, scheduled job, or new dependency is
+required.
+
+Local verification on 2026-09-14: Functions contract preparation, TypeScript
+build, and Functions ESLint passed. The six post contract/authentication tests
+passed. The Firestore emulator suite is prepared but was not run because the
+workstation has no Java runtime. The Security Rules evaluation passed all 282
+cases, including the new direct-access denials. Firestore Rules and the five
+Ticket 12 callables were deployed to `faithful-4325a` in `us-central1`; each
+resource reported a successful release/create operation. The Firebase CLI still
+exited nonzero because the project's Functions artifact repository has no
+cleanup policy. Setting that billing/retention policy remains an explicit
+operational decision; it was not changed by this ticket.
+
 ## Ticket 01 operational notes
 
 Ticket 01 implements callable-only current-member readers without changing the

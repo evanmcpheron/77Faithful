@@ -1,8 +1,45 @@
 import type { IPersistedTimestamp } from '../shared/persistence.types';
 import type {
+	ICommunityPost,
 	TCommunityPostContent,
 	TPrayerRequestStatus,
 } from './community-post.types';
+
+export type TCommunityPostReasonCode =
+	| 'AuthenticationRequired'
+	| 'EmailVerificationRequired'
+	| 'InvalidInput'
+	| 'InvalidCursor'
+	| 'AccountUnavailable'
+	| 'CommunityUnavailable'
+	| 'CommunityClosed'
+	| 'MembershipUnavailable'
+	| 'OrganizerRequired'
+	| 'PostUnavailable'
+	| 'PostAuthorRequired'
+	| 'RevisionConflict'
+	| 'OperationPayloadMismatch'
+	| 'PostDataUnavailable';
+
+export interface IGetCommunityPostRequest {
+	communityId: string;
+	postId: string;
+}
+
+export interface IGetCommunityPostResult {
+	post: ICommunityPost;
+}
+
+export interface IListCommunityPostsRequest {
+	communityId: string;
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IListCommunityPostsResult {
+	posts: ICommunityPost[];
+	nextCursor: string | null;
+}
 
 export interface ICreateCommunityPostRequest {
 	communityId: string;

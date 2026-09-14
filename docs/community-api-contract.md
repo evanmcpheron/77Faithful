@@ -239,6 +239,62 @@ Functions inventory. The deploy command reported a final non-resource error
 because Artifact Registry has no container-image cleanup policy; the deployed
 resources themselves reported success. No cleanup retention policy was set.
 
+### Ticket 12 — explicit community posts and chronological readers
+
+| Exported operation    | Canonical request / result                                   | Authorization and transaction behavior                                                                                                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createCommunityPost` | `ICreateCommunityPostRequest` / `ICreateCommunityPostResult` | A current active member of an Active community may create PrayerRequest, Discussion, or SharedReflectionCopy. Only the current active Organizer may create OrganizerAnnouncement. Identity, author display name, timestamps, and revision are server-derived. |
+| `getCommunityPost`    | `IGetCommunityPostRequest` / `IGetCommunityPostResult`       | A current active member may read one post in an Active or Closed community. The post must belong to the named community. Published projections contain submitted content; tombstones contain no text.                                                         |
+| `listCommunityPosts`  | `IListCommunityPostsRequest` / `IListCommunityPostsResult`   | A current active member may read chronological history in an Active or Closed community, including posts created before joining. Results order by `createdAt` descending then post ID descending.                                                             |
+| `editCommunityPost`   | `IEditCommunityPostRequest` / `IEditCommunityPostResult`     | The current active author may replace only the text of a published post in an Active community at `expectedRevision`. Type, audience, prayer state, and author remain immutable. Announcement edits additionally require current Organizer authority.         |
+| `deleteCommunityPost` | `IDeleteCommunityPostRequest` / `IDeleteCommunityPostResult` | The authenticated author may replace a published body with an AuthorDeleted tombstone at `expectedRevision`, including after leaving/removal or community closure. This owner action grants no feed or detail access after membership ends.                   |
+
+Community IDs, post IDs, and operation IDs use the existing 1–128 character safe
+identifier alphabet. Submitted text is trimmed, required, rejects ASCII control
+characters, and is limited to 10,000 characters. Creation accepts exactly one
+canonical content shape. PrayerRequest begins at `Current`; Discussion,
+OrganizerAnnouncement, and SharedReflectionCopy accept only `postType` and
+`text`. Unexpected journey, day, writing, source revision, caller-authored
+identity, lifecycle, or audience fields are rejected.
+
+Feed pages default to 20 and allow 1–50 records. The opaque cursor is limited to
+512 base64url characters and binds version, operation kind, community ID,
+created timestamp, and post ID. Malformed and cross-community cursors return
+`InvalidCursor`. The safe `ICommunityPost` projection includes community/post
+identity, author display name, created/updated/edited timestamps, publication
+status/type, revision, and actual content only while Published.
+
+Create, edit, and delete require actor-and-operation-scoped idempotency IDs.
+Private receipts store a SHA-256 digest of the normalized request and body-free
+result metadata; payload reuse returns `OperationPayloadMismatch`. Every retry
+rereads current account, community, membership/role where applicable, author,
+and post lifecycle. Revisions conflict with `RevisionConflict`. Stable reasons
+are `AuthenticationRequired`, `EmailVerificationRequired`, `InvalidInput`,
+`InvalidCursor`, `AccountUnavailable`, `CommunityUnavailable`,
+`CommunityClosed`, `MembershipUnavailable`, `OrganizerRequired`,
+`PostUnavailable`, `PostAuthorRequired`, `RevisionConflict`,
+`OperationPayloadMismatch`, and `PostDataUnavailable`.
+
+Posts persist under `communities/{communityId}/posts/{postId}`. A body-free
+backend-only author index under
+`users/{userId}/communityPostContributions/{digest}` stores only identity, post
+type/status, and timestamps so a later owner-contribution reader can be
+implemented without group access. Creation and deletion update the post, author
+index, and retry receipt in one transaction. No body is copied to the index,
+receipt, counter, preview, or revision history. Existing callable-only Rules
+deny direct access to posts; explicit denies cover the author index and
+post-operation receipts. The feed and per-author index use built-in single-field
+ordering, so no composite Firestore index or data migration is required.
+
+Implementation and exports are in `functions/src/community/community-post.ts`
+and `functions/src/index.ts`. Canonical contracts are in the authorized post
+type files, and request validators in
+`src/features/communities/community-post.ts` are copied through
+`scripts/prepare-functions.cjs`. Contract coverage is in
+`tests/community-post-contract.test.cjs`; transaction, role, archive,
+pagination, tombstone, and private-separation coverage is prepared in
+`tests/community-posts.emulator.test.cjs`.
+
 ## Currently implemented operations (not adopted future ledger entries)
 
 These names exist in this checkout and may be retained, revised, or superseded

@@ -28,6 +28,7 @@ interface ICommunityHomeProps {
 	onReturn: () => void;
 	onInvite: (communityId: string) => void;
 	onMembers: (communityId: string) => void;
+	onSettings: (communityId: string) => void;
 }
 
 export const CommunityHome = ({
@@ -36,6 +37,7 @@ export const CommunityHome = ({
 	onReturn,
 	onInvite,
 	onMembers,
+	onSettings,
 }: ICommunityHomeProps) => {
 	if (state.status === 'Loading') {
 		return (
@@ -221,6 +223,12 @@ export const CommunityHome = ({
 			>
 				Members
 			</TurndownButton>
+			<TurndownButton
+				variant='Outline'
+				onPress={() => onSettings(community.communityId)}
+			>
+				Community settings
+			</TurndownButton>
 
 			<Typography
 				size='Body2'
@@ -263,6 +271,11 @@ const CommunityDetails = ({
 			pathname: '/communities/[communityId]/members',
 			params: { communityId: selectedCommunityId },
 		});
+	const openSettings = (selectedCommunityId: string) =>
+		router.push({
+			pathname: '/communities/[communityId]/settings',
+			params: { communityId: selectedCommunityId },
+		});
 
 	return (
 		<TurndownScrollScreen
@@ -283,6 +296,7 @@ const CommunityDetails = ({
 					onReturn={returnToCommunities}
 					onInvite={openInvitations}
 					onMembers={openMembers}
+					onSettings={openSettings}
 				/>
 			</View>
 		</TurndownScrollScreen>

@@ -1,22 +1,30 @@
 import { app } from '@td/services/firebase/firebase.instance';
 import type {
+	ICloseCommunityRequest,
+	ICloseCommunityResult,
 	ILeaveCommunityRequest,
 	ILeaveCommunityResult,
 	IRemoveCommunityMemberRequest,
 	IRemoveCommunityMemberResult,
 	ITransferCommunityOrganizerRequest,
 	ITransferCommunityOrganizerResult,
+	IUpdateCommunityRequest,
+	IUpdateCommunityResult,
 	TCommunityAdministrationReasonCode,
 } from '@td/types/community/community-function.types';
 import { randomUUID } from 'expo-crypto';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {
+	parseCloseCommunityRequest,
+	parseCloseCommunityResult,
 	parseLeaveCommunityRequest,
 	parseLeaveCommunityResult,
 	parseRemoveCommunityMemberRequest,
 	parseRemoveCommunityMemberResult,
 	parseTransferCommunityOrganizerRequest,
 	parseTransferCommunityOrganizerResult,
+	parseUpdateCommunityRequest,
+	parseUpdateCommunityResult,
 } from './community-administration';
 
 const administrationReasons: readonly TCommunityAdministrationReasonCode[] = [
@@ -62,6 +70,17 @@ export const leaveCommunity = async (
 	return parseLeaveCommunityResult((await callable(request)).data);
 };
 
+export const updateCommunity = async (
+	input: IUpdateCommunityRequest,
+): Promise<IUpdateCommunityResult> => {
+	const request = parseUpdateCommunityRequest(input);
+	const callable = httpsCallable<IUpdateCommunityRequest, unknown>(
+		getFunctions(app),
+		'updateCommunity',
+	);
+	return parseUpdateCommunityResult((await callable(request)).data);
+};
+
 export const removeCommunityMember = async (
 	input: IRemoveCommunityMemberRequest,
 ): Promise<IRemoveCommunityMemberResult> => {
@@ -84,4 +103,15 @@ export const transferCommunityOrganizer = async (
 	return parseTransferCommunityOrganizerResult(
 		(await callable(request)).data,
 	);
+};
+
+export const closeCommunity = async (
+	input: ICloseCommunityRequest,
+): Promise<ICloseCommunityResult> => {
+	const request = parseCloseCommunityRequest(input);
+	const callable = httpsCallable<ICloseCommunityRequest, unknown>(
+		getFunctions(app),
+		'closeCommunity',
+	);
+	return parseCloseCommunityResult((await callable(request)).data);
 };

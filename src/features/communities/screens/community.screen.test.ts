@@ -83,6 +83,7 @@ const mount = (state: React.ComponentProps<typeof CommunityHome>['state']) => {
 	const onReturn = jest.fn();
 	const onInvite = jest.fn();
 	const onMembers = jest.fn();
+	const onSettings = jest.fn();
 	act(() => {
 		renderer = create(
 			createElement(CommunityHome, {
@@ -91,10 +92,11 @@ const mount = (state: React.ComponentProps<typeof CommunityHome>['state']) => {
 				onReturn,
 				onInvite,
 				onMembers,
+				onSettings,
 			}),
 		);
 	});
-	return { onRetry, onReturn, onInvite, onMembers };
+	return { onRetry, onReturn, onInvite, onMembers, onSettings };
 };
 const renderedText = () => JSON.stringify(renderer.toJSON());
 const press = (label: string) => {
@@ -118,7 +120,12 @@ it('renders organizer context with a working, prominent invitation action', () =
 		renderer.root
 			.findAll((node) => String(node.type) === 'Button')
 			.map((node) => node.props['children']),
-	).toEqual(['Invite people', 'Members', 'Your communities']);
+	).toEqual([
+		'Invite people',
+		'Members',
+		'Community settings',
+		'Your communities',
+	]);
 	press('Invite people');
 	expect(actions.onInvite).toHaveBeenCalledWith('group');
 });
@@ -144,6 +151,8 @@ it('renders member context, organizer identity, purpose, privacy, and bounded co
 	expect(renderedText()).not.toContain('Invite people');
 	press('Members');
 	expect(actions.onMembers).toHaveBeenCalledWith('group');
+	press('Community settings');
+	expect(actions.onSettings).toHaveBeenCalledWith('group');
 });
 
 it('keeps the organizer invitation action available after others join', () => {
@@ -183,6 +192,7 @@ it('keeps transport retry and unavailable membership states distinct', () => {
 				onReturn: actions.onReturn,
 				onInvite: actions.onInvite,
 				onMembers: actions.onMembers,
+				onSettings: actions.onSettings,
 			}),
 		),
 	);

@@ -123,6 +123,19 @@ const CommunitiesLayout = () => {
 						header: () => <CommunityChildHeader title='Members' />,
 					}}
 				/>
+				<Stack.Screen
+					name='[communityId]/settings'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => (
+							<CommunityChildHeader title='Community settings' />
+						),
+					}}
+				/>
 			</Stack>
 		</HeaderScrollProvider>
 	);

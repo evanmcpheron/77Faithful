@@ -126,3 +126,23 @@ it('returns a cold-open members route to its community', () => {
 	});
 	act(() => header.unmount());
 });
+
+it('returns a cold-open settings route to its community', () => {
+	const settings = renderer.root.findByProps({
+		name: '[communityId]/settings',
+	});
+	let header!: ReactTestRenderer;
+	act(() => {
+		header = create(settings.props['options'].header());
+	});
+	const topRow = header.root.find(
+		(node) => String(node.type) === 'HeaderTopRow',
+	);
+	expect(topRow.props['title']).toBe('Community settings');
+	act(() => topRow.props['onBackPress']());
+	expect(mockReplace).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]',
+		params: { communityId: 'group' },
+	});
+	act(() => header.unmount());
+});

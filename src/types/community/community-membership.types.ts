@@ -40,7 +40,6 @@ export interface ICommunityMembershipDocument extends IDocumentTimestamps {
 	schemaVersion: typeof DomainSchemaVersion.Current;
 	communityId: string;
 	userId: string;
-	displayName: string;
 	role: TCommunityRole;
 	joinedAt: IPersistedTimestamp;
 	lifecycle: TCommunityMembershipLifecycle;

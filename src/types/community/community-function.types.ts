@@ -13,7 +13,6 @@ import type { ICommunitySettings, ICommunitySummary } from './community.types';
 export interface ICreateCommunityRequest {
 	name: string;
 	purpose: string;
-	organizerDisplayName: string;
 	settings: ICommunitySettings;
 	operationId: string;
 }

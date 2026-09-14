@@ -26,3 +26,8 @@ cpSync(
 	path.join(root, 'src/features/journey/reflections.types.ts'),
 	path.join(generated, 'features/journey/reflections.types.ts'),
 );
+mkdirSync(path.join(generated, 'features/communities'), { recursive: true });
+cpSync(
+	path.join(root, 'src/features/communities/community-creation.ts'),
+	path.join(generated, 'features/communities/community-creation.ts'),
+);

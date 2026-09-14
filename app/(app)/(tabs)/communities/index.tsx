@@ -1,7 +1,7 @@
-import { CommunitiesScreen } from '@td/features/communities/screens/communities.screen';
+import { CommunitiesConnectedScreen } from '@td/features/communities/screens/communities-connected.screen';
 
 const CommunitiesRoute = () => {
-	return <CommunitiesScreen />;
+	return <CommunitiesConnectedScreen />;
 };
 
 export default CommunitiesRoute;

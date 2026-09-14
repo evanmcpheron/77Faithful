@@ -136,3 +136,7 @@ export const refreshTodayVerses = onSchedule(
 );
 
 export { listReflections } from './journey/list-reflections';
+
+export { createCommunity } from './community/create-community';
+
+export { getCommunity, listCommunities } from './community/read-community';

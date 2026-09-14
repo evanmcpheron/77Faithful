@@ -1,4 +1,9 @@
-import { getCommunity, listCommunities } from './community-reader.service';
+import {
+	getCommunity,
+	getCommunityContext,
+	getCommunityReaderReason,
+	listCommunities,
+} from './community-reader.service';
 
 const mockCall = jest.fn();
 const mockCallable = jest.fn();
@@ -13,6 +18,26 @@ const community = {
 	purpose: '',
 	organizer: { userId: 'owner', displayName: 'Anna' },
 	status: 'Active',
+};
+const context = {
+	community,
+	membership: {
+		communityId: 'group',
+		userId: 'owner',
+		displayName: 'Anna',
+		role: 'Organizer',
+		status: 'Active',
+	},
+	capabilities: {
+		canReadMembers: true,
+		canCreatePost: true,
+		canInviteMembers: true,
+		canManageMembers: true,
+		canEditCommunity: true,
+		canCloseCommunity: true,
+		canLeaveCommunity: true,
+	},
+	activeMemberCount: { value: 3, isExact: true },
 };
 beforeEach(() => {
 	jest.clearAllMocks();
@@ -37,6 +62,31 @@ it('allows an absent profile name without inventing a fallback name', async () =
 		data: { ...community, organizer: { userId: 'owner', displayName: '' } },
 	});
 	expect((await getCommunity('group')).organizer.displayName).toBe('');
+});
+it('loads and validates the canonical role-aware community context', async () => {
+	mockCall.mockResolvedValue({ data: { context } });
+	expect(await getCommunityContext('group')).toEqual(context);
+	expect(mockCallable).toHaveBeenCalledWith(
+		'functions',
+		'getCommunityContext',
+	);
+	expect(mockCall).toHaveBeenCalledWith({ communityId: 'group' });
+});
+it('rejects malformed context responses and reads only canonical denial reasons', async () => {
+	mockCall.mockResolvedValueOnce({
+		data: { context: { ...context, activeMemberCount: { value: -1 } } },
+	});
+	await expect(getCommunityContext('group')).rejects.toThrow(
+		'Invalid community context response.',
+	);
+	expect(
+		getCommunityReaderReason({
+			details: { reason: 'CommunityUnavailable' },
+		}),
+	).toBe('CommunityUnavailable');
+	expect(
+		getCommunityReaderReason({ details: { reason: 'UnexpectedReason' } }),
+	).toBeNull();
 });
 it('propagates denied access and rejects malformed responses', async () => {
 	mockCall.mockRejectedValueOnce(new Error('permission-denied'));

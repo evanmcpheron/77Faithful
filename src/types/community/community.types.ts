@@ -62,6 +62,7 @@ export interface IBoundedCommunityMemberCount {
 
 export interface ICommunityContext {
 	community: ICommunitySummary;
+	communityRevision: number;
 	membership: ICurrentCommunityMembershipSummary;
 	capabilities: ICommunityCapabilities;
 	activeMemberCount: IBoundedCommunityMemberCount;

@@ -342,12 +342,14 @@ recorded in the Ticket 09 section of `docs/community-api-contract.md`.
 
 The current-member readers remain the permission-change boundary: both the
 community-owned membership and the account discovery index change atomically,
-while every read reauthorizes against the community-owned Active membership.
-Removed remains distinct from Left so invitation acceptance continues to deny
-Removed and permit a later explicit Left rejoin. Removal reasons are restricted
-administrative data and are absent from memberships, member lists, and public
-responses. Retry receipts retain only a digest of the reason rather than a
-second plaintext copy.
+while every read reauthorizes against the community-owned Active membership. The
+authorized context projection includes the authoritative community revision so
+frontend administration submits revision-checked mutations without direct
+document access or a fabricated revision. Removed remains distinct from Left so
+invitation acceptance continues to deny Removed and permit a later explicit Left
+rejoin. Removal reasons are restricted administrative data and are absent from
+memberships, member lists, and public responses. Retry receipts retain only a
+digest of the reason rather than a second plaintext copy.
 
 Ownership transfer changes the community owner, old and new membership roles,
 and both account indexes in one revision-checked transaction. Invitation

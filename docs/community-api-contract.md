@@ -202,7 +202,8 @@ community invitation acceptance retains the deliberately non-enumerating
 `InvitationUnavailable` result.
 
 Existing `getCommunityContext` remains the safe discoverable permission
-projection without changing its public response shape: authoritative role plus
+projection. Its authorized response includes the authoritative community
+revision needed for revision-checked administration, plus authoritative role and
 `canManageMembers`, `canEditCommunity`, `canCloseCommunity`, and
 `canLeaveCommunity` distinguish member, Organizer, and Closed archive behavior.
 Closed archives remain readable by retained active members; mutation and invite

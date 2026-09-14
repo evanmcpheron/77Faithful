@@ -243,6 +243,7 @@ const communityContext = ({
 		organizer: { userId: 'owner', displayName: 'Anna' },
 		status,
 	},
+	communityRevision: 4,
 	membership: {
 		communityId: 'group',
 		userId: role === 'Organizer' ? 'owner' : 'member',

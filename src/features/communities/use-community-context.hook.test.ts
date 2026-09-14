@@ -27,6 +27,7 @@ const context = (userId: string, role: 'Organizer' | 'Member' = 'Member') =>
 			organizer: { userId: 'owner', displayName: 'Anna' },
 			status: 'Active',
 		},
+		communityRevision: 4,
 		membership: {
 			communityId: 'group',
 			userId,

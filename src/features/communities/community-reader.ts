@@ -148,10 +148,15 @@ export const parseGetCommunityContextResult = (
 		!hasOnlyKeys(result, ['context']) ||
 		!hasOnlyKeys(context, [
 			'community',
+			'communityRevision',
 			'membership',
 			'capabilities',
 			'activeMemberCount',
 		]) ||
+		typeof context['communityRevision'] !== 'number' ||
+		!Number.isInteger(context['communityRevision']) ||
+		context['communityRevision'] < 0 ||
+		context['communityRevision'] > 2_147_483_646 ||
 		membership['status'] !== 'Active' ||
 		!hasOnlyKeys(membership, [
 			'communityId',
@@ -186,6 +191,7 @@ export const parseGetCommunityContextResult = (
 	return {
 		context: {
 			community: parsedCommunity,
+			communityRevision: context['communityRevision'],
 			membership: { ...parsedMembership, status: 'Active' },
 			capabilities: {
 				canReadMembers: capabilities['canReadMembers'] as boolean,

@@ -21,6 +21,7 @@ const community = {
 };
 const context = {
 	community,
+	communityRevision: 4,
 	membership: {
 		communityId: 'group',
 		userId: 'owner',
@@ -87,6 +88,19 @@ it('rejects malformed context responses and reads only canonical denial reasons'
 	expect(
 		getCommunityReaderReason({ details: { reason: 'UnexpectedReason' } }),
 	).toBeNull();
+});
+it('rejects a missing, fractional, or out-of-range community revision', async () => {
+	const { communityRevision: _missing, ...withoutRevision } = context;
+	for (const invalidContext of [
+		withoutRevision,
+		{ ...context, communityRevision: 1.5 },
+		{ ...context, communityRevision: 2_147_483_647 },
+	]) {
+		mockCall.mockResolvedValueOnce({ data: { context: invalidContext } });
+		await expect(getCommunityContext('group')).rejects.toThrow(
+			'Invalid community context response.',
+		);
+	}
 });
 it('propagates denied access and rejects malformed responses', async () => {
 	mockCall.mockRejectedValueOnce(new Error('permission-denied'));

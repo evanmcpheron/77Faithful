@@ -220,6 +220,22 @@ const requireCommunityStatus = (community: DocumentData): TCommunityStatus => {
 	return status;
 };
 
+const requireCommunityRevision = (community: DocumentData): number => {
+	const revision: unknown = community.revision;
+	if (
+		typeof revision !== 'number' ||
+		!Number.isInteger(revision) ||
+		revision < 0 ||
+		revision > 2_147_483_646
+	)
+		throw readerError(
+			'internal',
+			'This community could not be loaded.',
+			'CommunityUnavailable',
+		);
+	return revision;
+};
+
 const profileDisplayName = (profile: DocumentSnapshot): string =>
 	resolveCommunityDisplayName(profile.data()?.preferredName);
 
@@ -272,6 +288,9 @@ export const getCommunityContextForAccount = async (
 		return {
 			context: {
 				community: summary,
+				communityRevision: requireCommunityRevision(
+					authorized.community,
+				),
 				membership: {
 					communityId: input.communityId,
 					userId,

@@ -57,6 +57,7 @@ const communityContext = ({
 		participationExpectations: 'Listen with care.',
 		status,
 	},
+	communityRevision: 4,
 	membership: {
 		communityId: 'group',
 		userId: role === 'Organizer' ? 'owner' : 'member',

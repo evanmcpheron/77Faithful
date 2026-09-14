@@ -54,6 +54,7 @@ test('community context parser returns only its canonical safe projection', () =
 	const value = {
 		context: {
 			community,
+			communityRevision: 4,
 			membership: {
 				communityId: 'community-1',
 				userId: 'owner',
@@ -89,6 +90,13 @@ test('community context parser returns only its canonical safe projection', () =
 			},
 		}),
 	);
+	for (const communityRevision of [-1, 1.5, 2_147_483_647])
+		assert.throws(() =>
+			parseGetCommunityContextResult({
+				...value,
+				context: { ...value.context, communityRevision },
+			}),
+		);
 });
 
 test('page result parsers reject private extras and over-limit results', () => {

@@ -56,6 +56,28 @@ const CommunitiesLayout = () => {
 			>
 				<Stack.Screen name='index' />
 				<Stack.Screen
+					name='join'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => (
+							<ConnectedHeaderTopRow
+								canGoBack
+								title='Join community'
+								showNotifications={false}
+								onBackPress={() =>
+									router.canGoBack()
+										? router.back()
+										: router.replace('/communities')
+								}
+							/>
+						),
+					}}
+				/>
+				<Stack.Screen
 					name='[communityId]/index'
 					options={{
 						headerShown: true,

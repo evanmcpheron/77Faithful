@@ -1,8 +1,11 @@
 import { app } from '@td/services/firebase/firebase.instance';
 import type {
+	IAcceptCommunityInvitationRequest,
+	IAcceptCommunityInvitationResult,
 	IGetCurrentCommunityInvitationRequest,
 	IGetCurrentCommunityInvitationResult,
 	IIssueCommunityInvitationRequest,
+	IPreviewCommunityInvitationRequest,
 	IRevokeCommunityInvitationRequest,
 	IRotateCommunityInvitationRequest,
 	TCommunityInvitationReasonCode,
@@ -10,10 +13,14 @@ import type {
 import { randomUUID } from 'expo-crypto';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {
+	parseAcceptCommunityInvitationRequest,
+	parseAcceptCommunityInvitationResult,
 	parseGetCurrentCommunityInvitationRequest,
 	parseGetCurrentCommunityInvitationResult,
 	parseIssueCommunityInvitationRequest,
 	parseIssueCommunityInvitationResult,
+	parsePreviewCommunityInvitationRequest,
+	parsePreviewCommunityInvitationResult,
 	parseRevokeCommunityInvitationRequest,
 	parseRevokeCommunityInvitationResult,
 	parseRotateCommunityInvitationRequest,
@@ -62,6 +69,29 @@ export const getCurrentCommunityInvitation = async (communityId: string) => {
 	return parseGetCurrentCommunityInvitationResult(
 		(await callable(request)).data,
 	).invitation;
+};
+
+export const previewCommunityInvitation = async (
+	input: IPreviewCommunityInvitationRequest,
+) => {
+	const request = parsePreviewCommunityInvitationRequest(input);
+	const callable = httpsCallable<IPreviewCommunityInvitationRequest, unknown>(
+		getFunctions(app),
+		'previewCommunityInvitation',
+	);
+	return parsePreviewCommunityInvitationResult((await callable(request)).data)
+		.preview;
+};
+
+export const acceptCommunityInvitation = async (
+	input: IAcceptCommunityInvitationRequest,
+): Promise<IAcceptCommunityInvitationResult> => {
+	const request = parseAcceptCommunityInvitationRequest(input);
+	const callable = httpsCallable<IAcceptCommunityInvitationRequest, unknown>(
+		getFunctions(app),
+		'acceptCommunityInvitation',
+	);
+	return parseAcceptCommunityInvitationResult((await callable(request)).data);
 };
 
 export const issueCommunityInvitation = async (

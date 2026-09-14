@@ -1,8 +1,10 @@
 import {
+	acceptCommunityInvitation,
 	createCommunityInvitationOperationId,
 	getCommunityInvitationReason,
 	getCurrentCommunityInvitation,
 	issueCommunityInvitation,
+	previewCommunityInvitation,
 	revokeCommunityInvitation,
 	rotateCommunityInvitation,
 } from './community-invitation.service';
@@ -85,6 +87,60 @@ it('calls the issue, rotate, and revoke contracts with validated requests', asyn
 				communityId: 'group',
 				invitationId: 'invitation-2',
 				operationId: 'revoke-1',
+			},
+		],
+	]);
+});
+
+it('calls and runtime-validates invitation preview and acceptance', async () => {
+	const preview = {
+		communityName: 'Grace Church',
+		communityPurpose: 'Pray together.',
+		organizerDisplayName: 'Anna',
+		expiresAt: { seconds: 1_800_000_000, nanoseconds: 0 },
+	};
+	const community = {
+		communityId: 'group',
+		name: 'Grace Church',
+		purpose: 'Pray together.',
+		organizer: { userId: 'owner', displayName: 'Anna' },
+		status: 'Active',
+	};
+	const membership = {
+		communityId: 'group',
+		userId: 'member',
+		displayName: 'Reader',
+		role: 'Member',
+	};
+	mockCall
+		.mockResolvedValueOnce({ data: { preview } })
+		.mockResolvedValueOnce({
+			data: { outcome: 'Accepted', community, membership },
+		});
+
+	await expect(
+		previewCommunityInvitation({
+			invitationCode: '23456-789ab-cdefg-hjkmn',
+		}),
+	).resolves.toEqual(preview);
+	await expect(
+		acceptCommunityInvitation({
+			invitationCode: '23456789ABCDEFGHJKMN',
+			displayName: ' Reader ',
+			operationId: 'accept-1',
+		}),
+	).resolves.toEqual({ outcome: 'Accepted', community, membership });
+	expect(mockCallable.mock.calls.map((call) => call[1])).toEqual([
+		'previewCommunityInvitation',
+		'acceptCommunityInvitation',
+	]);
+	expect(mockCall.mock.calls).toEqual([
+		[{ invitationCode: '23456789ABCDEFGHJKMN' }],
+		[
+			{
+				invitationCode: '23456789ABCDEFGHJKMN',
+				displayName: 'Reader',
+				operationId: 'accept-1',
 			},
 		],
 	]);

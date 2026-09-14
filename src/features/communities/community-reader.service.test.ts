@@ -3,6 +3,7 @@ import {
 	getCommunityContext,
 	getCommunityReaderReason,
 	listCommunities,
+	listCommunityMembers,
 } from './community-reader.service';
 
 const mockCall = jest.fn();
@@ -72,6 +73,42 @@ it('loads and validates the canonical role-aware community context', async () =>
 		'getCommunityContext',
 	);
 	expect(mockCall).toHaveBeenCalledWith({ communityId: 'group' });
+});
+it('loads a validated page containing only safe member fields', async () => {
+	mockCall.mockResolvedValue({
+		data: {
+			members: [
+				{
+					communityId: 'group',
+					userId: 'owner',
+					displayName: 'Anna',
+					role: 'Organizer',
+				},
+			],
+			nextCursor: 'next_cursor',
+		},
+	});
+	await expect(
+		listCommunityMembers({ communityId: 'group', pageSize: 20 }),
+	).resolves.toEqual({
+		members: [
+			{
+				communityId: 'group',
+				userId: 'owner',
+				displayName: 'Anna',
+				role: 'Organizer',
+			},
+		],
+		nextCursor: 'next_cursor',
+	});
+	expect(mockCallable).toHaveBeenCalledWith(
+		'functions',
+		'listCommunityMembers',
+	);
+	expect(mockCall).toHaveBeenCalledWith({
+		communityId: 'group',
+		pageSize: 20,
+	});
 });
 it('rejects malformed context responses and reads only canonical denial reasons', async () => {
 	mockCall.mockResolvedValueOnce({

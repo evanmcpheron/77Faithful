@@ -2,6 +2,8 @@ import { app } from '@td/services/firebase/firebase.instance';
 import type {
 	IGetCommunityContextRequest,
 	IGetCommunityContextResult,
+	IListCommunityMembersRequest,
+	IListCommunityMembersResult,
 	TCommunityReaderReasonCode,
 } from '@td/types/community/community-function.types';
 import type {
@@ -13,6 +15,8 @@ import { parseCreateCommunityResult } from './community-creation';
 import {
 	parseGetCommunityContextRequest,
 	parseGetCommunityContextResult,
+	parseListCommunityMembersRequest,
+	parseListCommunityMembersResult,
 } from './community-reader';
 
 const communityReaderReasons: readonly TCommunityReaderReasonCode[] = [
@@ -48,6 +52,17 @@ export const getCommunityContext = async (
 	>(getFunctions(app), 'getCommunityContext');
 	return parseGetCommunityContextResult((await callable(request)).data)
 		.context;
+};
+
+export const listCommunityMembers = async (
+	input: IListCommunityMembersRequest,
+): Promise<IListCommunityMembersResult> => {
+	const request = parseListCommunityMembersRequest(input);
+	const callable = httpsCallable<IListCommunityMembersRequest, unknown>(
+		getFunctions(app),
+		'listCommunityMembers',
+	);
+	return parseListCommunityMembersResult((await callable(request)).data);
 };
 
 export const getCommunity = async (

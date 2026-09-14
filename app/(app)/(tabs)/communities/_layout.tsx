@@ -17,13 +17,13 @@ const ConnectedHeaderTopRow = (props: IHeaderTopRowProps) => {
 	);
 };
 
-const InvitePeopleHeader = () => {
+const CommunityChildHeader = ({ title }: { title: string }) => {
 	const router = useRouter();
 	const { communityId } = useLocalSearchParams<{ communityId?: string }>();
 	return (
 		<ConnectedHeaderTopRow
 			canGoBack
-			title='Invite people'
+			title={title}
 			showNotifications={false}
 			onBackPress={() => {
 				if (router.canGoBack()) {
@@ -107,7 +107,20 @@ const CommunitiesLayout = () => {
 						headerTransparent: true,
 						headerShadowVisible: false,
 						headerStyle: { backgroundColor: 'transparent' },
-						header: () => <InvitePeopleHeader />,
+						header: () => (
+							<CommunityChildHeader title='Invite people' />
+						),
+					}}
+				/>
+				<Stack.Screen
+					name='[communityId]/members'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => <CommunityChildHeader title='Members' />,
 					}}
 				/>
 			</Stack>

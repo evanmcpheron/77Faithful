@@ -106,3 +106,23 @@ it('returns a cold-open invitation route to its community', () => {
 	});
 	act(() => header.unmount());
 });
+
+it('returns a cold-open members route to its community', () => {
+	const members = renderer.root.findByProps({
+		name: '[communityId]/members',
+	});
+	let header!: ReactTestRenderer;
+	act(() => {
+		header = create(members.props['options'].header());
+	});
+	const topRow = header.root.find(
+		(node) => String(node.type) === 'HeaderTopRow',
+	);
+	expect(topRow.props['title']).toBe('Members');
+	act(() => topRow.props['onBackPress']());
+	expect(mockReplace).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]',
+		params: { communityId: 'group' },
+	});
+	act(() => header.unmount());
+});

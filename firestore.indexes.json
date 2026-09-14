@@ -1,4 +1,33 @@
 {
-	"indexes": [],
+	"indexes": [
+		{
+			"collectionGroup": "communityMemberships",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{
+					"fieldPath": "lifecycle.status",
+					"order": "ASCENDING"
+				},
+				{
+					"fieldPath": "joinedAt",
+					"order": "ASCENDING"
+				}
+			]
+		},
+		{
+			"collectionGroup": "members",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{
+					"fieldPath": "lifecycle.status",
+					"order": "ASCENDING"
+				},
+				{
+					"fieldPath": "joinedAt",
+					"order": "ASCENDING"
+				}
+			]
+		}
+	],
 	"fieldOverrides": []
 }

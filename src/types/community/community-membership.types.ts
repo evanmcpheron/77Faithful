@@ -53,6 +53,10 @@ export interface ICommunityMemberSummary {
 	role: TCommunityRole;
 }
 
+export interface ICurrentCommunityMembershipSummary extends ICommunityMemberSummary {
+	status: typeof CommunityMembershipStatus.Active;
+}
+
 export interface ICommunityAuthorSummary {
 	userId: string;
 	displayName: string;

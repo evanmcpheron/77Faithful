@@ -36,6 +36,20 @@ service cloud.firestore {
             && request.resource.data.preferredName.size() <= 80));
     }
 
+    // Community access is callable-only. Account indexes discover memberships
+    // for trusted readers but never grant client access or authority.
+    match /users/{userId}/communityMemberships/{communityId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityCreateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /communities/{communityPath=**} {
+      allow read, write: if false;
+    }
+
     match /users/{userId}/journeys/{journeyId} {
       allow read: if isOwner(userId) && request.auth.token.email_verified == true;
     }

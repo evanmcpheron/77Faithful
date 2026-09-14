@@ -146,6 +146,28 @@ for (const path of [
 		);
 	}
 }
+for (const path of [
+	'communities/community-1',
+	'communities/community-1/members/owner',
+	'communities/community-1/invitations/invitation-1',
+	'communities/community-1/posts/post-1',
+	'communities/community-1/posts/post-1/replies/reply-1',
+	'users/owner/communityMemberships/community-1',
+	'users/owner/communityCreateOperations/operation-1',
+]) {
+	for (const method of ['get', 'list', 'create', 'update', 'delete']) {
+		add(
+			`direct community boundary denies ${method} ${path}`,
+			'DENY',
+			method,
+			path,
+			'owner',
+			true,
+			true,
+			{ forged: true },
+		);
+	}
+}
 const draft = 'users/owner/journeySetupDrafts/current';
 const device = 'users/owner/devicePreferences/12345678901234567890';
 const journey = 'users/owner/journeys/current';

@@ -7,7 +7,19 @@ import type {
 import type { ICommunityInvitationPreview } from './community-invitation.types';
 import type { ICommunityJourneyPreview } from './community-journey.types';
 import type { ICommunityMemberSummary } from './community-membership.types';
-import type { ICommunitySettings, ICommunitySummary } from './community.types';
+import type {
+	ICommunityContext,
+	ICommunitySettings,
+	ICommunitySummary,
+} from './community.types';
+
+export type TCommunityReaderReasonCode =
+	| 'AuthenticationRequired'
+	| 'EmailVerificationRequired'
+	| 'InvalidInput'
+	| 'InvalidCursor'
+	| 'AccountUnavailable'
+	| 'CommunityUnavailable';
 
 // All caller identity, roles, generated IDs, lifecycle transitions, and audit times are server-owned.
 export interface ICreateCommunityRequest {
@@ -19,6 +31,35 @@ export interface ICreateCommunityRequest {
 
 export interface ICreateCommunityResult {
 	community: ICommunitySummary;
+}
+
+export interface IGetCommunityContextRequest {
+	communityId: string;
+}
+
+export interface IGetCommunityContextResult {
+	context: ICommunityContext;
+}
+
+export interface IListCommunitiesPageRequest {
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IListCommunitiesPageResult {
+	communities: ICommunitySummary[];
+	nextCursor: string | null;
+}
+
+export interface IListCommunityMembersRequest {
+	communityId: string;
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IListCommunityMembersResult {
+	members: ICommunityMemberSummary[];
+	nextCursor: string | null;
 }
 
 export interface ICreateCommunityInvitationRequest {

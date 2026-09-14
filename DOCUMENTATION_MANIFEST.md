@@ -19,6 +19,11 @@ This archive preserves and rewrites the project-authored documentation from:
 - `product/`;
 - `content/provisional-course/README.md`.
 
+The adopted community workflow and its initially empty future-operation ledger
+are recorded in `docs/community-implementation-plan.md` and
+`docs/community-api-contract.md`. These are implementation references, not
+evidence of shipped community functionality.
+
 The original directory and file names are retained where practical so future
 agents can follow stable links between documents.
 

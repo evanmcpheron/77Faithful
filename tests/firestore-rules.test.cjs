@@ -659,34 +659,41 @@ addWrite(
 		urlPrefix: 'https://firebaserules.googleapis.com',
 		apiVersion: 'v1',
 	});
-	const result = await client.post(
-		`/projects/${project}:test`,
-		{
-			source: {
-				files: [
-					{
-						name: 'firestore.rules',
-						content: fs.readFileSync('firestore.rules', 'utf8'),
-					},
-				],
+	const rulesSource = {
+		files: [
+			{
+				name: 'firestore.rules',
+				content: fs.readFileSync('firestore.rules', 'utf8'),
 			},
-			testSuite: { testCases: tests.map(({ test }) => test) },
-		},
-		{ skipLog: { body: true, resBody: true } },
-	);
-	for (const [index, testResult] of (result.body.testResults || []).entries())
+		],
+	};
+	const testResults = [];
+	const batchSize = 200;
+	for (let start = 0; start < tests.length; start += batchSize) {
+		const batch = tests.slice(start, start + batchSize);
+		const result = await client.post(
+			`/projects/${project}:test`,
+			{
+				source: rulesSource,
+				testSuite: { testCases: batch.map(({ test }) => test) },
+			},
+			{ skipLog: { body: true, resBody: true } },
+		);
+		testResults.push(...(result.body.testResults || []));
+		if (result.body.issues) console.log(JSON.stringify(result.body.issues));
+	}
+	for (const [index, testResult] of testResults.entries())
 		console.log(
 			tests[index].name,
 			testResult.state,
 			testResult.state === 'SUCCESS' ? '' : JSON.stringify(testResult),
 		);
-	if (result.body.issues) console.log(JSON.stringify(result.body.issues));
 	console.log(
-		`${result.body.testResults?.filter((result) => result.state === 'SUCCESS').length ?? 0}/${tests.length} rules tests passed.`,
+		`${testResults.filter((result) => result.state === 'SUCCESS').length}/${tests.length} rules tests passed.`,
 	);
 	if (
-		!result.body.testResults?.length ||
-		result.body.testResults.some((result) => result.state !== 'SUCCESS')
+		testResults.length !== tests.length ||
+		testResults.some((result) => result.state !== 'SUCCESS')
 	)
 		process.exitCode = 1;
 })().catch((error) => {

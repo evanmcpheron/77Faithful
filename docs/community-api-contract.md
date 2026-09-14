@@ -229,9 +229,14 @@ type files; runtime validators are copied from
 `tests/community-administration.test.cjs`; transaction, concurrency, archive,
 index, invitation-authority, and private-journey coverage is prepared in
 `tests/community-administration.emulator.test.cjs`. On 2026-09-14, Functions
-lint/build and 31 focused non-emulator community tests passed. The Firestore
-emulator suite was not run because no Java runtime is installed. Rules
-evaluation was not run because the Firebase CLI login had expired.
+lint/build, 31 focused non-emulator community tests, 96 existing community Jest
+tests, and 262 authenticated Security Rules cases passed. The Firestore emulator
+suite was not run because no Java runtime is installed. Firestore Rules and
+indexes were deployed to `faithful-4325a`; all five administration callables
+were created in `us-central1` on Node.js 24 and verified by the deployed
+Functions inventory. The deploy command reported a final non-resource error
+because Artifact Registry has no container-image cleanup policy; the deployed
+resources themselves reported success. No cleanup retention policy was set.
 
 ## Currently implemented operations (not adopted future ledger entries)
 

@@ -367,11 +367,21 @@ the administration operations. Invitation deployment still depends on the
 adopted legacy-invitation migration gate and configured encryption secret.
 
 Verification on 2026-09-14: Functions lint and build passed; 31 focused
-community unit/contract tests passed. The new Firestore-emulator transaction
-suite is present but was not run because the workstation has no Java runtime.
-Rules evaluation was not run because Firebase CLI credentials require
-reauthentication. Deployment and push evidence must be recorded from their
-actual command outcomes and must not be inferred from compilation.
+community unit/contract tests, 96 existing community Jest tests, and all 262
+authenticated Security Rules cases passed. The new Firestore-emulator
+transaction suite is present but was not run because the workstation has no Java
+runtime.
+
+Commit `f860e2b` was pushed to `origin/community`. Firestore Rules and indexes
+were deployed to project `faithful-4325a`. The deployed Functions inventory
+confirmed the new Node.js 24 second-generation `updateCommunity`,
+`leaveCommunity`, `removeCommunityMember`, `transferCommunityOrganizer`, and
+`closeCommunity` callables in `us-central1`; all existing Functions also
+reported successful updates. The overall deploy command ended with an Artifact
+Registry cleanup-policy warning/error after every configured resource reported
+success. A cleanup retention policy remains unset because it is a separate
+destructive configuration choice. This is deployment evidence, not production
+launch or release-readiness evidence.
 
 ## Ticket 01 operational notes
 

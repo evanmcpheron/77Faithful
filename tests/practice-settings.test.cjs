@@ -66,6 +66,9 @@ const fixture = () => {
 				const collections = [];
 				const writes = [];
 				const result = await callback({
+					async getAll(...refs) {
+						return Promise.all(refs.map((ref) => this.get(ref)));
+					},
 					get: async (ref) => {
 						assert.equal(
 							writes.length,

@@ -5,6 +5,7 @@ const functionsRequire = createRequire(
 	require.resolve('../functions/package.json'),
 );
 const { Timestamp } = functionsRequire('firebase-admin/firestore');
+const logger = functionsRequire('firebase-functions/logger');
 const {
 	getJourneyDayForAccount,
 } = require('../functions/lib/src/journey/journey-day');
@@ -71,6 +72,9 @@ const createDatabase = () => {
 		runTransaction: async (callback) => {
 			const writes = [];
 			const result = await callback({
+				async getAll(...refs) {
+					return Promise.all(refs.map((ref) => this.get(ref)));
+				},
 				get: async (ref) => {
 					assert.equal(writes.length, 0, 'reads precede writes');
 					if (ref.path.split('/').length % 2 === 0)
@@ -201,6 +205,50 @@ test('opening a day is idempotent and never completes a practice', async () => {
 			.lastParticipantUpdateAt,
 		null,
 	);
+});
+
+test('timing logs contain only duration, attempts, and outcome', async (context) => {
+	const log = context.mock.method(logger, 'info', () => {});
+	const { database, documents } = createDatabase();
+	await getJourneyDayForAccount('owner', dayRequest, database);
+	documents.delete('users/owner/preferences/current');
+	await assert.rejects(
+		getJourneyDayForAccount('owner', dayRequest, database),
+		{ code: 'failed-precondition' },
+	);
+	assert.equal(log.mock.calls.length, 2);
+	for (const [index, call] of log.mock.calls.entries()) {
+		const [message, metrics] = call.arguments;
+		assert.equal(message, 'getJourneyDay timing');
+		assert.deepEqual(Object.keys(metrics).sort(), [
+			'durationMs',
+			'succeeded',
+			'transactionAttempts',
+		]);
+		assert.ok(
+			Number.isFinite(metrics.durationMs) && metrics.durationMs >= 0,
+		);
+		assert.equal(metrics.transactionAttempts, 1);
+		assert.equal(metrics.succeeded, index === 0);
+	}
+});
+
+test('missing session content never materializes a day', async () => {
+	for (const path of [
+		'users/owner/preferences/current',
+		`formationCourses/${courseId}/versions/${courseVersionId}/weekOverviews/1`,
+		`formationCourses/${courseId}/versions/${courseVersionId}/weekIntroductions/1`,
+	]) {
+		const { database, documents } = createDatabase();
+		documents.delete(path);
+		await assert.rejects(
+			getJourneyDayForAccount('owner', dayRequest, database),
+		);
+		assert.equal(
+			documents.has('users/owner/journeys/current/days/1'),
+			false,
+		);
+	}
 });
 
 test('completion survives reopening, can be undone, and retries do not create extra revisions', async () => {

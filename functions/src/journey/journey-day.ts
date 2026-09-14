@@ -1,6 +1,8 @@
 import type { Firestore, Transaction } from 'firebase-admin/firestore';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { info } from 'firebase-functions/logger';
 import { HttpsError } from 'firebase-functions/v2/https';
+import { performance } from 'node:perf_hooks';
 import { readTodayVerses } from './today-verses';
 
 import {
@@ -168,12 +170,15 @@ export const readJourneyDay = async (
 	const dayReference = journeyReference
 		.collection('days')
 		.doc(String(request.dayNumber));
-	const existingDay = (await transaction.get(dayReference)).data() as
-		IJourneyDayDocument | undefined;
 	const versionReference = database.doc(
 		`formationCourses/${journey.course.courseId}/versions/${journey.course.courseVersionId}`,
 	);
-	const version = (await transaction.get(versionReference)).data() as
+	const [daySnapshot, versionSnapshot] = await transaction.getAll(
+		dayReference,
+		versionReference,
+	);
+	const existingDay = daySnapshot.data() as IJourneyDayDocument | undefined;
+	const version = versionSnapshot.data() as
 		IFormationCourseVersionDocument | undefined;
 	if (version?.publicationState.status !== 'Published')
 		throw new HttpsError(
@@ -256,124 +261,142 @@ export const getJourneyDayForAccount = async (
 	request: IGetJourneyDayRequest,
 	database = getFirestore(),
 ): Promise<IJourneyDaySession> => {
-	return database.runTransaction(async (transaction) => {
-		const { day, content, dayReference, versionReference, isNew } =
-			await readJourneyDay(transaction, database, userId, request);
-		const profile = (
-			await transaction.get(database.doc(`users/${userId}`))
-		).data() as IUserProfileDocument | undefined;
-		const preferences = (
-			await transaction.get(
+	const startedAt = performance.now();
+	let transactionAttempts = 0;
+	let succeeded = false;
+	try {
+		const session = await database.runTransaction(async (transaction) => {
+			transactionAttempts += 1;
+			const { day, content, dayReference, versionReference, isNew } =
+				await readJourneyDay(transaction, database, userId, request);
+			const [
+				profileSnapshot,
+				preferencesSnapshot,
+				overviewSnapshot,
+				introductionSnapshot,
+				configurationSnapshot,
+				assignmentSnapshot,
+			] = await transaction.getAll(
+				database.doc(`users/${userId}`),
 				database.doc(`users/${userId}/preferences/current`),
-			)
-		).data() as IUserPreferencesDocument | undefined;
-		const translation = Object.values(BibleVersion).find(
-			(version) => version.bibleVersionId === preferences?.bibleVersionId,
-		);
-		if (!translation)
-			throw new HttpsError(
-				'failed-precondition',
-				'Choose a Bible translation in Settings.',
-			);
-		const overview = (
-			await transaction.get(
 				versionReference
 					.collection('weekOverviews')
 					.doc(String(day.weekNumber)),
-			)
-		).data() as IFormationWeekOverviewDocument | undefined;
-		const introduction = (
-			await transaction.get(
 				versionReference
 					.collection('weekIntroductions')
 					.doc(String(day.weekNumber)),
-			)
-		).data() as IFormationWeekIntroductionDocument | undefined;
-		if (!overview || !introduction)
-			throw new HttpsError(
-				'unavailable',
-				'We couldn’t load this week’s introduction. Please try again.',
-			);
-		const configuration = (
-			await transaction.get(
 				database.doc('formationConfiguration/current'),
-			)
-		).data();
-		const editionId: unknown =
-			configuration?.bibleTextEditionIds?.[translation.bibleVersionId];
-		const assignment = (
-			await transaction.get(
 				database.doc(
 					`scriptureAssignments/${content.scriptureAssignmentId}`,
 				),
-			)
-		).data() as IScriptureAssignmentDocument | undefined;
-		if (!assignment)
-			throw new HttpsError(
-				'unavailable',
-				'We couldn’t load the assigned reading. Please try again.',
 			);
-		let scripture: IScriptureAssignmentTextDocument | null = null;
-		let acknowledgments: readonly string[] = [];
-		if (
-			typeof editionId === 'string' &&
-			/^[a-zA-Z0-9_-]{1,128}$/.test(editionId)
-		) {
-			const editionReference = database.doc(
-				`bibleTextEditions/${editionId}`,
+			const profile = profileSnapshot.data() as
+				IUserProfileDocument | undefined;
+			const preferences = preferencesSnapshot.data() as
+				IUserPreferencesDocument | undefined;
+			const translation = Object.values(BibleVersion).find(
+				(version) =>
+					version.bibleVersionId === preferences?.bibleVersionId,
 			);
-			const edition = (await transaction.get(editionReference)).data() as
-				IBibleTextEditionDocument | undefined;
-			const reading = (
-				await transaction.get(
-					editionReference
-						.collection('assignmentTexts')
-						.doc(content.scriptureAssignmentId),
-				)
-			).data() as IScriptureAssignmentTextDocument | undefined;
+			if (!translation)
+				throw new HttpsError(
+					'failed-precondition',
+					'Choose a Bible translation in Settings.',
+				);
+			const overview = overviewSnapshot.data() as
+				IFormationWeekOverviewDocument | undefined;
+			const introduction = introductionSnapshot.data() as
+				IFormationWeekIntroductionDocument | undefined;
+			if (!overview || !introduction)
+				throw new HttpsError(
+					'unavailable',
+					'We couldn’t load this week’s introduction. Please try again.',
+				);
+			const configuration = configurationSnapshot.data();
+			const editionId: unknown =
+				configuration?.bibleTextEditionIds?.[
+					translation.bibleVersionId
+				];
+			const assignment = assignmentSnapshot.data() as
+				IScriptureAssignmentDocument | undefined;
+			if (!assignment)
+				throw new HttpsError(
+					'unavailable',
+					'We couldn’t load the assigned reading. Please try again.',
+				);
+			let scripture: IScriptureAssignmentTextDocument | null = null;
+			let acknowledgments: readonly string[] = [];
 			if (
-				edition?.releaseState.status === 'Released' &&
-				edition.bibleVersionId === translation.bibleVersionId &&
-				reading?.bibleVersionId === translation.bibleVersionId &&
-				reading.bibleTextEditionId === editionId &&
-				reading.scriptureAssignmentId ===
-					content.scriptureAssignmentId &&
-				assignment &&
-				reading.primaryPassage.passageId ===
-					assignment.primaryPassage.passageId &&
-				(assignment.supportingPassage
-					? reading.supportingPassage?.passageId ===
-						assignment.supportingPassage.passageId
-					: reading.supportingPassage === null)
+				typeof editionId === 'string' &&
+				/^[a-zA-Z0-9_-]{1,128}$/.test(editionId)
 			) {
-				scripture = {
-					...reading,
-					createdAt: serializeTimestamp(reading.createdAt),
-					updatedAt: serializeTimestamp(reading.updatedAt),
-				};
-				acknowledgments = edition.acknowledgments;
+				const editionReference = database.doc(
+					`bibleTextEditions/${editionId}`,
+				);
+				const [editionSnapshot, readingSnapshot] =
+					await transaction.getAll(
+						editionReference,
+						editionReference
+							.collection('assignmentTexts')
+							.doc(content.scriptureAssignmentId),
+					);
+				const edition = editionSnapshot.data() as
+					IBibleTextEditionDocument | undefined;
+				const reading = readingSnapshot.data() as
+					IScriptureAssignmentTextDocument | undefined;
+				if (
+					edition?.releaseState.status === 'Released' &&
+					edition.bibleVersionId === translation.bibleVersionId &&
+					reading?.bibleVersionId === translation.bibleVersionId &&
+					reading.bibleTextEditionId === editionId &&
+					reading.scriptureAssignmentId ===
+						content.scriptureAssignmentId &&
+					assignment &&
+					reading.primaryPassage.passageId ===
+						assignment.primaryPassage.passageId &&
+					(assignment.supportingPassage
+						? reading.supportingPassage?.passageId ===
+							assignment.supportingPassage.passageId
+						: reading.supportingPassage === null)
+				) {
+					scripture = {
+						...reading,
+						createdAt: serializeTimestamp(reading.createdAt),
+						updatedAt: serializeTimestamp(reading.updatedAt),
+					};
+					acknowledgments = edition.acknowledgments;
+				}
 			}
-		}
-		const todayVerses = await readTodayVerses(
-			transaction,
-			database,
-			day.dayNumber,
-			translation.bibleVersionId,
-		);
-		if (isNew) transaction.create(dayReference, day);
-		return {
-			day: serializeDay(day),
-			todayVerses,
-			content,
-			scripture,
-			scriptureReference: assignment.displayReference,
-			translation,
-			acknowledgments,
-			scriptureAvailabilityMessage: scripture
-				? null
-				: `The full passage isn’t available in ${translation.abbreviation} right now. Please try again later.`,
-			week: { ...overview, ...introduction },
-			preferredName: profile?.preferredName ?? null,
-		};
-	});
+			const todayVerses = await readTodayVerses(
+				transaction,
+				database,
+				day.dayNumber,
+				translation.bibleVersionId,
+			);
+			if (isNew) transaction.create(dayReference, day);
+			return {
+				day: serializeDay(day),
+				todayVerses,
+				content,
+				scripture,
+				scriptureReference: assignment.displayReference,
+				translation,
+				acknowledgments,
+				scriptureAvailabilityMessage: scripture
+					? null
+					: `The full passage isn’t available in ${translation.abbreviation} right now. Please try again later.`,
+				week: { ...overview, ...introduction },
+				preferredName: profile?.preferredName ?? null,
+			};
+		});
+		succeeded = true;
+		return session;
+	} finally {
+		// Include retries and commit time without logging request, document, or error data.
+		info('getJourneyDay timing', {
+			durationMs: Math.round(performance.now() - startedAt),
+			transactionAttempts,
+			succeeded,
+		});
+	}
 };

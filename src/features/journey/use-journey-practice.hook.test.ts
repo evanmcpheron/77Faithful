@@ -2,6 +2,11 @@ import { useAuth } from '@td/providers/auth/auth.hook';
 import type { IAuthContextValue } from '@td/providers/auth/auth.types';
 import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+import {
+	clearDaySessions,
+	loadDaySession,
+	setDaySessionAccount,
+} from './journey-day-cache';
 import type { IJourneyDaySession } from './journey-day-session.types';
 import { parsePracticeRoute } from './journey-practice-route';
 import {
@@ -9,6 +14,9 @@ import {
 	savePracticeCompletion,
 } from './journey-practice.service';
 import { useJourneyPractice } from './use-journey-practice.hook';
+jest.mock('react-native', () => ({
+	AppState: { addEventListener: () => ({ remove: jest.fn() }) },
+}));
 
 jest.mock('@td/providers/auth/auth.hook');
 jest.mock('./journey-practice.service');
@@ -60,6 +68,8 @@ const Consumer = () => {
 	return null;
 };
 beforeEach(() => {
+	setDaySessionAccount('owner');
+	clearDaySessions();
 	jest.resetAllMocks();
 	practiceId = 'Worship';
 	jest.mocked(useAuth).mockReturnValue({
@@ -84,7 +94,7 @@ it('loads the routed day and saves only its assigned practice with the current r
 		completion: { ...completion, status: 'Complete', revision: 3 },
 	});
 	await mount();
-	expect(loadPracticeDay).toHaveBeenCalledWith('owner', 'journey', 12);
+	expect(loadPracticeDay).toHaveBeenCalledWith('owner', 'journey', 12, false);
 	expect(savePracticeCompletion).not.toHaveBeenCalled();
 	await act(async () => {
 		await Promise.all([current.complete(), current.complete()]);
@@ -178,3 +188,47 @@ it.each(['ReadScripture', 'Pray', 'Reflect', 'Worship', 'Gratitude'] as const)(
 		expect(mockNavigate).toHaveBeenCalledWith('/today');
 	},
 );
+
+it('shows an already cached session while its background load is pending', async () => {
+	await loadDaySession(
+		'owner',
+		{
+			journeyId: 'journey',
+			dayNumber: 12,
+			observedPhoneTimeZoneId:
+				Intl.DateTimeFormat().resolvedOptions().timeZone,
+		},
+		async () => session,
+	);
+	jest.mocked(loadPracticeDay).mockReturnValue(new Promise(() => {}));
+	await mount();
+	expect(current.session).toBe(session);
+	expect(current.loading).toBe(false);
+	await act(async () => clearDaySessions());
+	expect(current.session).toBeNull();
+});
+
+it('hides a loaded session if another consumer’s refresh is rejected', async () => {
+	const request = {
+		journeyId: 'journey',
+		dayNumber: 12,
+		observedPhoneTimeZoneId:
+			Intl.DateTimeFormat().resolvedOptions().timeZone,
+	};
+	await loadDaySession('owner', request, async () => session);
+	await mount();
+	expect(current.session).toBe(session);
+	await act(async () => {
+		await expect(
+			loadDaySession(
+				'owner',
+				request,
+				async () => {
+					throw new Error('not-found');
+				},
+				true,
+			),
+		).rejects.toThrow('not-found');
+	});
+	expect(current.session).toBeNull();
+});

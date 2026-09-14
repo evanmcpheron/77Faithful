@@ -1,4 +1,6 @@
 import { ensureAccountProfile } from '@td/features/account/account-profile.service';
+import { subscribeDaySessionInvalidation } from '@td/features/journey/day-session-invalidation.service';
+import { setDaySessionAccount } from '@td/features/journey/journey-day-cache';
 import {
 	authActions,
 	subscribeToAccount,
@@ -51,6 +53,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		() =>
 			subscribeToAccount(
 				(nextAccount) => {
+					setDaySessionAccount(
+						nextAccount?.isEmailConfirmed
+							? nextAccount.userId
+							: null,
+					);
 					if (!nextAccount) {
 						setProfileState(null);
 						registration.current = null;
@@ -60,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					setIsInitializing(false);
 				},
 				(error) => {
+					setDaySessionAccount(null);
 					setProfileState(null);
 					registration.current = null;
 					setAccount(null);
@@ -110,6 +118,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const isProfileReady = Boolean(
 		userId && profileState?.userId === userId && profileState.isReady,
 	);
+	useEffect(() => {
+		if (userId && isProfileReady && account?.isEmailConfirmed)
+			return subscribeDaySessionInvalidation(userId);
+	}, [userId, isProfileReady, account?.isEmailConfirmed]);
 	const profileError =
 		profileState?.userId === userId ? (profileState?.error ?? null) : null;
 

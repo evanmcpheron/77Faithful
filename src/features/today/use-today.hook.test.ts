@@ -9,6 +9,7 @@ import { useToday } from './use-today.hook';
 jest.mock('@td/providers/auth/auth.hook');
 jest.mock('./today.service', () => ({
 	loadToday: jest.fn(),
+	getCachedToday: jest.fn(() => null),
 	saveTodayCompletion: jest.fn(),
 }));
 jest.mock('expo-router', () => ({

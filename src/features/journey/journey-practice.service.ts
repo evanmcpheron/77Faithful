@@ -3,6 +3,12 @@ import { app, db } from '@td/services/firebase/firebase.instance';
 import type { ISetPracticeCompletionResult } from '@td/types/journey/journey-day.types';
 import { collection, doc, Timestamp } from 'firebase/firestore';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import {
+	cachePracticeCompletion,
+	getDaySessionAccount,
+	getDaySessionGeneration,
+	loadDaySession,
+} from './journey-day-cache';
 import type {
 	ICompleteJourneyPracticeRequest,
 	IGetJourneyDayRequest,
@@ -13,24 +19,24 @@ export const loadPracticeDay = async (
 	userId: string,
 	journeyId: string,
 	dayNumber: number,
+	force = false,
 ) => {
 	const callable = httpsCallable<IGetJourneyDayRequest, IJourneyDaySession>(
 		getFunctions(app),
 		'getJourneyDay',
 	);
-	const { data } = await callable({
+	const request = {
 		journeyId,
 		dayNumber,
 		observedPhoneTimeZoneId:
 			Intl.DateTimeFormat().resolvedOptions().timeZone,
-	});
-	if (
-		data.day.userId !== userId ||
-		data.day.journeyId !== journeyId ||
-		data.day.dayNumber !== dayNumber
-	)
-		throw new Error('Unexpected journey day.');
-	return data;
+	};
+	return loadDaySession(
+		userId,
+		request,
+		async () => (await callable(request)).data,
+		force,
+	);
 };
 
 export const savePracticeCompletion = async (
@@ -39,19 +45,28 @@ export const savePracticeCompletion = async (
 		'origin' | 'observedPhoneTimeZoneId'
 	>,
 ) => {
+	const userId = getDaySessionAccount();
+	const generation = getDaySessionGeneration();
+	const deviceId = await getDeviceId();
+	if (
+		!userId ||
+		userId !== getDaySessionAccount() ||
+		generation !== getDaySessionGeneration()
+	)
+		throw new Error('Account changed.');
 	const timestamp = Timestamp.now();
 	const callable = httpsCallable<
 		ICompleteJourneyPracticeRequest,
 		ISetPracticeCompletionResult
 	>(getFunctions(app), 'setJourneyPracticeCompletion');
-	return (
+	const result = (
 		await callable({
 			...input,
 			observedPhoneTimeZoneId:
 				Intl.DateTimeFormat().resolvedOptions().timeZone,
 			origin: {
 				operationId: doc(collection(db, 'operationIds')).id,
-				deviceId: await getDeviceId(),
+				deviceId,
 				recordedOnDeviceAt: {
 					seconds: timestamp.seconds,
 					nanoseconds: timestamp.nanoseconds,
@@ -59,4 +74,14 @@ export const savePracticeCompletion = async (
 			},
 		})
 	).data;
+	if (
+		result.journeyId !== input.journeyId ||
+		result.dayNumber !== input.dayNumber ||
+		result.practiceId !== input.practiceId ||
+		result.completion.status !==
+			(input.isComplete ? 'Complete' : 'NotMarked')
+	)
+		throw new Error('Unexpected completion.');
+	cachePracticeCompletion(userId, generation, result);
+	return result;
 };

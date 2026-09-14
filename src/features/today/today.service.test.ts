@@ -1,8 +1,17 @@
 import type { IJourneyDaySession } from '@td/features/journey/journey-day-session.types';
 import { getDocs } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
+import {
+	clearDaySessions,
+	setDaySessionAccount,
+} from '../journey/journey-day-cache';
+import { loadPracticeDay } from '../journey/journey-practice.service';
 import { getTodayPractices } from './today-practices';
-import { loadToday, saveTodayCompletion } from './today.service';
+import {
+	getCachedToday,
+	loadToday,
+	saveTodayCompletion,
+} from './today.service';
 
 jest.mock('@td/services/firebase/firebase.instance', () => ({
 	app: {},
@@ -60,6 +69,8 @@ const journey = (startDate: string) =>
 		docs: [{ id: 'journey', data: () => ({ startDate }) }],
 	} as never);
 beforeEach(() => {
+	setDaySessionAccount('owner');
+	clearDaySessions();
 	jest.clearAllMocks();
 	jest.mocked(httpsCallable).mockReturnValue(callable);
 	callable.mockResolvedValue({ data: session() });
@@ -98,6 +109,7 @@ it('does not fall back to sample data for an absent journey', async () => {
 	expect(callable).not.toHaveBeenCalled();
 });
 it('rejects a response belonging to another account', async () => {
+	setDaySessionAccount('other');
 	await expect(loadToday('other', new Date(2026, 8, 10, 12))).rejects.toThrow(
 		'Unexpected journey day',
 	);
@@ -120,6 +132,14 @@ it('shows foundational practices followed by the actual assignments and saved co
 	expect(practices[1]?.description).toBe('Today’s prayer');
 });
 it('sends completion through the trusted function with the assigned practice and expected revision', async () => {
+	callable.mockResolvedValueOnce({
+		data: {
+			journeyId: 'journey',
+			dayNumber: 1,
+			practiceId: 'Worship',
+			completion: { status: 'NotMarked', revision: 4, updatedAt: null },
+		},
+	});
 	await saveTodayCompletion({
 		journeyId: 'journey',
 		dayNumber: 1,
@@ -143,4 +163,45 @@ it('sends completion through the trusted function with the assigned practice and
 			},
 		}),
 	);
+});
+
+it('shares a getJourneyDay request between Today and a practice screen', async () => {
+	let resolve!: (value: { data: IJourneyDaySession }) => void;
+	callable.mockImplementationOnce(
+		() =>
+			new Promise((done) => {
+				resolve = done;
+			}),
+	);
+	const practice = loadPracticeDay('owner', 'journey', 1);
+	const today = loadToday('owner', new Date(2026, 8, 10, 12));
+	await Promise.resolve();
+	resolve({ data: session() });
+	const [practiceSession, todayResult] = await Promise.all([practice, today]);
+	expect(callable).toHaveBeenCalledTimes(1);
+	expect(todayResult.status === 'Ready' && todayResult.session).toBe(
+		practiceSession,
+	);
+});
+
+it('applies a confirmed practice result to Today without another day load', async () => {
+	await loadToday('owner', new Date(2026, 8, 10, 12));
+	const result = {
+		journeyId: 'journey',
+		dayNumber: 1,
+		practiceId: 'Pray',
+		completion: { status: 'Complete', revision: 1, updatedAt: null },
+	};
+	callable.mockResolvedValueOnce({ data: result });
+	await saveTodayCompletion({
+		journeyId: 'journey',
+		dayNumber: 1,
+		practiceId: 'Pray',
+		isComplete: true,
+		expectedCompletionRevision: 0,
+	});
+	expect(getCachedToday('owner')?.session.day.practices.pray).toEqual(
+		result.completion,
+	);
+	expect(callable).toHaveBeenCalledTimes(2);
 });

@@ -3,6 +3,11 @@ import type { IPracticeCompletion } from '@td/types/journey/journey-day.types';
 import { PracticeCompletionStatus } from '@td/types/journey/journey-day.types';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
+import { AppState } from 'react-native';
+import {
+	getCachedDaySession,
+	getDaySessionRevision,
+} from './journey-day-cache';
 import type { IJourneyDaySession } from './journey-day-session.types';
 import type { parsePracticeRoute } from './journey-practice-route';
 import {
@@ -10,20 +15,29 @@ import {
 	savePracticeCompletion,
 } from './journey-practice.service';
 import { getJourneyPractices } from './journey-practices';
+import { useDaySessionContext } from './use-day-session-context.hook';
 
 export const useJourneyPractice = (
 	route: ReturnType<typeof parsePracticeRoute>,
 ) => {
 	const { account, isProfileReady } = useAuth();
 	const router = useRouter();
+	const context = useDaySessionContext();
 	const userId =
 		account?.isEmailConfirmed && isProfileReady ? account.userId : null;
 	const journeyId = route?.journeyId;
 	const dayNumber = route?.dayNumber;
 	const practiceId = route?.practiceId;
-	const key = JSON.stringify([userId, journeyId, dayNumber, practiceId]);
+	const key = JSON.stringify([
+		userId,
+		journeyId,
+		dayNumber,
+		practiceId,
+		context,
+	]);
 	const [state, setState] = useState<{
 		key: string;
+		revision: number;
 		session: IJourneyDaySession;
 	} | null>(null);
 	const [saved, setSaved] = useState<{
@@ -35,44 +49,85 @@ export const useJourneyPractice = (
 	const [isSaving, setIsSaving] = useState(false);
 	const generation = useRef(0);
 	const saving = useRef(false);
-	const refresh = useCallback(async () => {
-		const request = ++generation.current;
-		setError(null);
-		setLoading(true);
-		if (!userId || !journeyId || !dayNumber || !practiceId) {
-			setLoading(false);
-			return;
-		}
-		try {
-			const session = await loadPracticeDay(userId, journeyId, dayNumber);
-			if (
-				!getJourneyPractices(session).some(
-					(practice) => practice.id === practiceId,
-				)
-			)
-				throw new Error('Practice not assigned.');
-			if (request === generation.current) {
-				setState({ key, session });
-				setSaved(null);
+	const refresh = useCallback(
+		async (force = true) => {
+			const request = ++generation.current;
+			setError(null);
+			setLoading(true);
+			if (!userId || !journeyId || !dayNumber || !practiceId) {
+				setLoading(false);
+				return;
 			}
-		} catch {
-			if (request === generation.current)
-				setError(
-					'We couldn’t load this practice. Check your connection and try again.',
+			try {
+				const session = await loadPracticeDay(
+					userId,
+					journeyId,
+					dayNumber,
+					force,
 				);
-		} finally {
-			if (request === generation.current) setLoading(false);
-		}
-	}, [userId, journeyId, dayNumber, practiceId, key]);
+				if (
+					!getJourneyPractices(session).some(
+						(practice) => practice.id === practiceId,
+					)
+				)
+					throw new Error('Practice not assigned.');
+				if (request === generation.current) {
+					setState({
+						key,
+						revision: getDaySessionRevision(),
+						session,
+					});
+					setSaved(null);
+				}
+			} catch {
+				if (request === generation.current) {
+					setState(null);
+					setError(
+						'We couldn’t load this practice. Check your connection and try again.',
+					);
+				}
+			} finally {
+				if (request === generation.current) setLoading(false);
+			}
+		},
+		[userId, journeyId, dayNumber, practiceId, key],
+	);
 	useFocusEffect(
 		useCallback(() => {
-			void refresh();
+			void refresh(false);
+			const subscription = AppState.addEventListener(
+				'change',
+				(status) => {
+					if (status === 'active') void refresh(false);
+				},
+			);
 			return () => {
 				generation.current++;
+				subscription.remove();
 			};
 		}, [refresh]),
 	);
-	const session = state?.key === key ? state.session : null;
+	const cached =
+		userId && journeyId && dayNumber
+			? getCachedDaySession(userId, {
+					journeyId,
+					dayNumber,
+					observedPhoneTimeZoneId:
+						Intl.DateTimeFormat().resolvedOptions().timeZone,
+				})
+			: null;
+	const candidate =
+		cached ??
+		(state?.key === key && state.revision === getDaySessionRevision()
+			? state.session
+			: null);
+	const session =
+		candidate &&
+		getJourneyPractices(candidate).some(
+			(practice) => practice.id === practiceId,
+		)
+			? candidate
+			: null;
 	const practice = session
 		? getJourneyPractices(session).find((item) => item.id === practiceId)
 		: undefined;
@@ -125,7 +180,7 @@ export const useJourneyPractice = (
 		session,
 		practice,
 		completion,
-		loading,
+		loading: loading && !session,
 		isSaving,
 		error,
 		refresh,

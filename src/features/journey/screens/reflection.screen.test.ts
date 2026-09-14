@@ -11,7 +11,9 @@ import { useJourneyPractice } from '../use-journey-practice.hook';
 import { ReflectionScreen } from './reflection.screen';
 import { ReflectionInput } from './reflection.styles';
 
-jest.mock('../use-journey-practice.hook');
+jest.mock('../use-journey-practice.hook', () => ({
+	useJourneyPractice: jest.fn(),
+}));
 jest.mock('../journey-reflection.service');
 jest.mock('@td/assets/icons/prayer/leaf.svg', () => 'svg');
 jest.mock('@td/assets/icons/reading/book-open.svg', () => 'svg');

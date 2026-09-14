@@ -10,6 +10,10 @@ import { useAuth } from './auth.hook';
 import { AuthProvider } from './auth.provider';
 import type { IAuthContextValue } from './auth.types';
 
+jest.mock('@td/features/journey/day-session-invalidation.service', () => ({
+	subscribeDaySessionInvalidation: jest.fn(() => jest.fn()),
+}));
+
 jest.mock('@td/services/firebase/firebase-auth.service', () => ({
 	authActions: { signUp: jest.fn() },
 	subscribeToAccount: jest.fn(),

@@ -8,10 +8,12 @@ import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
 import { ComponentTone } from '@td/types/ui.types';
 import * as Clipboard from 'expo-clipboard';
+import Constants from 'expo-constants';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
 import { useState } from 'react';
 import { Alert, Share, Text, View } from 'react-native';
+import { buildCommunityInvitationLink } from '../community-invite-intent';
 import {
 	type TCommunityContextState,
 	useCommunityContext,
@@ -26,12 +28,20 @@ import { invitePeopleStyles as styles } from './invite-people.styles';
 export const buildInvitationShareMessage = ({
 	communityName,
 	code,
+	link = buildCommunityInvitationLink(
+		code,
+		typeof Constants.expoConfig?.scheme === 'string'
+			? Constants.expoConfig.scheme
+			: 'mobile',
+	),
 }: {
 	communityName: string;
 	code: string;
+	link?: string;
 }): string =>
 	[
 		`You’re invited to join ${communityName} in 77Faithful.`,
+		`Open invitation: ${link}`,
 		`Invitation code: ${code}`,
 		'Open 77Faithful, choose Join a community, and enter this code. If the app is not installed yet, keep the code until you can install and open 77Faithful.',
 	].join('\n\n');

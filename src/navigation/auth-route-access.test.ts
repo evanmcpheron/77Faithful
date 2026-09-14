@@ -55,3 +55,12 @@ it.each(['/', '/register', '/confirm-email', '/otp'])(
 		);
 	},
 );
+
+it('continues a verified pending invitation before journey setup', () => {
+	expect(getAuthRouteRedirect(verified, '/', true, false, true)).toBe(
+		'/communities/join',
+	);
+	expect(getAuthRouteRedirect(verified, '/', true, true, true)).toBe(
+		'/communities/join',
+	);
+});

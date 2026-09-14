@@ -26,6 +26,11 @@ import { joinCommunityStyles as styles } from './join-community.styles';
 
 interface IJoinCommunityScreenProps {
 	initialCode?: string;
+	previewOnLoad?: boolean;
+	onCancelIntent?: () => Promise<void>;
+	onInvitationUnavailable?: () => Promise<void>;
+	onPreviewResolved?: (expiresAtSeconds: number) => Promise<void>;
+	onAccepted?: () => Promise<void>;
 }
 
 interface IFormMessage {
@@ -184,6 +189,11 @@ const PreviewDetails = ({
 
 export const JoinCommunityScreen = ({
 	initialCode = '',
+	previewOnLoad = false,
+	onCancelIntent,
+	onInvitationUnavailable,
+	onPreviewResolved,
+	onAccepted,
 }: IJoinCommunityScreenProps) => {
 	const { account } = useAuth();
 	return (
@@ -191,6 +201,11 @@ export const JoinCommunityScreen = ({
 			key={account?.userId ?? 'signed-out'}
 			initialCode={initialCode}
 			userId={account?.userId ?? null}
+			previewOnLoad={previewOnLoad}
+			{...(onCancelIntent ? { onCancelIntent } : {})}
+			{...(onInvitationUnavailable ? { onInvitationUnavailable } : {})}
+			{...(onPreviewResolved ? { onPreviewResolved } : {})}
+			{...(onAccepted ? { onAccepted } : {})}
 		/>
 	);
 };
@@ -198,9 +213,19 @@ export const JoinCommunityScreen = ({
 export const JoinCommunityForm = ({
 	initialCode,
 	userId,
+	previewOnLoad,
+	onCancelIntent,
+	onInvitationUnavailable,
+	onPreviewResolved,
+	onAccepted,
 }: {
 	initialCode: string;
 	userId: string | null;
+	previewOnLoad: boolean;
+	onCancelIntent?: () => Promise<void>;
+	onInvitationUnavailable?: () => Promise<void>;
+	onPreviewResolved?: (expiresAtSeconds: number) => Promise<void>;
+	onAccepted?: () => Promise<void>;
 }) => {
 	const router = useRouter();
 	const [code, setCode] = useState(() => formatCodeInput(initialCode));
@@ -228,6 +253,7 @@ export const JoinCommunityForm = ({
 		null,
 	);
 	const confirmedCommunityId = useRef<string | null>(null);
+	const automaticPreviewAttempted = useRef(false);
 
 	useEffect(() => {
 		mounted.current = true;
@@ -297,7 +323,7 @@ export const JoinCommunityForm = ({
 		setMessage(null);
 	};
 
-	const submitPreview = async () => {
+	const submitPreview = useCallback(async () => {
 		setSubmittedCode(true);
 		if (codeError || !userId || profileError) return;
 		const normalizedCode = normalizeCommunityInvitationCode(code);
@@ -316,19 +342,45 @@ export const JoinCommunityForm = ({
 				return;
 			setPreview(nextPreview);
 			setReviewedCode(normalizedCode);
+			await onPreviewResolved?.(nextPreview.expiresAt.seconds);
 		} catch (error) {
 			if (!mounted.current || generation !== previewGeneration.current)
 				return;
-			setMessage(
-				previewFailureMessage(getCommunityInvitationReason(error)),
-			);
+			const reason = getCommunityInvitationReason(error);
+			setMessage(previewFailureMessage(reason));
+			if (
+				reason === 'InvitationUnavailable' ||
+				reason === 'CommunityClosed' ||
+				reason === 'InvalidInput'
+			)
+				await onInvitationUnavailable?.();
 		} finally {
 			if (!mounted.current || generation !== previewGeneration.current)
 				return;
 			previewRequestCode.current = null;
 			setPreviewing(false);
 		}
-	};
+	}, [
+		code,
+		codeError,
+		onInvitationUnavailable,
+		onPreviewResolved,
+		profileError,
+		userId,
+	]);
+
+	useEffect(() => {
+		if (
+			!previewOnLoad ||
+			automaticPreviewAttempted.current ||
+			profileLoading ||
+			profileError ||
+			!userId
+		)
+			return;
+		automaticPreviewAttempted.current = true;
+		void submitPreview();
+	}, [previewOnLoad, profileError, profileLoading, submitPreview, userId]);
 
 	const rejectAcceptance = (
 		reason: TCommunityInvitationReasonCode | null,
@@ -418,18 +470,36 @@ export const JoinCommunityForm = ({
 				throw new Error('Unexpected invitation acceptance response.');
 			confirmedCommunityId.current = result.community.communityId;
 			pendingAcceptance.current = null;
+			await onAccepted?.();
 			if (focused.current)
 				router.replace({
 					pathname: '/communities/[communityId]',
 					params: { communityId: result.community.communityId },
 				});
 		} catch (error) {
-			if (mounted.current)
-				rejectAcceptance(getCommunityInvitationReason(error));
+			if (mounted.current) {
+				const reason = getCommunityInvitationReason(error);
+				rejectAcceptance(reason);
+				if (
+					reason === 'InvitationUnavailable' ||
+					reason === 'CommunityClosed' ||
+					reason === 'InvalidInput'
+				)
+					await onInvitationUnavailable?.();
+			}
 		} finally {
 			acceptanceInFlight.current = false;
 			if (mounted.current) setAccepting(false);
 		}
+	};
+	const cancelInvitation = async () => {
+		if (accepting) return;
+		await onCancelIntent?.();
+		if (router.canGoBack()) {
+			router.back();
+			return;
+		}
+		router.replace('/communities');
 	};
 
 	if (profileLoading)
@@ -604,6 +674,15 @@ export const JoinCommunityForm = ({
 							{message.text}
 						</Typography>
 					</View>
+				) : null}
+				{onCancelIntent ? (
+					<TurndownButton
+						variant='Outline'
+						disabled={accepting}
+						onPress={() => void cancelInvitation()}
+					>
+						Cancel invitation
+					</TurndownButton>
 				) : null}
 			</View>
 		</TurndownScrollScreen>

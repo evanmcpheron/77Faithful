@@ -1,3 +1,4 @@
+import { useCommunityInviteIntent } from '@td/features/communities/community-invite-intent.provider';
 import { getAuthRouteRedirect } from '@td/navigation/auth-route-access';
 import { useAuth } from '@td/providers/auth/auth.hook';
 import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
@@ -37,12 +38,14 @@ const AuthLayout = () => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { account, isProfileReady } = useAuth();
+	const { pendingCode } = useCommunityInviteIntent();
 	const { hasJourney } = useJourneyAccess();
 	const redirect = getAuthRouteRedirect(
 		account,
 		pathname,
 		isProfileReady,
 		hasJourney,
+		Boolean(pendingCode),
 	);
 
 	const showBackButton =

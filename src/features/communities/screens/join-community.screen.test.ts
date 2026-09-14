@@ -7,7 +7,12 @@ const mockPreview = jest.fn();
 const mockAccept = jest.fn();
 const mockOperationId = jest.fn();
 const mockReplace = jest.fn();
-const mockRouter = { replace: mockReplace };
+const mockBack = jest.fn();
+const mockRouter = {
+	replace: mockReplace,
+	back: mockBack,
+	canGoBack: () => false,
+};
 let mockAccountUserId: string | null = 'member';
 
 jest.mock('expo-router', () => {
@@ -92,9 +97,14 @@ const button = (label: string) =>
 			String(node.type) === 'Button' && node.props['children'] === label,
 	);
 const press = (label: string) => act(() => button(label).props['onPress']());
-const mount = async (initialCode = '') => {
+const mount = async (
+	initialCode = '',
+	props: Partial<React.ComponentProps<typeof JoinCommunityScreen>> = {},
+) => {
 	await act(async () => {
-		renderer = create(createElement(JoinCommunityScreen, { initialCode }));
+		renderer = create(
+			createElement(JoinCommunityScreen, { initialCode, ...props }),
+		);
 	});
 };
 const showPreview = async () => {
@@ -259,6 +269,35 @@ it('joins only on explicit confirmation and replaces the code route with communi
 		displayName: 'New Name',
 		operationId: 'accept-1',
 	});
+	expect(mockReplace).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]',
+		params: { communityId: 'group' },
+	});
+});
+
+it('automatically opens a link preview but still requires explicit membership confirmation', async () => {
+	const onPreviewResolved = jest.fn().mockResolvedValue(undefined);
+	await mount(invitationCode, { previewOnLoad: true, onPreviewResolved });
+	expect(mockPreview).toHaveBeenCalledTimes(1);
+	expect(mockAccept).not.toHaveBeenCalled();
+	expect(onPreviewResolved).toHaveBeenCalledWith(preview.expiresAt.seconds);
+	expect(text()).toContain('Review this invitation');
+});
+
+it('clears a pending link on cancellation and returns to a safe route', async () => {
+	const onCancelIntent = jest.fn().mockResolvedValue(undefined);
+	await mount(invitationCode, { onCancelIntent });
+	await press('Cancel invitation');
+	expect(onCancelIntent).toHaveBeenCalledTimes(1);
+	expect(mockReplace).toHaveBeenCalledWith('/communities');
+});
+
+it('clears a pending link after confirmed acceptance', async () => {
+	const onAccepted = jest.fn().mockResolvedValue(undefined);
+	await mount(invitationCode, { onAccepted });
+	await act(async () => press('Preview community'));
+	await act(async () => press('Join community'));
+	expect(onAccepted).toHaveBeenCalledTimes(1);
 	expect(mockReplace).toHaveBeenCalledWith({
 		pathname: '/communities/[communityId]',
 		params: { communityId: 'group' },

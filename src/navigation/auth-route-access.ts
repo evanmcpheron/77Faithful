@@ -5,9 +5,18 @@ export const getAuthRouteRedirect = (
 	pathname: string,
 	isProfileReady: boolean,
 	hasJourney: boolean,
-): '/' | '/confirm-email' | '/onboarding' | '/today' | null => {
-	if (account?.isEmailConfirmed && isProfileReady)
+	hasPendingCommunityInvitation = false,
+):
+	| '/'
+	| '/confirm-email'
+	| '/onboarding'
+	| '/today'
+	| '/communities/join'
+	| null => {
+	if (account?.isEmailConfirmed && isProfileReady) {
+		if (hasPendingCommunityInvitation) return '/communities/join';
 		return hasJourney ? '/today' : '/onboarding';
+	}
 
 	const isVerificationRoute =
 		pathname === '/confirm-email' || pathname === '/otp';

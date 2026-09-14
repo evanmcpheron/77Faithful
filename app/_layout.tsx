@@ -15,6 +15,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { StyledRootGestureContainer } from '@td/components/layout/root/root-layout.styles';
 import { NotificationHost } from '@td/components/ui/notification/notification-host.component';
+import { CommunityInviteIntentProvider } from '@td/features/communities/community-invite-intent.provider';
 import { RootNavigator } from '@td/navigation/root-navigator.component';
 import { AuthProvider } from '@td/providers/auth/auth.provider';
 
@@ -65,7 +66,9 @@ const RootLayout = () => {
 			<StyledRootGestureContainer>
 				<AuthProvider>
 					<JourneyAccessProvider>
-						<RootNavigator />
+						<CommunityInviteIntentProvider>
+							<RootNavigator />
+						</CommunityInviteIntentProvider>
 					</JourneyAccessProvider>
 					<NotificationHost />
 				</AuthProvider>

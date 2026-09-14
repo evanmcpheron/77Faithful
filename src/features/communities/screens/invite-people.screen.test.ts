@@ -23,6 +23,17 @@ const mockInvitationHook = jest.fn((_args: unknown) => ({
 jest.mock('expo-clipboard', () => ({
 	setStringAsync: (...args: unknown[]) => mockSetStringAsync(...args),
 }));
+jest.mock('expo-constants', () => ({
+	__esModule: true,
+	default: { expoConfig: { scheme: 'mobile' } },
+}));
+jest.mock('expo-secure-store', () => ({
+	AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 1,
+	isAvailableAsync: jest.fn(),
+	getItemAsync: jest.fn(),
+	setItemAsync: jest.fn(),
+	deleteItemAsync: jest.fn(),
+}));
 jest.mock('expo-router', () => ({
 	useLocalSearchParams: () => ({ communityId: 'group' }),
 	useRouter: () => ({ replace: mockReplace }),
@@ -174,7 +185,9 @@ it('shares manual fallback instructions and treats cancellation as neither failu
 	expect(message).toContain('Grace Church');
 	expect(message).toContain(activeInvitation.code);
 	expect(message).toContain('If the app is not installed yet');
-	expect(message).not.toMatch(/https?:|mobile:\/\//);
+	expect(message).toContain(
+		'mobile:///communities/join?invitationCode=23456789ABCDEFGHJKMN',
+	);
 
 	mockShare.mockRejectedValueOnce(new Error('share failed'));
 	await press('Share invitation');

@@ -237,6 +237,60 @@ export interface IConfigureCommunityJourneyResult {
 	communityJourney: ICommunityJourneyPreview;
 }
 
+export type TCommunityJourneyReasonCode =
+	| 'InvalidInput'
+	| 'InvalidCursor'
+	| 'AccountUnavailable'
+	| 'CommunityUnavailable'
+	| 'CommunityClosed'
+	| 'OrganizerRequired'
+	| 'CourseUnavailable'
+	| 'ScheduleExists'
+	| 'ScheduleUnavailable'
+	| 'ScheduleFrozen'
+	| 'EnrollmentClosed'
+	| 'RevisionConflict'
+	| 'OperationPayloadMismatch'
+	| 'ScheduleDataUnavailable';
+
+export interface IReviseCommunityJourneyRequest extends IConfigureCommunityJourneyRequest {
+	communityJourneyId: string;
+	expectedRevision: number;
+}
+export type IReviseCommunityJourneyResult = IConfigureCommunityJourneyResult;
+
+export interface ICancelCommunityJourneyRequest {
+	communityId: string;
+	communityJourneyId: string;
+	expectedRevision: number;
+	operationId: string;
+}
+export interface ICancelCommunityJourneyResult {
+	communityJourney: ICommunityJourneyPreview;
+}
+
+export interface IGetCommunityJourneyScheduleRequest {
+	communityId: string;
+}
+export interface IGetCommunityJourneyScheduleResult {
+	communityJourney: ICommunityJourneyPreview | null;
+}
+export interface IListCommunityJourneyHistoryRequest {
+	communityId: string;
+	pageSize?: number;
+	cursor?: string;
+}
+export interface IListCommunityJourneyHistoryResult {
+	communityJourneys: ICommunityJourneyPreview[];
+	nextCursor: string | null;
+}
+export interface IGetCommunityJourneyCourseOptionRequest {
+	communityId: string;
+}
+export interface IGetCommunityJourneyCourseOptionResult {
+	course: IFormationCourseReference | null;
+}
+
 export interface IEnrollCommunityJourneyRequest {
 	communityId: string;
 	communityJourneyId: string;

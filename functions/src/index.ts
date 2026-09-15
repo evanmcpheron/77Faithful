@@ -162,6 +162,14 @@ export {
 	previewCommunityInvitation,
 } from './community/community-invitation-redemption';
 export {
+	cancelCommunityJourney,
+	configureCommunityJourney,
+	getCommunityJourneyCourseOption,
+	getCommunityJourneySchedule,
+	listCommunityJourneyHistory,
+	reviseCommunityJourney,
+} from './community/community-journey';
+export {
 	createCommunityPost,
 	deleteCommunityPost,
 	editCommunityPost,

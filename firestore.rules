@@ -46,6 +46,18 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityJourneyConfigureOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyReviseOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyCancelOperations/{operationId} {
+      allow read, write: if false;
+    }
+
     match /users/{userId}/communityInvitationIssueOperations/{operationId} {
       allow read, write: if false;
     }

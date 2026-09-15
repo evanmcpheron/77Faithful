@@ -729,3 +729,83 @@ reported successful creation/update of every Function, and a subsequent
 inventory check found all four Ticket 22 callables Active with the same deployed
 hash. The CLI nevertheless exited 1 because no Artifact Registry cleanup policy
 is set in `us-central1`; this ticket did not set a billing/retention policy.
+
+### Ticket 25 — coordinated schedule authority and safe public preview
+
+The callable names are `configureCommunityJourney`, `reviseCommunityJourney`,
+`cancelCommunityJourney`, `getCommunityJourneySchedule`,
+`getCommunityJourneyCourseOption`, and `listCommunityJourneyHistory`. Canonical
+requests/results are the identically named `I...Request`/`I...Result` contracts
+in `src/types/community/community-function.types.ts`; schedule persistence and
+member previews use `ICommunityJourneyDocument` and
+`ICommunityJourneyPreview` in `src/types/community/community-journey.types.ts`.
+The parser source is `src/features/communities/community-journey.ts`, copied by
+`prepare-functions.cjs` at build time. Generated copies are never edited.
+
+`configure` accepts exactly communityId, `{courseId,courseVersionId}`,
+startDate, timeZoneId, and operationId. `revise` additionally requires
+communityJourneyId and expectedRevision. `cancel` accepts exactly communityId,
+communityJourneyId, expectedRevision, and operationId. IDs are 1–128 ASCII
+letters, digits, underscore, or hyphen. Revisions are safe nonnegative integers
+below 2,147,483,647. Dates are real Gregorian `YYYY-MM-DD` dates, strictly
+future in the named community zone at transaction time. Zone IDs are 1–100
+characters, valid through `Intl.DateTimeFormat`, and cannot be UTC offsets.
+Unknown request fields and course fields are rejected. The organizer course
+option reader accepts exactly communityId and returns the configured current
+published course/version or null. It checks the parent, version, 77 daily
+records, and 11 week introductions. It does not assert any participant's
+translation readiness; enrollment must recheck that separately.
+
+`getCommunityJourneySchedule` accepts exactly communityId and returns the
+current safe preview or null. History accepts communityId, optional pageSize
+1–20 (default 10), and optional opaque base64url cursor up to 512 characters.
+History orders by createdAt descending then document ID descending. Its cursor
+is versioned, bound to the community, and preserves timestamp seconds and
+nanoseconds plus the document ID. The safe preview contains only the public
+schedule ID/revision, course reference, date, community zone, status, and
+derived canEnroll/canRevise flags. Member reads force canRevise false; Closed
+community reads force both flags false. Invitation preview receives only its
+existing narrower coordinatedJourney DTO: course, date, zone, status, and
+canEnroll. It contains no enrollment, private setup, writing, practice,
+readiness, or personal journey link.
+
+All six callables require authentication and verified email. Active membership
+is rechecked for every transaction and retry. Only the current active Organizer
+may configure, revise, cancel, or read the course option. Active members may
+read current schedule/history; still-active members of a Closed community may
+read the archive. New mutations are rejected immediately after parent closure.
+Configure, revise, and cancel use per-actor/per-operation receipt paths and a
+SHA-256 digest of the bounded canonical request to detect payload mismatch.
+They read the community's currentCommunityJourneyId pointer in the same
+transaction as schedule state. Configure creates a new schedule ID; cancel
+clears the pointer and retains the Canceled record. Revision requires the
+original schedule to remain Scheduled, current, and never enrolled. The
+`firstEnrollmentAcceptedAt` marker starts null and must be set exactly once by
+the first enrollment transaction in Ticket 26, under the same schedule/pointer
+reads. It must never be cleared after withdrawal. Cancel only applies to a
+Scheduled record and does not write a personal journey.
+
+Stable reason codes are `InvalidInput`, `InvalidCursor`, `AccountUnavailable`,
+`CommunityUnavailable`, `CommunityClosed`, `OrganizerRequired`,
+`CourseUnavailable`, `ScheduleExists`, `ScheduleUnavailable`,
+`ScheduleFrozen`, `EnrollmentClosed`, `RevisionConflict`,
+`OperationPayloadMismatch`, and `ScheduleDataUnavailable`. Existing community
+account authentication/verification codes remain in use. No catalog query is
+opened to clients. Direct client read/write access remains denied by Rules for
+community records and schedule operation receipts. A collection composite
+index orders communityJourneys by createdAt DESC and `__name__` DESC.
+
+Operational prerequisites: `formationConfiguration/current` must identify a
+real current published course/version with its 77 days and 11 introductions.
+Existing communities need no backfill because an absent current pointer means
+no schedule. Any externally created legacy schedule lacking
+firstEnrollmentAcceptedAt needs an explicit migration before it can be read;
+this ticket performs no destructive migration. The pure contract/calendar test
+and Functions build/lint passed locally on 2026-09-15. The Firestore emulator
+suite was not run because no Java runtime is installed. The repository Rules
+API suite was not run because Firebase credentials require reauthentication.
+The edit-versus-enrollment and cancel-versus-enrollment races cannot be verified
+against a real enrollment callable until Ticket 26 supplies it.
+The root `npx tsc --noEmit` check fails on pre-existing application errors
+outside this ticket; it reports no errors in the new community journey parser
+or the narrowly changed community types.

@@ -767,3 +767,26 @@ showed all four Ticket 22 callables Active under one deployed hash. The Firebase
 CLI still exited 1 because the project has no `us-central1` Artifact Registry
 cleanup policy; no policy was set by this ticket. Local Functions build/lint
 and three Ticket 22 non-emulator tests passed.
+
+### Ticket 25 operational notes — coordinated schedule backend
+
+The checkout now has a callable-only current schedule, history reader,
+organizer-only published-current-course option, organizer configure/revise,
+and scheduled cancel. The currentCommunityJourneyId pointer on the community
+record and firstEnrollmentAcceptedAt marker on the schedule are the transaction
+coordination fields for Ticket 26 enrollment. Enrollment must read and update
+those exact records in one transaction, set the marker when the first acceptance
+commits, and never clear it after withdrawal. A cancellation clears the pointer
+without ending any started personal journey; a new schedule uses a new ID.
+The public closure/display boundary is the named start date in the community
+IANA zone. Participant activation date and zone remain separate future work.
+The current published-course configuration and the communityJourneys history
+index must be present in the deployed environment; no community backfill is
+needed for records without a schedule pointer. An older out-of-band schedule
+without the first-enrollment marker needs deliberate migration. Local pure
+calendar/contract tests and Functions build/lint passed on 2026-09-15. Emulator
+transaction/Rules tests could not run without Java; remote Rules API tests could
+not run without refreshed Firebase credentials. No enrollment callable exists
+in this checkout, so enrollment races remain a Ticket 26 integration check.
+The root application type check still fails on unrelated baseline errors;
+the new parser and changed community types report no errors.

@@ -55,6 +55,8 @@ export interface ICommunityJourneyDocument extends IDocumentTimestamps {
 	timeZoneId: TIanaTimeZoneId;
 	lifecycle: TCommunityJourneyLifecycle;
 	revision: number;
+	// Set by the first accepted enrollment and never cleared, even after withdrawal.
+	firstEnrollmentAcceptedAt: IPersistedTimestamp | null;
 }
 
 export interface ICommunityJourneyPreview {
@@ -66,6 +68,7 @@ export interface ICommunityJourneyPreview {
 	timeZoneId: TIanaTimeZoneId;
 	status: TCommunityJourneyStatus;
 	canEnroll: boolean;
+	canRevise: boolean;
 }
 
 export const CommunityJourneyEnrollmentStatus = {

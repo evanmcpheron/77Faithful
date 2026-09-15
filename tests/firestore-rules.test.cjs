@@ -666,6 +666,10 @@ addWrite(
 	writing,
 );
 for (const restrictedPath of [
+	'communities/alpha/communityJourneys/schedule1',
+	'users/owner/communityJourneyConfigureOperations/schedule1',
+	'users/owner/communityJourneyReviseOperations/revise1',
+	'users/owner/communityJourneyCancelOperations/cancel1',
 	'communitySafetyReports/report1',
 	'communityModerationActions/action1',
 	'users/owner/communitySafetyReviewOperations/review1',

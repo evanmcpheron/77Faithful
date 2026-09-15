@@ -25,6 +25,7 @@ import {
 	timestampMilliseconds,
 } from './community-invitation';
 import { digestCommunityInvitationCode } from './community-invitation-crypto';
+import { readCurrentCommunityJourney } from './community-journey';
 import {
 	requireCommunityAccount,
 	resolveCommunityDisplayName,
@@ -347,6 +348,13 @@ export const previewCommunityInvitationForAccount = async (
 			now,
 		);
 		const summary = communitySummary(resolved);
+		const schedule = await readCurrentCommunityJourney(
+			transaction,
+			database,
+			resolved.communityId,
+			resolved.community,
+			now,
+		);
 		return {
 			preview: {
 				communityName: summary.name,
@@ -359,6 +367,17 @@ export const previewCommunityInvitationForAccount = async (
 								summary.participationExpectations,
 						}),
 				expiresAt: resolved.invitation.expiresAt,
+				...(schedule === null
+					? {}
+					: {
+							coordinatedJourney: {
+								course: schedule.course,
+								startDate: schedule.startDate,
+								timeZoneId: schedule.timeZoneId,
+								status: schedule.status,
+								canEnroll: schedule.canEnroll,
+							},
+						}),
 			},
 		};
 	});

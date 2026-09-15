@@ -51,3 +51,7 @@ cpSync(
 	path.join(root, 'src/features/communities/community-safety.ts'),
 	path.join(generated, 'features/communities/community-safety.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-journey.ts'),
+	path.join(generated, 'features/communities/community-journey.ts'),
+);

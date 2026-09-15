@@ -41,6 +41,26 @@ const AdminLayout = () => {
 					),
 				}}
 			/>
+			<Stack.Screen
+				name='safety-reports/[reportId]'
+				options={{
+					headerShown: true,
+					headerTransparent: true,
+					headerShadowVisible: false,
+					header: () => (
+						<HeaderTopRow
+							canGoBack
+							showNotifications={false}
+							title='Review report'
+							onBackPress={() =>
+								router.canGoBack()
+									? router.back()
+									: router.replace('/safety-reports')
+							}
+						/>
+					),
+				}}
+			/>
 		</Stack>
 	);
 };

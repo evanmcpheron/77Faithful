@@ -3,7 +3,8 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { CommunitySafetyReviewQueueContent } from './community-safety-review-queue.screen';
 
 const mockReplace = jest.fn();
-const mockRouter = { replace: mockReplace };
+const mockPush = jest.fn();
+const mockRouter = { replace: mockReplace, push: mockPush };
 const mockAllowed = jest.fn();
 const mockList = jest.fn();
 let renderer: ReactTestRenderer;
@@ -123,6 +124,8 @@ it('shows an empty queue and paginates safe summaries without evidence', async (
 	});
 	expect(text()).toContain('Post report');
 	expect(text()).not.toContain('private evidence');
+	await press('open-safety-report-r1');
+	expect(mockPush).toHaveBeenCalledWith('/safety-reports/r1');
 	await press('load-more-safety-reports');
 	expect(
 		renderer.root.findAll((node) => String(node.type) === 'Card'),

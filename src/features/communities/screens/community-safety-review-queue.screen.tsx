@@ -242,6 +242,15 @@ export const CommunitySafetyReviewQueueContent = ({
 								item.createdAt.seconds * 1000,
 							).toLocaleString()}
 						</Typography>
+						<TurndownButton
+							variant='Outline'
+							onPress={() =>
+								router.push(`/safety-reports/${item.reportId}`)
+							}
+							testID={`open-safety-report-${item.reportId}`}
+						>
+							Review report
+						</TurndownButton>
 					</View>
 				</Card>
 			)}

@@ -679,8 +679,9 @@ Queue input is `{pageSize?, cursor?}`; default page size is 20, limit is 1–50,
 and a cursor is a document ID limited to 512 ASCII identifier characters. It
 returns Submitted and UnderReview cases, ordered by report document ID, with a next cursor
 from the last returned record. Queue entries contain IDs, target, reason,
-status, revision, and creation time, but no explanation or evidence. The index
-on `review.status` and `__name__` must be deployed. Detail input is exactly
+status, revision, and creation time, but no explanation or evidence. Firestore
+uses its single-field `review.status` index for this query; Firebase rejected
+the attempted composite status/document-ID index as unnecessary. Detail input is exactly
 `{reportId}`; detail returns the restricted report (including submitted
 revision/evidence) and the current target state/text and SHA-256 text digest.
 Parent post/reply and community IDs are validated in current-state reads.
@@ -719,7 +720,7 @@ removal tombstone and queues exit cleanup. Closure revokes the active invitation
 and digest pointer. Content removal creates a text-free ModeratorRemoved
 tombstone. No decision writes a personal journey or private writing. Direct
 client access to reports, moderation actions, claim receipts, and review
-receipts is denied by Rules. Auth claim provisioning, the queue index, Rules,
+receipts is denied by Rules. Auth claim provisioning and Rules,
 and Functions require operator configuration/deployment. Local Functions
 build/lint, three Ticket 22 non-emulator tests, six Firestore emulator cases,
 one Auth/Firestore emulator Rules case, and the repository's 422-case remote

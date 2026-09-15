@@ -756,8 +756,8 @@ restricted deletion procedure for submitted evidence, explanations, actions,
 and review receipts, plus backup/access practices. No retention schedule or
 staffed review service is established by this code. Restricted evidence must
 never be exported into member readers or a private journal lookup. Deploy the
-`communitySafetyReports` status/document-ID index and Rules denials with the
-Functions; no existing report migration is needed for Submitted prompt 20
+Rules denials with the Functions; Firestore's single-field status index serves
+the queue without a new composite index. No existing report migration is needed for Submitted prompt 20
 records. Six Firestore emulator transaction cases and one Auth/Firestore
 emulator Rules case passed using an existing bundled Java runtime. The
 repository's separate 422-case remote Rules evaluator also passed. Firebase

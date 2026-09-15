@@ -10,6 +10,7 @@ const mockReceivedListener = jest.fn();
 const mockLastResponse = jest.fn();
 const mockClearResponse = jest.fn();
 const mockAppListener = jest.fn();
+let pendingInviteCode: string | null = null;
 const mockAuthState: {
 	account: { userId: string; isEmailConfirmed: boolean } | null;
 	isInitializing: boolean;
@@ -17,6 +18,9 @@ const mockAuthState: {
 } = { account: null, isInitializing: true, isProfileReady: false };
 jest.mock('@td/providers/auth/auth.hook', () => ({
 	useAuth: () => mockAuthState,
+}));
+jest.mock('./community-invite-intent.provider', () => ({
+	useCommunityInviteIntent: () => ({ pendingCode: pendingInviteCode }),
 }));
 jest.mock('expo-router', () => ({
 	useRouter: () => ({ push: mockPush }),
@@ -59,6 +63,7 @@ beforeEach(() => {
 	mockAuthState.account = null;
 	mockAuthState.isInitializing = true;
 	mockAuthState.isProfileReady = false;
+	pendingInviteCode = null;
 	mockResponseListener.mockReturnValue({ remove: jest.fn() });
 	mockTokenListener.mockReturnValue({ remove: jest.fn() });
 	mockReceivedListener.mockReturnValue({ remove: jest.fn() });
@@ -70,6 +75,34 @@ beforeEach(() => {
 		communityId: null,
 		postId: null,
 		replyId: null,
+	});
+});
+it('holds a push target while an invitation is being handled, then opens it', async () => {
+	const id = 'c'.repeat(64);
+	pendingInviteCode = '23456-789AB-CDEFG-HJKMN';
+	mockAuthState.account = { userId: 'user', isEmailConfirmed: true };
+	mockAuthState.isInitializing = false;
+	mockAuthState.isProfileReady = true;
+	mockLastResponse.mockResolvedValue(event(id));
+	mockOpen.mockResolvedValue({
+		status: 'Available',
+		communityId: 'community',
+		postId: 'post',
+		replyId: null,
+	});
+	let root!: TestRenderer.ReactTestRenderer;
+	await act(async () => {
+		root = TestRenderer.create(React.createElement(CommunityPushLifecycle));
+	});
+	expect(mockOpen).not.toHaveBeenCalled();
+	pendingInviteCode = null;
+	await act(async () => {
+		root.update(React.createElement(CommunityPushLifecycle));
+	});
+	expect(mockOpen).toHaveBeenCalledWith(id);
+	expect(mockPush).toHaveBeenCalledTimes(1);
+	await act(async () => {
+		root.unmount();
 	});
 });
 it('installs one listener set and deduplicates a cold-start tap after auth initialization', async () => {

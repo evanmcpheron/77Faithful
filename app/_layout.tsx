@@ -67,8 +67,8 @@ const RootLayout = () => {
 			<StyledRootGestureContainer>
 				<AuthProvider>
 					<JourneyAccessProvider>
-						<CommunityPushLifecycle />
 						<CommunityInviteIntentProvider>
+							<CommunityPushLifecycle />
 							<RootNavigator />
 						</CommunityInviteIntentProvider>
 					</JourneyAccessProvider>

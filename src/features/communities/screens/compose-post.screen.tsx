@@ -182,6 +182,19 @@ const ComposePostContent = ({
 		return () => void (mounted.current = false);
 	}, []);
 
+	useEffect(() => {
+		if (
+			contextState.status !== 'Unavailable' &&
+			!(
+				contextState.status === 'Ready' &&
+				contextState.context.community.status === 'Closed'
+			)
+		)
+			return;
+		removeCommunityPostDraft(userId, communityId, postId);
+		pending.current = null;
+	}, [contextState, userId, communityId, postId]);
+
 	useFocusEffect(
 		useCallback(() => {
 			void postAttempt;
@@ -399,6 +412,7 @@ const ComposePostContent = ({
 			} else {
 				pending.current = null;
 				setUncertain(false);
+				if (unavailableReasons.has(reason)) retryContext();
 				if (reason === 'RevisionConflict')
 					setMessage(
 						'This post changed since you opened it. Your writing is still here. Return to the post and review the latest version before editing again.',
@@ -461,7 +475,7 @@ const ComposePostContent = ({
 				<Typography size='H2'>
 					This post composer is unavailable
 				</Typography>
-				{communityName ? (
+				{contextState.status === 'Ready' && communityName ? (
 					<Typography weight='Regular'>
 						Audience: {communityName}
 					</Typography>

@@ -155,8 +155,8 @@ it('keeps setup available without a journey while allowing independent authentic
 	});
 	render();
 	expect(renderer.toJSON()).toEqual([
-		'onboarding',
 		'(app)',
+		'onboarding',
 		'(public)',
 		'+not-found',
 	]);

@@ -4,6 +4,7 @@ import { SettingsScreen } from './settings.screen';
 
 const mockPush = jest.fn();
 let safetyAccessStatus: 'Allowed' | 'Denied' = 'Denied';
+let hasJourney = true;
 let renderer: ReactTestRenderer;
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
@@ -51,6 +52,9 @@ jest.mock('@td/providers/auth/auth.hook', () => ({
 		account: { userId: 'owner', contactEmail: 'owner@example.com' },
 	}),
 }));
+jest.mock('@td/providers/journey/journey-access.provider', () => ({
+	useJourneyAccess: () => ({ hasJourney }),
+}));
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
 it('offers Shared Contributions from signed-in Settings without community state', () => {
@@ -95,4 +99,18 @@ it('shows the restricted queue entry only after reviewer access is verified', ()
 		entry?.props['actions'].onPress();
 	});
 	expect(mockPush).toHaveBeenCalledWith('/safety-reports');
+});
+
+it('offers personal journey setup from Settings before a journey exists', () => {
+	hasJourney = false;
+	act(() => {
+		renderer = create(createElement(SettingsScreen));
+	});
+	const entry = renderer.root
+		.findAll((node) => String(node.type) === 'Actions')
+		.find((node) => node.props['actions']?.id === 'start-journey');
+	expect(entry).toBeDefined();
+	act(() => entry?.props['actions'].onPress());
+	expect(mockPush).toHaveBeenCalledWith('/onboarding');
+	hasJourney = true;
 });

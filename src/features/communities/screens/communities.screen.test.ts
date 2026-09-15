@@ -84,7 +84,7 @@ afterEach(() => {
 
 it('does not present the missing integration as an empty membership list', () => {
 	mount();
-	expect(text()).toContain('Communities aren’t available yet.');
+	expect(text()).toContain('Community access is unavailable.');
 	expect(text()).not.toContain('Faith is lived together.');
 });
 it('keeps loading and failed loading distinct from empty, and retries failures', () => {

@@ -3,6 +3,7 @@ import { useJourneyAccess } from '@td/providers/journey/journey-access.provider'
 import { useRootNavigationState, useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { AppState, Platform } from 'react-native';
+import { useCommunityInviteIntent } from './community-invite-intent.provider';
 import {
 	getCommunityPushPermission,
 	notifyCommunityPushIncoming,
@@ -26,6 +27,7 @@ const notificationIdFromResponse = (value: unknown): string | null => {
 export const CommunityPushLifecycle = () => {
 	const { account, isInitializing, isProfileReady } = useAuth();
 	const journeyAccess = useJourneyAccess();
+	const { pendingCode } = useCommunityInviteIntent();
 	const rootNavigation = useRootNavigationState();
 	const router = useRouter();
 	const routerRef = useRef(router);
@@ -49,6 +51,7 @@ export const CommunityPushLifecycle = () => {
 			currentUserId !== null &&
 			!journeyAccess.isLoading &&
 			!journeyAccess.hasError &&
+			!pendingCode &&
 			Boolean(rootNavigation?.key);
 		if (previous && previous !== currentUserId) {
 			pending.current = null;
@@ -71,6 +74,7 @@ export const CommunityPushLifecycle = () => {
 		isInitializing,
 		journeyAccess.isLoading,
 		journeyAccess.hasError,
+		pendingCode,
 		rootNavigation?.key,
 	]);
 

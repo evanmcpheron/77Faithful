@@ -46,7 +46,6 @@ interface ICommunitiesScreenProps {
 }
 
 export const CommunitiesScreen = ({
-	// No membership service or authorized community read path exists yet.
 	state = { status: 'Unavailable' },
 	headerCards,
 }: ICommunitiesScreenProps) => {
@@ -208,7 +207,7 @@ export const CommunitiesScreen = ({
 										>
 											{state.status === 'Error'
 												? 'We couldn’t load your communities.'
-												: 'Communities aren’t available yet.'}
+												: 'Community access is unavailable.'}
 										</Typography>
 										<Typography
 											tone='Secondary'
@@ -216,7 +215,7 @@ export const CommunitiesScreen = ({
 										>
 											{state.status === 'Error'
 												? 'Please try again.'
-												: 'Your communities will appear here when this is ready.'}
+												: 'Sign in again or try later.'}
 										</Typography>
 										{state.status === 'Error' && (
 											<TurndownButton

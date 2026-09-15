@@ -1,6 +1,7 @@
 import type { ICommunityContext } from '@td/types/community/community.types';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
+import { AppState } from 'react-native';
 import {
 	getCommunityContext,
 	getCommunityReaderReason,
@@ -31,6 +32,9 @@ export const useCommunityContext = (
 	);
 	const [attempt, setAttempt] = useState(0);
 	const requestGeneration = useRef(0);
+	const retry = useCallback(() => {
+		setAttempt((value) => value + 1);
+	}, []);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -65,19 +69,22 @@ export const useCommunityContext = (
 					});
 				},
 			);
+			const foreground = AppState.addEventListener(
+				'change',
+				(nextState) => {
+					if (nextState === 'active') retry();
+				},
+			);
 
 			return () => {
+				foreground.remove();
 				if (requestGeneration.current === generation)
 					requestGeneration.current += 1;
 			};
 			// Retry changes intentionally rerun this focused-screen load.
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [userId, communityId, attempt]),
+		}, [userId, communityId, attempt, retry]),
 	);
-
-	const retry = useCallback(() => {
-		setAttempt((value) => value + 1);
-	}, []);
 
 	return { state, retry };
 };

@@ -12,6 +12,7 @@ import { TurndownScrollScreen } from '@td/components/layout/screen/screen.compon
 import { IconName } from '@td/components/ui/icon/icon.types';
 import { NavigationActionList } from '@td/components/ui/navigation-action-list/navigation-action-list.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
+import { COMMUNITIES_ENABLED } from '@td/constants/feature-flags.constants';
 import { AuthHeaderBackground } from '@td/features/auth/components/auth-header.component';
 import { useAuthHeaderAnimation } from '@td/features/auth/hooks/use-auth-header-animation.hook';
 import {
@@ -21,6 +22,7 @@ import {
 } from '@td/features/auth/screens/auth.styles';
 import { useCommunitySafetyReviewAccess } from '@td/features/communities/use-community-safety-review-access.hook';
 import { useAuth } from '@td/providers/auth/auth.hook';
+import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
 import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
 
@@ -29,6 +31,7 @@ import { SETTINGS_PHOTO_HEIGHT, styles } from './settings.styles';
 export const SettingsScreen = () => {
 	const router = useRouter();
 	const { account } = useAuth();
+	const { hasJourney } = useJourneyAccess();
 	const safetyReviewAccess = useCommunitySafetyReviewAccess();
 	const [viewportHeight, setViewportHeight] = useState(0);
 	const [headerHeight, setHeaderHeight] = useState(styles.header.minHeight);
@@ -129,6 +132,19 @@ export const SettingsScreen = () => {
 					]}
 				>
 					<View style={styles.content}>
+						{!hasJourney ? (
+							<View style={styles.section}>
+								<NavigationActionList
+									actions={{
+										id: 'start-journey',
+										title: 'Start a personal journey',
+										iconName: IconName.CalendarFilled,
+										onPress: () =>
+											router.push('/onboarding'),
+									}}
+								/>
+							</View>
+						) : null}
 						<View style={styles.section}>
 							<Typography
 								size='H1'
@@ -185,6 +201,17 @@ export const SettingsScreen = () => {
 							>
 								Community
 							</Typography>
+							{COMMUNITIES_ENABLED ? (
+								<NavigationActionList
+									actions={{
+										id: 'communities',
+										title: 'Your communities',
+										iconName: IconName.UsersFilled,
+										onPress: () =>
+											router.push('/communities'),
+									}}
+								/>
+							) : null}
 							<NavigationActionList
 								actions={{
 									id: 'notifications',

@@ -16,6 +16,9 @@ jest.mock('expo-router', () => ({
 	},
 }));
 jest.mock('./community-reader.service');
+jest.mock('react-native', () => ({
+	AppState: { addEventListener: () => ({ remove: jest.fn() }) },
+}));
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
 const context = (userId: string, role: 'Organizer' | 'Member' = 'Member') =>

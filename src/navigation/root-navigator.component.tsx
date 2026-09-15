@@ -34,6 +34,7 @@ export const RootNavigator = () => {
 
 	return (
 		<Stack
+			initialRouteName='(app)'
 			screenOptions={{
 				contentStyle: StackContentStyle,
 				headerBackVisible: false,
@@ -45,11 +46,11 @@ export const RootNavigator = () => {
 			<Stack.Protected guard={!isVerified}>
 				<Stack.Screen name='(auth)' />
 			</Stack.Protected>
-			<Stack.Protected guard={isVerified && !journeyAccess.hasJourney}>
-				<Stack.Screen name='onboarding' />
-			</Stack.Protected>
 			<Stack.Protected guard={isVerified}>
 				<Stack.Screen name='(app)' />
+			</Stack.Protected>
+			<Stack.Protected guard={isVerified && !journeyAccess.hasJourney}>
+				<Stack.Screen name='onboarding' />
 			</Stack.Protected>
 			<Stack.Screen name='(public)' />
 			<Stack.Screen name='+not-found' />

@@ -1,5 +1,9 @@
 import { ensureAccountProfile } from '@td/features/account/account-profile.service';
 import {
+	getCommunityPostDraft,
+	setCommunityPostDraft,
+} from '@td/features/communities/community-post-draft';
+import {
 	authActions,
 	subscribeToAccount,
 } from '@td/services/firebase/firebase-auth.service';
@@ -74,6 +78,22 @@ it('waits for session restoration and follows sign-in, confirmation, and sign-ou
 	expect(current.account?.isEmailConfirmed).toBe(true);
 	act(() => onAccount(null));
 	expect(current.account).toBeNull();
+});
+
+it('clears an account draft immediately when the auth identity changes', () => {
+	act(() =>
+		onAccount({
+			userId: 'first',
+			contactEmail: 'first@example.com',
+			isEmailConfirmed: true,
+		}),
+	);
+	setCommunityPostDraft('first', 'community-1', {
+		postType: 'Discussion',
+		text: 'Private draft',
+	});
+	act(() => onAccount(null));
+	expect(getCommunityPostDraft('first', 'community-1')).toBeNull();
 });
 
 it('exposes initialization failure without leaving the provider loading', () => {

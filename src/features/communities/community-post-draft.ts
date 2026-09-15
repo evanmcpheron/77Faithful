@@ -8,6 +8,11 @@ export interface ICommunityPostDraft {
 const drafts = new Map<string, ICommunityPostDraft>();
 let draftAccountId: string | null = null;
 
+export const clearCommunityPostDrafts = (): void => {
+	drafts.clear();
+	draftAccountId = null;
+};
+
 const ensureAccount = (userId: string): void => {
 	if (draftAccountId === userId) return;
 	drafts.clear();

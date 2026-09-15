@@ -1,6 +1,7 @@
 import { useAuth } from '@td/providers/auth/auth.hook';
 import type { IAuthContextValue } from '@td/providers/auth/auth.types';
 import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
+import { Stack } from 'expo-router';
 import { createElement, type ReactNode } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { RootNavigator } from './root-navigator.component';
@@ -16,9 +17,7 @@ jest.mock('@td/components/ui/loading-state/loading-state.component', () => ({
 	LoadingState: () => 'account-loading',
 }));
 jest.mock('expo-router', () => {
-	const Stack = ({ children }: { children: ReactNode }) => children;
 	const Screen = ({ name }: { name: string }) => name;
-	Stack.Screen = Screen;
 	const Protected = ({
 		guard,
 		children,
@@ -26,7 +25,10 @@ jest.mock('expo-router', () => {
 		guard: boolean;
 		children: ReactNode;
 	}) => (guard ? children : null);
-	Stack.Protected = Protected;
+	const Stack = Object.assign(
+		jest.fn(({ children }: { children: ReactNode }) => children),
+		{ Screen, Protected },
+	);
 	return { Stack };
 });
 
@@ -110,12 +112,24 @@ it('switches available route groups as sign-in, verification, and sign-out happe
 	});
 	render();
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(auth)',
+	);
 	update(account);
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(auth)',
+	);
 	update({ ...account, isEmailConfirmed: true });
 	expect(renderer.toJSON()).toEqual(['(app)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(app)',
+	);
 	update(null);
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(auth)',
+	);
 });
 
 it('blocks private routes for a verified account until its profile is saved', () => {

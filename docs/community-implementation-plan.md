@@ -1059,3 +1059,83 @@ provider delivery, device checks, and production Rules/index deployment remain
 **not run**. No data migration, production secret, reviewer grant, deployment,
 or production write was performed in Ticket 39. The local emulator suite does
 not establish release readiness.
+
+### Ticket 40 — integration-test results
+
+Local run on 2026-09-15 used only `demo-faithful-ticket40` with local Auth,
+Firestore, and Functions emulators. `tests/run-community-workflow.ticket40.cjs`
+creates a temporary synthetic invitation encryption key and refuses to overwrite
+an existing secret override. The workflow test refuses non-demo projects and
+non-local emulator hosts. Its accounts and text are synthetic. There was no
+production access, deployment, or device session.
+
+Workflow status (real callable / other automated / manual or device):
+
+- Create, issue/retrieve, preview, join B/C/E, member reads, outsider denial,
+  remove E and deny the removed member: **pass / pass / not run**. Actual
+  Auth-token Functions responses passed the invitation and reader runtime
+  parsers.
+- Rotate, revoke, expire: **partial pass / pass / not run**. Real revocation and
+  old-code rejection passed; real rotation and expiry were not run. The
+  controlled-clock backend cases passed.
+- All post types, replies, and prayer state: **fail / pass / not run**. A real
+  shared-copy creation returned noncanonical `createdAt`; full real HTTP thread
+  paths were not run. Existing backend and fixture-based screen cases passed.
+- Private Reflect, edit/publish shared copy, independent edits and deletion:
+  **not run / pass / not run**. Backend isolation and contribution cleanup
+  passed, but the post response blocks the frontend publication path.
+- Administration, exit, and owner deletion: **partial pass / pass / not run**.
+  Real E removal and access denial passed; transfer, leave, close, and owner
+  deletion were not run as one real HTTP workflow. Backend administration,
+  races, cleanup, and Auth deletion passed.
+- Report, independent review, enforcement, block/unblock: **not run / pass / not
+  run**. Backend safety, current reviewer-claim denial, blocking, and Rules
+  cases passed.
+- Schedule, enroll, activate, and 77-day/DST/start-window: **not run / pass /
+  not run**. Controlled-clock backend cases passed.
+- Progress consent, revocation, suppression: **not run / pass / not run**.
+  Backend progress and suppression cases passed.
+- Inbox, preferences, authorized target, push: **not run / pass / not run**.
+  Backend inbox, preference, suppression, push-task, and Rules cases passed;
+  Expo or device delivery was not run.
+- Offline, account switch, stale results, drafts, double taps, loading/error,
+  and accessibility semantics: **not run / pass / not run**. The 242 focused
+  Jest screen/service cases use fixtures, not a device session.
+
+The existing backend emulator suite passed 88/88; the added real-callable
+workflow failed 1/1, so the combined run was 88 pass and 1 fail. The failure is
+reproducible with
+`JAVA_HOME=/opt/homebrew/opt/openjdk@21 node tests/run-community-workflow.ticket40.cjs`.
+The frontend `createCommunityPost` parser in `community-post.service.ts` reads
+`seconds` and `nanoseconds` and rejects the actual response. The backend must
+project a plain persisted timestamp before this workflow can pass. No
+client-side permission or timestamp workaround was added. The
+disabled/deleted/revoked Auth-token matrix, Rules boundaries, cursor and
+payload-mismatch cases remain covered by the passing existing emulator suite,
+but this is not an automated device UI run.
+
+Manual iOS and Android walkthrough, all **not run**:
+
+- [ ] Create an invite, share with the native share sheet, and open it through
+      secure continuation after sign-in or an account switch.
+- [ ] Join, rotate, expire, revoke, and re-enter; refresh a focused screen after
+      permission and membership changes.
+- [ ] Compose each post type; edit and delete a deliberately shared reflection
+      copy while the private source remains private.
+- [ ] Test keyboard dismissal, back navigation, and a dirty draft; verify
+      loading, uncertain success, and double-tap behavior.
+- [ ] Transfer organizer, remove a member, leave, close, and review an organizer
+      report with an independent reviewer.
+- [ ] Enroll in and withdraw from a schedule; grant and revoke progress consent.
+- [ ] Open inbox and notification taps to a still-authorized target; exercise
+      native push permission and preferences.
+- [ ] Repeat at large text sizes with VoiceOver on iOS and TalkBack on Android,
+      checking labels, focus order, and touch targets.
+
+The repository root lint completed with seven existing warnings; scoped test
+file lint and Prettier checks passed. Root `tsc --noEmit` failed in protected
+components and unrelated utilities as previously documented. There are no
+demonstrated frontend fixes in this ticket because the first integration defect
+is a backend response projection outside its edit scope. Acceptance criteria are
+**not met** until that contract is fixed, the remaining real workflows are
+exercised, and the manual/device walkthrough is completed.

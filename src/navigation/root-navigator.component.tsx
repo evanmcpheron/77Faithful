@@ -34,7 +34,7 @@ export const RootNavigator = () => {
 
 	return (
 		<Stack
-			initialRouteName='(app)'
+			initialRouteName={isVerified ? '(app)' : '(auth)'}
 			screenOptions={{
 				contentStyle: StackContentStyle,
 				headerBackVisible: false,

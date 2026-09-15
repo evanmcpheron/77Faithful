@@ -965,5 +965,7 @@ been smoke-tested.
 
 A later worker/retry update uploaded the final persisted-data validation
 change, but its CLI wait produced no completion result and was interrupted.
-The next Function inventory still listed both triggers with runtime fields
-unavailable during update. Treat that exact revision as pending verification.
+The next Function inventory listed both triggers with runtime fields
+unavailable during update; a later inventory again showed Node 22 v2 and 256 MB
+for each. The CLI did not confirm the exact revised source hash, so treat that
+revision as pending verification.

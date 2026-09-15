@@ -895,6 +895,7 @@ unrun emulator transaction/Rules checks.
 
 A follow-up worker/retry update uploaded the final persisted-data validation
 fix, but the CLI produced no completion result over the wait and was
-interrupted. A subsequent Function inventory still listed both triggers with
-runtime fields unavailable. Verify those revisions and scheduler health before
-relying on activation; this update is not a confirmed success.
+interrupted. A subsequent Function inventory listed both triggers with runtime
+fields unavailable during update; a later inventory again showed Node 22 v2 and
+256 MB for each. Verify the exact revised source hash and scheduler health
+before relying on activation; this update is not a confirmed source revision.

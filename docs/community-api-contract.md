@@ -1097,3 +1097,85 @@ composite in `firestore.indexes.json`. Revised Rules and the reply index were
 deployed to `faithful-4325a`; the index reported `READY` before the six new
 Functions and three source-callable updates were deployed. No backfill or push
 registration is included.
+
+### Ticket 35 — private push installations and Expo delivery
+
+The canonical contract is `src/types/community/community-push.types.ts`;
+exact-field and bounded request parsers are in
+`src/features/communities/community-push.ts`, copied by
+`scripts/prepare-functions.cjs`. New callables are
+`registerCommunityPushInstallation`, `unregisterCommunityPushInstallation`, and
+`openCommunityPushNotification`. The existing `openCommunityNotification` result
+shape is unchanged. Registration takes exactly `installationId` (20 ASCII
+alphanumeric characters), `installationSecret` (64 lowercase hexadecimal
+characters representing a locally persisted 32-byte random secret),
+`operationId` (1–128 ASCII letters, digits, `_` or `-`), `token` (null or
+`ExpoPushToken[...]`/`ExponentPushToken[...]` with 1–200 bounded token
+characters), `permission` (`NotRequested`, `Granted`, `Denied`, or
+`Unavailable`), and `deliveryEnabled` (boolean). A non-Granted permission
+requires a null token; enabling delivery requires Granted permission and a
+token. Unregistration takes exactly the three installation identity/operation
+fields. The server derives account binding and timestamps. Both return
+`ICommunityPushInstallationResult` without a token or secret. Both require
+authenticated, email-verified identity and an existing account; registration
+limits an account to ten installations. The installation secret digest guards
+same-installation rebinding across account switches, while unregistration also
+requires the current account owner. Actor-scoped operation receipts detect
+payload mismatch. Reasons are `InvalidInput`, `AccountUnavailable`,
+`InstallationOwnedByAnotherDevice`, `InstallationLimitReached`, and
+`OperationPayloadMismatch`, plus the shared auth guard reasons.
+
+Fan-out creates one `ICommunityPushDeliveryDocument` per eligible recipient
+installation, identified by a SHA-256 recipient/event/installation digest. Push
+tasks do not contain user-written text or raw tokens. `sendCommunityPushOutbox`
+runs every minute, at most one instance, examining ten Pending and ten expired
+Sending tasks. It transactionally rechecks the original recipient notification,
+current membership/join epoch, community and source availability, reciprocal
+blocks, account-deletion cleanup, per-community `pushEnabled` and category
+preference, current installation account binding, permission, delivery setting,
+and token status. It sends one generic payload through the fixed official Expo
+HTTPS endpoint. `openCommunityPushNotification` accepts exactly `notificationId`
+(64 lowercase hex characters), verifies task recipient ownership, and calls the
+existing authorized notification-open reader; unavailable events return the
+existing Unavailable shape. No notification ID is a bearer authorization token.
+
+`checkCommunityPushReceipts` runs every five minutes, at most one instance,
+examining twenty due ticket tasks and querying Expo's fixed receipt endpoint.
+Ticket IDs, bounded sender attempts (five), eight bounded receipt checks, and
+next-attempt timestamps are durable. A Sending lease expires after two minutes;
+retryable provider/network and rate errors back off from two minutes to one
+hour. A receipt is first checked after fifteen minutes and the same ticket is
+rechecked on lookup failure. A missing ticket receipt eventually permits a
+bounded resend after eight checks or 24 hours. Permanent errors stop;
+`DeviceNotRegistered` clears/disables only the installation still bound to the
+same account and token digest. This is best-effort provider submission:
+ambiguous network outcomes and retries can duplicate an alert, and a successful
+receipt does not guarantee device display. In-app inbox delivery remains
+separate from permission and push failures.
+
+Firestore Rules deny direct client read/write of `communityPushInstallations`,
+`communityPushDeliveries`, and actor operation receipts. The delivery
+status/due-time composite is in `firestore.indexes.json`; installation account
+lookup uses its single-field index. There is no cursor-based public task list.
+Before deployment, enable Expo enhanced push security, configure valid
+EAS/APNs/FCM push credentials, set the server-managed `EXPO_PUSH_ACCESS_TOKEN`
+Secret Manager secret with
+`firebase functions:secrets:set EXPO_PUSH_ACCESS_TOKEN`, verify the composite
+index is ready, and deploy the three callables, two Scheduler jobs, Rules, and
+indexes. No secret value is committed. The mobile installation secret, OS
+permission/token lifecycle, and a real-device open/delivery check remain
+separate work; this backend ticket adds no mobile package or screen.
+
+Local verification: Functions build and lint passed; root lint passed with
+pre-existing warnings; scoped Prettier and
+parser/generic-payload/HTTPS-transport unit tests passed. The configured
+read-only Rules API suite passed 572/572. The root `tsc --noEmit` still fails in
+protected components and unrelated utilities; it reported no diagnostics in the
+new push files. Emulator-backed authorization, registration/rebind, fan-out,
+mute/block/source, mocked transport, receipt, and Rules cases were written but
+skipped because Firestore/Auth emulator hosts and Java are unavailable. Rules
+and indexes were deployed to `faithful-4325a`; the push delivery index was still
+`CREATING` on the first status read. Secret Manager metadata confirmed
+`EXPO_PUSH_ACCESS_TOKEN` is absent, so sender/receipt Functions were not
+deployed. No live Expo request, real device delivery, Scheduler execution, or
+production authorization check ran in this ticket.

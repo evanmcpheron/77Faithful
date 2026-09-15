@@ -11,6 +11,10 @@ import type {
 	ICommunityNotificationEventDocument,
 	TCommunityNotificationCategory,
 } from '../../generated/types/community/community-notification.types';
+import type {
+	ICommunityPushDeliveryDocument,
+	ICommunityPushInstallationDocument,
+} from '../../generated/types/community/community-push.types';
 import { isBlockedRelationship } from './community-safety';
 
 export const notificationEventId = (
@@ -169,6 +173,21 @@ export const fanOutCommunityNotificationEvent = async (
 			),
 		);
 		const authorId: unknown = post.data()?.author?.userId;
+		const installations = new Map<
+			string,
+			FirebaseFirestore.QuerySnapshot
+		>();
+		for (const member of page.docs) {
+			installations.set(
+				member.id,
+				await transaction.get(
+					database
+						.collection('communityPushInstallations')
+						.where('userId', '==', member.id)
+						.limit(10),
+				),
+			);
+		}
 		const deliveries: {
 			reference: ReturnType<Firestore['doc']>;
 			joinedAt: Timestamp;
@@ -234,6 +253,43 @@ export const fanOutCommunityNotificationEvent = async (
 				joinedAt: delivery.joinedAt,
 				readAt: null,
 			});
+		for (const delivery of deliveries) {
+			const recipientId = delivery.reference.parent.parent!.id;
+			for (const installation of installations.get(recipientId)?.docs ??
+				[]) {
+				const state =
+					installation.data() as ICommunityPushInstallationDocument;
+				if (
+					state.userId !== recipientId ||
+					state.permission !== 'Granted' ||
+					!state.deliveryEnabled ||
+					state.tokenStatus !== 'Active'
+				)
+					continue;
+				const taskId = createHash('sha256')
+					.update(
+						`${recipientId}\u0000${eventId}\u0000${installation.id}`,
+					)
+					.digest('hex');
+				const task: ICommunityPushDeliveryDocument = {
+					schemaVersion: 1,
+					userId: recipientId,
+					eventId,
+					installationId: installation.id,
+					status: 'Pending',
+					attempts: 0,
+					receiptChecks: 0,
+					nextAttemptAt: event.createdAt,
+					ticketId: null,
+					tokenDigest: null,
+					createdAt: event.createdAt,
+				};
+				transaction.create(
+					database.doc(`communityPushDeliveries/${taskId}`),
+					task,
+				);
+			}
+		}
 		const complete = page.size < 20;
 		transaction.update(reference, {
 			cursorUserId:

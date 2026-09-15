@@ -110,13 +110,13 @@ const document = (
 		return null;
 	return data as unknown as ICommunityNotificationDocument;
 };
-const available = async (
+export const communityNotificationAvailable = async (
 	transaction: Transaction,
 	database: Firestore,
 	userId: string,
 	notification: ICommunityNotificationDocument,
 ): Promise<boolean> => {
-	const [community, member, account, actor, post, reply, support] =
+	const [community, member, account, actor, deletion, post, reply, support] =
 		await Promise.all([
 			transaction.get(
 				database.doc(`communities/${notification.communityId}`),
@@ -128,6 +128,9 @@ const available = async (
 			),
 			transaction.get(database.doc(`users/${userId}`)),
 			transaction.get(database.doc(`users/${notification.actorUserId}`)),
+			transaction.get(
+				database.doc(`communityAccountDeletionCleanup/${userId}`),
+			),
 			transaction.get(
 				database.doc(
 					`communities/${notification.communityId}/posts/${notification.postId}`,
@@ -152,6 +155,7 @@ const available = async (
 	const postData = post.data();
 	if (
 		!account.exists ||
+		deletion.exists ||
 		!actor.exists ||
 		community.data()?.lifecycle?.status !== 'Active' ||
 		membership?.lifecycle?.status !== 'Active' ||
@@ -290,7 +294,15 @@ export const listCommunityNotificationsForAccount = async (
 		const notifications: ICommunityNotification[] = [];
 		for (const snapshot of page.docs) {
 			const item = document(snapshot.data(), snapshot.id);
-			if (item && (await available(transaction, database, userId, item)))
+			if (
+				item &&
+				(await communityNotificationAvailable(
+					transaction,
+					database,
+					userId,
+					item,
+				))
+			)
 				notifications.push(project(item));
 		}
 		const count = await transaction.get(
@@ -306,7 +318,12 @@ export const listCommunityNotificationsForAccount = async (
 			const item = document(snapshot.data(), snapshot.id);
 			if (
 				item?.readAt === null &&
-				(await available(transaction, database, userId, item))
+				(await communityNotificationAvailable(
+					transaction,
+					database,
+					userId,
+					item,
+				))
 			)
 				unreadCount++;
 		}
@@ -338,7 +355,15 @@ export const openCommunityNotificationForAccount = async (
 			),
 		);
 		const item = document(snapshot.data(), input.eventId);
-		if (!item || !(await available(transaction, database, userId, item)))
+		if (
+			!item ||
+			!(await communityNotificationAvailable(
+				transaction,
+				database,
+				userId,
+				item,
+			))
+		)
 			return {
 				status: 'Unavailable',
 				communityId: null,
@@ -374,7 +399,15 @@ export const markCommunityNotificationReadForAccount = async (
 			transaction.get(receiptRef),
 		]);
 		const item = document(snapshot.data(), input.eventId);
-		if (!item || !(await available(transaction, database, userId, item)))
+		if (
+			!item ||
+			!(await communityNotificationAvailable(
+				transaction,
+				database,
+				userId,
+				item,
+			))
+		)
 			throw error('not-found', 'NotificationUnavailable');
 		if (receipt.exists && receipt.data()?.eventId !== input.eventId)
 			throw error('already-exists', 'OperationPayloadMismatch');

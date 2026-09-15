@@ -102,6 +102,22 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /communityPushInstallations/{installationId} {
+      allow read, write: if false;
+    }
+
+    match /communityPushDeliveries/{deliveryId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPushRegisterOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPushUnregisterOperations/{operationId} {
+      allow read, write: if false;
+    }
+
     match /communityJourneyActivationWorker/{documentId} {
       allow read, write: if false;
     }

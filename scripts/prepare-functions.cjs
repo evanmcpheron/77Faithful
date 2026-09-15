@@ -63,3 +63,7 @@ cpSync(
 	path.join(root, 'src/features/communities/community-notification.ts'),
 	path.join(generated, 'features/communities/community-notification.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-push.ts'),
+	path.join(generated, 'features/communities/community-push.ts'),
+);

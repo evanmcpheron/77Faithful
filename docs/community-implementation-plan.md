@@ -976,3 +976,41 @@ acknowledges their own request. Functions build/lint and the parser tests passed
 after that change; its emulator case remains skipped. Firebase reported a
 successful update of `setCommunityPrayerAcknowledgment`, then repeated the
 Artifact Registry cleanup-policy error. No policy was changed.
+
+### Ticket 35 operational notes — private push delivery
+
+This ticket adds canonical installation and delivery contracts, exact request
+validation, two account installation callables, a recipient-bound push-open
+callable, private event-to-installation outbox tasks, `sendCommunityPushOutbox`
+(every minute), and `checkCommunityPushReceipts` (every five minutes). The
+sender and receipt jobs are exported Firebase v2 Scheduler functions with
+`maxInstances: 1`, bounded pages, a durable Sending lease, bounded attempts, and
+Expo ticket/receipt recording. In-app notification history is independent of OS
+push permission. Leave, removal, closure, reciprocal blocks, source deletion,
+account deletion, account rebinding, and token rotation are rechecked at send or
+guarded at token retirement. No production push delivery is inferred from local
+compilation.
+
+Manual configuration before deploying the jobs: enable enhanced Expo push
+security and configure EAS/APNs/FCM credentials for the installed build, set
+`EXPO_PUSH_ACCESS_TOKEN` in Firebase Secret Manager without committing its
+value, deploy the new deny Rules and delivery due-time index, wait for that
+index to become READY, then deploy Functions/Scheduler. Verify authenticated
+callable behavior, job permissions/execution, generic lock-screen wording,
+receipt retrieval, token retirement, and app opening on real devices in each
+environment. The current mobile checkout does not implement installation-secret
+persistence, registration on token refresh/account switch/logout, or push-open
+handling; those are frontend prerequisites for actual device delivery. Expo's
+provider receipt indicates upstream handoff, not guaranteed device display.
+Network ambiguity can produce duplicate alerts despite task deduplication.
+
+The local Functions build/lint, root lint with existing warnings, scoped
+formatting, and parser/payload/HTTPS-transport unit cases passed. The configured
+read-only Rules API suite passed 572/572. The root type check still fails in
+protected components and unrelated utilities, with no new push-file diagnostics.
+Firestore/Auth emulator Functions and Rules cases were skipped because no Java
+runtime/emulator hosts are available. Rules and indexes were deployed to
+`faithful-4325a`; the new index was still `CREATING` on the first inventory.
+`EXPO_PUSH_ACCESS_TOKEN` was absent from Secret Manager, so sender and receipt
+jobs were not deployed. No live provider, Scheduler, credential, production
+callable, or device check ran for Ticket 35.

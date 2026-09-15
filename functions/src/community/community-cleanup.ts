@@ -138,6 +138,18 @@ const processDeletedAccountBatch = async (
 	database: Firestore,
 	userId: string,
 ): Promise<boolean> => {
+	const installations = await database
+		.collection('communityPushInstallations')
+		.where('userId', '==', userId)
+		.limit(batchSize)
+		.get();
+	if (!installations.empty) {
+		const batch = database.batch();
+		for (const installation of installations.docs)
+			batch.delete(installation.ref);
+		await batch.commit();
+		return false;
+	}
 	const communities = await database
 		.collection('communities')
 		.where('organizerUserId', '==', userId)

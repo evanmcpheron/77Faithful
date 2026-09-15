@@ -68,6 +68,14 @@
 					"order": "ASCENDING"
 				}
 			]
+		},
+		{
+			"collectionGroup": "communityPushDeliveries",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "status", "order": "ASCENDING" },
+				{ "fieldPath": "nextAttemptAt", "order": "ASCENDING" }
+			]
 		}
 	],
 	"fieldOverrides": [

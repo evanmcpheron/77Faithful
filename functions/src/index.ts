@@ -165,6 +165,15 @@ export {
 	setCommunityNotificationPreferences,
 } from './community/community-notification';
 export { deliverCommunityNotificationEvents } from './community/community-notification-event';
+export {
+	checkCommunityPushReceipts,
+	openCommunityPushNotification,
+	sendCommunityPushOutbox,
+} from './community/community-push-delivery';
+export {
+	registerCommunityPushInstallation,
+	unregisterCommunityPushInstallation,
+} from './community/community-push-installation';
 export { createCommunity } from './community/create-community';
 
 export {

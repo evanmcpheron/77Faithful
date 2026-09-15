@@ -42,6 +42,8 @@ yarn-error.*
 /android
 
 .env
+# Local QA operation receipts and execution history (never credentials in source).
+/.community-qa/
 # Firebase generated build output
 /functions/generated/
 /functions/lib/

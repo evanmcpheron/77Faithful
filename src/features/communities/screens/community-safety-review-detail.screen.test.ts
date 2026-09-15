@@ -397,3 +397,68 @@ it('clears restricted data and returns to Settings after role loss', async () =>
 	expect(mockReplace).toHaveBeenCalledWith('/settings');
 	expect(text()).not.toContain('Private explanation');
 });
+
+it('shows an independent-review conflict without revealing report evidence', async () => {
+	jest.mocked(hasCommunitySafetyReviewerCapability).mockResolvedValue(true);
+	jest.mocked(getCommunitySafetyReport).mockRejectedValue({
+		details: { reason: 'ReviewerConflict' },
+	});
+	jest.mocked(safetyReviewReason).mockReturnValue('ReviewerConflict');
+	await act(async () => {
+		renderer = create(
+			createElement(ReviewContent, {
+				userId: 'reviewer',
+				reportId: 'report1',
+			}),
+		);
+	});
+	expect(text()).toContain('Independent review is required');
+	expect(text()).not.toContain('Submitted copy');
+	expect(button('confirm-review-decision')).toBeUndefined();
+});
+
+it('discards an old account detail read after an account switch', async () => {
+	let resolveOld!: (value: IGetCommunitySafetyReportResult) => void;
+	jest.mocked(hasCommunitySafetyReviewerCapability).mockResolvedValue(true);
+	jest.mocked(getCommunitySafetyReport)
+		.mockImplementationOnce(
+			() =>
+				new Promise((resolve) => {
+					resolveOld = resolve;
+				}),
+		)
+		.mockResolvedValueOnce({
+			...detail,
+			report: {
+				...detail.report,
+				evidence: { targetRevision: 1, text: 'New account evidence' },
+			},
+		} as IGetCommunitySafetyReportResult);
+	await act(async () => {
+		renderer = create(
+			createElement(ReviewContent, {
+				userId: 'reviewer',
+				reportId: 'report1',
+			}),
+		);
+	});
+	await act(async () => {
+		renderer.update(
+			createElement(ReviewContent, {
+				userId: 'another',
+				reportId: 'report1',
+			}),
+		);
+	});
+	await act(async () => {
+		resolveOld({
+			...detail,
+			report: {
+				...detail.report,
+				evidence: { targetRevision: 1, text: 'Old account evidence' },
+			},
+		} as IGetCommunitySafetyReportResult);
+	});
+	expect(text()).toContain('New account evidence');
+	expect(text()).not.toContain('Old account evidence');
+});

@@ -102,6 +102,7 @@ export const ReviewContent = ({
 	const [explanation, setExplanation] = useState('');
 	const [busy, setBusy] = useState(false);
 	const generation = useRef(0);
+	const focused = useRef(false);
 	const busyRef = useRef(false);
 	const pending = useRef<IReviewCommunityReportRequest | null>(null);
 	const safeRoute = useCallback(() => router.replace('/settings'), [router]);
@@ -155,8 +156,10 @@ export const ReviewContent = ({
 	}, [userId, reportId, safeRoute]);
 	useFocusEffect(
 		useCallback(() => {
+			focused.current = true;
 			void load();
 			return () => {
+				focused.current = false;
 				generation.current += 1;
 				busyRef.current = false;
 				pending.current = null;
@@ -258,7 +261,7 @@ export const ReviewContent = ({
 			}
 		} finally {
 			busyRef.current = false;
-			setBusy(false);
+			if (focused.current) setBusy(false);
 		}
 	};
 	const confirm = () => {

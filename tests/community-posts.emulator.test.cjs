@@ -13,6 +13,7 @@ const { getFirestore, Timestamp } = require(
 );
 const posts = require('../functions/lib/src/community/community-post');
 const threads = require('../functions/lib/src/community/community-thread');
+const safety = require('../functions/lib/src/community/community-safety');
 
 const projectId = 'faithful-community-posts-test';
 const baseNow = Timestamp.fromMillis(Date.UTC(2026, 8, 14, 15));
@@ -127,6 +128,660 @@ beforeEach(clearFirestore);
 
 after(async () => {
 	await Promise.all(getApps().map(deleteApp));
+});
+
+test('reports all supported targets with exact restricted revision evidence and isolated organizer reports', async () => {
+	await seedCommunity();
+	const post = await posts.createCommunityPostForAccount(
+		'owner',
+		createRequest('Discussion', 'reported-post', 'Original words'),
+		dependencies(),
+	);
+	const reply = await threads.createCommunityReplyForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: post.postId,
+			text: 'Reported reply',
+			operationId: 'reported-reply',
+		},
+		dependencies(atSecond(1)),
+	);
+	const targets = [
+		{ targetType: 'Post', postId: post.postId },
+		{ targetType: 'Reply', postId: post.postId, replyId: reply.replyId },
+		{ targetType: 'Member', userId: 'owner' },
+		{ targetType: 'Community' },
+	];
+	const receipts = [];
+	for (const [index, target] of targets.entries())
+		receipts.push(
+			await safety.reportCommunityContentForAccount(
+				'member-a',
+				{
+					communityId: 'alpha',
+					target,
+					reason: 'Harassment',
+					operationId: `report-${index}`,
+				},
+				database,
+				atSecond(index + 2),
+			),
+		);
+	assert.equal(receipts.length, 4);
+	for (const receipt of receipts) assert.equal(receipt.status, 'Submitted');
+	const postEvidence = (
+		await database
+			.doc(`communitySafetyReports/${receipts[0].reportId}`)
+			.get()
+	).data();
+	assert.equal(postEvidence.evidence.targetRevision, 0);
+	assert.equal(postEvidence.evidence.text, 'Original words');
+	assert.equal(postEvidence.reporterUserId, 'member-a');
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[1].reportId}`)
+				.get()
+		).get('evidence.text'),
+		'Reported reply',
+	);
+	await threads.editCommunityReplyForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: post.postId,
+			replyId: reply.replyId,
+			text: 'Changed reply',
+			expectedRevision: 0,
+			operationId: 'edit-reported-reply',
+		},
+		dependencies(atSecond(8)),
+	);
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[1].reportId}`)
+				.get()
+		).get('evidence.targetRevision'),
+		0,
+	);
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[1].reportId}`)
+				.get()
+		).get('evidence.text'),
+		'Reported reply',
+	);
+	const sameRevision = await safety.reportCommunityContentForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			target: targets[0],
+			reason: 'Harassment',
+			operationId: 'same-revision-report',
+		},
+		database,
+		atSecond(9),
+	);
+	assert.equal(sameRevision.reportId, receipts[0].reportId);
+	await posts.editCommunityPostForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: post.postId,
+			text: 'Changed words',
+			expectedRevision: 0,
+			operationId: 'edit-reported',
+		},
+		dependencies(atSecond(10)),
+	);
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[0].reportId}`)
+				.get()
+		).get('evidence.text'),
+		'Original words',
+	);
+	const duplicate = await safety.reportCommunityContentForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			target: targets[0],
+			reason: 'Harassment',
+			operationId: 'report-again',
+		},
+		database,
+		atSecond(11),
+	);
+	assert.notEqual(duplicate.reportId, receipts[0].reportId); // New post revision is new evidence.
+	await assert.rejects(
+		safety.reportCommunityContentForAccount(
+			'outsider',
+			{
+				communityId: 'alpha',
+				target: targets[0],
+				reason: 'Harassment',
+				operationId: 'outsider-report',
+			},
+			database,
+		),
+		(error) => error.details.reason === 'MembershipUnavailable',
+	);
+	await assert.rejects(
+		safety.reportCommunityContentForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				target: { targetType: 'Post', postId: 'arbitrary' },
+				reason: 'Other',
+				operationId: 'arbitrary-report',
+			},
+			database,
+		),
+		(error) => error.details.reason === 'TargetUnavailable',
+	);
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[2].reportId}`)
+				.get()
+		).get('evidence.targetUserId'),
+		'owner',
+	);
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[2].reportId}`)
+				.get()
+		).get('evidence.targetRole'),
+		'Organizer',
+	);
+	assert.equal(
+		(
+			await database
+				.doc(`communitySafetyReports/${receipts[3].reportId}`)
+				.get()
+		).get('evidence.communityName'),
+		'Community',
+	);
+	await database
+		.doc('communities/alpha')
+		.update({ lifecycle: { status: 'Closed', closedAt: baseNow } });
+	const closed = await safety.reportCommunityContentForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			target: { targetType: 'Community' },
+			reason: 'PrivacyViolation',
+			operationId: 'closed-report',
+		},
+		database,
+		atSecond(601),
+	);
+	assert.equal(closed.status, 'Submitted');
+});
+
+test('new reports are rate limited while duplicates recover the first receipt', async () => {
+	await seedCommunity();
+	const targets = [];
+	for (let index = 0; index < 6; index++) {
+		const post = await posts.createCommunityPostForAccount(
+			'owner',
+			createRequest('Discussion', `rate-post-${index}`, `Words ${index}`),
+			dependencies(atSecond(index)),
+		);
+		targets.push({ targetType: 'Post', postId: post.postId });
+	}
+	for (let index = 0; index < 5; index++)
+		await safety.reportCommunityContentForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				target: targets[index],
+				reason: 'Other',
+				operationId: `rate-report-${index}`,
+			},
+			database,
+			atSecond(index),
+		);
+	await assert.rejects(
+		safety.reportCommunityContentForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				target: targets[5],
+				reason: 'Other',
+				operationId: 'rate-report-sixth',
+			},
+			database,
+			atSecond(6),
+		),
+		(error) => error.details.reason === 'RateLimited',
+	);
+	const first = await safety.reportCommunityContentForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			target: targets[0],
+			reason: 'Other',
+			operationId: 'rate-report-zero-again',
+		},
+		database,
+		atSecond(7),
+	);
+	assert.equal(first.status, 'Submitted');
+});
+
+test('feed cursor remains usable after a bounded run of hidden posts', async () => {
+	await seedCommunity();
+	await safety.blockCommunityMemberForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			memberUserId: 'owner',
+			operationId: 'dense-block',
+		},
+		database,
+	);
+	const batch = database.batch();
+	for (let index = 0; index < 205; index++)
+		batch.set(
+			database.doc(
+				`communities/alpha/posts/hidden${String(index).padStart(3, '0')}`,
+			),
+			{
+				schemaVersion: 1,
+				communityId: 'alpha',
+				author: { userId: 'owner', displayName: 'Organizer' },
+				revision: 0,
+				editedAt: null,
+				publication: {
+					status: 'Published',
+					content: { postType: 'Discussion', text: 'Hidden words' },
+				},
+				createdAt: atSecond(index + 1),
+				updatedAt: atSecond(index + 1),
+			},
+		);
+	batch.set(database.doc('communities/alpha/posts/ownlast'), {
+		schemaVersion: 1,
+		communityId: 'alpha',
+		author: { userId: 'member-a', displayName: 'Member A' },
+		revision: 0,
+		editedAt: null,
+		publication: {
+			status: 'Published',
+			content: { postType: 'Discussion', text: 'Visible words' },
+		},
+		createdAt: baseNow,
+		updatedAt: baseNow,
+	});
+	await batch.commit();
+	const first = await posts.listCommunityPostsForAccount(
+		'member-a',
+		{ communityId: 'alpha', pageSize: 50 },
+		database,
+	);
+	assert.equal(first.posts.length, 0);
+	assert.ok(first.nextCursor);
+	const second = await posts.listCommunityPostsForAccount(
+		'member-a',
+		{ communityId: 'alpha', pageSize: 50, cursor: first.nextCursor },
+		database,
+	);
+	assert.equal(second.posts[0].publication.content.text, 'Visible words');
+});
+
+test('blocks across communities, filters projections, and retains author deletion and Unblock', async () => {
+	await seedCommunity();
+	await seedCommunity('beta');
+	const alpha = await posts.createCommunityPostForAccount(
+		'owner',
+		createRequest('PrayerRequest', 'alpha-prayer', 'Please pray'),
+		dependencies(),
+	);
+	const beta = await posts.createCommunityPostForAccount(
+		'owner',
+		{
+			...createRequest('Discussion', 'beta-post', 'Words in beta'),
+			communityId: 'beta',
+		},
+		dependencies(atSecond(1)),
+	);
+	await threads.createCommunityReplyForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: alpha.postId,
+			text: 'Owner reply',
+			operationId: 'owner-reply',
+		},
+		dependencies(atSecond(2)),
+	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: alpha.postId,
+			isPraying: true,
+			operationId: 'owner-praying',
+		},
+		dependencies(atSecond(3)),
+	);
+	const blocked = await safety.blockCommunityMemberForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			memberUserId: 'owner',
+			operationId: 'block-owner',
+		},
+		database,
+		atSecond(4),
+	);
+	assert.equal(blocked.isBlocked, true);
+	assert.equal(
+		(
+			await safety.listBlockedCommunityMembersForAccount(
+				'member-a',
+				{},
+				database,
+			)
+		).members[0].blockedUserId,
+		'owner',
+	);
+	for (const [communityId, postId] of [
+		['alpha', alpha.postId],
+		['beta', beta.postId],
+	]) {
+		assert.equal(
+			(
+				await posts.listCommunityPostsForAccount(
+					'member-a',
+					{ communityId },
+					database,
+				)
+			).posts.length,
+			0,
+		);
+		await assert.rejects(
+			posts.getCommunityPostForAccount(
+				'member-a',
+				{ communityId, postId },
+				database,
+			),
+			(error) => error.details.reason === 'PostUnavailable',
+		);
+	}
+	await assert.rejects(
+		threads.listCommunityRepliesForAccount(
+			'member-a',
+			{ communityId: 'alpha', postId: alpha.postId },
+			database,
+		),
+		(error) => error.details.reason === 'PostUnavailable',
+	);
+	await assert.rejects(
+		threads.listCommunityPrayerSupportForAccount(
+			'member-a',
+			{ communityId: 'alpha', postId: alpha.postId },
+			database,
+		),
+		(error) => error.details.reason === 'PostUnavailable',
+	);
+	await assert.rejects(
+		threads.createCommunityReplyForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				postId: alpha.postId,
+				text: 'Direct reply',
+				operationId: 'blocked-reply',
+			},
+			dependencies(atSecond(5)),
+		),
+		(error) => error.details.reason === 'BlockedInteraction',
+	);
+	await posts.deleteCommunityPostForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: alpha.postId,
+			expectedRevision: 0,
+			operationId: 'blocked-author-delete',
+		},
+		dependencies(atSecond(6)),
+	);
+	const own = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest('Discussion', 'own-after-block', 'Own words'),
+		dependencies(atSecond(6)),
+	);
+	await posts.deleteCommunityPostForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			postId: own.postId,
+			expectedRevision: 0,
+			operationId: 'own-delete',
+		},
+		dependencies(atSecond(7)),
+	);
+	await database
+		.doc('communities/alpha/members/owner')
+		.update({ lifecycle: { status: 'Left', leftAt: baseNow } });
+	assert.equal(
+		(
+			await safety.listBlockedCommunityMembersForAccount(
+				'member-a',
+				{},
+				database,
+			)
+		).members.length,
+		1,
+	);
+	assert.equal(
+		(
+			await safety.unblockCommunityMemberForAccount(
+				'member-a',
+				{ memberUserId: 'owner', operationId: 'unblock-owner' },
+				database,
+			)
+		).isBlocked,
+		false,
+	);
+	assert.equal(
+		(
+			await safety.listBlockedCommunityMembersForAccount(
+				'member-a',
+				{},
+				database,
+			)
+		).members.length,
+		0,
+	);
+	assert.equal(
+		(
+			await posts.getCommunityPostForAccount(
+				'member-a',
+				{ communityId: 'beta', postId: beta.postId },
+				database,
+			)
+		).post.postId,
+		beta.postId,
+	);
+});
+
+test('blocked-member list uses owner-bound stable pagination', async () => {
+	await seedCommunity();
+	await seedMembership('alpha', 'member-b');
+	for (const [index, memberUserId] of ['owner', 'member-b'].entries())
+		await safety.blockCommunityMemberForAccount(
+			'member-a',
+			{
+				communityId: 'alpha',
+				memberUserId,
+				operationId: `list-block-${index}`,
+			},
+			database,
+		);
+	const first = await safety.listBlockedCommunityMembersForAccount(
+		'member-a',
+		{ pageSize: 1 },
+		database,
+	);
+	assert.equal(first.members.length, 1);
+	assert.ok(first.nextCursor);
+	const second = await safety.listBlockedCommunityMembersForAccount(
+		'member-a',
+		{ pageSize: 1, cursor: first.nextCursor },
+		database,
+	);
+	assert.equal(second.members.length, 1);
+	assert.notEqual(
+		first.members[0].blockedUserId,
+		second.members[0].blockedUserId,
+	);
+	assert.equal(second.nextCursor, null);
+	await assert.rejects(
+		safety.listBlockedCommunityMembersForAccount(
+			'outsider',
+			{ cursor: first.nextCursor },
+			database,
+		),
+		(error) => error.details.reason === 'InvalidCursor',
+	);
+});
+
+test('blocked reply and prayer supporters are removed from an otherwise visible thread', async () => {
+	await seedCommunity();
+	const parent = await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest(
+			'PrayerRequest',
+			'visible-parent',
+			'Please pray for our neighbors',
+		),
+		dependencies(),
+	);
+	await threads.createCommunityReplyForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: parent.postId,
+			text: 'Owner words',
+			operationId: 'owner-words',
+		},
+		dependencies(atSecond(1)),
+	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'owner',
+		{
+			communityId: 'alpha',
+			postId: parent.postId,
+			isPraying: true,
+			operationId: 'owner-support',
+		},
+		dependencies(atSecond(2)),
+	);
+	await safety.blockCommunityMemberForAccount(
+		'member-a',
+		{
+			communityId: 'alpha',
+			memberUserId: 'owner',
+			operationId: 'filter-owner',
+		},
+		database,
+	);
+	const replies = await threads.listCommunityRepliesForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: parent.postId },
+		database,
+	);
+	assert.equal(replies.replies.length, 0);
+	assert.equal(replies.replyCount, 0);
+	const support = await threads.listCommunityPrayerSupportForAccount(
+		'member-a',
+		{ communityId: 'alpha', postId: parent.postId },
+		database,
+	);
+	assert.equal(support.supporters.length, 0);
+	assert.equal(support.supportCount, 0);
+	await assert.rejects(
+		threads.createCommunityReplyForAccount(
+			'owner',
+			{
+				communityId: 'alpha',
+				postId: parent.postId,
+				text: 'More owner words',
+				operationId: 'direct-denied',
+			},
+			dependencies(atSecond(3)),
+		),
+		(error) => error.details.reason === 'BlockedInteraction',
+	);
+});
+
+test('submission policy permits Christian vocabulary and denies obvious harmful text', async () => {
+	await seedCommunity();
+	await posts.createCommunityPostForAccount(
+		'member-a',
+		createRequest(
+			'Discussion',
+			'scripture-text',
+			'Jesus Christ offers grace. Scripture calls us to pray.',
+		),
+		dependencies(),
+	);
+	await assert.rejects(
+		posts.createCommunityPostForAccount(
+			'member-a',
+			createRequest(
+				'Discussion',
+				'harmful-text',
+				'Send me your bank login now.',
+			),
+			dependencies(atSecond(1)),
+		),
+		(error) => error.details.reason === 'SubmissionRejected',
+	);
+});
+
+test('submission budget limits repeated public text without scanning private writing', async () => {
+	await seedCommunity();
+	await database
+		.doc('users/member-a/journeys/private/days/1/writing/reflection')
+		.set({ text: 'Private words' });
+	for (let index = 0; index < 10; index++)
+		await posts.createCommunityPostForAccount(
+			'member-a',
+			createRequest(
+				'Discussion',
+				`budget-${index}`,
+				`Good words ${index}`,
+			),
+			dependencies(atSecond(index)),
+		);
+	await assert.rejects(
+		posts.createCommunityPostForAccount(
+			'member-a',
+			createRequest('Discussion', 'budget-eleven', 'More words'),
+			dependencies(atSecond(11)),
+		),
+		(error) => error.details.reason === 'RateLimited',
+	);
+	assert.equal(
+		(
+			await database
+				.doc(
+					'users/member-a/journeys/private/days/1/writing/reflection',
+				)
+				.get()
+		).get('text'),
+		'Private words',
+	);
 });
 
 test('creates all four explicit types while enforcing announcement authority and private separation', async () => {

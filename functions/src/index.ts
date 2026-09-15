@@ -169,6 +169,12 @@ export {
 	listCommunityPosts,
 } from './community/community-post';
 export {
+	blockCommunityMember,
+	listBlockedCommunityMembers,
+	reportCommunityContent,
+	unblockCommunityMember,
+} from './community/community-safety';
+export {
 	createCommunityReply,
 	deleteCommunityReply,
 	editCommunityReply,

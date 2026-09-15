@@ -47,3 +47,7 @@ cpSync(
 	path.join(root, 'src/features/communities/community-post.ts'),
 	path.join(generated, 'features/communities/community-post.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-safety.ts'),
+	path.join(generated, 'features/communities/community-safety.ts'),
+);

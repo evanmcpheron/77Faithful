@@ -685,3 +685,42 @@ Root `tsc --noEmit` remains failing in existing protected components and
 unrelated utilities; it reported no Ticket 18 file error. Acceptance therefore
 has local compile/contract evidence but lacks emulator, trigger, and Rules
 execution evidence.
+
+## Ticket 20 operational notes
+
+The callable-only safety operations are `reportCommunityContent`,
+`blockCommunityMember`, `unblockCommunityMember`, and
+`listBlockedCommunityMembers`. Canonical report and block contracts live in
+`src/types/community/community-moderation.types.ts` and
+`src/types/community/community-block.types.ts`; validators are copied from
+`src/features/communities/community-safety.ts` by
+`scripts/prepare-functions.cjs`. Reports stay in restricted safety records even
+when the named target is the Organizer. Block records and the saved identity for
+Unblock are account-private. Membership and roster access are unchanged.
+
+The post/reply readers now apply the reciprocal block relationship inside the
+trusted Functions boundary and keep cursor scans bounded. Later notification
+send/open operations must recheck blocks; no notification is sent by this
+ticket. The deterministic submitted-text filter and fixed ten-minute rate
+windows are first-pass safeguards, not a complete moderation system. Optional
+`COMMUNITY_SAFETY_POST_LIMIT` and `COMMUNITY_SAFETY_REPORT_LIMIT` settings must
+be validated at deployment. No private writing, personal practice, or journey
+data is scanned or copied into safety records. No new Firestore composite index
+or migration is required for the safety collections, but the added Rules denials
+must be deployed with the Functions. Prompt 22 must separately provision
+reviewer authority and decisions before anyone operates the review queue.
+
+Before release, operators must establish an accessible support contact and
+published community standards/Terms, a timely report-response process, trained
+reviewer access, and participant-facing report/block controls.
+[Apple guideline 1.2](https://developer.apple.com/app-store/review/guidelines/)
+and
+[Google Play's UGC policy](https://support.google.com/googleplay/android-developer/answer/9876937)
+require filtering, reporting, blocking, and ongoing moderation; backend
+compilation cannot establish compliance. No support address was found in the
+current checkout and none was invented. Local build, lint, and 11 post/safety
+non-emulator contract tests passed; Firestore emulator integration was attempted
+but could not start without Java. Restricted Rules execution and deployment
+evidence are still pending. The configured Rules evaluator could not reach
+Google's API; root `tsc --noEmit` still fails in existing protected
+components/utilities and reported no Ticket 20 file error.

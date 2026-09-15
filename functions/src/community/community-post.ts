@@ -42,6 +42,12 @@ import type {
 	TPrayerRequestStatus,
 } from '../../generated/types/community/community-post.types';
 import { redactDeletedAuthors } from './community-cleanup';
+import {
+	consumeSubmissionBudget,
+	isBlockedRelationship,
+	requireSafeSubmission,
+	visibleToViewer,
+} from './community-safety';
 import { resolveCommunityDisplayName } from './read-community';
 
 export interface ICommunityPostDependencies {
@@ -583,6 +589,8 @@ export const createCommunityPostForAccount = async (
 				createdAt: previous.createdAt,
 			};
 		}
+		requireSafeSubmission(input.content.text);
+		await consumeSubmissionBudget(transaction, database, userId, now);
 		const post = {
 			schemaVersion: 1,
 			communityId: input.communityId,
@@ -655,6 +663,20 @@ export const getCommunityPostForAccount = async (
 		const [post] = await redactDeletedAuthors(transaction, database, [
 			postProjection(snapshot, input.communityId),
 		]);
+		if (
+			post.publication.status === 'Published' &&
+			(await isBlockedRelationship(
+				transaction,
+				database,
+				userId,
+				post.author.userId,
+			))
+		)
+			throw postError(
+				'not-found',
+				'This post is unavailable.',
+				'PostUnavailable',
+			);
 		return { post };
 	});
 };
@@ -709,18 +731,32 @@ export const listCommunityPostsForAccount = async (
 			);
 		}
 		const pageSize = input.pageSize ?? CommunityPostLimits.defaultPageSize;
-		const snapshots = await transaction.get(query.limit(pageSize + 1));
-		const page = snapshots.docs.slice(0, pageSize);
-		const posts = await redactDeletedAuthors(
+		const scanBudget = Math.min(200, Math.max(pageSize + 1, pageSize * 4));
+		const snapshots = await transaction.get(query.limit(scanBudget + 1));
+		const scanned = snapshots.docs.slice(0, scanBudget);
+		const projected = await redactDeletedAuthors(
 			transaction,
 			database,
-			page.map((snapshot) => postProjection(snapshot, input.communityId)),
+			scanned.map((snapshot) =>
+				postProjection(snapshot, input.communityId),
+			),
 		);
+		const posts = (
+			await visibleToViewer(transaction, database, userId, projected)
+		).slice(0, pageSize);
+		const consumed =
+			posts.length === pageSize
+				? projected.findIndex(
+						(post) =>
+							post.postId === posts[posts.length - 1].postId,
+					) + 1
+				: scanned.length;
+		const lastScanned = scanned[consumed - 1];
 		return {
 			posts,
 			nextCursor:
-				snapshots.size > pageSize && page.length > 0
-					? encodeCursor(input.communityId, page[page.length - 1])
+				snapshots.size > consumed && lastScanned
+					? encodeCursor(input.communityId, lastScanned)
 					: null,
 		};
 	});
@@ -777,6 +813,8 @@ export const editCommunityPostForAccount = async (
 				editedAt: previous.editedAt,
 			};
 		}
+		requireSafeSubmission(input.text);
+		await consumeSubmissionBudget(transaction, database, userId, now);
 		requireExpectedRevision(post, input.expectedRevision);
 		const nextContent =
 			publication.content.postType === 'PrayerRequest'

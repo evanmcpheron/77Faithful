@@ -586,3 +586,76 @@ first-generation Auth trigger and scheduler on the configured Node 22 runtime,
 and an operational path that deletes accounts singly. Firebase Admin
 `deleteUsers` bulk deletion does not emit individual Auth deletion events. No
 live cleanup was run in this ticket.
+
+### Ticket 20 — reports, member blocks, and submission safety
+
+`reportCommunityContent` is a Firebase callable using
+`IReportCommunityContentRequest` and `IReportCommunityContentResult` in
+`src/types/community/community-moderation.types.ts`. It accepts Post, Reply,
+Member, and Community targets; the existing future Message target is rejected.
+The authenticated, email-verified reporter needs an available account and Active
+membership in the community, including a closed archive they can read.
+Post/reply parents and Active member targets are verified against that
+community. Hidden published content cannot be reported by arbitrary ID.
+Organizer targets enter the same restricted queue; the acknowledgment is
+`reportId` and `Submitted`, with no invented outcome or response SLA.
+
+`communitySafetyReports/{reportId}` stores the reporter ID, target, reason,
+optional explanation, exact current post/reply revision and submitted text,
+target author ID, member display name/role or community name/purpose when
+applicable, and server timestamps in a restricted transactionally captured
+record. Organizer membership does not grant evidence access. Actor-private
+duplicate keys reuse a report for the same target/reason/revision; actor/Report
+operation receipts recover retries and reject payload mismatch. New reports
+default to five per ten-minute reporter window. Unexpected fields are rejected.
+Identifiers are 1–128 ASCII letters, digits, underscore, or hyphen; optional
+explanation is trimmed to 1–1000 characters. Reasons reuse
+`CommunityReportReason`.
+
+`blockCommunityMember`, `unblockCommunityMember`, and
+`listBlockedCommunityMembers` are callables using canonical contracts in
+`src/types/community/community-block.types.ts`. Block requires current Active
+membership shared with a current Active target member; Unblock and list require
+only the owner's account, so an ended shared membership does not strand a block.
+Self-targeting is denied. `users/{owner}/communityBlocks/{blockedUserId}` stores
+only IDs, a safely resolved saved display name, and server creation time. List
+returns the target ID and saved name, defaults to 20, allows 1–50 items, orders
+by document ID, and uses an opaque owner-bound cursor limited to 512 characters.
+Block/Unblock operation receipts are actor and operation scoped with payload
+mismatch detection. No blocked-person notification is sent; membership and
+roster access remain intact. Published blocked-relationship content is hidden
+from post feed/detail, reply lists, and prayer support; direct replies and
+prayer acknowledgments to a blocked post author are denied. Author deletion
+remains owner-only. Later notification work must suppress targeted delivery.
+
+Feed and reply readers scan at most 200 candidates per page, filter before
+returning items, and advance cursors at the last consumed candidate. Reply
+counts are exact on the first page when the bounded scan reaches the end;
+otherwise the existing numeric field is a page-visible lower bound. Prayer
+support retains its bounded 500-member scan and filters before count/pagination.
+No new composite index is needed for safety records or document-ID blocked-list
+ordering; existing post/reply indexes remain required. Firestore Rules deny
+direct client access to blocks, report evidence, duplicate keys, receipts, and
+rate records.
+
+The deterministic safeguard covers deliberately submitted community post/reply
+creation and edits only. It rejects text over 10,000 characters, direct threat
+phrases, child-sexual-content phrases, and credential solicitation; ordinary
+Christian terms and Scripture are not keywords. The actor submission window
+defaults to ten attempts per ten minutes. `COMMUNITY_SAFETY_POST_LIMIT` and
+`COMMUNITY_SAFETY_REPORT_LIMIT` may be configured as integers 1–100; invalid
+values fail closed as `SafetyConfigurationUnavailable`. Safety reasons are
+`InvalidInput`, `InvalidCursor`, `AccountUnavailable`, `CommunityUnavailable`,
+`TargetUnavailable`, `SelfTarget`, `BlockedInteraction`, `RateLimited`,
+`SubmissionRejected`, and `OperationPayloadMismatch`.
+
+Functions build/lint and 11 post/safety non-emulator contract tests passed.
+Emulator cases in `tests/community-posts.emulator.test.cjs` and restricted-path
+Rules cases in `tests/firestore-rules.test.cjs` are prepared. Emulator execution
+was attempted but Java was unavailable. The root TypeScript check still fails in
+pre-existing protected components/utilities and reported no Ticket 20 file
+error. The configured Rules evaluator could not reach Google's API. Prompt 22
+owns independent reviewer decisions. Production launch still requires reviewer
+provisioning, timely response operations, published contact information,
+user-facing Terms/community standards, an operational response process, and
+in-app report/block surfaces.

@@ -59,6 +59,13 @@ import {
 	requireTimestamp,
 	type ICommunityPostDependencies,
 } from './community-post';
+import {
+	consumeSubmissionBudget,
+	isBlockedRelationship,
+	requireSafeSubmission,
+	requireUnblockedInteraction,
+	visibleToViewer,
+} from './community-safety';
 
 interface IThreadCursor {
 	version: 1;
@@ -370,6 +377,12 @@ export const createCommunityReplyForAccount = async (
 			input.postId,
 		);
 		requirePublishedParent(post);
+		await requireUnblockedInteraction(
+			transaction,
+			database,
+			userId,
+			post.author.userId,
+		);
 		const previous = assertReceipt(receipt, input);
 		if (previous) {
 			if (
@@ -386,6 +399,8 @@ export const createCommunityReplyForAccount = async (
 				createdAt: serializeTimestamp(previous.createdAt),
 			};
 		}
+		requireSafeSubmission(input.text);
+		await consumeSubmissionBudget(transaction, database, userId, now);
 		const reply: ICommunityReplyDocument = {
 			schemaVersion: 1,
 			communityId: input.communityId,
@@ -459,7 +474,25 @@ export const listCommunityRepliesForAccount = async (
 			`communities/${input.communityId}/posts/${input.postId}`,
 		);
 		const postSnapshot = await transaction.get(postReference);
-		requireParentPost(postSnapshot, input.communityId, input.postId);
+		const parent = requireParentPost(
+			postSnapshot,
+			input.communityId,
+			input.postId,
+		);
+		if (
+			parent.publication.status === 'Published' &&
+			(await isBlockedRelationship(
+				transaction,
+				database,
+				userId,
+				parent.author.userId,
+			))
+		)
+			throw postError(
+				'not-found',
+				'This post is unavailable.',
+				'PostUnavailable',
+			);
 		let query: Query = postReference
 			.collection('replies')
 			.orderBy('createdAt', 'asc')
@@ -477,26 +510,41 @@ export const listCommunityRepliesForAccount = async (
 			);
 		}
 		const pageSize = input.pageSize ?? CommunityPostLimits.defaultPageSize;
-		const snapshots = await transaction.get(query.limit(pageSize + 1));
-		const page = snapshots.docs.slice(0, pageSize);
-		const storedReplyCount = postSnapshot.get('replyCount');
-		const replyCount =
-			storedReplyCount === undefined
-				? 0
-				: requireRevision(storedReplyCount);
-		const replies = await redactDeletedAuthors(
+		const scanBudget = Math.min(200, Math.max(pageSize + 1, pageSize * 4));
+		const snapshots = await transaction.get(query.limit(scanBudget + 1));
+		const scanned = snapshots.docs.slice(0, scanBudget);
+		const projected = await redactDeletedAuthors(
 			transaction,
 			database,
-			page.map((snapshot) =>
+			scanned.map((snapshot) =>
 				replyProjection(snapshot, input.communityId, input.postId),
 			),
 		);
+		const visibleReplies = await visibleToViewer(
+			transaction,
+			database,
+			userId,
+			projected,
+		);
+		const replies = visibleReplies.slice(0, pageSize);
+		const consumed =
+			replies.length === pageSize
+				? projected.findIndex(
+						(reply) =>
+							reply.replyId ===
+							replies[replies.length - 1].replyId,
+					) + 1
+				: scanned.length;
+		const lastScanned = scanned[consumed - 1];
 		return {
 			replies,
-			replyCount,
+			replyCount:
+				!input.cursor && snapshots.size <= scanBudget
+					? visibleReplies.length
+					: replies.length,
 			nextCursor:
-				snapshots.size > pageSize && page.length > 0
-					? encodeReplyCursor(input, page[page.length - 1])
+				snapshots.size > consumed && lastScanned
+					? encodeReplyCursor(input, lastScanned)
 					: null,
 		};
 	});
@@ -599,6 +647,8 @@ export const editCommunityReplyForAccount = async (
 				editedAt: serializeTimestamp(previous.editedAt),
 			};
 		}
+		requireSafeSubmission(input.text);
+		await consumeSubmissionBudget(transaction, database, userId, now);
 		requireExpectedReplyRevision(reply, input.expectedRevision);
 		const revision = nextRevision(reply.revision);
 		transaction.update(replyReference, {
@@ -957,6 +1007,12 @@ export const setCommunityPrayerAcknowledgmentForAccount = async (
 				'PrayerRequestRequired',
 			);
 		if (input.isPraying) {
+			await requireUnblockedInteraction(
+				transaction,
+				database,
+				userId,
+				post.author.userId,
+			);
 			const publication = requirePrayerRequest(post);
 			if (publication.content.prayerRequestStatus !== 'Current')
 				throw postError(
@@ -1088,6 +1144,20 @@ export const listCommunityPrayerSupportForAccount = async (
 				'This post is not a prayer request.',
 				'PrayerRequestRequired',
 			);
+		if (
+			post.publication.status === 'Published' &&
+			(await isBlockedRelationship(
+				transaction,
+				database,
+				userId,
+				post.author.userId,
+			))
+		)
+			throw postError(
+				'not-found',
+				'This post is unavailable.',
+				'PostUnavailable',
+			);
 		const memberships = await transaction.get(
 			database
 				.collection(`communities/${input.communityId}/members`)
@@ -1143,7 +1213,7 @@ export const listCommunityPrayerSupportForAccount = async (
 					input.postId,
 				),
 			);
-		const supporters: ICommunityPrayerSupporter[] = acknowledgments
+		const allSupporters: ICommunityPrayerSupporter[] = acknowledgments
 			.filter(
 				(acknowledgment) =>
 					acknowledgment.isPraying &&
@@ -1156,6 +1226,19 @@ export const listCommunityPrayerSupportForAccount = async (
 				),
 			}))
 			.sort(compareSupport);
+		const visible = await Promise.all(
+			allSupporters.map(
+				async (supporter) =>
+					supporter.userId === userId ||
+					!(await isBlockedRelationship(
+						transaction,
+						database,
+						userId,
+						supporter.userId,
+					)),
+			),
+		);
+		const supporters = allSupporters.filter((_, index) => visible[index]);
 		const cursor = input.cursor
 			? decodeCursor(
 					input.cursor,

@@ -96,6 +96,16 @@ export interface ICommunityReportDocument extends IDocumentTimestamps {
 	explanation?: string;
 	review: TCommunityReportReview;
 	revision: number;
+	// Captured inside the submission transaction; this restricted copy survives edits.
+	evidence: {
+		targetRevision: number;
+		text?: string;
+		targetUserId?: string;
+		targetDisplayName?: string;
+		targetRole?: 'Organizer' | 'Member';
+		communityName?: string;
+		communityPurpose?: string;
+	};
 }
 
 export const CommunityModerationAction = {

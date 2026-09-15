@@ -118,6 +118,34 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityBlocks/{blockedUserId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityBlockOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityUnblockOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReportOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReportDuplicates/{duplicateId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communitySafetyRates/{rateId} {
+      allow read, write: if false;
+    }
+
+    match /communitySafetyReports/{reportId} {
+      allow read, write: if false;
+    }
+
     match /communityInvitationDigests/{digest} {
       allow read, write: if false;
     }

@@ -665,6 +665,26 @@ addWrite(
 	{ ...writing, text: 'Changed' },
 	writing,
 );
+for (const restrictedPath of [
+	'communitySafetyReports/report1',
+	'users/owner/communityBlocks/member-a',
+	'users/owner/communityBlockOperations/block1',
+	'users/owner/communityUnblockOperations/unblock1',
+	'users/owner/communityReportOperations/report1',
+	'users/owner/communityReportDuplicates/duplicate1',
+	'users/owner/communitySafetyRates/reports_1',
+]) {
+	for (const uid of ['owner', 'member-a']) {
+		for (const method of ['get', 'list', 'create', 'update', 'delete'])
+			add(
+				`restricted safety ${uid} ${method} ${restrictedPath}`,
+				'DENY',
+				method,
+				restrictedPath,
+				uid,
+			);
+	}
+}
 (async () => {
 	await requireAuth(options);
 	const client = new Client({

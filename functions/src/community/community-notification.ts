@@ -246,8 +246,10 @@ const cursor = (userId: string, value: string): ICursor => {
 			Object.keys(item).length !== 5 ||
 			item['version'] !== 1 ||
 			item['userId'] !== userId ||
-			!Number.isInteger(item['seconds']) ||
+			!Number.isSafeInteger(item['seconds']) ||
 			!Number.isInteger(item['nanoseconds']) ||
+			(item['nanoseconds'] as number) < 0 ||
+			(item['nanoseconds'] as number) > 999_999_999 ||
 			typeof item['eventId'] !== 'string' ||
 			!/^[A-Za-z0-9_-]{1,128}$/.test(item['eventId'])
 		)

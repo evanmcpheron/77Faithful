@@ -366,7 +366,10 @@ export const previewCommunityInvitationForAccount = async (
 							participationExpectations:
 								summary.participationExpectations,
 						}),
-				expiresAt: resolved.invitation.expiresAt,
+				expiresAt: {
+					seconds: resolved.invitation.expiresAt.seconds,
+					nanoseconds: resolved.invitation.expiresAt.nanoseconds,
+				},
 				...(schedule === null
 					? {}
 					: {

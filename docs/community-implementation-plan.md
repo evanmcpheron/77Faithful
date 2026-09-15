@@ -1014,3 +1014,28 @@ runtime/emulator hosts are available. Rules and indexes were deployed to
 `EXPO_PUSH_ACCESS_TOKEN` was absent from Secret Manager, so sender and receipt
 jobs were not deployed. No live provider, Scheduler, credential, production
 callable, or device check ran for Ticket 35.
+
+### Ticket 39 operational notes — backend audit
+
+The existing callable-only Firestore reader and writer boundary was retained. An
+invalid notification cursor timestamp can now return `InvalidCursor` before
+query construction; the regression covers unsafe seconds and out-of-range
+nanoseconds. The focused local Functions build and 35 non-emulator tests passed.
+Invitation preview now serializes its expiry as the canonical plain timestamp;
+the 42-case backend contract suite passed after regression coverage asserted the
+result validator accepts the returned preview directly. This is a compatible
+backend projection correction, with a frontend method-assumption check for
+prompt 40. The Firestore/Auth/Functions emulator command was attempted, but it
+stopped before executing tests because `java -version` cannot find a runtime.
+Hostile client callable/Rules tests, lifecycle race stress, fan-out/send exit
+races, production Auth-state checks, secret bindings, and device delivery are
+**not run** for this audit.
+
+Current ordinary community callable guards rely on the verified-email claim in
+the presented token plus application records; the platform safety reviewer guard
+separately fetches current Auth state and independently checks reviewer
+capability. Disabled/deleted-account behavior for ordinary callables remains
+open pending a real callable test and a consistent current-Auth guard. Do not
+interpret a mock Admin SDK or local compilation as closure of this finding. No
+data migration, production secret, reviewer grant, deployment, or production
+write was performed in Ticket 39.

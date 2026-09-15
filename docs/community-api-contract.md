@@ -1179,3 +1179,38 @@ and indexes were deployed to `faithful-4325a`; the push delivery index was still
 `EXPO_PUSH_ACCESS_TOKEN` is absent, so sender/receipt Functions were not
 deployed. No live Expo request, real device delivery, Scheduler execution, or
 production authorization check ran in this ticket.
+
+### Ticket 39 — backend security and lifecycle audit
+
+No operation, response shape, canonical type, index, or Rule was added by this
+audit. `listCommunityNotifications` continues to use
+`IListCommunityNotificationsRequest` and `IListCommunityNotificationsResult`;
+its cursor remains a recipient-bound Base64url traversal position of at most 512
+characters, ordered by `createdAt` descending and event ID descending. The
+backend now rejects non-safe-integer cursor seconds and nanoseconds outside
+0–999,999,999 with the existing `InvalidCursor` reason before constructing a
+Firestore timestamp. All other authorization, audience, retry, and lifecycle
+semantics remain as registered in their owning sections. No frontend-visible
+contract change is required for prompt 40.
+
+`previewCommunityInvitation` continues to return
+`IPreviewCommunityInvitationResult`. Its `expiresAt` field is now projected as
+the canonical plain `IPersistedTimestamp` value instead of leaking an Admin SDK
+`Timestamp` object across the callable boundary. The approved field set and
+meaning are unchanged. Existing callers that used `.seconds` and `.nanoseconds`
+remain compatible; prompt 40 should verify any caller that assumed SDK-specific
+timestamp methods.
+
+The Functions build and the focused notification, creation, owner-contribution,
+and personal journey-start tests passed locally (35 tests). The broader backend
+contract suite passed 42/42 after the preview projection correction. An emulator
+command for existing service-level community tests was attempted but **not run**
+because the workstation has no Java runtime. Actual callable hostile-client
+tests were also **not run**. This is not evidence of callable authorization or
+Rules correctness. A source audit found that ordinary community callable guards
+check the Auth token's `email_verified` claim and a Firestore profile, while the
+separate safety reviewer guard checks current Firebase Auth state. Whether a
+disabled or deleted account with a still-valid token can reach ordinary
+operations remains an open security finding requiring real callable tests and a
+backend-wide correction. No production migration, secret provisioning, privilege
+grant, deployment, or device check was performed for this audit.

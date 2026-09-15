@@ -219,26 +219,8 @@ test('previews only approved invitation fields and no member, post, contact, or 
 			expiresAt: issued.invitation.expiresAt,
 		},
 	});
-	assert.deepEqual(
-		parsePreviewCommunityInvitationResult({
-			preview: {
-				...result.preview,
-				expiresAt: {
-					seconds: result.preview.expiresAt.seconds,
-					nanoseconds: result.preview.expiresAt.nanoseconds,
-				},
-			},
-		}),
-		{
-			preview: {
-				...result.preview,
-				expiresAt: {
-					seconds: result.preview.expiresAt.seconds,
-					nanoseconds: result.preview.expiresAt.nanoseconds,
-				},
-			},
-		},
-	);
+	assert.deepEqual(parsePreviewCommunityInvitationResult(result), result);
+	assert.equal(result.preview.expiresAt instanceof Timestamp, false);
 	assert.doesNotMatch(
 		JSON.stringify(result),
 		/member|post|email|digest|code|invitationId|communityId/i,

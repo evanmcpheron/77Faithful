@@ -310,6 +310,12 @@ Release remains blocked until all applicable items are evidenced:
 
 ## External configuration required before release
 
+Ticket 41's checkout-derived environment, migration, deployment, rollback,
+native push, and evidence procedure is in `docs/community-release-runbook.md`.
+Its commands require an explicitly approved project and are not deployment or
+migration evidence. The current app identity and staging Firebase client mapping
+remain operator/code release gates.
+
 - `EXPO_PUBLIC_COMMUNITIES_ENABLED` release value and a route-access rollout
   plan.
 - Firebase project environments, callable region policy, Firestore

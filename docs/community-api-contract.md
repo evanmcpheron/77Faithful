@@ -1229,3 +1229,12 @@ protected-component errors. The remote Rules API check could not authenticate
 with saved credentials. No production migration, secret provisioning, privilege
 grant, deployment, Scheduler execution, live push send, or device check ran in
 this audit.
+
+## Ticket 41 operational release reference
+
+The exact current Functions export groups, Secret Manager names/bindings,
+environment settings, invitation model-2 migration gate, worker schedules, and
+manual verification evidence are recorded in
+`docs/community-release-runbook.md`. This ledger entry records a local runbook
+only; it does not establish a production secret, migration, deploy, real push
+receipt, or device test.

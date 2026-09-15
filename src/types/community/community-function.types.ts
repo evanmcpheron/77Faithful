@@ -338,6 +338,8 @@ export interface IGetCommunityJourneyEnrollmentResult {
 		groupDisplayStartDate: TCalendarDate;
 		communityTimeZoneId: TIanaTimeZoneId;
 		startingTimeZoneId: TIanaTimeZoneId;
+		communityCalendarDate: TCalendarDate;
+		startingZoneCalendarDate: TCalendarDate;
 		personalStartDateBehavior: 'ParticipantCalendarDay1';
 		activationEligibility:
 			| 'Eligible'
@@ -353,6 +355,21 @@ export interface IGetCommunityJourneyEnrollmentResult {
 		enrolledAt: IPersistedTimestamp;
 	} | null;
 }
+
+export interface IRetryCommunityJourneyActivationRequest {
+	communityId: string;
+	communityJourneyId: string;
+	operationId: string;
+}
+export interface IRetryCommunityJourneyActivationResult {
+	outcome: 'NotDue' | 'Started' | 'StartBlocked' | 'Withdrawn';
+}
+
+export type TCommunityJourneyActivationReasonCode =
+	| 'InvalidInput'
+	| 'OperationPayloadMismatch'
+	| 'EnrollmentDataUnavailable'
+	| 'ScheduleDataUnavailable';
 
 export type TCommunityJourneyEnrollmentReasonCode =
 	| 'InvalidInput'

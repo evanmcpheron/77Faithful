@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase-admin/app';
 import { setGlobalOptions } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { runDueCommunityJourneyBatch } from './community/activate-community-journey-enrollments';
 import {
 	cancelPracticeSettingsForAccount,
 	confirmPracticeSettingsForAccount,
@@ -13,6 +14,7 @@ import {
 	parsePracticeSettingsRequest,
 } from './journey/practice-settings-request';
 import { refreshTodayVerseSources } from './journey/refresh-today-verses';
+export { retryCommunityJourneyActivation } from './community/activate-community-journey-enrollments';
 export {
 	enrollCommunityJourney,
 	getCommunityJourneyEnrollment,
@@ -137,6 +139,19 @@ export const refreshTodayVerses = onSchedule(
 	},
 	async () => {
 		await refreshTodayVerseSources();
+	},
+);
+
+export const activateDueCommunityJourneyEnrollments = onSchedule(
+	{
+		schedule: '*/5 * * * *',
+		timeZone: 'Etc/UTC',
+		timeoutSeconds: 540,
+		maxInstances: 1,
+		retryCount: 0,
+	},
+	async () => {
+		await runDueCommunityJourneyBatch();
 	},
 );
 

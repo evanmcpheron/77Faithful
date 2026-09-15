@@ -63,6 +63,20 @@
 	],
 	"fieldOverrides": [
 		{
+			"collectionGroup": "communityJourneyEnrollments",
+			"fieldPath": "lifecycle.status",
+			"indexes": [
+				{ "queryScope": "COLLECTION_GROUP", "order": "ASCENDING" }
+			]
+		},
+		{
+			"collectionGroup": "communityJourneys",
+			"fieldPath": "lifecycle.status",
+			"indexes": [
+				{ "queryScope": "COLLECTION_GROUP", "order": "ASCENDING" }
+			]
+		},
+		{
 			"collectionGroup": "prayerAcknowledgments",
 			"fieldPath": "supporter.userId",
 			"indexes": [

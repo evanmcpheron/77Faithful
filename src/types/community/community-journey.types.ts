@@ -88,6 +88,13 @@ export const CommunityJourneyStartBlockReason = {
 	ActivePersonalJourney: 'ActivePersonalJourney',
 	MembershipEnded: 'MembershipEnded',
 	CommunityJourneyCanceled: 'CommunityJourneyCanceled',
+	CommunityClosed: 'CommunityClosed',
+	AccountUnavailable: 'AccountUnavailable',
+	EmailVerificationRequired: 'EmailVerificationRequired',
+	MissedStartDate: 'MissedStartDate',
+	ContentUnavailable: 'ContentUnavailable',
+	SetupInvalid: 'SetupInvalid',
+	WritingUnavailable: 'WritingUnavailable',
 } as const;
 
 export type TCommunityJourneyStartBlockReason =

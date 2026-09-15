@@ -888,3 +888,82 @@ Actual Day 1 activation and monitoring belong to the later activation ticket.
 
 Local build, lint, contract, Rules, and emulator results are recorded in the
 Ticket 26 operational notes in `docs/community-implementation-plan.md`.
+
+### Ticket 27 — due enrollment activation
+
+`activateDueCommunityJourneyEnrollments` is a Node 22 v2 scheduled Function,
+configured for every five minutes in UTC, a 540-second timeout, one instance,
+and zero platform retries. Its backend implementation is
+`runDueCommunityJourneyBatch`. It reads at most four pages of 20 Enrolled
+participant-private records and four pages of 20 Scheduled/Active public
+schedules per invocation. Each collection-group scan orders by document path;
+private cursor paths live only in `communityJourneyActivationWorker/current`.
+The next invocation resumes after the cursor, wrapping to the first page at
+the end. A crash before checkpoint advancement may repeat a page; enrollment
+lifecycle, the account journey-control lock, and actor-scoped activation
+receipts make repeating a completed start safe. The worker reports a failed
+candidate count in its private checkpoint, without recording bodies or invite
+codes. It does not scan a community's practice totals.
+
+`retryCommunityJourneyActivation` is a Firebase callable. Its canonical
+request/result are `IRetryCommunityJourneyActivationRequest` and
+`IRetryCommunityJourneyActivationResult` in
+`src/types/community/community-function.types.ts`. It accepts exactly
+`communityId`, `communityJourneyId`, and `operationId`; each ID is 1–128 ASCII
+letters, digits, underscores, or hyphens. The shared parser is
+`parseRetryCommunityJourneyActivationRequest` in
+`src/features/communities/community-journey.ts`, copied by
+`scripts/prepare-functions.cjs`. The callable requires authenticated verified
+identity; actual activation also reads the current Firebase Auth user and
+profile, private consent snapshot, active membership, active parent and current
+schedule pointer, schedule revision and pinned course, full released course and
+translation content, and the active personal-journey query under the existing
+journey-control lock. A repeated operation ID with a different community or
+schedule digest returns `OperationPayloadMismatch`. Receipts contain only the
+digest and server creation timestamp. Results are `NotDue`, `Started`,
+`StartBlocked`, or `Withdrawn`; private lifecycle carries the started journey
+link or exact block reason. A transient failure leaves Enrolled and may retry
+only while the participant's scheduled Day 1 remains current. A later date
+records `MissedStartDate` and creates no journey. Other block reasons are
+`ActivePersonalJourney`, `MembershipEnded`, `CommunityJourneyCanceled`,
+`CommunityClosed`, `AccountUnavailable`, `EmailVerificationRequired`,
+`ContentUnavailable`, `SetupInvalid`, and `WritingUnavailable`. Input errors
+use `InvalidInput`; invalid persisted enrollment/schedule data use
+`EnrollmentDataUnavailable`/`ScheduleDataUnavailable`.
+
+The existing `getCommunityJourneyEnrollment` result keeps its previous fields
+and adds `communityCalendarDate` and `startingZoneCalendarDate`, derived from
+one server instant. It reads only the caller's private enrollment and returns
+no writing text or other participant schedules. An Active public schedule may
+still be eligible for participant-zone Day 1 activation. The public schedule
+becomes Active on its own start date and Completed at the beginning of its Day
+78 in the community zone, with actual reconciliation timestamps. A started
+private journey keeps the existing phone-zone day semantics after membership
+or community lifecycle changes.
+
+Collection-group single-field indexes on `lifecycle.status` are required
+for enrollment and schedule scans; document path ordering is implicit. Rules explicitly deny direct client access
+to activation receipts and the worker checkpoint; enrollment and public
+community records retain the callable-only boundary. Existing enrollment
+records must have the Ticket 26 consent snapshot and freeze marker. Missing
+or incompatible records require deliberate migration rather than an invented
+start. Local Functions build/lint and 30 contract/calendar/normal-start tests
+passed. The extended Firestore emulator transaction tests were added but not
+run because Java is unavailable. The remote Rules API test was attempted but
+could not contact Firebase; root application type check still has unrelated
+baseline errors and none in this ticket's changed contract files.
+
+The requested Firebase deploy released `firestore.rules` and the two
+collection-group single-field index controls, created the scheduled worker and
+retry callable, and updated `getCommunityJourneyEnrollment` and
+`startJourney` in `us-central1` on Node 22 v2. The Function inventory showed
+the scheduled and callable triggers. The deploy CLI exited 1 after successful
+resource operations because it could not establish an Artifact Registry
+cleanup policy in `us-central1`; no retention or billing policy was changed.
+Authenticated production activation/retry and Scheduler execution have not
+been smoke-tested.
+
+A later worker/retry update uploaded the final persisted-data validation
+change, but its CLI wait produced no completion result and was interrupted.
+The next Function inventory still listed both triggers with runtime fields
+unavailable during update. Treat that exact revision as pending verification.

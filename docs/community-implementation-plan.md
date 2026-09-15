@@ -833,3 +833,68 @@ successful creation of all three Ticket 26 Node 22 v2 callables in
 exited 1 only because the project has no Artifact Registry cleanup policy in
 `us-central1`; this ticket did not set a billing or retention policy. No
 authenticated production enrollment/withdrawal smoke was performed.
+
+### Ticket 27 operational notes — due enrollment activation
+
+The scheduled worker is exported as `activateDueCommunityJourneyEnrollments`
+and runs every five minutes in UTC with one instance, four 20-record enrollment
+pages and four 20-record schedule pages per invocation. Deployment must create
+its Cloud Scheduler job and grant its runtime identity Firestore/Admin Auth
+access. Confirm the two collection-group indexes and Rules deployment before
+enabling activation. Verify that existing private enrollments include the
+Ticket 26 consent/zone/setup snapshot and that schedules retain their freeze
+marker; incompatible records need a deliberate migration. Formation
+configuration must pin the scheduled published course and released text
+edition for each selected translation. No migration is performed here.
+
+Monitor `communityJourneyActivationWorker/current.failedInLastRun`, scheduler
+execution failures, and Enrolled records still due near participant-zone Day 1
+end. A transient failure leaves the enrollment Enrolled, so a repeated worker
+page or participant `retryCommunityJourneyActivation` can resume during Day 1.
+A missed date becomes `StartBlocked/MissedStartDate` with the real block time;
+it is not backdated. A dry run without writes is available through
+`runDueCommunityJourneyBatch({ database }, true)` in a Firestore emulator or
+controlled local Functions process. The dry-run count is the number of
+candidate records scanned, including future Enrolled records, rather than the
+number that would start. Emulator invocation and a seeded participant-zone
+DST/date matrix are in `tests/community-journey-enrollment.emulator.test.cjs`.
+
+The normal personal-start response shape remains unchanged. Both start paths
+write the private journey, motivation head revision, account preference, and
+journey-control marker through one shared trusted write set. The enrollment
+transaction atomically changes the private lifecycle to Started or
+StartBlocked. Public schedule reconciliation uses its own community-zone
+calendar and practice totals do not influence completion. Membership exit or
+group closure never mutates an already started private journey. The status
+reader adds one server-instant calendar date in the community zone and the
+confirmed starting zone, so callers can explain a displayed-day difference;
+the actual personal journey continues to use its current phone-zone semantics.
+
+Local Functions build and lint passed; 30 activation contract, calendar,
+enrollment contract, schedule contract, and existing normal-start tests passed.
+The added emulator transaction cases cover before start, DST day, missed day,
+blocked eligibility, repeated batches, withdrawal/normal-start races, writing
+retention, independent public completion, and private journey continuity, but
+were **not run** because this machine has no Java runtime. Remote Rules API
+evaluation was attempted but could not contact Firebase. The root TypeScript
+check still fails on baseline component/utility errors, with no reported error
+in the changed shared contract/parser files. Authenticated production retry,
+activation, status, scheduler health, index and Rules smoke checks remain
+manual verification steps.
+
+The requested Firebase deploy released the Rules and both collection-group
+single-field index controls, created `activateDueCommunityJourneyEnrollments`
+and `retryCommunityJourneyActivation`, and updated
+`getCommunityJourneyEnrollment` and `startJourney` in `us-central1`. A Function
+inventory confirmed the scheduled and callable triggers. The CLI exited 1
+only at the Artifact Registry cleanup-policy step after the resources reported
+success; no retention/billing policy was changed. Production scheduler
+execution, account/content configuration, index readiness, and authenticated
+activation/retry status remain unverified. No deployment result resolves the
+unrun emulator transaction/Rules checks.
+
+A follow-up worker/retry update uploaded the final persisted-data validation
+fix, but the CLI produced no completion result over the wait and was
+interrupted. A subsequent Function inventory still listed both triggers with
+runtime fields unavailable. Verify those revisions and scheduler health before
+relying on activation; this update is not a confirmed success.

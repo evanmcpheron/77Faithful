@@ -16,10 +16,20 @@ const {
 } = require('../functions/lib/generated/types/formation/formation-course.types');
 const schedules = require('../functions/lib/src/community/community-journey');
 const enrollments = require('../functions/lib/src/community/community-journey-enrollment');
+const activations = require('../functions/lib/src/community/activate-community-journey-enrollments');
+const personalStarts = require('../functions/lib/src/journey/start-journey');
+const {
+	getJourneyCalendarDate,
+} = require('../functions/lib/generated/features/journey/journey-calendar');
 const projectId = 'faithful-community-enrollment-test';
 const now = Timestamp.fromMillis(Date.UTC(2026, 8, 15, 15));
 let database;
 const dependencies = (instant = now) => ({ database, now: instant });
+const activationDependencies = (instant) => ({
+	database,
+	now: instant,
+	verifiedAccount: async () => true,
+});
 const fails = (reason) => (caught) => caught.details?.reason === reason;
 const clear = async () => {
 	const response = await fetch(
@@ -312,6 +322,362 @@ test('first enrollment freezes schedule and snapshots private setup without crea
 	assert.equal(
 		JSON.stringify(publicPreview).includes('optionalPracticeIds'),
 		false,
+	);
+});
+
+test('participant zone controls Day 1 across the DST difference; repeat activation creates one private journey', async () => {
+	const schedule = await configured();
+	await enrollments.enrollCommunityJourneyForAccount(
+		'member',
+		enrollRequest(schedule.communityJourneyId),
+		dependencies(),
+	);
+	const beforeLosAngelesDay1 = Timestamp.fromMillis(Date.UTC(2026, 10, 1, 6));
+	assert.equal(
+		await activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'worker-1',
+			activationDependencies(beforeLosAngelesDay1),
+		),
+		'NotDue',
+	);
+	assert.equal(
+		(await database.collection('users/member/journeys').get()).size,
+		0,
+	);
+	const onLosAngelesDay1 = Timestamp.fromMillis(Date.UTC(2026, 10, 1, 10));
+	assert.equal(
+		await activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'worker-1',
+			activationDependencies(onLosAngelesDay1),
+		),
+		'Started',
+	);
+	assert.equal(
+		await activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'worker-1',
+			activationDependencies(onLosAngelesDay1),
+		),
+		'Started',
+	);
+	const journeys = await database.collection('users/member/journeys').get();
+	assert.equal(journeys.size, 1);
+	assert.equal(journeys.docs[0].get('startDate'), '2026-11-01');
+	assert.equal(journeys.docs[0].get('timeZoneId'), 'America/Los_Angeles');
+	assert.equal(
+		journeys.docs[0].get('startingMotivation.text'),
+		'Private motivation',
+	);
+	const revision = await journeys.docs[0].ref
+		.collection('writingRevisions')
+		.doc('motivation-1')
+		.get();
+	assert.equal(revision.get('text'), 'Private motivation');
+	assert.equal(
+		(
+			await database
+				.doc(
+					'users/member/journeySetupDrafts/current/writingRevisions/motivation-1',
+				)
+				.get()
+		).get('text'),
+		'Private motivation',
+	);
+	const publicSchedule = await database
+		.doc(
+			`communities/alpha/communityJourneys/${schedule.communityJourneyId}`,
+		)
+		.get();
+	assert.equal(
+		JSON.stringify(publicSchedule.data()).includes('Private motivation'),
+		false,
+	);
+});
+
+test('missed Day 1, withdrawn enrollment and active personal journey never start a second journey', async () => {
+	const schedule = await configured();
+	await enrollments.enrollCommunityJourneyForAccount(
+		'member',
+		enrollRequest(schedule.communityJourneyId),
+		dependencies(),
+	);
+	const afterDay1 = Timestamp.fromMillis(Date.UTC(2026, 10, 2, 10));
+	assert.equal(
+		await activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'missed',
+			activationDependencies(afterDay1),
+		),
+		'StartBlocked',
+	);
+	assert.equal(
+		(
+			await database
+				.doc(
+					`users/member/communityJourneyEnrollments/${schedule.communityJourneyId}`,
+				)
+				.get()
+		).get('lifecycle.reason'),
+		'MissedStartDate',
+	);
+	assert.equal(
+		(await database.collection('users/member/journeys').get()).size,
+		0,
+	);
+	await database
+		.doc(
+			`users/member/communityJourneyEnrollments/${schedule.communityJourneyId}`,
+		)
+		.update({ lifecycle: { status: 'Enrolled' } });
+	await database
+		.collection('users/member/journeys')
+		.doc('ordinary')
+		.set({ state: { status: 'Active' }, startDate: '2026-09-15' });
+	assert.equal(
+		await activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'active',
+			activationDependencies(
+				Timestamp.fromMillis(Date.UTC(2026, 10, 1, 10)),
+			),
+		),
+		'StartBlocked',
+	);
+	assert.equal(
+		(await database.collection('users/member/journeys').get()).size,
+		1,
+	);
+});
+
+test('cancel, removal, unverified account and unavailable content block without creating a journey', async () => {
+	const day1 = Timestamp.fromMillis(Date.UTC(2026, 10, 1, 10));
+	for (const condition of ['Canceled', 'Removed', 'Unverified', 'Content']) {
+		await clear();
+		await seed();
+		const schedule = await configured();
+		await enrollments.enrollCommunityJourneyForAccount(
+			'member',
+			enrollRequest(schedule.communityJourneyId),
+			dependencies(),
+		);
+		if (condition === 'Canceled')
+			await database
+				.doc(
+					`communities/alpha/communityJourneys/${schedule.communityJourneyId}`,
+				)
+				.update({
+					lifecycle: { status: 'Canceled', canceledAt: day1 },
+				});
+		if (condition === 'Removed')
+			await database
+				.doc('communities/alpha/members/member')
+				.update({ lifecycle: { status: 'Removed', removedAt: day1 } });
+		if (condition === 'Content')
+			await database
+				.doc('bibleTextEditions/web-edition')
+				.update({ releaseState: { status: 'Withdrawn' } });
+		const checked = {
+			database,
+			now: day1,
+			verifiedAccount: async () => condition !== 'Unverified',
+		};
+		assert.equal(
+			await activations.activateCommunityJourneyEnrollment(
+				'member',
+				'alpha',
+				schedule.communityJourneyId,
+				`condition-${condition}`,
+				checked,
+			),
+			'StartBlocked',
+		);
+		assert.equal(
+			(await database.collection('users/member/journeys').get()).size,
+			0,
+		);
+	}
+});
+
+test('public schedule advances and completes on its own calendar even with no practice totals', async () => {
+	const schedule = await configured();
+	assert.equal(
+		await activations.reconcileCommunityJourneySchedule(
+			'alpha',
+			schedule.communityJourneyId,
+			activationDependencies(
+				Timestamp.fromMillis(Date.UTC(2026, 10, 1, 6)),
+			),
+		),
+		'Active',
+	);
+	assert.equal(
+		await activations.reconcileCommunityJourneySchedule(
+			'alpha',
+			schedule.communityJourneyId,
+			activationDependencies(
+				Timestamp.fromMillis(Date.UTC(2027, 0, 17, 6)),
+			),
+		),
+		'Completed',
+	);
+	assert.equal(
+		(await database.collection('users/member/journeys').get()).size,
+		0,
+	);
+});
+
+test('bounded worker dry run and repeated batches are resumable; withdrawal races activation', async () => {
+	const schedule = await configured();
+	await enrollments.enrollCommunityJourneyForAccount(
+		'member',
+		enrollRequest(schedule.communityJourneyId),
+		dependencies(),
+	);
+	const day1 = Timestamp.fromMillis(Date.UTC(2026, 10, 1, 10));
+	const checked = activationDependencies(day1);
+	assert.equal(
+		(await activations.runDueCommunityJourneyBatch(checked, true))
+			.enrollments,
+		1,
+	);
+	assert.equal(
+		(await database.collection('users/member/journeys').get()).size,
+		0,
+	);
+	await Promise.allSettled([
+		activations.runDueCommunityJourneyBatch(checked),
+		enrollments.withdrawCommunityJourneyEnrollmentForAccount(
+			'member',
+			{
+				communityId: 'alpha',
+				communityJourneyId: schedule.communityJourneyId,
+				operationId: 'withdraw-race',
+			},
+			dependencies(day1),
+		),
+	]);
+	await activations.runDueCommunityJourneyBatch(checked);
+	const enrollment = await database
+		.doc(
+			`users/member/communityJourneyEnrollments/${schedule.communityJourneyId}`,
+		)
+		.get();
+	const personal = await database.collection('users/member/journeys').get();
+	assert.ok(
+		['Withdrawn', 'Started'].includes(enrollment.get('lifecycle.status')),
+	);
+	assert.equal(
+		personal.size,
+		enrollment.get('lifecycle.status') === 'Started' ? 1 : 0,
+	);
+	if (personal.size) {
+		await database
+			.doc('communities/alpha/members/member')
+			.update({ lifecycle: { status: 'Left', leftAt: day1 } });
+		await database
+			.doc('communities/alpha')
+			.update({ lifecycle: { status: 'Closed', closedAt: day1 } });
+		assert.equal(
+			(await personal.docs[0].ref.get()).get('state.status'),
+			'Active',
+		);
+	}
+});
+
+test('ordinary start racing enrolled activation still leaves only one active personal journey', async () => {
+	const schedule = await configured();
+	await enrollments.enrollCommunityJourneyForAccount(
+		'member',
+		enrollRequest(schedule.communityJourneyId),
+		dependencies(),
+	);
+	const reviewDate = getJourneyCalendarDate(new Date(), 'UTC');
+	const day1 = Timestamp.fromMillis(Date.UTC(2026, 10, 1, 10));
+	const outcomes = await Promise.allSettled([
+		personalStarts.startJourneyForAccount(
+			'member',
+			{
+				operationId: 'normal-race',
+				setupDraftId: 'current',
+				expectedSetupRevision: 4,
+				review: {
+					observedPhoneTimeZoneId: 'UTC',
+					reviewedStartDate: reviewDate,
+				},
+			},
+			database,
+		),
+		activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'group-race',
+			activationDependencies(day1),
+		),
+	]);
+	assert.ok(outcomes.some((outcome) => outcome.status === 'fulfilled'));
+	const active = await database
+		.collection('users/member/journeys')
+		.where('state.status', '==', 'Active')
+		.get();
+	assert.equal(active.size, 1);
+});
+
+test('source writing conflicts remain private and recoverable after activation', async () => {
+	const schedule = await configured();
+	const conflict = {
+		userId: 'member',
+		target: { kind: 'SetupMotivation', setupDraftId: 'current' },
+		currentRevisionId: 'motivation-1',
+		competingRevisionId: 'motivation-2',
+		resolution: { status: 'Unresolved' },
+		createdAt: now,
+		updatedAt: now,
+	};
+	await database
+		.doc(
+			'users/member/journeySetupDrafts/current/writingConflicts/conflict-1',
+		)
+		.set(conflict);
+	await enrollments.enrollCommunityJourneyForAccount(
+		'member',
+		enrollRequest(schedule.communityJourneyId),
+		dependencies(),
+	);
+	const day1 = Timestamp.fromMillis(Date.UTC(2026, 10, 1, 10));
+	assert.equal(
+		await activations.activateCommunityJourneyEnrollment(
+			'member',
+			'alpha',
+			schedule.communityJourneyId,
+			'conflict-start',
+			activationDependencies(day1),
+		),
+		'Started',
+	);
+	const retained = await database
+		.doc(
+			'users/member/journeySetupDrafts/current/writingConflicts/conflict-1',
+		)
+		.get();
+	assert.equal(retained.get('resolution.status'), 'Unresolved');
+	assert.equal(
+		(
+			await database.doc('users/member/journeySetupDrafts/current').get()
+		).get('startingMotivation.text'),
+		'Private motivation',
 	);
 });
 

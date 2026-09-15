@@ -5,6 +5,7 @@ import type {
 	IGetCommunityJourneyEnrollmentRequest,
 	IGetCommunityJourneyScheduleRequest,
 	IListCommunityJourneyHistoryRequest,
+	IRetryCommunityJourneyActivationRequest,
 	IReviseCommunityJourneyRequest,
 	IWithdrawCommunityJourneyEnrollmentRequest,
 } from '../../types/community/community-function.types';
@@ -277,6 +278,19 @@ export const parseWithdrawCommunityJourneyEnrollmentRequest = (
 	const input = record(value);
 	if (!exactKeys(input, ['communityId', 'communityJourneyId', 'operationId']))
 		throw new Error('Invalid withdrawal.');
+	return {
+		communityId: id(input['communityId']),
+		communityJourneyId: id(input['communityJourneyId']),
+		operationId: id(input['operationId']),
+	};
+};
+
+export const parseRetryCommunityJourneyActivationRequest = (
+	value: unknown,
+): IRetryCommunityJourneyActivationRequest => {
+	const input = record(value);
+	if (!exactKeys(input, ['communityId', 'communityJourneyId', 'operationId']))
+		throw new Error('Invalid activation retry.');
 	return {
 		communityId: id(input['communityId']),
 		communityJourneyId: id(input['communityJourneyId']),

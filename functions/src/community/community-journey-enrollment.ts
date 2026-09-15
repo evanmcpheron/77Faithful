@@ -272,7 +272,8 @@ const eligibility = (
 		community.get('currentCommunityJourneyId') !== journeyId
 	)
 		return 'ScheduleCanceled';
-	if (journey.lifecycle.status !== 'Scheduled') return 'EnrollmentClosed';
+	if (!['Scheduled', 'Active'].includes(journey.lifecycle.status))
+		return 'EnrollmentClosed';
 	return 'Eligible';
 };
 
@@ -527,6 +528,7 @@ export const getCommunityJourneyEnrollmentForAccount = async (
 ): Promise<IGetCommunityJourneyEnrollmentResult> => {
 	const input = parse(parseGetCommunityJourneyEnrollmentRequest, value);
 	const database = dependencies.database ?? getFirestore();
+	const now = dependencies.now ?? Timestamp.now();
 	return database.runTransaction(async (transaction) => {
 		await owner(transaction, database, userId);
 		const [enrollmentSnapshot, journey, community, member, activeJourneys] =
@@ -588,6 +590,14 @@ export const getCommunityJourneyEnrollmentForAccount = async (
 						groupDisplayStartDate: journey.data.startDate,
 						communityTimeZoneId: journey.data.timeZoneId,
 						startingTimeZoneId: enrollment.startingTimeZoneId,
+						communityCalendarDate: getJourneyCalendarDate(
+							now.toDate(),
+							journey.data.timeZoneId,
+						),
+						startingZoneCalendarDate: getJourneyCalendarDate(
+							now.toDate(),
+							enrollment.startingTimeZoneId,
+						),
 						personalStartDateBehavior:
 							'ParticipantCalendarDay1' as const,
 						lifecycle: enrollment.lifecycle,

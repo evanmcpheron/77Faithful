@@ -15,6 +15,7 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import { getCommunityJourneySchedule } from '../community-journey-schedule.service';
+import { CommunityProgressSummary } from '../community-progress-summary';
 import {
 	type TCommunityContextState,
 	useCommunityContext,
@@ -493,6 +494,17 @@ export const CommunityHome = ({
 								</Typography>
 							</View>
 						</Card>
+					) : null}
+					{schedule &&
+					context.community.status === 'Active' &&
+					schedule.status !== 'Canceled' ? (
+						<CommunityProgressSummary
+							key={`${context.membership.userId}:${context.community.communityId}:${schedule.communityJourneyId}`}
+							communityId={context.community.communityId}
+							communityJourneyId={schedule.communityJourneyId}
+							communityName={context.community.name}
+							enabled={true}
+						/>
 					) : null}
 					<View style={styles.navigationActions}>
 						{onSchedule &&

@@ -8,6 +8,10 @@ import {
 	CommunityScreen,
 } from './community.screen';
 
+jest.mock('../community-progress-summary', () => ({
+	CommunityProgressSummary: 'ProgressSummary',
+}));
+
 const mockRouterPush = jest.fn();
 let mockScreenContextState: unknown = { status: 'Loading' };
 let mockScreenFeedState: unknown = { status: 'Loading' };
@@ -480,7 +484,49 @@ it('links the safe public schedule card to participant detail without enrollment
 	const card = renderer.root.findByProps({
 		testID: 'community-home-journey-card',
 	});
+	expect(
+		renderer.root.findAll((node) => String(node.type) === 'ProgressSummary')
+			.length,
+	).toBe(1);
 	expect(card.findAllByProps({ size: 'H2' }).length).toBeGreaterThan(0);
 	act(() => card.parent?.props['onPress']());
 	expect(onJourneyDetail).toHaveBeenCalledWith('group', 'schedule');
+});
+
+it('removes the summary for a closed community', () => {
+	act(() => {
+		renderer = create(
+			createElement(CommunityHome, {
+				contextState: {
+					status: 'Ready',
+					context: communityContext({
+						role: 'Member',
+						memberCount: 5,
+						status: 'Closed',
+					}),
+				},
+				feedState: readyFeed([]),
+				headerHeight: 80,
+				...actions,
+				schedule: {
+					communityJourneyId: 'schedule',
+					communityId: 'group',
+					revision: 1,
+					course: { courseId: 'course', courseVersionId: 'version' },
+					startDate: '2026-10-01',
+					timeZoneId: 'America/New_York',
+					status: 'Completed',
+					canEnroll: false,
+					canRevise: false,
+				},
+				scrollOffset: { value: 0 } as never,
+				onScrollPositionChange: jest.fn(),
+			}),
+		);
+	});
+	expect(
+		renderer.root.findAll(
+			(node) => String(node.type) === 'ProgressSummary',
+		),
+	).toHaveLength(0);
 });

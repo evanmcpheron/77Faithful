@@ -69,6 +69,14 @@ it('offers Shared Contributions from signed-in Settings without community state'
 		entry?.props['actions'].onPress();
 	});
 	expect(mockPush).toHaveBeenCalledWith('/settings/shared-contributions');
+	const progressEntry = actions.find(
+		(node) => node.props['actions']?.id === 'progress-sharing',
+	);
+	expect(progressEntry).toBeDefined();
+	act(() => {
+		progressEntry?.props['actions'].onPress();
+	});
+	expect(mockPush).toHaveBeenCalledWith('/settings/progress-sharing');
 	expect(
 		actions.some((node) => node.props['actions']?.id === 'safety-reports'),
 	).toBe(false);

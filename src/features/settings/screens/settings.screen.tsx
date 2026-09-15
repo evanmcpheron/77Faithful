@@ -187,6 +187,17 @@ export const SettingsScreen = () => {
 							</Typography>
 							<NavigationActionList
 								actions={{
+									id: 'progress-sharing',
+									title: 'Progress sharing',
+									iconName: IconName.Lock,
+									onPress: () =>
+										router.push(
+											'/settings/progress-sharing',
+										),
+								}}
+							/>
+							<NavigationActionList
+								actions={{
 									id: 'blocked-members',
 									title: 'Blocked members',
 									iconName: IconName.Lock,

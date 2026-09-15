@@ -12,6 +12,26 @@ const SettingsLayout = () => {
 		>
 			<Stack.Screen name='index' />
 			<Stack.Screen
+				name='progress-sharing'
+				options={{
+					headerShown: true,
+					headerTransparent: true,
+					headerShadowVisible: false,
+					header: () => (
+						<HeaderTopRow
+							canGoBack
+							title='Progress sharing'
+							showNotifications={false}
+							onBackPress={() =>
+								router.canGoBack()
+									? router.back()
+									: router.replace('/settings')
+							}
+						/>
+					),
+				}}
+			/>
+			<Stack.Screen
 				name='blocked-members'
 				options={{
 					headerShown: true,

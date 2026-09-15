@@ -2,6 +2,10 @@ import type { IGetCommunityJourneyEnrollmentResult } from '@td/types/community/c
 import type { ICommunityJourneyPreview } from '@td/types/community/community-journey.types';
 import { journeyDetailStatus } from './community-journey-detail.screen';
 
+jest.mock('../community-progress-summary', () => ({
+	CommunityProgressSummary: 'ProgressSummary',
+}));
+
 jest.mock('@td/providers/auth/auth.hook', () => ({ useAuth: jest.fn() }));
 jest.mock('@td/providers/journey/journey-access.provider', () => ({
 	useJourneyAccess: jest.fn(),

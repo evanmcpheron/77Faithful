@@ -22,6 +22,7 @@ import {
 	getCommunityJourneySchedule,
 	listCommunityJourneyHistory,
 } from '../community-journey-schedule.service';
+import { CommunityProgressSummary } from '../community-progress-summary';
 import { useCommunityContext } from '../use-community-context.hook';
 
 const blockText: Record<string, string> = {
@@ -360,6 +361,39 @@ const CommunityJourneyDetail = ({
 								) : null}
 							</View>
 						</Card>
+						{context.status === 'Ready' &&
+						context.context.community.status === 'Active' &&
+						schedule.status !== 'Canceled' ? (
+							<>
+								<CommunityProgressSummary
+									key={`${userId}:${communityId}:${schedule.communityJourneyId}`}
+									communityId={communityId!}
+									communityJourneyId={
+										schedule.communityJourneyId
+									}
+									communityName={
+										context.context.community.name
+									}
+									enabled={true}
+								/>
+								<TurndownButton
+									variant='Outline'
+									onPress={() =>
+										router.push({
+											pathname:
+												'/settings/progress-sharing',
+											params: {
+												communityId: communityId!,
+												communityJourneyId:
+													schedule.communityJourneyId,
+											},
+										})
+									}
+								>
+									Review progress sharing
+								</TurndownButton>
+							</>
+						) : null}
 						{schedule.canEnroll &&
 						!enrollment &&
 						context.status === 'Ready' &&

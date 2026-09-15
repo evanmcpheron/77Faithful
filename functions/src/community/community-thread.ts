@@ -1058,15 +1058,16 @@ export const setCommunityPrayerAcknowledgmentForAccount = async (
 		let revision: number | null = current?.revision ?? null;
 		if (!current && input.isPraying) {
 			revision = 0;
-			createNotificationEvent(transaction, database, {
-				category: 'PrayerSupport',
-				communityId: input.communityId,
-				postId: input.postId,
-				replyId: null,
-				actorUserId: userId,
-				sourceId: userId,
-				now,
-			});
+			if (post.author.userId !== userId)
+				createNotificationEvent(transaction, database, {
+					category: 'PrayerSupport',
+					communityId: input.communityId,
+					postId: input.postId,
+					replyId: null,
+					actorUserId: userId,
+					sourceId: userId,
+					now,
+				});
 			transaction.create(supportReference, {
 				schemaVersion: 1,
 				communityId: input.communityId,

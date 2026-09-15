@@ -930,15 +930,15 @@ smoke testing.
 ### Ticket 33 operational notes — private in-app activity events
 
 Ticket 33 adds text-free durable events to confirmed reply, first eligible
-prayer-support, and original organizer-announcement transactions. A scheduled
-five-minute worker processes five pending events and one 20-member page per
-event per run with transactional cursors and recipient-event deduplication.
-Member join epochs, Active lifecycle, blocks, source availability, and current
-authorization are checked during delivery and again for recipient
-list/count/open/mark. Push and category controls are persisted for optional
-future push delivery; they do not remove authorized in-app history and default
-to disabled. No push provider, mobile interface, or deployment migration was
-added.
+non-self prayer-support, and original organizer-announcement transactions. A
+scheduled five-minute worker processes five pending events and one 20-member
+page per event per run with transactional cursors and recipient-event
+deduplication. Member join epochs, Active lifecycle, blocks, source
+availability, and current authorization are checked during delivery and again
+for recipient list/count/open/mark. Push and category controls are persisted for
+optional future push delivery; they do not remove authorized in-app history and
+default to disabled. No push provider, mobile interface, or deployment migration
+was added.
 
 The canonical contracts and validators are in
 `src/types/community/community-notification.types.ts` and
@@ -970,3 +970,9 @@ solely because it could not set an Artifact Registry cleanup policy in
 production calls, Scheduler execution, and notification privacy behavior remain
 manual checks. The ticket commit remains local because automatic approval review
 rejected egress to the configured private GitHub remote.
+
+A focused follow-up suppressed the outbox event when a prayer-request author
+acknowledges their own request. Functions build/lint and the parser tests passed
+after that change; its emulator case remains skipped. Firebase reported a
+successful update of `setCommunityPrayerAcknowledgment`, then repeated the
+Artifact Registry cleanup-policy error. No policy was changed.

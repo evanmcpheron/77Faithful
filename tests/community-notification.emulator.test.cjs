@@ -280,6 +280,26 @@ test('verified source mutations create only first support and original announcem
 		},
 		{ database, now },
 	);
+	await threads.setCommunityPrayerAcknowledgmentForAccount(
+		'replyer',
+		{
+			communityId: 'church2',
+			postId: prayer.postId,
+			isPraying: true,
+			operationId: 'self-support',
+		},
+		{ database, now },
+	);
+	assert.equal(
+		(
+			await database
+				.collection('communityNotificationEvents')
+				.where('communityId', '==', 'church2')
+				.where('category', '==', 'PrayerSupport')
+				.get()
+		).size,
+		0,
+	);
 	const support = {
 		communityId: 'church2',
 		postId: prayer.postId,

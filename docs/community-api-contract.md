@@ -1074,7 +1074,7 @@ controls govern future optional push delivery only; relevant authorized in-app
 history remains visible regardless of mute. No OS push consent or push provider
 integration is implied.
 
-Reply creation, first true prayer acknowledgment, and original
+Reply creation, first non-self true prayer acknowledgment, and original
 organizer-announcement creation each write a text-free durable event in the same
 source transaction. Events use a SHA-256 source-derived ID. The worker scans at
 most five pending events and 20 members per event invocation, advances a

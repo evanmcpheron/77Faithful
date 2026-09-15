@@ -444,3 +444,43 @@ it('navigates from a real home feed card to the post conversation route', () => 
 		params: { communityId: 'group', postId: 'post-1' },
 	});
 });
+
+it('links the safe public schedule card to participant detail without enrollment counts', () => {
+	const onJourneyDetail = jest.fn();
+	act(() => {
+		renderer = create(
+			createElement(CommunityHome, {
+				contextState: {
+					status: 'Ready',
+					context: communityContext({
+						role: 'Member',
+						memberCount: 3,
+					}),
+				},
+				feedState: readyFeed([]),
+				headerHeight: 80,
+				...actions,
+				schedule: {
+					communityJourneyId: 'schedule',
+					communityId: 'group',
+					revision: 1,
+					course: { courseId: 'course', courseVersionId: 'version' },
+					startDate: '2026-10-01',
+					timeZoneId: 'America/New_York',
+					status: 'Active',
+					canEnroll: false,
+					canRevise: false,
+				},
+				onJourneyDetail,
+				scrollOffset: { value: 0 } as never,
+				onScrollPositionChange: jest.fn(),
+			}),
+		);
+	});
+	const card = renderer.root.findByProps({
+		testID: 'community-home-journey-card',
+	});
+	expect(card.findAllByProps({ size: 'H2' }).length).toBeGreaterThan(0);
+	act(() => card.parent?.props['onPress']());
+	expect(onJourneyDetail).toHaveBeenCalledWith('group', 'schedule');
+});

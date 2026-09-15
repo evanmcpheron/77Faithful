@@ -6,6 +6,7 @@ import { useAuth } from '@td/providers/auth/auth.hook';
 import { useScreenScrollOffset } from '@td/providers/header-scroll/use-screen-scroll-offset.hook';
 import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
+import type { ICommunityJourneyPreview } from '@td/types/community/community-journey.types';
 import type { ICommunityPost } from '@td/types/community/community-post.types';
 import type { ICommunityContext } from '@td/types/community/community.types';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
@@ -208,6 +209,9 @@ interface ICommunityHomeProps {
 	onMembers: (communityId: string) => void;
 	onSettings: (communityId: string) => void;
 	onSchedule?: (communityId: string) => void;
+	onJourneyDetail?: (communityId: string, communityJourneyId: string) => void;
+	schedule?: ICommunityJourneyPreview | null;
+	scheduleError?: boolean;
 	noJourney?: boolean;
 	onCompose: (communityId: string) => void;
 	onPost: (communityId: string, postId: string) => void;
@@ -252,6 +256,9 @@ export const CommunityHome = ({
 	onMembers,
 	onSettings,
 	onSchedule,
+	onJourneyDetail,
+	schedule,
+	scheduleError,
 	noJourney,
 	onCompose,
 	onPost,
@@ -440,6 +447,53 @@ export const CommunityHome = ({
 						</TurndownButton>
 					) : null}
 
+					{scheduleError ? (
+						<Card>
+							<View style={styles.details}>
+								<Typography weight='Regular'>
+									We could not load the community schedule.
+									Refresh this home to try again.
+								</Typography>
+								<TurndownButton
+									variant='Outline'
+									onPress={onRefresh}
+								>
+									Refresh schedule
+								</TurndownButton>
+							</View>
+						</Card>
+					) : null}
+					{schedule && onJourneyDetail ? (
+						<Card
+							onPress={() =>
+								onJourneyDetail(
+									context.community.communityId,
+									schedule.communityJourneyId,
+								)
+							}
+						>
+							<View
+								style={styles.details}
+								testID='community-home-journey-card'
+							>
+								<Typography size='H2'>
+									Community journey
+								</Typography>
+								<Typography weight='Regular'>
+									Course {schedule.course.courseId} ·{' '}
+									{schedule.status} · Starts{' '}
+									{schedule.startDate} in{' '}
+									{schedule.timeZoneId}
+								</Typography>
+								<Typography
+									tone='Secondary'
+									weight='Regular'
+								>
+									View the schedule and your own status
+								</Typography>
+							</View>
+						</Card>
+					) : null}
 					<View style={styles.navigationActions}>
 						{onSchedule &&
 						context.membership.role === 'Organizer' &&
@@ -609,30 +663,41 @@ const CommunityDetails = ({
 	);
 	const canRead = contextState.status === 'Ready';
 	const [noJourney, setNoJourney] = useState(false);
+	const [scheduleRefresh, setScheduleRefresh] = useState(0);
+	const [scheduleError, setScheduleError] = useState(false);
+	const [schedule, setSchedule] = useState<ICommunityJourneyPreview | null>(
+		null,
+	);
 	useFocusEffect(
 		useCallback(() => {
 			let active = true;
 			setNoJourney(false);
-			if (
-				canRead &&
-				communityId &&
-				contextState.context.membership.role === 'Organizer' &&
-				contextState.context.community.status === 'Active'
-			) {
+			setSchedule(null);
+			setScheduleError(false);
+			if (canRead && communityId) {
 				void getCommunityJourneySchedule(communityId)
 					.then((result) => {
-						if (active)
-							setNoJourney(result.communityJourney === null);
+						if (!active) return;
+						setScheduleError(false);
+						setSchedule(result.communityJourney);
+						setNoJourney(result.communityJourney === null);
 					})
 					.catch(() => {
-						if (active) setNoJourney(false);
+						if (active) {
+							setSchedule(null);
+							setScheduleError(true);
+							setNoJourney(false);
+						}
 					});
 			}
 			return () => {
 				active = false;
 			};
-		}, [canRead, communityId, contextState]),
+			// A deliberate home refresh reruns the focused schedule reader.
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [canRead, communityId, scheduleRefresh]),
 	);
+
 	const {
 		state: feedState,
 		refresh: refreshFeed,
@@ -653,6 +718,18 @@ const CommunityDetails = ({
 		router.push({
 			pathname: '/communities/[communityId]/settings',
 			params: { communityId: selectedCommunityId },
+		});
+	const openJourneyDetail = (
+		selectedCommunityId: string,
+		selectedCommunityJourneyId: string,
+	) =>
+		router.push({
+			pathname:
+				'/communities/[communityId]/journeys/[communityJourneyId]',
+			params: {
+				communityId: selectedCommunityId,
+				communityJourneyId: selectedCommunityJourneyId,
+			},
 		});
 	const openSchedule = (selectedCommunityId: string) =>
 		router.push({
@@ -690,13 +767,19 @@ const CommunityDetails = ({
 			headerHeight={headerHeight}
 			successMessage={successMessage}
 			onRetry={retry}
-			onRefresh={() => void refreshFeed()}
+			onRefresh={() => {
+				setScheduleRefresh((value) => value + 1);
+				void refreshFeed();
+			}}
 			onLoadMore={() => void loadMore()}
 			onReturn={returnToCommunities}
 			onInvite={openInvitations}
 			onMembers={openMembers}
 			onSettings={openSettings}
 			onSchedule={openSchedule}
+			onJourneyDetail={openJourneyDetail}
+			schedule={schedule}
+			scheduleError={scheduleError}
 			noJourney={noJourney}
 			onCompose={openComposer}
 			onPost={openPost}

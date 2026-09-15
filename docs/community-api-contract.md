@@ -663,12 +663,12 @@ in-app report/block surfaces.
 ### Ticket 22 — restricted platform safety review
 
 `listCommunitySafetyReports`, `claimCommunitySafetyReport`,
-`getCommunitySafetyReport`, and
-`reviewCommunityReport` are Firebase callables. Canonical request, result, report,
-and action types are in `src/types/community/community-moderation.types.ts`;
-validators are sourced from `src/features/communities/community-safety.ts` and
-copied by `scripts/prepare-functions.cjs`. Every request requires a current,
-enabled, email-verified Auth user with the separate Boolean custom claim
+`getCommunitySafetyReport`, and `reviewCommunityReport` are Firebase callables.
+Canonical request, result, report, and action types are in
+`src/types/community/community-moderation.types.ts`; validators are sourced from
+`src/features/communities/community-safety.ts` and copied by
+`scripts/prepare-functions.cjs`. Every request requires a current, enabled,
+email-verified Auth user with the separate Boolean custom claim
 `communitySafetyReviewer: true`, read from Auth on each attempt. Organizer and
 ordinary membership roles grant no access. A caller cannot supply a reviewer ID.
 There is no user-facing role-grant callable. Reports filed by or about the
@@ -677,58 +677,59 @@ operator escalation is required.
 
 Queue input is `{pageSize?, cursor?}`; default page size is 20, limit is 1–50,
 and a cursor is a document ID limited to 512 ASCII identifier characters. It
-returns Submitted and UnderReview cases, ordered by report document ID, with a next cursor
-from the last returned record. Queue entries contain IDs, target, reason,
-status, revision, and creation time, but no explanation or evidence. Firestore
-uses its single-field `review.status` index for this query; Firebase rejected
-the attempted composite status/document-ID index as unnecessary. Detail input is exactly
-`{reportId}`; detail returns the restricted report (including submitted
-revision/evidence) and the current target state/text and SHA-256 text digest.
-Parent post/reply and community IDs are validated in current-state reads.
-Claim input is exactly `{reportId, expectedRevision, operationId}` and changes
-Submitted to UnderReview with reviewer ID, trusted time, and incremented report
-revision in one transaction. A claimed case can be decided only by its claimant;
-concurrent claims conflict. After one hour from the trusted claim timestamp,
-another reviewer may reclaim with the latest report revision; an old claimant
-cannot decide after reassignment. Actor/Claim receipts contain only a request digest,
-report ID, revision, and creation time. A claim retry recovers the same result
-while it remains claimed; its operation ID cannot be reused with another payload.
+returns Submitted and UnderReview cases, ordered by report document ID, with a
+next cursor from the last returned record. Queue entries contain IDs, target,
+reason, status, revision, and creation time, but no explanation or evidence.
+Firestore uses its single-field `review.status` index for this query; Firebase
+rejected the attempted composite status/document-ID index as unnecessary. Detail
+input is exactly `{reportId}`; detail returns the restricted report (including
+submitted revision/evidence) and the current target state/text and SHA-256 text
+digest. Parent post/reply and community IDs are validated in current-state
+reads. Claim input is exactly `{reportId, expectedRevision, operationId}` and
+changes Submitted to UnderReview with reviewer ID, trusted time, and incremented
+report revision in one transaction. A claimed case can be decided only by its
+claimant; concurrent claims conflict. After one hour from the trusted claim
+timestamp, another reviewer may reclaim with the latest report revision; an old
+claimant cannot decide after reassignment. Actor/Claim receipts contain only a
+request digest, report ID, revision, and creation time. A claim retry recovers
+the same result while it remains claimed; its operation ID cannot be reused with
+another payload.
 
-Decision input is exactly `{reportId, expectedRevision,
-expectedTargetRevision, requestedAction, explanation, operationId,
-reviewedCurrentTextDigest?}`. IDs are 1–128 ASCII letters/digits/underscore/hyphen;
-revisions are integers 0–2,147,483,646; explanation trims to 1–1000 characters
-without control characters; optional digest is 64 lowercase hex characters.
-Actions are `RemoveContent` for Post/Reply, `RemoveMember` for Member,
-`CloseCommunity` for Community, or `NoAction` for any supported target. A changed
-reported target must match the current revision; any decision after a text edit
-also requires the digest of the current text returned by detail. Stale
-report/target revisions fail `RevisionConflict`, and missing current-content
-acknowledgement fails `CurrentContentReviewRequired`. Decisions resolve a
-Submitted or claimant-owned UnderReview report transactionally, advance its revision, and create a restricted
-action with reviewer, trusted time, target/report revisions, and reason. Actor
-and Review scoped operation receipts store only a request digest, IDs, and
-creation time; retries detect `OperationPayloadMismatch` and never replay an
-action. Other reasons are `AuthenticationRequired`,
+Decision input is exactly
+`{reportId, expectedRevision, expectedTargetRevision, requestedAction, explanation, operationId, reviewedCurrentTextDigest?}`.
+IDs are 1–128 ASCII letters/digits/underscore/hyphen; revisions are integers
+0–2,147,483,646; explanation trims to 1–1000 characters without control
+characters; optional digest is 64 lowercase hex characters. Actions are
+`RemoveContent` for Post/Reply, `RemoveMember` for Member, `CloseCommunity` for
+Community, or `NoAction` for any supported target. A changed reported target
+must match the current revision; any decision after a text edit also requires
+the digest of the current text returned by detail. Stale report/target revisions
+fail `RevisionConflict`, and missing current-content acknowledgement fails
+`CurrentContentReviewRequired`. Decisions resolve a Submitted or claimant-owned
+UnderReview report transactionally, advance its revision, and create a
+restricted action with reviewer, trusted time, target/report revisions, and
+reason. Actor and Review scoped operation receipts store only a request digest,
+IDs, and creation time; retries detect `OperationPayloadMismatch` and never
+replay an action. Other reasons are `AuthenticationRequired`,
 `EmailVerificationRequired`, `ReviewerRequired`, `ReviewerConflict`,
 `InvalidInput`, `ReportUnavailable`, `CommunityUnavailable`,
 `TargetUnavailable`, `UnsupportedTarget`, `ActionTargetMismatch`,
 `CommunityClosed`, and `OrganizerEscalationRequired`.
 
-Member removal writes the existing Removed membership/index and private
-removal tombstone and queues exit cleanup. Closure revokes the active invitation
-and digest pointer. Content removal creates a text-free ModeratorRemoved
-tombstone. No decision writes a personal journey or private writing. Direct
-client access to reports, moderation actions, claim receipts, and review
-receipts is denied by Rules. Auth claim provisioning and Rules,
-and Functions require operator configuration/deployment. Local Functions
-build/lint, three Ticket 22 non-emulator tests, six Firestore emulator cases,
-one Auth/Firestore emulator Rules case, and the repository's 422-case remote
-Rules evaluator passed. Firebase deploy released the local Rules and indexes,
-reported successful creation/update of every Function, and a subsequent
-inventory check found all four Ticket 22 callables Active with the same deployed
-hash. The CLI nevertheless exited 1 because no Artifact Registry cleanup policy
-is set in `us-central1`; this ticket did not set a billing/retention policy.
+Member removal writes the existing Removed membership/index and private removal
+tombstone and queues exit cleanup. Closure revokes the active invitation and
+digest pointer. Content removal creates a text-free ModeratorRemoved tombstone.
+No decision writes a personal journey or private writing. Direct client access
+to reports, moderation actions, claim receipts, and review receipts is denied by
+Rules. Auth claim provisioning and Rules, and Functions require operator
+configuration/deployment. Local Functions build/lint, three Ticket 22
+non-emulator tests, six Firestore emulator cases, one Auth/Firestore emulator
+Rules case, and the repository's 422-case remote Rules evaluator passed.
+Firebase deploy released the local Rules and indexes, reported successful
+creation/update of every Function, and a subsequent inventory check found all
+four Ticket 22 callables Active with the same deployed hash. The CLI
+nevertheless exited 1 because no Artifact Registry cleanup policy is set in
+`us-central1`; this ticket did not set a billing/retention policy.
 
 ### Ticket 25 — coordinated schedule authority and safe public preview
 
@@ -737,9 +738,9 @@ The callable names are `configureCommunityJourney`, `reviseCommunityJourney`,
 `getCommunityJourneyCourseOption`, and `listCommunityJourneyHistory`. Canonical
 requests/results are the identically named `I...Request`/`I...Result` contracts
 in `src/types/community/community-function.types.ts`; schedule persistence and
-member previews use `ICommunityJourneyDocument` and
-`ICommunityJourneyPreview` in `src/types/community/community-journey.types.ts`.
-The parser source is `src/features/communities/community-journey.ts`, copied by
+member previews use `ICommunityJourneyDocument` and `ICommunityJourneyPreview`
+in `src/types/community/community-journey.types.ts`. The parser source is
+`src/features/communities/community-journey.ts`, copied by
 `prepare-functions.cjs` at build time. Generated copies are never edited.
 
 `configure` accepts exactly communityId, `{courseId,courseVersionId}`,
@@ -775,11 +776,11 @@ may configure, revise, cancel, or read the course option. Active members may
 read current schedule/history; still-active members of a Closed community may
 read the archive. New mutations are rejected immediately after parent closure.
 Configure, revise, and cancel use per-actor/per-operation receipt paths and a
-SHA-256 digest of the bounded canonical request to detect payload mismatch.
-They read the community's currentCommunityJourneyId pointer in the same
-transaction as schedule state. Configure creates a new schedule ID; cancel
-clears the pointer and retains the Canceled record. Revision requires the
-original schedule to remain Scheduled, current, and never enrolled. The
+SHA-256 digest of the bounded canonical request to detect payload mismatch. They
+read the community's currentCommunityJourneyId pointer in the same transaction
+as schedule state. Configure creates a new schedule ID; cancel clears the
+pointer and retains the Canceled record. Revision requires the original schedule
+to remain Scheduled, current, and never enrolled. The
 `firstEnrollmentAcceptedAt` marker starts null and must be set exactly once by
 the first enrollment transaction in Ticket 26, under the same schedule/pointer
 reads. It must never be cleared after withdrawal. Cancel only applies to a
@@ -787,45 +788,45 @@ Scheduled record and does not write a personal journey.
 
 Stable reason codes are `InvalidInput`, `InvalidCursor`, `AccountUnavailable`,
 `CommunityUnavailable`, `CommunityClosed`, `OrganizerRequired`,
-`CourseUnavailable`, `ScheduleExists`, `ScheduleUnavailable`,
-`ScheduleFrozen`, `EnrollmentClosed`, `RevisionConflict`,
-`OperationPayloadMismatch`, and `ScheduleDataUnavailable`. Existing community
-account authentication/verification codes remain in use. No catalog query is
-opened to clients. Direct client read/write access remains denied by Rules for
-community records and schedule operation receipts. The history query uses the
-existing single-field createdAt DESC index with document-ID ordering. Firebase
-rejected a proposed composite createdAt/document-ID index as unnecessary;
-no communityJourneys composite index is required.
+`CourseUnavailable`, `ScheduleExists`, `ScheduleUnavailable`, `ScheduleFrozen`,
+`EnrollmentClosed`, `RevisionConflict`, `OperationPayloadMismatch`, and
+`ScheduleDataUnavailable`. Existing community account
+authentication/verification codes remain in use. No catalog query is opened to
+clients. Direct client read/write access remains denied by Rules for community
+records and schedule operation receipts. The history query uses the existing
+single-field createdAt DESC index with document-ID ordering. Firebase rejected a
+proposed composite createdAt/document-ID index as unnecessary; no
+communityJourneys composite index is required.
 
-Operational prerequisites: `formationConfiguration/current` must identify a
-real current published course/version with its 77 days and 11 introductions.
-Existing communities need no backfill because an absent current pointer means
-no schedule. Any externally created legacy schedule lacking
+Operational prerequisites: `formationConfiguration/current` must identify a real
+current published course/version with its 77 days and 11 introductions. Existing
+communities need no backfill because an absent current pointer means no
+schedule. Any externally created legacy schedule lacking
 firstEnrollmentAcceptedAt needs an explicit migration before it can be read;
 this ticket performs no destructive migration. The pure contract/calendar test
 and Functions build/lint passed locally on 2026-09-15. The Firestore emulator
-suite was not run because no Java runtime is installed. The repository Rules
-API suite was not run because Firebase credentials require reauthentication.
-The edit-versus-enrollment and cancel-versus-enrollment races cannot be verified
-against a real enrollment callable until Ticket 26 supplies it.
-The root `npx tsc --noEmit` check fails on pre-existing application errors
-outside this ticket; it reports no errors in the new community journey parser
-or the narrowly changed community types.
-The first Firebase deployment attempt compiled the Rules but exited before
-publishing Functions when Firestore rejected the unnecessary composite index.
-The retry released `firestore.rules` and reported successful creation of all six
-new callables plus successful update of `previewCommunityInvitation` in
-`us-central1`. A subsequent `firebase functions:list` showed the seven selected
-callables present as Node 22 v2 callables. The deploy CLI still exited 1 because
-it could not set an Artifact Registry cleanup policy in `us-central1`; this
-ticket did not set a billing or retention policy. No production callable smoke
-test or published-course configuration check was performed.
+suite was not run because no Java runtime is installed. The repository Rules API
+suite was not run because Firebase credentials require reauthentication. The
+edit-versus-enrollment and cancel-versus-enrollment races cannot be verified
+against a real enrollment callable until Ticket 26 supplies it. The root
+`npx tsc --noEmit` check fails on pre-existing application errors outside this
+ticket; it reports no errors in the new community journey parser or the narrowly
+changed community types. The first Firebase deployment attempt compiled the
+Rules but exited before publishing Functions when Firestore rejected the
+unnecessary composite index. The retry released `firestore.rules` and reported
+successful creation of all six new callables plus successful update of
+`previewCommunityInvitation` in `us-central1`. A subsequent
+`firebase functions:list` showed the seven selected callables present as Node 22
+v2 callables. The deploy CLI still exited 1 because it could not set an Artifact
+Registry cleanup policy in `us-central1`; this ticket did not set a billing or
+retention policy. No production callable smoke test or published-course
+configuration check was performed.
 
 ### Ticket 26 — private enrollment and withdrawal
 
-The callable names are `getCommunityJourneyEnrollment`, `enrollCommunityJourney`,
-and `withdrawCommunityJourneyEnrollment`. Canonical request/result contracts
-are `IGetCommunityJourneyEnrollmentRequest/Result`,
+The callable names are `getCommunityJourneyEnrollment`,
+`enrollCommunityJourney`, and `withdrawCommunityJourneyEnrollment`. Canonical
+request/result contracts are `IGetCommunityJourneyEnrollmentRequest/Result`,
 `IEnrollCommunityJourneyRequest/Result`, and
 `IWithdrawCommunityJourneyEnrollmentRequest/Result` in
 `src/types/community/community-function.types.ts`. The private persisted record
@@ -844,12 +845,12 @@ below 2,147,483,647. The confirmed IANA zone is 1–100 characters, valid throug
 `Intl.DateTimeFormat`, and cannot be a UTC offset.
 
 All three callables require authentication and verified email. Enrollment
-rechecks the available profile, Active membership, Active community, non-Organizer
-role, current Scheduled schedule, Open enrollment window, matching revision,
-and community-zone date before the named start date. It uses the existing
-journey-start setup choice and full course/translation readiness validators,
-rejects an Active personal journey, and verifies the motivation head against
-its owned revision. The transaction creates only
+rechecks the available profile, Active membership, Active community,
+non-Organizer role, current Scheduled schedule, Open enrollment window, matching
+revision, and community-zone date before the named start date. It uses the
+existing journey-start setup choice and full course/translation readiness
+validators, rejects an Active personal journey, and verifies the motivation head
+against its owned revision. The transaction creates only
 `users/{userId}/communityJourneyEnrollments/{communityJourneyId}` and a bounded
 actor/operation digest receipt; the first accepted enrollment sets the public
 schedule's permanent `firstEnrollmentAcceptedAt` marker. It does not create a
@@ -860,31 +861,31 @@ The organizer/member projections contain none of these private fields.
 
 Enrollment confirmation returns the safe schedule preview, community display
 date, confirmed participant zone, and
-`personalStartDateBehavior: ParticipantCalendarDay1`. The participant-only reader
-returns its enrollment lifecycle and derived activationEligibility, including
-membership/closure/cancellation changes and an active personal journey conflict,
-without returning writing text.
-Withdrawal changes Enrolled to Withdrawn only, and never deletes setup writing
-or a personal journey. Started enrollment returns `EnrollmentStarted`; a
-Withdrawn record cannot be enrolled again. Enrollment and withdrawal receipts
-are scoped to actor and operation and store only a request SHA-256 digest and
-creation time. A repeated enrollment receipt rechecks current membership and
-schedule state; changed payload returns `OperationPayloadMismatch`.
+`personalStartDateBehavior: ParticipantCalendarDay1`. The participant-only
+reader returns its enrollment lifecycle and derived activationEligibility,
+including membership/closure/cancellation changes and an active personal journey
+conflict, without returning writing text. Withdrawal changes Enrolled to
+Withdrawn only, and never deletes setup writing or a personal journey. Started
+enrollment returns `EnrollmentStarted`; a Withdrawn record cannot be enrolled
+again. Enrollment and withdrawal receipts are scoped to actor and operation and
+store only a request SHA-256 digest and creation time. A repeated enrollment
+receipt rechecks current membership and schedule state; changed payload returns
+`OperationPayloadMismatch`.
 
 Typed reasons are `InvalidInput`, `AccountUnavailable`, `CommunityUnavailable`,
 `MembershipEnded`, `CommunityClosed`, `OrganizerCannotEnroll`,
-`ScheduleChanged`, `ScheduleCanceled`, `EnrollmentClosed`,
-`ContentUnavailable`, `SetupChanged`, `SetupInvalid`, `WritingUnavailable`,
-`ActivePersonalJourney`, `EnrollmentAlreadyExists`, `EnrollmentWithdrawn`,
-`EnrollmentStarted`, `EnrollmentUnavailable`, `OperationPayloadMismatch`, and
+`ScheduleChanged`, `ScheduleCanceled`, `EnrollmentClosed`, `ContentUnavailable`,
+`SetupChanged`, `SetupInvalid`, `WritingUnavailable`, `ActivePersonalJourney`,
+`EnrollmentAlreadyExists`, `EnrollmentWithdrawn`, `EnrollmentStarted`,
+`EnrollmentUnavailable`, `OperationPayloadMismatch`, and
 `EnrollmentDataUnavailable`. The reader is a single-record lookup; no cursor or
 composite index is needed. Rules explicitly deny direct client reads and writes
-to enrollment and operation receipts. Existing Active-journey single-field
-query indexing is used. Legacy enrollment records lacking the confirmed zone,
-snapshot revision, or consent timestamp need deliberate migration before this
-reader accepts them. Production formation configuration must map each selected
-Bible version to a released text edition and the scheduled published course.
-Actual Day 1 activation and monitoring belong to the later activation ticket.
+to enrollment and operation receipts. Existing Active-journey single-field query
+indexing is used. Legacy enrollment records lacking the confirmed zone, snapshot
+revision, or consent timestamp need deliberate migration before this reader
+accepts them. Production formation configuration must map each selected Bible
+version to a released text edition and the scheduled published course. Actual
+Day 1 activation and monitoring belong to the later activation ticket.
 
 Local build, lint, contract, Rules, and emulator results are recorded in the
 Ticket 26 operational notes in `docs/community-implementation-plan.md`.
@@ -898,8 +899,8 @@ and zero platform retries. Its backend implementation is
 participant-private records and four pages of 20 Scheduled/Active public
 schedules per invocation. Each collection-group scan orders by document path;
 private cursor paths live only in `communityJourneyActivationWorker/current`.
-The next invocation resumes after the cursor, wrapping to the first page at
-the end. A crash before checkpoint advancement may repeat a page; enrollment
+The next invocation resumes after the cursor, wrapping to the first page at the
+end. A crash before checkpoint advancement may repeat a page; enrollment
 lifecycle, the account journey-control lock, and actor-scoped activation
 receipts make repeating a completed start safe. The worker reports a failed
 candidate count in its private checkpoint, without recording bodies or invite
@@ -927,45 +928,45 @@ only while the participant's scheduled Day 1 remains current. A later date
 records `MissedStartDate` and creates no journey. Other block reasons are
 `ActivePersonalJourney`, `MembershipEnded`, `CommunityJourneyCanceled`,
 `CommunityClosed`, `AccountUnavailable`, `EmailVerificationRequired`,
-`ContentUnavailable`, `SetupInvalid`, and `WritingUnavailable`. Input errors
-use `InvalidInput`; invalid persisted enrollment/schedule data use
+`ContentUnavailable`, `SetupInvalid`, and `WritingUnavailable`. Input errors use
+`InvalidInput`; invalid persisted enrollment/schedule data use
 `EnrollmentDataUnavailable`/`ScheduleDataUnavailable`.
 
 The existing `getCommunityJourneyEnrollment` result keeps its previous fields
 and adds `communityCalendarDate` and `startingZoneCalendarDate`, derived from
-one server instant. It reads only the caller's private enrollment and returns
-no writing text or other participant schedules. An Active public schedule may
-still be eligible for participant-zone Day 1 activation. The public schedule
-becomes Active on its own start date and Completed at the beginning of its Day
-78 in the community zone, with actual reconciliation timestamps. A started
-private journey keeps the existing phone-zone day semantics after membership
-or community lifecycle changes.
+one server instant. It reads only the caller's private enrollment and returns no
+writing text or other participant schedules. An Active public schedule may still
+be eligible for participant-zone Day 1 activation. The public schedule becomes
+Active on its own start date and Completed at the beginning of its Day 78 in the
+community zone, with actual reconciliation timestamps. A started private journey
+keeps the existing phone-zone day semantics after membership or community
+lifecycle changes.
 
-Collection-group single-field indexes on `lifecycle.status` are required
-for enrollment and schedule scans; document path ordering is implicit. Rules explicitly deny direct client access
-to activation receipts and the worker checkpoint; enrollment and public
-community records retain the callable-only boundary. Existing enrollment
-records must have the Ticket 26 consent snapshot and freeze marker. Missing
-or incompatible records require deliberate migration rather than an invented
-start. Local Functions build/lint and 30 contract/calendar/normal-start tests
-passed. The extended Firestore emulator transaction tests were added but not
-run because Java is unavailable. The remote Rules API test was attempted but
-could not contact Firebase; root application type check still has unrelated
-baseline errors and none in this ticket's changed contract files.
+Collection-group single-field indexes on `lifecycle.status` are required for
+enrollment and schedule scans; document path ordering is implicit. Rules
+explicitly deny direct client access to activation receipts and the worker
+checkpoint; enrollment and public community records retain the callable-only
+boundary. Existing enrollment records must have the Ticket 26 consent snapshot
+and freeze marker. Missing or incompatible records require deliberate migration
+rather than an invented start. Local Functions build/lint and 30
+contract/calendar/normal-start tests passed. The extended Firestore emulator
+transaction tests were added but not run because Java is unavailable. The remote
+Rules API test was attempted but could not contact Firebase; root application
+type check still has unrelated baseline errors and none in this ticket's changed
+contract files.
 
 The requested Firebase deploy released `firestore.rules` and the two
 collection-group single-field index controls, created the scheduled worker and
-retry callable, and updated `getCommunityJourneyEnrollment` and
-`startJourney` in `us-central1` on Node 22 v2. The Function inventory showed
-the scheduled and callable triggers. The deploy CLI exited 1 after successful
-resource operations because it could not establish an Artifact Registry
-cleanup policy in `us-central1`; no retention or billing policy was changed.
-Authenticated production activation/retry and Scheduler execution have not
-been smoke-tested.
+retry callable, and updated `getCommunityJourneyEnrollment` and `startJourney`
+in `us-central1` on Node 22 v2. The Function inventory showed the scheduled and
+callable triggers. The deploy CLI exited 1 after successful resource operations
+because it could not establish an Artifact Registry cleanup policy in
+`us-central1`; no retention or billing policy was changed. Authenticated
+production activation/retry and Scheduler execution have not been smoke-tested.
 
-A later worker/retry update uploaded the final persisted-data validation
-change, but its CLI wait produced no completion result and was interrupted.
-The next Function inventory listed both triggers with runtime fields
-unavailable during update; a later inventory again showed Node 22 v2 and 256 MB
-for each. The CLI did not confirm the exact revised source hash, so treat that
-revision as pending verification.
+A later worker/retry update uploaded the final persisted-data validation change,
+but its CLI wait produced no completion result and was interrupted. The next
+Function inventory listed both triggers with runtime fields unavailable during
+update; a later inventory again showed Node 22 v2 and 256 MB for each. The CLI
+did not confirm the exact revised source hash, so treat that revision as pending
+verification.

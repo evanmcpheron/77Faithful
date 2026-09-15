@@ -727,15 +727,15 @@ components/utilities and reported no Ticket 20 file error.
 
 ## Ticket 22 operational notes
 
-An authorized Firebase operator must provision and revoke reviewer access out
-of band through Firebase Auth user custom claims. Preserve unrelated claims,
-set only `communitySafetyReviewer: true` for a separately selected, trained
-reviewer, and remove that property or set it false to revoke. Verify the user
-is email-verified and enabled; do not grant a real account a claim merely to
+An authorized Firebase operator must provision and revoke reviewer access out of
+band through Firebase Auth user custom claims. Preserve unrelated claims, set
+only `communitySafetyReviewer: true` for a separately selected, trained
+reviewer, and remove that property or set it false to revoke. Verify the user is
+email-verified and enabled; do not grant a real account a claim merely to
 exercise this checkout. Each review callable reads the current Auth user record,
-so a stale client token or Organizer role does not retain access after revocation.
-The reviewer has no community administration or personal-account authority by
-virtue of this claim.
+so a stale client token or Organizer role does not retain access after
+revocation. The reviewer has no community administration or personal-account
+authority by virtue of this claim.
 
 Operators need a staffed queue, published response/escalation process, and a
 second independent reviewer for cases filed by or about a reviewer. Reports
@@ -743,55 +743,54 @@ about Organizers remain in the restricted platform queue rather than settings.
 The workflow offers an expected-revision claim and resolves a Submitted or
 claimant-owned UnderReview report through an expected-revision decision. Two
 concurrent reviewers cannot silently replace one another. An UnderReview claim
-expires for reassignment after one hour; takeover requires
-the latest report revision and a currently authorized independent reviewer.
-Operators must watch stalled claims and provision a second reviewer. A reported
-member who has become Organizer requires escalation before removal; reviewers
-may choose NoAction or CloseCommunity on a suitable report, but cannot use
-ordinary member removal to break the organizer invariant. The role claim must
-not be granted via any callable or client route.
+expires for reassignment after one hour; takeover requires the latest report
+revision and a currently authorized independent reviewer. Operators must watch
+stalled claims and provision a second reviewer. A reported member who has become
+Organizer requires escalation before removal; reviewers may choose NoAction or
+CloseCommunity on a suitable report, but cannot use ordinary member removal to
+break the organizer invariant. The role claim must not be granted via any
+callable or client route.
 
 Before production use, an operator must approve exact retention periods and a
-restricted deletion procedure for submitted evidence, explanations, actions,
-and review receipts, plus backup/access practices. No retention schedule or
-staffed review service is established by this code. Restricted evidence must
-never be exported into member readers or a private journal lookup. Deploy the
-Rules denials with the Functions; Firestore's single-field status index serves
-the queue without a new composite index. No existing report migration is needed for Submitted prompt 20
-records. Six Firestore emulator transaction cases and one Auth/Firestore
-emulator Rules case passed using an existing bundled Java runtime. The
-repository's separate 422-case remote Rules evaluator also passed. Firebase
-project access was verified. The corrected deploy released Rules and indexes,
-reported successful creation/update of all Functions, and a follow-up inventory
-showed all four Ticket 22 callables Active under one deployed hash. The Firebase
-CLI still exited 1 because the project has no `us-central1` Artifact Registry
-cleanup policy; no policy was set by this ticket. Local Functions build/lint
-and three Ticket 22 non-emulator tests passed.
+restricted deletion procedure for submitted evidence, explanations, actions, and
+review receipts, plus backup/access practices. No retention schedule or staffed
+review service is established by this code. Restricted evidence must never be
+exported into member readers or a private journal lookup. Deploy the Rules
+denials with the Functions; Firestore's single-field status index serves the
+queue without a new composite index. No existing report migration is needed for
+Submitted prompt 20 records. Six Firestore emulator transaction cases and one
+Auth/Firestore emulator Rules case passed using an existing bundled Java
+runtime. The repository's separate 422-case remote Rules evaluator also passed.
+Firebase project access was verified. The corrected deploy released Rules and
+indexes, reported successful creation/update of all Functions, and a follow-up
+inventory showed all four Ticket 22 callables Active under one deployed hash.
+The Firebase CLI still exited 1 because the project has no `us-central1`
+Artifact Registry cleanup policy; no policy was set by this ticket. Local
+Functions build/lint and three Ticket 22 non-emulator tests passed.
 
 ### Ticket 25 operational notes — coordinated schedule backend
 
 The checkout now has a callable-only current schedule, history reader,
-organizer-only published-current-course option, organizer configure/revise,
-and scheduled cancel. The currentCommunityJourneyId pointer on the community
-record and firstEnrollmentAcceptedAt marker on the schedule are the transaction
+organizer-only published-current-course option, organizer configure/revise, and
+scheduled cancel. The currentCommunityJourneyId pointer on the community record
+and firstEnrollmentAcceptedAt marker on the schedule are the transaction
 coordination fields for Ticket 26 enrollment. Enrollment must read and update
 those exact records in one transaction, set the marker when the first acceptance
 commits, and never clear it after withdrawal. A cancellation clears the pointer
-without ending any started personal journey; a new schedule uses a new ID.
-The public closure/display boundary is the named start date in the community
-IANA zone. Participant activation date and zone remain separate future work.
-The current published-course configuration must be present in the deployed
+without ending any started personal journey; a new schedule uses a new ID. The
+public closure/display boundary is the named start date in the community IANA
+zone. Participant activation date and zone remain separate future work. The
+current published-course configuration must be present in the deployed
 environment. The existing single-field createdAt index supports history;
-Firestore rejected an unnecessary composite during the first deploy attempt.
-No community backfill is
-needed for records without a schedule pointer. An older out-of-band schedule
-without the first-enrollment marker needs deliberate migration. Local pure
-calendar/contract tests and Functions build/lint passed on 2026-09-15. Emulator
-transaction/Rules tests could not run without Java; remote Rules API tests could
-not run without refreshed Firebase credentials. No enrollment callable exists
-in this checkout, so enrollment races remain a Ticket 26 integration check.
-The root application type check still fails on unrelated baseline errors;
-the new parser and changed community types report no errors.
+Firestore rejected an unnecessary composite during the first deploy attempt. No
+community backfill is needed for records without a schedule pointer. An older
+out-of-band schedule without the first-enrollment marker needs deliberate
+migration. Local pure calendar/contract tests and Functions build/lint passed on
+2026-09-15. Emulator transaction/Rules tests could not run without Java; remote
+Rules API tests could not run without refreshed Firebase credentials. No
+enrollment callable exists in this checkout, so enrollment races remain a Ticket
+26 integration check. The root application type check still fails on unrelated
+baseline errors; the new parser and changed community types report no errors.
 The second Firebase attempt released the Rules and reported success for all six
 new schedule callables and the invitation-preview update. The Function inventory
 confirmed their presence as v2 Node 22 callables. The CLI exited 1 only on its
@@ -813,62 +812,61 @@ records. Withdrawal removes unstarted activation eligibility while preserving
 private setup writing and unrelated journeys. Schedule and account records
 created outside these contracts may require a deliberate migration; none is
 performed here. Formation configuration must point to the scheduled published
-course/version and released selected text edition with complete readings.
-Day 1 activation, automatic retry, monitoring, and participant conflict review
-remain separate work. Local Functions build/lint and scoped Prettier checks
-passed. Five focused enrollment/schedule contract and callable-auth tests, and 22 existing
-journey-start tests passed. The repository Rules API suite passed 492/492 cases,
-including owner and other-account denials for the new private enrollment and
-receipt paths. Root Expo lint passed with seven existing warnings. The root
-TypeScript check still fails on existing application errors outside this ticket.
-The Firestore emulator transaction suite was written but **not run** because
-this machine has no Java runtime. Firestore indexes are unchanged: the reader
-uses a document lookup and enrollment uses the existing Active-journey
-single-field query. Production callable smoke and formation configuration
-checks remain pending. Compilation and Rules evaluation alone are not
-production behavior evidence.
-The requested Firebase deploy released `firestore.rules` and reported
-successful creation of all three Ticket 26 Node 22 v2 callables in
-`us-central1`. A subsequent inventory showed each Active. The deploy CLI
-exited 1 only because the project has no Artifact Registry cleanup policy in
-`us-central1`; this ticket did not set a billing or retention policy. No
-authenticated production enrollment/withdrawal smoke was performed.
+course/version and released selected text edition with complete readings. Day 1
+activation, automatic retry, monitoring, and participant conflict review remain
+separate work. Local Functions build/lint and scoped Prettier checks passed.
+Five focused enrollment/schedule contract and callable-auth tests, and 22
+existing journey-start tests passed. The repository Rules API suite passed
+492/492 cases, including owner and other-account denials for the new private
+enrollment and receipt paths. Root Expo lint passed with seven existing
+warnings. The root TypeScript check still fails on existing application errors
+outside this ticket. The Firestore emulator transaction suite was written but
+**not run** because this machine has no Java runtime. Firestore indexes are
+unchanged: the reader uses a document lookup and enrollment uses the existing
+Active-journey single-field query. Production callable smoke and formation
+configuration checks remain pending. Compilation and Rules evaluation alone are
+not production behavior evidence. The requested Firebase deploy released
+`firestore.rules` and reported successful creation of all three Ticket 26 Node
+22 v2 callables in `us-central1`. A subsequent inventory showed each Active. The
+deploy CLI exited 1 only because the project has no Artifact Registry cleanup
+policy in `us-central1`; this ticket did not set a billing or retention policy.
+No authenticated production enrollment/withdrawal smoke was performed.
 
 ### Ticket 27 operational notes — due enrollment activation
 
-The scheduled worker is exported as `activateDueCommunityJourneyEnrollments`
-and runs every five minutes in UTC with one instance, four 20-record enrollment
+The scheduled worker is exported as `activateDueCommunityJourneyEnrollments` and
+runs every five minutes in UTC with one instance, four 20-record enrollment
 pages and four 20-record schedule pages per invocation. Deployment must create
 its Cloud Scheduler job and grant its runtime identity Firestore/Admin Auth
 access. Confirm the two collection-group indexes and Rules deployment before
-enabling activation. Verify that existing private enrollments include the
-Ticket 26 consent/zone/setup snapshot and that schedules retain their freeze
-marker; incompatible records need a deliberate migration. Formation
-configuration must pin the scheduled published course and released text
-edition for each selected translation. No migration is performed here.
+enabling activation. Verify that existing private enrollments include the Ticket
+26 consent/zone/setup snapshot and that schedules retain their freeze marker;
+incompatible records need a deliberate migration. Formation configuration must
+pin the scheduled published course and released text edition for each selected
+translation. No migration is performed here.
 
 Monitor `communityJourneyActivationWorker/current.failedInLastRun`, scheduler
 execution failures, and Enrolled records still due near participant-zone Day 1
 end. A transient failure leaves the enrollment Enrolled, so a repeated worker
-page or participant `retryCommunityJourneyActivation` can resume during Day 1.
-A missed date becomes `StartBlocked/MissedStartDate` with the real block time;
-it is not backdated. A dry run without writes is available through
+page or participant `retryCommunityJourneyActivation` can resume during Day 1. A
+missed date becomes `StartBlocked/MissedStartDate` with the real block time; it
+is not backdated. A dry run without writes is available through
 `runDueCommunityJourneyBatch({ database }, true)` in a Firestore emulator or
-controlled local Functions process. The dry-run count is the number of
-candidate records scanned, including future Enrolled records, rather than the
-number that would start. Emulator invocation and a seeded participant-zone
-DST/date matrix are in `tests/community-journey-enrollment.emulator.test.cjs`.
+controlled local Functions process. The dry-run count is the number of candidate
+records scanned, including future Enrolled records, rather than the number that
+would start. Emulator invocation and a seeded participant-zone DST/date matrix
+are in `tests/community-journey-enrollment.emulator.test.cjs`.
 
 The normal personal-start response shape remains unchanged. Both start paths
 write the private journey, motivation head revision, account preference, and
 journey-control marker through one shared trusted write set. The enrollment
-transaction atomically changes the private lifecycle to Started or
-StartBlocked. Public schedule reconciliation uses its own community-zone
-calendar and practice totals do not influence completion. Membership exit or
-group closure never mutates an already started private journey. The status
-reader adds one server-instant calendar date in the community zone and the
-confirmed starting zone, so callers can explain a displayed-day difference;
-the actual personal journey continues to use its current phone-zone semantics.
+transaction atomically changes the private lifecycle to Started or StartBlocked.
+Public schedule reconciliation uses its own community-zone calendar and practice
+totals do not influence completion. Membership exit or group closure never
+mutates an already started private journey. The status reader adds one
+server-instant calendar date in the community zone and the confirmed starting
+zone, so callers can explain a displayed-day difference; the actual personal
+journey continues to use its current phone-zone semantics.
 
 Local Functions build and lint passed; 30 activation contract, calendar,
 enrollment contract, schedule contract, and existing normal-start tests passed.
@@ -879,15 +877,15 @@ were **not run** because this machine has no Java runtime. Remote Rules API
 evaluation was attempted but could not contact Firebase. The root TypeScript
 check still fails on baseline component/utility errors, with no reported error
 in the changed shared contract/parser files. Authenticated production retry,
-activation, status, scheduler health, index and Rules smoke checks remain
-manual verification steps.
+activation, status, scheduler health, index and Rules smoke checks remain manual
+verification steps.
 
 The requested Firebase deploy released the Rules and both collection-group
 single-field index controls, created `activateDueCommunityJourneyEnrollments`
 and `retryCommunityJourneyActivation`, and updated
 `getCommunityJourneyEnrollment` and `startJourney` in `us-central1`. A Function
-inventory confirmed the scheduled and callable triggers. The CLI exited 1
-only at the Artifact Registry cleanup-policy step after the resources reported
+inventory confirmed the scheduled and callable triggers. The CLI exited 1 only
+at the Artifact Registry cleanup-policy step after the resources reported
 success; no retention/billing policy was changed. Production scheduler
 execution, account/content configuration, index readiness, and authenticated
 activation/retry status remain unverified. No deployment result resolves the

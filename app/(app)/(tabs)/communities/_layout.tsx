@@ -149,6 +149,30 @@ const CommunitiesLayout = () => {
 					}}
 				/>
 				<Stack.Screen
+					name='[communityId]/journeys/[communityJourneyId]'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						header: () => (
+							<CommunityChildHeader title='Community journey' />
+						),
+					}}
+				/>
+				<Stack.Screen
+					name='[communityId]/journeys/[communityJourneyId]/enroll'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						header: () => (
+							<CommunityChildHeader title='Review enrollment' />
+						),
+					}}
+				/>
+				<Stack.Screen
 					name='[communityId]/report'
 					options={{
 						headerShown: true,

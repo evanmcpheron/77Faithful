@@ -84,11 +84,18 @@ export interface ICommunityPostDocument extends IDocumentTimestamps {
 	communityId: string;
 	author: ICommunityAuthorSummary;
 	revision: number;
+	// Optional for Ticket 12 records; initialized transactionally by the first reply.
+	replyCount?: number;
 	editedAt: IPersistedTimestamp | null;
 	publication:
 		| IPublishedCommunityPost
 		| IAuthorDeletedCommunityPost
 		| IModeratorRemovedCommunityPost;
+}
+
+// Safe callable projection. Tombstones retain identity and omit authored text.
+export interface ICommunityPost extends ICommunityPostDocument {
+	postId: string;
 }
 
 export interface IPublishedCommunityReply {
@@ -118,4 +125,25 @@ export interface ICommunityReplyDocument extends IDocumentTimestamps {
 		| IPublishedCommunityReply
 		| IAuthorDeletedCommunityReply
 		| IModeratorRemovedCommunityReply;
+}
+
+// Safe callable projection. Reply records are one level beneath their post.
+export interface ICommunityReply extends ICommunityReplyDocument {
+	replyId: string;
+}
+
+export interface ICommunityPrayerAcknowledgmentDocument extends IDocumentTimestamps {
+	schemaVersion: typeof DomainSchemaVersion.Current;
+	communityId: string;
+	postId: string;
+	supporter: ICommunityAuthorSummary;
+	isPraying: boolean;
+	revision: number;
+	acknowledgedAt: IPersistedTimestamp | null;
+	// Retained across withdrawal/reactivation so later notification work can fire once.
+	firstNotificationEligibleAt: IPersistedTimestamp;
+}
+
+export interface ICommunityPrayerSupporter extends ICommunityAuthorSummary {
+	acknowledgedAt: IPersistedTimestamp;
 }

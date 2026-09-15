@@ -10,6 +10,7 @@ import {
 import { db } from '@td/services/firebase/firebase.instance';
 import type { IDevicePreferencesDocument } from '@td/types/account/device-preferences.types';
 import type { IJourneySetupDraftDocument } from '@td/types/account/journey-setup.types';
+import { JourneySetupStep } from '@td/types/account/journey-setup.types';
 import type {
 	IWritingHead,
 	IWritingRevisionDocument,
@@ -62,6 +63,39 @@ export const loadJourneySetup = async (
 				? (deviceSnapshot.data() as IDevicePreferencesDocument)
 				: null,
 		};
+	});
+};
+
+/** Choice edits during community enrollment must leave private writing and device preferences intact. */
+export const saveJourneySetupChoicesOnly = async ({
+	userId,
+	expectedRevision,
+	choices,
+}: {
+	userId: string;
+	expectedRevision: number | null;
+	choices: IJourneySetupDraftDocument['choices'];
+}): Promise<void> => {
+	const reference = doc(db, 'users', userId, 'journeySetupDrafts', 'current');
+	await runTransaction(db, async (transaction) => {
+		const snapshot = await transaction.get(reference);
+		const draft = snapshot.data() as IJourneySetupDraftDocument | undefined;
+		if (
+			(draft?.revision ?? null) !== expectedRevision ||
+			(draft && draft.userId !== userId)
+		)
+			throw new JourneySetupConflictError();
+		const nextDraft: WithFieldValue<IJourneySetupDraftDocument> = {
+			schemaVersion: DomainSchemaVersion.Current,
+			userId,
+			revision: (expectedRevision ?? -1) + 1,
+			currentStep: JourneySetupStep.Review,
+			choices,
+			startingMotivation: draft?.startingMotivation ?? null,
+			createdAt: draft?.createdAt ?? serverTimestamp(),
+			updatedAt: serverTimestamp(),
+		};
+		transaction.set(reference, nextDraft);
 	});
 };
 

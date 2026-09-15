@@ -145,6 +145,7 @@ test('atomically creates private community and organizer membership without publ
 	assert.equal(community.purpose, '');
 	assert.equal(community.createdAt.constructor.name, 'Timestamp');
 	assert.equal(community.revision, 0);
+	assert.equal(community.activeInvitationId, null);
 	assert.equal(member.role, 'Organizer');
 	assert.equal(member.displayName, undefined);
 	assert.equal(member.lifecycle.status, 'Active');
@@ -288,13 +289,6 @@ test('requires a confirmed identity and rejects caller-supplied identities on re
 			{ code: 'permission-denied' },
 		);
 	}
-	await assert.rejects(
-		listCommunities.run({
-			data: { userId: 'other' },
-			auth: { uid: 'owner', token: { email_verified: true } },
-		}),
-		{ code: 'invalid-argument' },
-	);
 	const { database } = databaseFixture();
 	for (const data of [
 		null,

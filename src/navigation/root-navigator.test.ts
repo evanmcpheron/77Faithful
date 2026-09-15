@@ -1,6 +1,7 @@
 import { useAuth } from '@td/providers/auth/auth.hook';
 import type { IAuthContextValue } from '@td/providers/auth/auth.types';
 import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
+import { Stack } from 'expo-router';
 import { createElement, type ReactNode } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { RootNavigator } from './root-navigator.component';
@@ -16,9 +17,7 @@ jest.mock('@td/components/ui/loading-state/loading-state.component', () => ({
 	LoadingState: () => 'account-loading',
 }));
 jest.mock('expo-router', () => {
-	const Stack = ({ children }: { children: ReactNode }) => children;
 	const Screen = ({ name }: { name: string }) => name;
-	Stack.Screen = Screen;
 	const Protected = ({
 		guard,
 		children,
@@ -26,7 +25,10 @@ jest.mock('expo-router', () => {
 		guard: boolean;
 		children: ReactNode;
 	}) => (guard ? children : null);
-	Stack.Protected = Protected;
+	const Stack = Object.assign(
+		jest.fn(({ children }: { children: ReactNode }) => children),
+		{ Screen, Protected },
+	);
 	return { Stack };
 });
 
@@ -110,12 +112,24 @@ it('switches available route groups as sign-in, verification, and sign-out happe
 	});
 	render();
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(auth)',
+	);
 	update(account);
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(auth)',
+	);
 	update({ ...account, isEmailConfirmed: true });
 	expect(renderer.toJSON()).toEqual(['(app)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(app)',
+	);
 	update(null);
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
+	expect(jest.mocked(Stack).mock.lastCall?.[0].initialRouteName).toBe(
+		'(auth)',
+	);
 });
 
 it('blocks private routes for a verified account until its profile is saved', () => {
@@ -136,7 +150,7 @@ it('blocks private routes for a verified account until its profile is saved', ()
 	expect(renderer.toJSON()).toEqual(['(auth)', '(public)', '+not-found']);
 });
 
-it('routes an eligible account without a journey into setup and opens the app after confirmation', () => {
+it('keeps setup available without a journey while allowing independent authenticated app routes', () => {
 	mockSession({
 		account: {
 			userId: 'owner',
@@ -154,7 +168,12 @@ it('routes an eligible account without a journey into setup and opens the app af
 		retry: jest.fn(),
 	});
 	render();
-	expect(renderer.toJSON()).toEqual(['onboarding', '(public)', '+not-found']);
+	expect(renderer.toJSON()).toEqual([
+		'(app)',
+		'onboarding',
+		'(public)',
+		'+not-found',
+	]);
 	jest.mocked(useJourneyAccess).mockReturnValue({
 		activeJourney: null,
 		hasJourney: true,

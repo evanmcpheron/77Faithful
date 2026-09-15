@@ -1,4 +1,6 @@
 import { ensureAccountProfile } from '@td/features/account/account-profile.service';
+import { clearCommunityPostDrafts } from '@td/features/communities/community-post-draft';
+import { unregisterCommunityPush } from '@td/features/communities/community-push.service';
 import { subscribeDaySessionInvalidation } from '@td/features/journey/day-session-invalidation.service';
 import { setDaySessionAccount } from '@td/features/journey/journey-day-cache';
 import {
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		isReady: boolean;
 		error: Error | null;
 	} | null>(null);
+	const draftAccount = useRef<string | null>(null);
 
 	const signUp = useCallback(async (credentials: ISignUpCredentials) => {
 		// Reserve the name before Firebase publishes the signed-in account.
@@ -53,6 +56,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		() =>
 			subscribeToAccount(
 				(nextAccount) => {
+					if (
+						draftAccount.current !== (nextAccount?.userId ?? null)
+					) {
+						clearCommunityPostDrafts();
+						draftAccount.current = nextAccount?.userId ?? null;
+					}
 					setDaySessionAccount(
 						nextAccount?.isEmailConfirmed
 							? nextAccount.userId
@@ -67,6 +76,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					setIsInitializing(false);
 				},
 				(error) => {
+					clearCommunityPostDrafts();
+					draftAccount.current = null;
 					setDaySessionAccount(null);
 					setProfileState(null);
 					registration.current = null;
@@ -128,7 +139,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const value = useMemo<IAuthContextValue>(
 		() => ({
 			...authActions,
-			signUp,
+			signIn: async (credentials) => {
+				if (account?.userId)
+					await unregisterCommunityPush(account.userId);
+				return authActions.signIn(credentials);
+			},
+			signUp: async (credentials) => {
+				if (account?.userId)
+					await unregisterCommunityPush(account.userId);
+				return signUp(credentials);
+			},
+			signOut: async () => {
+				if (account?.userId)
+					await unregisterCommunityPush(account.userId);
+				await authActions.signOut();
+			},
 			account,
 			isInitializing,
 			initializationError,

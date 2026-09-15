@@ -1,4 +1,8 @@
-import type { Firestore, Transaction } from 'firebase-admin/firestore';
+import type {
+	DocumentReference,
+	Firestore,
+	Transaction,
+} from 'firebase-admin/firestore';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { HttpsError } from 'firebase-functions/v2/https';
 
@@ -7,7 +11,10 @@ import {
 	getJourneyCalendarDate,
 	getJourneyEndTime,
 } from '../../generated/features/journey/journey-calendar';
-import type { IJourneySetupDraftDocument } from '../../generated/types/account/journey-setup.types';
+import type {
+	IJourneySetupDraftDocument,
+	IReadyJourneySetupChoices,
+} from '../../generated/types/account/journey-setup.types';
 import { BibleVersionId } from '../../generated/types/formation/bible-version.types';
 import { FormationThemeOrder } from '../../generated/types/formation/formation-course.types';
 import { OptionalPracticeId } from '../../generated/types/formation/practice.types';
@@ -15,7 +22,10 @@ import type {
 	IStartJourneyRequest,
 	TStartJourneyResult,
 } from '../../generated/types/journey/journey-function.types';
-import type { IWritingRevisionDocument } from '../../generated/types/journey/journey-writing.types';
+import type {
+	IWritingHead,
+	IWritingRevisionDocument,
+} from '../../generated/types/journey/journey-writing.types';
 import type {
 	IJourneyDetails,
 	IJourneyDocument,
@@ -94,7 +104,7 @@ export const parseStartJourneyRequest = (
 	};
 };
 
-const requirePublishedCourse = async (
+export const requirePublishedCourse = async (
 	transaction: Transaction,
 	database: Firestore,
 	bibleVersionId: string,
@@ -238,6 +248,24 @@ const requirePublishedCourse = async (
 	return { courseId, courseVersionId };
 };
 
+export const isReadyJourneySetup = (
+	draft: IJourneySetupDraftDocument,
+): draft is IJourneySetupDraftDocument & {
+	choices: IReadyJourneySetupChoices;
+} =>
+	draft.currentStep === 'Review' &&
+	Boolean(draft.choices) &&
+	draft.choices.readiness === 'ReadyForReview' &&
+	Array.isArray(draft.choices.optionalPracticeIds) &&
+	draft.choices.optionalPracticeIds.length >= 2 &&
+	draft.choices.optionalPracticeIds.length <= 4 &&
+	new Set(draft.choices.optionalPracticeIds).size ===
+		draft.choices.optionalPracticeIds.length &&
+	draft.choices.optionalPracticeIds.every((practiceId) =>
+		Object.values(OptionalPracticeId).includes(practiceId),
+	) &&
+	Object.values(BibleVersionId).includes(draft.choices.bibleVersionId);
+
 const getDetails = (
 	journeyId: string,
 	journey: IJourneyDocument,
@@ -277,6 +305,63 @@ const getDetails = (
 	},
 	day77Date: addJourneyCalendarDays(journey.startDate, 76),
 });
+
+/** Shared write set; callers must first read the account lock and Active-journey query. */
+export const writePrivateJourneyStart = ({
+	transaction,
+	userReference,
+	journeyReference,
+	lockReference,
+	preferencesReference,
+	preferences,
+	journey,
+	motivationRevision,
+	motivationHead,
+	bibleVersionId,
+	now,
+}: {
+	transaction: Transaction;
+	userReference: DocumentReference;
+	journeyReference: DocumentReference;
+	lockReference: DocumentReference;
+	preferencesReference: DocumentReference;
+	preferences: FirebaseFirestore.DocumentData | undefined;
+	journey: IJourneyDocument;
+	motivationRevision: IWritingRevisionDocument | null;
+	motivationHead: IWritingHead | null;
+	bibleVersionId: string;
+	now: Timestamp;
+}): void => {
+	transaction.create(journeyReference, journey);
+	if (motivationRevision && motivationHead) {
+		transaction.create(
+			journeyReference
+				.collection('writingRevisions')
+				.doc(motivationHead.revisionId),
+			{
+				userId: userReference.id,
+				target: {
+					kind: 'StartingMotivation',
+					journeyId: journeyReference.id,
+				},
+				baseRevisionId: null,
+				text: motivationRevision.text,
+				origin: motivationRevision.origin,
+				savedAt: motivationRevision.savedAt,
+			} satisfies IWritingRevisionDocument,
+		);
+	}
+	transaction.set(preferencesReference, {
+		schemaVersion: 1,
+		revision: (preferences?.revision ?? -1) + 1,
+		bibleVersionId,
+		appearance: preferences?.appearance ?? 'System',
+		textSizeMultiplier: preferences?.textSizeMultiplier ?? 1,
+		createdAt: preferences?.createdAt ?? now,
+		updatedAt: now,
+	});
+	transaction.set(lockReference, { journeyId: journeyReference.id });
+};
 
 export const startJourneyForAccount = async (
 	userId: string,
@@ -347,20 +432,7 @@ export const startJourneyForAccount = async (
 				'Your setup changed. Load your saved setup and review it before starting.',
 				{ reason: 'SetupChanged' },
 			);
-		if (
-			draft.currentStep !== 'Review' ||
-			draft.choices.readiness !== 'ReadyForReview' ||
-			draft.choices.optionalPracticeIds.length < 2 ||
-			draft.choices.optionalPracticeIds.length > 4 ||
-			new Set(draft.choices.optionalPracticeIds).size !==
-				draft.choices.optionalPracticeIds.length ||
-			!draft.choices.optionalPracticeIds.every((practiceId) =>
-				Object.values(OptionalPracticeId).includes(practiceId),
-			) ||
-			!Object.values(BibleVersionId).includes(
-				draft.choices.bibleVersionId,
-			)
-		)
+		if (!isReadyJourneySetup(draft))
 			throw new HttpsError(
 				'failed-precondition',
 				'Review your practices and Bible translation before starting.',
@@ -438,36 +510,19 @@ export const startJourneyForAccount = async (
 				updatedAt: now,
 			});
 		}
-		transaction.create(journeyReference, journey);
-		if (motivationRevision && draft.startingMotivation) {
-			const startingRevision: IWritingRevisionDocument = {
-				userId,
-				target: {
-					kind: 'StartingMotivation',
-					journeyId: journeyReference.id,
-				},
-				baseRevisionId: null,
-				text: motivationRevision.text,
-				origin: motivationRevision.origin,
-				savedAt: motivationRevision.savedAt,
-			};
-			transaction.create(
-				journeyReference
-					.collection('writingRevisions')
-					.doc(draft.startingMotivation.revisionId),
-				startingRevision,
-			);
-		}
-		transaction.set(preferencesReference, {
-			schemaVersion: 1,
-			revision: (preferences?.revision ?? -1) + 1,
+		writePrivateJourneyStart({
+			transaction,
+			userReference,
+			journeyReference,
+			lockReference,
+			preferencesReference,
+			preferences,
+			journey,
+			motivationRevision: motivationRevision ?? null,
+			motivationHead: draft.startingMotivation,
 			bibleVersionId: draft.choices.bibleVersionId,
-			appearance: preferences?.appearance ?? 'System',
-			textSizeMultiplier: preferences?.textSizeMultiplier ?? 1,
-			createdAt: preferences?.createdAt ?? now,
-			updatedAt: now,
+			now,
 		});
-		transaction.set(lockReference, { journeyId: journeyReference.id });
 		transaction.create(operationReference, { result });
 		// Retain the draft and its revision history as the source of the starting motivation.
 		return result;

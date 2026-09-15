@@ -1,7 +1,10 @@
 import type { TBibleVersionId } from '../formation/bible-version.types';
 import type { IFormationCourseReference } from '../formation/formation-course.types';
 import type { TOptionalPracticeSelection } from '../formation/practice.types';
-import type { IWritingHead } from '../journey/journey-writing.types';
+import type {
+	IWritingHead,
+	IWritingRevisionDocument,
+} from '../journey/journey-writing.types';
 import type {
 	DomainSchemaVersion,
 	IDocumentTimestamps,
@@ -55,6 +58,8 @@ export interface ICommunityJourneyDocument extends IDocumentTimestamps {
 	timeZoneId: TIanaTimeZoneId;
 	lifecycle: TCommunityJourneyLifecycle;
 	revision: number;
+	// Set by the first accepted enrollment and never cleared, even after withdrawal.
+	firstEnrollmentAcceptedAt: IPersistedTimestamp | null;
 }
 
 export interface ICommunityJourneyPreview {
@@ -66,6 +71,7 @@ export interface ICommunityJourneyPreview {
 	timeZoneId: TIanaTimeZoneId;
 	status: TCommunityJourneyStatus;
 	canEnroll: boolean;
+	canRevise: boolean;
 }
 
 export const CommunityJourneyEnrollmentStatus = {
@@ -82,6 +88,13 @@ export const CommunityJourneyStartBlockReason = {
 	ActivePersonalJourney: 'ActivePersonalJourney',
 	MembershipEnded: 'MembershipEnded',
 	CommunityJourneyCanceled: 'CommunityJourneyCanceled',
+	CommunityClosed: 'CommunityClosed',
+	AccountUnavailable: 'AccountUnavailable',
+	EmailVerificationRequired: 'EmailVerificationRequired',
+	MissedStartDate: 'MissedStartDate',
+	ContentUnavailable: 'ContentUnavailable',
+	SetupInvalid: 'SetupInvalid',
+	WritingUnavailable: 'WritingUnavailable',
 } as const;
 
 export type TCommunityJourneyStartBlockReason =
@@ -114,7 +127,11 @@ export interface ICommunityJourneyEnrollmentDocument extends IDocumentTimestamps
 	bibleVersionId: TBibleVersionId;
 	setupDraftId: string;
 	setupRevision: number;
+	scheduleRevision: number;
+	startingTimeZoneId: TIanaTimeZoneId;
+	activationConsentConfirmedAt: IPersistedTimestamp;
 	// Preserve source revisions/conflicts through setup removal and transfer them at actual start.
 	startingMotivation: IWritingHead | null;
+	startingMotivationRevision: IWritingRevisionDocument | null;
 	lifecycle: TCommunityJourneyEnrollmentLifecycle;
 }

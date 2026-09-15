@@ -3,13 +3,13 @@ import {
 	type Firestore,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import {
-	HttpsError,
-	onCall,
-	type CallableRequest,
-} from 'firebase-functions/v2/https';
+import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { parseCreateCommunityResult } from '../../generated/features/communities/community-creation';
+import type { TCommunityReaderReasonCode } from '../../generated/types/community/community-function.types';
 import type { ICommunitySummary } from '../../generated/types/community/community.types';
+import { onCall } from './community-callable';
+
+const readerReason = (reason: TCommunityReaderReasonCode) => ({ reason });
 
 export const requireCommunityAccount = (
 	auth: CallableRequest['auth'],
@@ -18,11 +18,13 @@ export const requireCommunityAccount = (
 		throw new HttpsError(
 			'unauthenticated',
 			'Sign in to open your communities.',
+			readerReason('AuthenticationRequired'),
 		);
 	if (auth.token.email_verified !== true)
 		throw new HttpsError(
 			'permission-denied',
 			'Confirm your email to open your communities.',
+			readerReason('EmailVerificationRequired'),
 		);
 	return auth.uid;
 };

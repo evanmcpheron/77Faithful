@@ -12,6 +12,7 @@ import { TurndownScrollScreen } from '@td/components/layout/screen/screen.compon
 import { IconName } from '@td/components/ui/icon/icon.types';
 import { NavigationActionList } from '@td/components/ui/navigation-action-list/navigation-action-list.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
+import { COMMUNITIES_ENABLED } from '@td/constants/feature-flags.constants';
 import { AuthHeaderBackground } from '@td/features/auth/components/auth-header.component';
 import { useAuthHeaderAnimation } from '@td/features/auth/hooks/use-auth-header-animation.hook';
 import {
@@ -19,7 +20,9 @@ import {
 	StyledAuthHeaderContent,
 	StyledAuthHeaderSafeArea,
 } from '@td/features/auth/screens/auth.styles';
+import { useCommunitySafetyReviewAccess } from '@td/features/communities/use-community-safety-review-access.hook';
 import { useAuth } from '@td/providers/auth/auth.hook';
+import { useJourneyAccess } from '@td/providers/journey/journey-access.provider';
 import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
 
@@ -28,6 +31,8 @@ import { SETTINGS_PHOTO_HEIGHT, styles } from './settings.styles';
 export const SettingsScreen = () => {
 	const router = useRouter();
 	const { account } = useAuth();
+	const { hasJourney } = useJourneyAccess();
+	const safetyReviewAccess = useCommunitySafetyReviewAccess();
 	const [viewportHeight, setViewportHeight] = useState(0);
 	const [headerHeight, setHeaderHeight] = useState(styles.header.minHeight);
 	const scrollOffset = useSharedValue(0);
@@ -127,6 +132,19 @@ export const SettingsScreen = () => {
 					]}
 				>
 					<View style={styles.content}>
+						{!hasJourney ? (
+							<View style={styles.section}>
+								<NavigationActionList
+									actions={{
+										id: 'start-journey',
+										title: 'Start a personal journey',
+										iconName: IconName.CalendarFilled,
+										onPress: () =>
+											router.push('/onboarding'),
+									}}
+								/>
+							</View>
+						) : null}
 						<View style={styles.section}>
 							<Typography
 								size='H1'
@@ -176,6 +194,94 @@ export const SettingsScreen = () => {
 								An incomplete day does not reset your journey.
 							</Typography>
 						</View>
+						<View style={styles.section}>
+							<Typography
+								size='H1'
+								weight='Semibold'
+							>
+								Community
+							</Typography>
+							{COMMUNITIES_ENABLED ? (
+								<NavigationActionList
+									actions={{
+										id: 'communities',
+										title: 'Your communities',
+										iconName: IconName.UsersFilled,
+										onPress: () =>
+											router.push('/communities'),
+									}}
+								/>
+							) : null}
+							<NavigationActionList
+								actions={{
+									id: 'notifications',
+									title: 'Notifications',
+									iconName: IconName.BellNotification,
+									onPress: () =>
+										router.push('/settings/notifications'),
+								}}
+							/>
+						</View>
+						<View style={styles.section}>
+							<Typography
+								size='H1'
+								weight='Semibold'
+							>
+								Your shared words
+							</Typography>
+							<NavigationActionList
+								actions={{
+									id: 'progress-sharing',
+									title: 'Progress sharing',
+									iconName: IconName.Lock,
+									onPress: () =>
+										router.push(
+											'/settings/progress-sharing',
+										),
+								}}
+							/>
+							<NavigationActionList
+								actions={{
+									id: 'blocked-members',
+									title: 'Blocked members',
+									iconName: IconName.Lock,
+									onPress: () =>
+										router.push(
+											'/settings/blocked-members',
+										),
+								}}
+							/>
+							<NavigationActionList
+								actions={{
+									id: 'shared-contributions',
+									title: 'Shared Contributions',
+									iconName: IconName.Note,
+									onPress: () =>
+										router.push(
+											'/settings/shared-contributions',
+										),
+								}}
+							/>
+						</View>
+						{safetyReviewAccess.status === 'Allowed' ? (
+							<View style={styles.section}>
+								<Typography
+									size='H1'
+									weight='Semibold'
+								>
+									Platform safety
+								</Typography>
+								<NavigationActionList
+									actions={{
+										id: 'safety-reports',
+										title: 'Safety reports',
+										iconName: IconName.Lock,
+										onPress: () =>
+											router.push('/safety-reports'),
+									}}
+								/>
+							</View>
+						) : null}
 						<View style={styles.section}>
 							<Typography
 								size='H1'

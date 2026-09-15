@@ -31,3 +31,39 @@ cpSync(
 	path.join(root, 'src/features/communities/community-creation.ts'),
 	path.join(generated, 'features/communities/community-creation.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-reader.ts'),
+	path.join(generated, 'features/communities/community-reader.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-invitation.ts'),
+	path.join(generated, 'features/communities/community-invitation.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-administration.ts'),
+	path.join(generated, 'features/communities/community-administration.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-post.ts'),
+	path.join(generated, 'features/communities/community-post.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-safety.ts'),
+	path.join(generated, 'features/communities/community-safety.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-journey.ts'),
+	path.join(generated, 'features/communities/community-journey.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-progress.ts'),
+	path.join(generated, 'features/communities/community-progress.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-notification.ts'),
+	path.join(generated, 'features/communities/community-notification.ts'),
+);
+cpSync(
+	path.join(root, 'src/features/communities/community-push.ts'),
+	path.join(generated, 'features/communities/community-push.ts'),
+);

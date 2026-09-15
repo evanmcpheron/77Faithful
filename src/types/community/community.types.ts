@@ -3,7 +3,10 @@ import type {
 	IDocumentTimestamps,
 	IPersistedTimestamp,
 } from '../shared/persistence.types';
-import type { ICommunityAuthorSummary } from './community-membership.types';
+import type {
+	ICommunityAuthorSummary,
+	ICurrentCommunityMembershipSummary,
+} from './community-membership.types';
 
 export const CommunityStatus = {
 	Active: 'Active',
@@ -29,6 +32,7 @@ export interface ICommunityDocument extends IDocumentTimestamps {
 	organizerUserId: string;
 	settings: ICommunitySettings;
 	lifecycle: TCommunityLifecycle;
+	activeInvitationId: string | null;
 	revision: number;
 }
 
@@ -39,4 +43,27 @@ export interface ICommunitySummary {
 	organizer: ICommunityAuthorSummary;
 	participationExpectations?: string;
 	status: TCommunityStatus;
+}
+
+export interface ICommunityCapabilities {
+	canReadMembers: boolean;
+	canCreatePost: boolean;
+	canInviteMembers: boolean;
+	canManageMembers: boolean;
+	canEditCommunity: boolean;
+	canCloseCommunity: boolean;
+	canLeaveCommunity: boolean;
+}
+
+export interface IBoundedCommunityMemberCount {
+	value: number;
+	isExact: boolean;
+}
+
+export interface ICommunityContext {
+	community: ICommunitySummary;
+	communityRevision: number;
+	membership: ICurrentCommunityMembershipSummary;
+	capabilities: ICommunityCapabilities;
+	activeMemberCount: IBoundedCommunityMemberCount;
 }

@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase-admin/app';
 import { setGlobalOptions } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { runDueCommunityJourneyBatch } from './community/activate-community-journey-enrollments';
 import {
 	cancelPracticeSettingsForAccount,
 	confirmPracticeSettingsForAccount,
@@ -13,6 +14,12 @@ import {
 	parsePracticeSettingsRequest,
 } from './journey/practice-settings-request';
 import { refreshTodayVerseSources } from './journey/refresh-today-verses';
+export { retryCommunityJourneyActivation } from './community/activate-community-journey-enrollments';
+export {
+	enrollCommunityJourney,
+	getCommunityJourneyEnrollment,
+	withdrawCommunityJourneyEnrollment,
+} from './community/community-journey-enrollment';
 
 import { getJourneyDayForAccount } from './journey/journey-day';
 import {
@@ -135,8 +142,108 @@ export const refreshTodayVerses = onSchedule(
 	},
 );
 
+export const activateDueCommunityJourneyEnrollments = onSchedule(
+	{
+		schedule: '*/5 * * * *',
+		timeZone: 'Etc/UTC',
+		timeoutSeconds: 540,
+		maxInstances: 1,
+		retryCount: 0,
+	},
+	async () => {
+		await runDueCommunityJourneyBatch();
+	},
+);
+
 export { listReflections } from './journey/list-reflections';
 
+export {
+	getCommunityNotificationPreferences,
+	listCommunityNotifications,
+	markCommunityNotificationRead,
+	openCommunityNotification,
+	setCommunityNotificationPreferences,
+} from './community/community-notification';
+export { deliverCommunityNotificationEvents } from './community/community-notification-event';
+export {
+	checkCommunityPushReceipts,
+	openCommunityPushNotification,
+	sendCommunityPushOutbox,
+} from './community/community-push-delivery';
+export {
+	registerCommunityPushInstallation,
+	unregisterCommunityPushInstallation,
+} from './community/community-push-installation';
 export { createCommunity } from './community/create-community';
 
+export {
+	closeCommunity,
+	leaveCommunity,
+	removeCommunityMember,
+	transferCommunityOrganizer,
+	updateCommunity,
+} from './community/community-administration';
+
+export {
+	communityAuthUserDeleted,
+	resumeCommunityCleanup,
+} from './community/community-cleanup';
+export {
+	getCurrentCommunityInvitation,
+	issueCommunityInvitation,
+	revokeCommunityInvitation,
+	rotateCommunityInvitation,
+} from './community/community-invitation';
+export {
+	acceptCommunityInvitation,
+	previewCommunityInvitation,
+} from './community/community-invitation-redemption';
+export {
+	cancelCommunityJourney,
+	configureCommunityJourney,
+	getCommunityJourneyCourseOption,
+	getCommunityJourneySchedule,
+	listCommunityJourneyHistory,
+	reviseCommunityJourney,
+} from './community/community-journey';
+export {
+	createCommunityPost,
+	deleteCommunityPost,
+	editCommunityPost,
+	getCommunityPost,
+	listCommunityPosts,
+} from './community/community-post';
+export {
+	getCommunityAggregateProgress,
+	getCommunityProgressSharing,
+	listSharedCommunityProgress,
+	setCommunityProgressSharing,
+} from './community/community-progress';
+export {
+	blockCommunityMember,
+	listBlockedCommunityMembers,
+	reportCommunityContent,
+	unblockCommunityMember,
+} from './community/community-safety';
+export {
+	claimCommunitySafetyReport,
+	getCommunitySafetyReport,
+	listCommunitySafetyReports,
+	reviewCommunityReport,
+} from './community/community-safety-review';
+export {
+	createCommunityReply,
+	deleteCommunityReply,
+	editCommunityReply,
+	listCommunityPrayerSupport,
+	listCommunityReplies,
+	setCommunityPrayerAcknowledgment,
+	setCommunityPrayerRequestStatus,
+} from './community/community-thread';
+export { listOwnCommunityContributions } from './community/own-community-contributions';
 export { getCommunity, listCommunities } from './community/read-community';
+export {
+	getCommunityContext,
+	listCommunityMembers,
+	listCommunityPage,
+} from './community/read-community-context';

@@ -36,6 +36,224 @@ service cloud.firestore {
             && request.resource.data.preferredName.size() <= 80));
     }
 
+    // Community access is callable-only. Account indexes discover memberships
+    // for trusted readers but never grant client access or authority.
+    match /users/{userId}/communityMemberships/{communityId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityCreateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyConfigureOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyReviseOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyCancelOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyEnrollOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyWithdrawOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyActivationOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityJourneyEnrollments/{communityJourneyId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityProgressPreferences/{preferenceId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityProgressSetOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotifications/{eventId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotificationReadOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotificationPreferences/{communityId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotificationPreferenceOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /communityNotificationEvents/{eventId} {
+      allow read, write: if false;
+    }
+
+    match /communityPushInstallations/{installationId} {
+      allow read, write: if false;
+    }
+
+    match /communityPushDeliveries/{deliveryId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPushRegisterOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPushUnregisterOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /communityJourneyActivationWorker/{documentId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityInvitationIssueOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityInvitationRotateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityInvitationRevokeOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityInvitationAcceptOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityUpdateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityLeaveOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityRemoveMemberOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityTransferOrganizerOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityCloseOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPostContributions/{postId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPostCreateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPostEditOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPostDeleteOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReplyCreateOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReplyEditOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReplyDeleteOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPrayerStatusOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityPrayerAcknowledgmentOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityBlocks/{blockedUserId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityBlockOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityUnblockOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReportOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityReportDuplicates/{duplicateId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communitySafetyRates/{rateId} {
+      allow read, write: if false;
+    }
+
+    match /communitySafetyReports/{reportId} {
+      allow read, write: if false;
+    }
+
+    match /communityModerationActions/{actionId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communitySafetyReviewOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communitySafetyClaimOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /communityInvitationDigests/{digest} {
+      allow read, write: if false;
+    }
+
+    match /communityInvitationRateLimits/{limitId} {
+      allow read, write: if false;
+    }
+
+    match /communityAccountDeletionCleanup/{userId} {
+      allow read, write: if false;
+    }
+
+    match /communityExitCleanup/{taskId} {
+      allow read, write: if false;
+    }
+
+    match /communities/{communityPath=**} {
+      allow read, write: if false;
+    }
+
     match /users/{userId}/journeys/{journeyId} {
       allow read: if isOwner(userId) && request.auth.token.email_verified == true;
     }

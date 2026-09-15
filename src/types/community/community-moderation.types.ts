@@ -83,6 +83,7 @@ export type TCommunityReportReview =
 	| {
 			status: typeof CommunityReportStatus.Resolved;
 			moderationActionId: string;
+			reviewerUserId: string;
 			resolvedAt: IPersistedTimestamp;
 	  };
 
@@ -96,6 +97,16 @@ export interface ICommunityReportDocument extends IDocumentTimestamps {
 	explanation?: string;
 	review: TCommunityReportReview;
 	revision: number;
+	// Captured inside the submission transaction; this restricted copy survives edits.
+	evidence: {
+		targetRevision: number;
+		text?: string;
+		targetUserId?: string;
+		targetDisplayName?: string;
+		targetRole?: 'Organizer' | 'Member';
+		communityName?: string;
+		communityPurpose?: string;
+	};
 }
 
 export const CommunityModerationAction = {
@@ -133,6 +144,8 @@ export interface ICommunityModerationActionDocument {
 	decidedByUserId: string;
 	decision: TCommunityModerationDecision;
 	explanation: string;
+	targetRevision: number;
+	reportRevision: number;
 	createdAt: IPersistedTimestamp;
 }
 
@@ -151,9 +164,11 @@ export interface IReportCommunityContentResult {
 
 // Authorized reviewers request a decision; the server determines authority, actor, and timestamps.
 export interface IReviewCommunityReportRequest {
-	communityId: string;
 	reportId: string;
 	expectedRevision: number;
+	expectedTargetRevision: number;
+	// Required for a destructive action after reported content has been edited.
+	reviewedCurrentTextDigest?: string;
 	requestedAction: TCommunityModerationAction;
 	explanation: string;
 	operationId: string;
@@ -163,4 +178,56 @@ export interface IReviewCommunityReportResult {
 	reportId: string;
 	moderationActionId: string;
 	status: typeof CommunityReportStatus.Resolved;
+}
+
+export interface IClaimCommunitySafetyReportRequest {
+	reportId: string;
+	expectedRevision: number;
+	operationId: string;
+}
+
+export interface IClaimCommunitySafetyReportResult {
+	reportId: string;
+	status: typeof CommunityReportStatus.UnderReview;
+	revision: number;
+}
+
+export interface IListCommunitySafetyReportsRequest {
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface ICommunitySafetyReportQueueItem {
+	reportId: string;
+	communityId: string;
+	reporterUserId: string;
+	target: TCommunityReportTarget;
+	reason: TCommunityReportReason;
+	status: TCommunityReportStatus;
+	revision: number;
+	createdAt: IPersistedTimestamp;
+}
+
+export interface IListCommunitySafetyReportsResult {
+	reports: ICommunitySafetyReportQueueItem[];
+	nextCursor: string | null;
+}
+
+export interface IGetCommunitySafetyReportRequest {
+	reportId: string;
+}
+
+export interface ICommunitySafetyCurrentTarget {
+	revision: number;
+	status: string;
+	text?: string;
+	textDigest?: string;
+	userId?: string;
+	role?: 'Organizer' | 'Member';
+}
+
+export interface IGetCommunitySafetyReportResult {
+	reportId: string;
+	report: ICommunityReportDocument;
+	currentTarget: ICommunitySafetyCurrentTarget;
 }

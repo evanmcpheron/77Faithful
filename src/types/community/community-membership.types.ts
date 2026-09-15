@@ -53,7 +53,21 @@ export interface ICommunityMemberSummary {
 	role: TCommunityRole;
 }
 
+export interface ICurrentCommunityMembershipSummary extends ICommunityMemberSummary {
+	status: typeof CommunityMembershipStatus.Active;
+}
+
 export interface ICommunityAuthorSummary {
 	userId: string;
 	displayName: string;
+}
+
+// Restricted administrative data. Never include this record in member-list projections.
+export interface ICommunityMemberRemovalDocument extends IDocumentTimestamps {
+	schemaVersion: typeof DomainSchemaVersion.Current;
+	communityId: string;
+	memberUserId: string;
+	removedByUserId: string;
+	privateReason: string;
+	removedAt: IPersistedTimestamp;
 }

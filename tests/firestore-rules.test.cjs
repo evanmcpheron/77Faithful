@@ -146,6 +146,65 @@ for (const path of [
 		);
 	}
 }
+for (const path of [
+	'communities/community-1',
+	'communities/community-1/members/owner',
+	'communities/community-1/invitations/invitation-1',
+	'communities/community-1/posts/post-1',
+	'communities/community-1/posts/post-1/replies/reply-1',
+	'communities/community-1/posts/post-1/prayerAcknowledgments/owner',
+	'users/owner/communityMemberships/community-1',
+	'users/owner/communityCreateOperations/operation-1',
+	'users/owner/communityInvitationIssueOperations/operation-1',
+	'users/owner/communityInvitationRotateOperations/operation-1',
+	'users/owner/communityInvitationRevokeOperations/operation-1',
+	'users/owner/communityInvitationAcceptOperations/operation-1',
+	'users/owner/communityUpdateOperations/operation-1',
+	'users/owner/communityLeaveOperations/operation-1',
+	'users/owner/communityRemoveMemberOperations/operation-1',
+	'users/owner/communityTransferOrganizerOperations/operation-1',
+	'users/owner/communityCloseOperations/operation-1',
+	'users/owner/communityProgressPreferences/preference-1',
+	'users/owner/communityProgressSetOperations/operation-1',
+	'communityNotificationEvents/event-1',
+	'users/owner/communityNotifications/event-1',
+	'users/owner/communityNotificationReadOperations/operation-1',
+	'users/owner/communityNotificationPreferences/community-1',
+	'users/owner/communityNotificationPreferenceOperations/operation-1',
+	'communityPushInstallations/ABCDEFGHIJKLMNOPQRST',
+	'communityPushDeliveries/delivery-1',
+	'users/owner/communityPushRegisterOperations/operation-1',
+	'users/owner/communityPushUnregisterOperations/operation-1',
+	'communities/community-1/communityJourneys/journey-1/progress/owner',
+	'users/owner/communityPostContributions/contribution-1',
+	'users/owner/communityPostCreateOperations/operation-1',
+	'users/owner/communityPostEditOperations/operation-1',
+	'users/owner/communityPostDeleteOperations/operation-1',
+	'users/owner/communityReplyCreateOperations/operation-1',
+	'users/owner/communityReplyEditOperations/operation-1',
+	'users/owner/communityReplyDeleteOperations/operation-1',
+	'users/owner/communityPrayerStatusOperations/operation-1',
+	'users/owner/communityPrayerAcknowledgmentOperations/operation-1',
+	'communityInvitationDigests/digest-1',
+	'communityInvitationRateLimits/limit-1',
+	'communityAccountDeletionCleanup/owner',
+	'communityExitCleanup/task-1',
+	'communities/community-1/invitations/invitation-1/redemptions/owner',
+	'communities/community-1/memberRemovals/member-1',
+]) {
+	for (const method of ['get', 'list', 'create', 'update', 'delete']) {
+		add(
+			`direct community boundary denies ${method} ${path}`,
+			'DENY',
+			method,
+			path,
+			'owner',
+			true,
+			true,
+			{ forged: true },
+		);
+	}
+}
 const draft = 'users/owner/journeySetupDrafts/current';
 const device = 'users/owner/devicePreferences/12345678901234567890';
 const journey = 'users/owner/journeys/current';
@@ -618,40 +677,79 @@ addWrite(
 	{ ...writing, text: 'Changed' },
 	writing,
 );
+for (const restrictedPath of [
+	'communities/alpha/communityJourneys/schedule1',
+	'users/owner/communityJourneyConfigureOperations/schedule1',
+	'users/owner/communityJourneyReviseOperations/revise1',
+	'users/owner/communityJourneyCancelOperations/cancel1',
+	'users/owner/communityJourneyEnrollOperations/enroll1',
+	'users/owner/communityJourneyWithdrawOperations/withdraw1',
+	'users/owner/communityJourneyActivationOperations/activate1',
+	'users/owner/communityJourneyEnrollments/schedule1',
+	'communityJourneyActivationWorker/current',
+	'communitySafetyReports/report1',
+	'communityModerationActions/action1',
+	'users/owner/communitySafetyReviewOperations/review1',
+	'users/owner/communitySafetyClaimOperations/claim1',
+	'users/owner/communityBlocks/member-a',
+	'users/owner/communityBlockOperations/block1',
+	'users/owner/communityUnblockOperations/unblock1',
+	'users/owner/communityReportOperations/report1',
+	'users/owner/communityReportDuplicates/duplicate1',
+	'users/owner/communitySafetyRates/reports_1',
+]) {
+	for (const uid of ['owner', 'member-a']) {
+		for (const method of ['get', 'list', 'create', 'update', 'delete'])
+			add(
+				`restricted safety ${uid} ${method} ${restrictedPath}`,
+				'DENY',
+				method,
+				restrictedPath,
+				uid,
+			);
+	}
+}
 (async () => {
 	await requireAuth(options);
 	const client = new Client({
 		urlPrefix: 'https://firebaserules.googleapis.com',
 		apiVersion: 'v1',
 	});
-	const result = await client.post(
-		`/projects/${project}:test`,
-		{
-			source: {
-				files: [
-					{
-						name: 'firestore.rules',
-						content: fs.readFileSync('firestore.rules', 'utf8'),
-					},
-				],
+	const rulesSource = {
+		files: [
+			{
+				name: 'firestore.rules',
+				content: fs.readFileSync('firestore.rules', 'utf8'),
 			},
-			testSuite: { testCases: tests.map(({ test }) => test) },
-		},
-		{ skipLog: { body: true, resBody: true } },
-	);
-	for (const [index, testResult] of (result.body.testResults || []).entries())
+		],
+	};
+	const testResults = [];
+	const batchSize = 200;
+	for (let start = 0; start < tests.length; start += batchSize) {
+		const batch = tests.slice(start, start + batchSize);
+		const result = await client.post(
+			`/projects/${project}:test`,
+			{
+				source: rulesSource,
+				testSuite: { testCases: batch.map(({ test }) => test) },
+			},
+			{ skipLog: { body: true, resBody: true } },
+		);
+		testResults.push(...(result.body.testResults || []));
+		if (result.body.issues) console.log(JSON.stringify(result.body.issues));
+	}
+	for (const [index, testResult] of testResults.entries())
 		console.log(
 			tests[index].name,
 			testResult.state,
 			testResult.state === 'SUCCESS' ? '' : JSON.stringify(testResult),
 		);
-	if (result.body.issues) console.log(JSON.stringify(result.body.issues));
 	console.log(
-		`${result.body.testResults?.filter((result) => result.state === 'SUCCESS').length ?? 0}/${tests.length} rules tests passed.`,
+		`${testResults.filter((result) => result.state === 'SUCCESS').length}/${tests.length} rules tests passed.`,
 	);
 	if (
-		!result.body.testResults?.length ||
-		result.body.testResults.some((result) => result.state !== 'SUCCESS')
+		testResults.length !== tests.length ||
+		testResults.some((result) => result.state !== 'SUCCESS')
 	)
 		process.exitCode = 1;
 })().catch((error) => {

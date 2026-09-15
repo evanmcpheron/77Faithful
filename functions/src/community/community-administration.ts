@@ -30,6 +30,7 @@ import type {
 	ICommunityMembershipDocument,
 } from '../../generated/types/community/community-membership.types';
 import type { ICommunitySummary } from '../../generated/types/community/community.types';
+import { queueCommunityExitCleanup } from './community-cleanup';
 import { resolveCommunityDisplayName } from './read-community';
 
 interface IAdministrationDependencies {
@@ -497,6 +498,13 @@ export const leaveCommunityForAccount = async (
 			authorized.membershipReference,
 			membership,
 		);
+		queueCommunityExitCleanup(
+			transaction,
+			database,
+			input.communityId,
+			userId,
+			now,
+		);
 		transaction.create(receiptReference, {
 			request: operationRequest(input),
 			leftAt: now,
@@ -587,6 +595,13 @@ export const removeCommunityMemberForAccount = async (
 			database,
 			targetReference,
 			membership,
+		);
+		queueCommunityExitCleanup(
+			transaction,
+			database,
+			input.communityId,
+			input.memberUserId,
+			now,
 		);
 		const removal: ICommunityMemberRemovalDocument = {
 			schemaVersion: 1,

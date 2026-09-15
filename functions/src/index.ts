@@ -148,6 +148,10 @@ export {
 } from './community/community-administration';
 
 export {
+	communityAuthUserDeleted,
+	resumeCommunityCleanup,
+} from './community/community-cleanup';
+export {
 	getCurrentCommunityInvitation,
 	issueCommunityInvitation,
 	revokeCommunityInvitation,
@@ -173,6 +177,7 @@ export {
 	setCommunityPrayerAcknowledgment,
 	setCommunityPrayerRequestStatus,
 } from './community/community-thread';
+export { listOwnCommunityContributions } from './community/own-community-contributions';
 export { getCommunity, listCommunities } from './community/read-community';
 export {
 	getCommunityContext,

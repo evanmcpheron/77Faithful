@@ -46,6 +46,27 @@ export interface IListCommunityPostsResult {
 	nextCursor: string | null;
 }
 
+export interface IListOwnCommunityContributionsRequest {
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IOwnCommunityContribution {
+	communityId: string;
+	postId: string;
+	replyId?: string;
+	kind: 'Post' | 'Reply';
+	publicationStatus: 'Published' | 'AuthorDeleted' | 'ModeratorRemoved';
+	revision: number;
+	createdAt: IPersistedTimestamp;
+	text?: string;
+}
+
+export interface IListOwnCommunityContributionsResult {
+	contributions: IOwnCommunityContribution[];
+	nextCursor: string | null;
+}
+
 export interface ICreateCommunityPostRequest {
 	communityId: string;
 	content: TCommunityPostContent;

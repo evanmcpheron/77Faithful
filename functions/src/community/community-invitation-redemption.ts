@@ -272,9 +272,16 @@ const resolveInvitation = async (
 			lookup.expiresAt.toMillis()
 	)
 		throw invitationUnavailable();
-	const organizerProfile = await transaction.get(
-		database.doc(`users/${community.organizerUserId}`),
-	);
+	const [organizerProfile, deletionTask] = await Promise.all([
+		transaction.get(database.doc(`users/${community.organizerUserId}`)),
+		transaction.get(
+			database.doc(
+				`communityAccountDeletionCleanup/${community.organizerUserId}`,
+			),
+		),
+	]);
+	if (!organizerProfile.exists || deletionTask.exists)
+		throw invitationUnavailable();
 	return {
 		communityId: lookup.communityId,
 		invitationId: lookup.invitationId,

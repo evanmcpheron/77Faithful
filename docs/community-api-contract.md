@@ -532,3 +532,57 @@ decisions, and separately provisioned safety-reviewer authority.
 Compilation or mocked tests do not prove emulator behavior, deployed functions,
 configured secrets, device delivery, production authorization, or release
 readiness. Record those as separate evidence when they actually occur.
+
+### Ticket 18 — author ownership and community cleanup
+
+`listOwnCommunityContributions` accepts `IListOwnCommunityContributionsRequest`
+and returns `IListOwnCommunityContributionsResult` from
+`src/types/community/community-post-function.types.ts`. The caller must be
+authenticated, email-verified, and have an available account. No membership is
+required, including after leave, removal, or closure. The result contains only
+the caller's own post/reply identity, status, revision, created timestamp, and
+submitted text while Published. It returns no feed, other replies, member list,
+or private report. Each body-free author index entry is checked against the
+community, parent post, actual record, and actual author before projection;
+stale or forged index entries are ignored. Existing `deleteCommunityPost` and
+`deleteCommunityReply` remain the author-only revision-checked delete operations
+with actor/operation-scoped IDs, request-digest mismatch detection, and
+`PostAuthorRequired`/`ReplyAuthorRequired`, `RevisionConflict`,
+`OperationPayloadMismatch`, or item-unavailable reasons. No public delete
+response shape changed.
+
+The list rejects unexpected fields. Page size defaults to 20 and is limited to
+1–50. Opaque base64url cursors are limited to 512 characters, bind the caller
+and operation, and order by author-index `createdAt` descending then index ID
+descending. A malformed or cross-account cursor returns `InvalidCursor`; other
+input failures return `InvalidInput`. Auth/account and data reason codes reuse
+the existing post contract. No client write/read access is added.
+
+`communityAuthUserDeleted` is a first-generation Firebase Authentication
+single-user deletion trigger. `resumeCommunityCleanup` is a scheduled trusted
+worker. No callable permits a client to queue account deletion. Auth cleanup
+tasks are bounded to 20 records per stage and resumable after partial failure.
+The worker closes any still-Active orphaned Organizer community, revokes its
+pointed invitation and digest, tombstones Published author bodies, replaces
+public author names with “Former participant,” clears contribution indexes and
+membership discovery records, marks community membership inactive, and deletes
+prayer support. A pending deletion task causes member post/reply/support readers
+to redact deleted-author content and support before physical cleanup finishes.
+Invitation preview/acceptance reject a pending Organizer deletion task, and
+member lists/counts omit pending-deletion accounts. New posts/replies and other
+active-community mutations treat a pending Organizer deletion as closed while
+retained-member archive reads and author deletion remain available.
+Leave/removal transactionally queues restricted support cleanup; current
+membership is rechecked before a retry deletes a support record, so rejoining
+does not destroy active support. These operations do not touch private journeys.
+
+Restricted deletion/exit tasks contain only actor/community identifiers and
+queue timestamps; they are deleted when finished. Shared text is erased from
+normal records through text-free tombstones. Existing restricted member-removal
+records remain the minimal safety/audit evidence under the existing
+administration boundary; no submitted body or invite code is copied there.
+Production preparation requires the new Firestore indexes and Rules, the
+first-generation Auth trigger and scheduler on the configured Node 22 runtime,
+and an operational path that deletes accounts singly. Firebase Admin
+`deleteUsers` bulk deletion does not emit individual Auth deletion events. No
+live cleanup was run in this ticket.

@@ -41,6 +41,7 @@ import type {
 	TCommunityPostType,
 	TPrayerRequestStatus,
 } from '../../generated/types/community/community-post.types';
+import { redactDeletedAuthors } from './community-cleanup';
 import { resolveCommunityDisplayName } from './read-community';
 
 export interface ICommunityPostDependencies {
@@ -236,12 +237,25 @@ export const getCommunityAccess = async (
 		database.doc(`communities/${communityId}`),
 	);
 	const community = requireCommunity(communitySnapshot, communityId);
+	const deletionTask = await transaction.get(
+		database.doc(
+			`communityAccountDeletionCleanup/${community.organizerUserId}`,
+		),
+	);
 	return requireActiveMembership(
 		transaction,
 		database,
 		userId,
 		communityId,
-		community,
+		deletionTask.exists && community.lifecycle.status === 'Active'
+			? {
+					...community,
+					lifecycle: {
+						status: 'Closed',
+						closedAt: deletionTask.get('queuedAt'),
+					},
+				}
+			: community,
 	);
 };
 
@@ -638,7 +652,10 @@ export const getCommunityPostForAccount = async (
 				'This post is unavailable.',
 				'PostUnavailable',
 			);
-		return { post: postProjection(snapshot, input.communityId) };
+		const [post] = await redactDeletedAuthors(transaction, database, [
+			postProjection(snapshot, input.communityId),
+		]);
+		return { post };
 	});
 };
 
@@ -694,10 +711,13 @@ export const listCommunityPostsForAccount = async (
 		const pageSize = input.pageSize ?? CommunityPostLimits.defaultPageSize;
 		const snapshots = await transaction.get(query.limit(pageSize + 1));
 		const page = snapshots.docs.slice(0, pageSize);
+		const posts = await redactDeletedAuthors(
+			transaction,
+			database,
+			page.map((snapshot) => postProjection(snapshot, input.communityId)),
+		);
 		return {
-			posts: page.map((snapshot) =>
-				postProjection(snapshot, input.communityId),
-			),
+			posts,
 			nextCursor:
 				snapshots.size > pageSize && page.length > 0
 					? encodeCursor(input.communityId, page[page.length - 1])

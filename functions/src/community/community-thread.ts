@@ -44,6 +44,7 @@ import type {
 	ICommunityReplyDocument,
 } from '../../generated/types/community/community-post.types';
 import type { IPersistedTimestamp } from '../../generated/types/shared/persistence.types';
+import { redactDeletedAuthors } from './community-cleanup';
 import {
 	dataUnavailable,
 	getCommunityAccess,
@@ -483,10 +484,15 @@ export const listCommunityRepliesForAccount = async (
 			storedReplyCount === undefined
 				? 0
 				: requireRevision(storedReplyCount);
-		return {
-			replies: page.map((snapshot) =>
+		const replies = await redactDeletedAuthors(
+			transaction,
+			database,
+			page.map((snapshot) =>
 				replyProjection(snapshot, input.communityId, input.postId),
 			),
+		);
+		return {
+			replies,
 			replyCount,
 			nextCursor:
 				snapshots.size > pageSize && page.length > 0
@@ -1101,7 +1107,21 @@ export const listCommunityPrayerSupportForAccount = async (
 			);
 		});
 		if (hasInvalidMembership) throw dataUnavailable();
-		const activeUserIds = memberships.docs.map((snapshot) => snapshot.id);
+		const candidateUserIds = memberships.docs.map(
+			(snapshot) => snapshot.id,
+		);
+		const deletionTasks = await Promise.all(
+			candidateUserIds.map((memberUserId) =>
+				transaction.get(
+					database.doc(
+						`communityAccountDeletionCleanup/${memberUserId}`,
+					),
+				),
+			),
+		);
+		const activeUserIds = candidateUserIds.filter(
+			(_, index) => !deletionTasks[index].exists,
+		);
 		const supportSnapshots = await Promise.all(
 			activeUserIds.map((memberUserId) =>
 				transaction.get(

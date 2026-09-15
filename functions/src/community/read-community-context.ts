@@ -271,20 +271,32 @@ export const getCommunityContextForAccount = async (
 					.limit(CommunityReaderLimits.memberCount + 1),
 			),
 		]);
+		const deletionTasks = await Promise.all(
+			activeMembers.docs.map((snapshot) =>
+				transaction.get(
+					database.doc(
+						`communityAccountDeletionCleanup/${snapshot.id}`,
+					),
+				),
+			),
+		);
 		const role = deriveRole(
 			authorized.community,
 			authorized.membership,
 			userId,
 		);
 		const status = requireCommunityStatus(authorized.community);
-		const validActiveMemberCount = activeMembers.docs.filter((snapshot) => {
-			const membership = snapshot.data();
-			return (
-				membership.userId === snapshot.id &&
-				membership.communityId === input.communityId &&
-				membership.lifecycle?.status === 'Active'
-			);
-		}).length;
+		const validActiveMemberCount = activeMembers.docs.filter(
+			(snapshot, index) => {
+				const membership = snapshot.data();
+				return (
+					!deletionTasks[index].exists &&
+					membership.userId === snapshot.id &&
+					membership.communityId === input.communityId &&
+					membership.lifecycle?.status === 'Active'
+				);
+			},
+		).length;
 		return {
 			context: {
 				community: summary,
@@ -416,10 +428,20 @@ export const listCommunityMembersForAccount = async (
 				transaction.get(database.doc(`users/${snapshot.id}`)),
 			),
 		);
+		const deletionTasks = await Promise.all(
+			page.map((snapshot) =>
+				transaction.get(
+					database.doc(
+						`communityAccountDeletionCleanup/${snapshot.id}`,
+					),
+				),
+			),
+		);
 		const members: ICommunityMemberSummary[] = [];
 		for (const [index, snapshot] of page.entries()) {
 			const membership = snapshot.data();
 			if (
+				deletionTasks[index].exists ||
 				membership.userId !== snapshot.id ||
 				membership.communityId !== input.communityId ||
 				membership.lifecycle?.status !== 'Active'

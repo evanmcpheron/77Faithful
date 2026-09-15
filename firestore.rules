@@ -126,6 +126,14 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /communityAccountDeletionCleanup/{userId} {
+      allow read, write: if false;
+    }
+
+    match /communityExitCleanup/{taskId} {
+      allow read, write: if false;
+    }
+
     match /communities/{communityPath=**} {
       allow read, write: if false;
     }

@@ -1,5 +1,8 @@
 # Agent Instructions
 
+When you are done with all work push up all changes to the current branch. and
+then make sure all local changes are deployed successfully to firebase/firestore
+
 ## Components are strictly read-only
 
 AI agents must NEVER alter anything inside `/src/component/**` or the existing

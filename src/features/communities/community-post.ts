@@ -9,6 +9,7 @@ import type {
 	IListCommunityPostsRequest,
 	IListCommunityPrayerSupportRequest,
 	IListCommunityRepliesRequest,
+	IListOwnCommunityContributionsRequest,
 	ISetCommunityPrayerAcknowledgmentRequest,
 	ISetCommunityPrayerRequestStatusRequest,
 } from '../../types/community/community-post-function.types';
@@ -161,6 +162,39 @@ export const parseListCommunityPostsRequest = (
 		throw new Error('Invalid community post cursor.');
 	return {
 		communityId: identifier(input['communityId']),
+		pageSize:
+			pageSize === undefined
+				? CommunityPostLimits.defaultPageSize
+				: pageSize,
+		...(cursor === undefined ? {} : { cursor }),
+	};
+};
+
+export const parseListOwnCommunityContributionsRequest = (
+	value: unknown,
+): IListOwnCommunityContributionsRequest => {
+	const input = record(value);
+	if (!hasOnlyKeys(input, ['pageSize', 'cursor']))
+		throw new Error('Invalid contribution request.');
+	const pageSize = input['pageSize'];
+	if (
+		pageSize !== undefined &&
+		(typeof pageSize !== 'number' ||
+			!Number.isInteger(pageSize) ||
+			pageSize < 1 ||
+			pageSize > CommunityPostLimits.maxPageSize)
+	)
+		throw new Error('Invalid contribution page size.');
+	const cursor = input['cursor'];
+	if (
+		cursor !== undefined &&
+		(typeof cursor !== 'string' ||
+			cursor.length < 1 ||
+			cursor.length > CommunityPostLimits.cursor ||
+			!cursorPattern.test(cursor))
+	)
+		throw new Error('Invalid contribution cursor.');
+	return {
 		pageSize:
 			pageSize === undefined
 				? CommunityPostLimits.defaultPageSize

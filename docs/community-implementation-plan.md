@@ -646,3 +646,42 @@ Checks run locally on 2026-09-14:
   Firebase CLI credentials require reauthentication.
 - No production configuration, migration, secret provisioning, deployment, or
   device check was performed.
+
+## Ticket 18 operational notes
+
+The callable-only owner contribution reader is `listOwnCommunityContributions`.
+It uses the existing body-free post/reply author index and rereads the actual
+community, post, and reply before returning the caller's own content or delete
+metadata. Existing post/reply author deletion remains available after exit or
+closure. `communityAuthUserDeleted` uses the supported first-generation
+Authentication deletion event; `resumeCommunityCleanup` resumes bounded work.
+Leave/removal queue support cleanup in the same transaction as membership
+invalidation. Current membership and deletion-task checks deny shared access
+before support or author bodies are physically removed. Closure leaves private
+journeys untouched.
+
+Rollout requires Firestore composite/collection-group indexes and the explicit
+Rules denials, deployment of the first-generation Auth trigger and scheduler
+under Node 22 (the prior Node 24 runtime does not support first-generation
+functions), and monitoring for persistent cleanup tasks. Ordinary account
+deletion must delete Auth users singly; bulk Admin `deleteUsers` does not fire
+deletion events. No production cleanup, migration, deploy, or push was
+performed. The task collections are backend-only and retain no written body.
+Existing restricted member-removal evidence remains subject to the
+administration policy; no new member-readable audit body is introduced.
+
+Local checks on 2026-09-15: Functions contract preparation/build and Functions
+ESLint passed; the existing 11 focused community contract tests and 2 new
+owner-input/authentication tests passed. The prepared
+`tests/community-ownership-cleanup.emulator.test.cjs` covers author listing and
+deletion after exit/removal/closure, forged indexes, partial account cleanup,
+orphaned Organizer closure, support cleanup, and private-journey preservation;
+it was syntax-checked but not executed. A broader invitation-redemption suite
+had one unrelated existing preview timestamp-shape assertion failure (20 of 21
+combined tests passed). Firestore emulator transaction and Auth-trigger coverage
+were not run because Java is unavailable. The configured Security Rules
+evaluator did not run because Firebase CLI credentials require reauthentication.
+Root `tsc --noEmit` remains failing in existing protected components and
+unrelated utilities; it reported no Ticket 18 file error. Acceptance therefore
+has local compile/contract evidence but lacks emulator, trigger, and Rules
+execution evidence.

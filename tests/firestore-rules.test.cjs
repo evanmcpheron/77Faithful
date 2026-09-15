@@ -175,6 +175,8 @@ for (const path of [
 	'users/owner/communityPrayerAcknowledgmentOperations/operation-1',
 	'communityInvitationDigests/digest-1',
 	'communityInvitationRateLimits/limit-1',
+	'communityAccountDeletionCleanup/owner',
+	'communityExitCleanup/task-1',
 	'communities/community-1/invitations/invitation-1/redemptions/owner',
 	'communities/community-1/memberRemovals/member-1',
 ]) {

@@ -959,3 +959,14 @@ because Java and emulator hosts are unavailable. The root type check still fails
 on existing protected components and unrelated utilities. Emulator
 authorization, transaction/race, partial-fan-out, and live Security Rules
 behavior remain pending. No production smoke test or push-device check has run.
+
+The requested `faithful-4325a` deployment released the revised Rules and
+reply-participation index; a Firestore API check reported that index `READY`
+before Functions were deployed. Firebase reported successful creation of all six
+notification v2 Functions and successful updates of the three source callables.
+A fresh Function inventory confirmed all nine. The Functions deploy CLI exited 1
+solely because it could not set an Artifact Registry cleanup policy in
+`us-central1`; no retention or billing policy was changed. Authenticated
+production calls, Scheduler execution, and notification privacy behavior remain
+manual checks. The ticket commit remains local because automatic approval review
+rejected egress to the configured private GitHub remote.

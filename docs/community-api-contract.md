@@ -1093,6 +1093,7 @@ Reason codes are `InvalidInput`, `InvalidCursor`, `AccountUnavailable`,
 authentication and email-verification reasons. No notification record contains
 post, reply, reflection, invitation, or profile text. The inbox order uses
 Firestore's built-in single-field index; only reply participation needs the new
-composite in `firestore.indexes.json`. Production requires deployment of revised
-Rules/indexes and six new Functions, with the reply-participation index ready
-before fan-out runs. No backfill or push registration is included.
+composite in `firestore.indexes.json`. Revised Rules and the reply index were
+deployed to `faithful-4325a`; the index reported `READY` before the six new
+Functions and three source-callable updates were deployed. No backfill or push
+registration is included.

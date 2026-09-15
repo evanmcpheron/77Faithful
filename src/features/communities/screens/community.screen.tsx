@@ -8,10 +8,12 @@ import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
 import type { ICommunityPost } from '@td/types/community/community-post.types';
 import type { ICommunityContext } from '@td/types/community/community.types';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
+import { getCommunityJourneySchedule } from '../community-journey-schedule.service';
 import {
 	type TCommunityContextState,
 	useCommunityContext,
@@ -205,6 +207,8 @@ interface ICommunityHomeProps {
 	onInvite: (communityId: string) => void;
 	onMembers: (communityId: string) => void;
 	onSettings: (communityId: string) => void;
+	onSchedule?: (communityId: string) => void;
+	noJourney?: boolean;
 	onCompose: (communityId: string) => void;
 	onPost: (communityId: string, postId: string) => void;
 	scrollOffset: SharedValue<number>;
@@ -247,6 +251,8 @@ export const CommunityHome = ({
 	onInvite,
 	onMembers,
 	onSettings,
+	onSchedule,
+	noJourney,
 	onCompose,
 	onPost,
 	scrollOffset,
@@ -435,6 +441,20 @@ export const CommunityHome = ({
 					) : null}
 
 					<View style={styles.navigationActions}>
+						{onSchedule &&
+						context.membership.role === 'Organizer' &&
+						context.community.status === 'Active' &&
+						noJourney ? (
+							<TurndownButton
+								variant='Outline'
+								testID='community-home-schedule'
+								onPress={() =>
+									onSchedule(context.community.communityId)
+								}
+							>
+								Schedule community journey
+							</TurndownButton>
+						) : null}
 						<TurndownButton
 							variant='Outline'
 							onPress={() =>
@@ -588,6 +608,31 @@ const CommunityDetails = ({
 		communityId,
 	);
 	const canRead = contextState.status === 'Ready';
+	const [noJourney, setNoJourney] = useState(false);
+	useFocusEffect(
+		useCallback(() => {
+			let active = true;
+			setNoJourney(false);
+			if (
+				canRead &&
+				communityId &&
+				contextState.context.membership.role === 'Organizer' &&
+				contextState.context.community.status === 'Active'
+			) {
+				void getCommunityJourneySchedule(communityId)
+					.then((result) => {
+						if (active)
+							setNoJourney(result.communityJourney === null);
+					})
+					.catch(() => {
+						if (active) setNoJourney(false);
+					});
+			}
+			return () => {
+				active = false;
+			};
+		}, [canRead, communityId, contextState]),
+	);
 	const {
 		state: feedState,
 		refresh: refreshFeed,
@@ -607,6 +652,11 @@ const CommunityDetails = ({
 	const openSettings = (selectedCommunityId: string) =>
 		router.push({
 			pathname: '/communities/[communityId]/settings',
+			params: { communityId: selectedCommunityId },
+		});
+	const openSchedule = (selectedCommunityId: string) =>
+		router.push({
+			pathname: '/communities/[communityId]/schedule',
 			params: { communityId: selectedCommunityId },
 		});
 	const openComposer = (selectedCommunityId: string) =>
@@ -646,6 +696,8 @@ const CommunityDetails = ({
 			onInvite={openInvitations}
 			onMembers={openMembers}
 			onSettings={openSettings}
+			onSchedule={openSchedule}
+			noJourney={noJourney}
 			onCompose={openComposer}
 			onPost={openPost}
 			scrollOffset={scrollOffset}

@@ -75,6 +75,7 @@ interface ICommunitySettingsViewProps {
 	onRetry: () => void;
 	onMembers: () => void;
 	onInvite: () => void;
+	onSchedule?: () => void;
 	onContributions?: () => void;
 	onReport?: () => void;
 	onClose: () => void;
@@ -173,6 +174,7 @@ export const CommunitySettingsView = ({
 	onRetry,
 	onMembers,
 	onInvite,
+	onSchedule,
 	onContributions,
 	onReport,
 	onClose,
@@ -334,6 +336,21 @@ export const CommunitySettingsView = ({
 					>
 						{message}
 					</Typography>
+				</View>
+			) : null}
+
+			{onSchedule ? (
+				<View style={styles.section}>
+					<Typography size='H2'>Community journey</Typography>
+					<TurndownButton
+						variant='Outline'
+						onPress={onSchedule}
+						testID='community-settings-schedule'
+					>
+						{membership.role === 'Organizer' && isActive
+							? 'Schedule community journey'
+							: 'View community schedule'}
+					</TurndownButton>
 				</View>
 			) : null}
 
@@ -744,6 +761,13 @@ export const CommunitySettingsContent = ({
 						communityId &&
 						router.push({
 							pathname: '/communities/[communityId]/invite',
+							params: { communityId },
+						})
+					}
+					onSchedule={() =>
+						communityId &&
+						router.push({
+							pathname: '/communities/[communityId]/schedule',
 							params: { communityId },
 						})
 					}

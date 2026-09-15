@@ -13,8 +13,16 @@ let mockScreenContextState: unknown = { status: 'Loading' };
 let mockScreenFeedState: unknown = { status: 'Loading' };
 
 jest.mock('expo-router', () => ({
+	useFocusEffect: (effect: () => void | (() => void)) => {
+		const React = jest.requireActual('react') as typeof import('react');
+		React.useEffect(effect, [effect]);
+	},
 	useLocalSearchParams: () => ({ communityId: 'group' }),
 	useRouter: () => ({ replace: jest.fn(), push: mockRouterPush }),
+}));
+jest.mock('../community-journey-schedule.service', () => ({
+	getCommunityJourneySchedule: () =>
+		Promise.resolve({ communityJourney: null }),
 }));
 jest.mock('expo-router/react-navigation', () => ({
 	useHeaderHeight: () => 80,
@@ -160,9 +168,38 @@ const actions = {
 	onInvite: jest.fn(),
 	onMembers: jest.fn(),
 	onSettings: jest.fn(),
+	onSchedule: jest.fn(),
 	onCompose: jest.fn(),
 	onPost: jest.fn(),
 };
+
+it('offers schedule navigation in the organizer no-journey state', () => {
+	act(() => {
+		renderer = create(
+			createElement(CommunityHome, {
+				contextState: {
+					status: 'Ready',
+					context: communityContext({
+						role: 'Organizer',
+						memberCount: 2,
+					}),
+				},
+				feedState: readyFeed([]),
+				headerHeight: 80,
+				...actions,
+				noJourney: true,
+				scrollOffset: { value: 0 } as never,
+				onScrollPositionChange: jest.fn(),
+			}),
+		);
+	});
+	act(() =>
+		renderer.root
+			.findByProps({ testID: 'community-home-schedule' })
+			.props['onPress'](),
+	);
+	expect(actions.onSchedule).toHaveBeenCalledWith('group');
+});
 const mount = (
 	contextState: React.ComponentProps<typeof CommunityHome>['contextState'],
 	feedState: React.ComponentProps<typeof CommunityHome>['feedState'],

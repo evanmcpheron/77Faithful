@@ -289,6 +289,15 @@ it('shows only readable details and allowed controls to members and archives', (
 	).toHaveLength(0);
 });
 
+it('opens the real schedule route from community settings', async () => {
+	await mountContent();
+	act(() => buttons('Schedule community journey')[0]?.props['onPress']());
+	expect(mockPush).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]/schedule',
+		params: { communityId: 'group' },
+	});
+});
+
 it('removes organizer editing controls immediately after a role loss', async () => {
 	await mountContent();
 	act(() => field('community-settings-name').props['onChange']('Unsaved'));

@@ -137,6 +137,18 @@ const CommunitiesLayout = () => {
 					}}
 				/>
 				<Stack.Screen
+					name='[communityId]/schedule'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						header: () => (
+							<CommunityChildHeader title='Schedule journey' />
+						),
+					}}
+				/>
+				<Stack.Screen
 					name='[communityId]/report'
 					options={{
 						headerShown: true,

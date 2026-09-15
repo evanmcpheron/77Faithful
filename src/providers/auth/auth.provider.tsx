@@ -1,4 +1,5 @@
 import { ensureAccountProfile } from '@td/features/account/account-profile.service';
+import { unregisterCommunityPush } from '@td/features/communities/community-push.service';
 import { subscribeDaySessionInvalidation } from '@td/features/journey/day-session-invalidation.service';
 import { setDaySessionAccount } from '@td/features/journey/journey-day-cache';
 import {
@@ -128,7 +129,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const value = useMemo<IAuthContextValue>(
 		() => ({
 			...authActions,
-			signUp,
+			signIn: async (credentials) => {
+				if (account?.userId)
+					await unregisterCommunityPush(account.userId);
+				return authActions.signIn(credentials);
+			},
+			signUp: async (credentials) => {
+				if (account?.userId)
+					await unregisterCommunityPush(account.userId);
+				return signUp(credentials);
+			},
+			signOut: async () => {
+				if (account?.userId)
+					await unregisterCommunityPush(account.userId);
+				await authActions.signOut();
+			},
 			account,
 			isInitializing,
 			initializationError,

@@ -22,6 +22,9 @@ jest.mock('@td/services/firebase/firebase-auth.service', () => ({
 jest.mock('@td/features/account/account-profile.service', () => ({
 	ensureAccountProfile: jest.fn(),
 }));
+jest.mock('@td/features/communities/community-push.service', () => ({
+	unregisterCommunityPush: jest.fn(() => Promise.resolve(true)),
+}));
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 

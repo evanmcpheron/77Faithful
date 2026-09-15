@@ -1,10 +1,11 @@
 import type { ICommunityNotification } from '@td/types/community/community-notification.types';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
 	getCommunityNotificationReason,
 	listCommunityNotifications,
 } from './community-notification.service';
+import { subscribeCommunityPushIncoming } from './community-push.service';
 
 const unavailable = new Set([
 	'AuthenticationRequired',
@@ -81,6 +82,13 @@ export const useCommunityNotifications = (userId: string | null) => {
 				);
 		}
 	}, [userId]);
+	useEffect(
+		() =>
+			subscribeCommunityPushIncoming(() => {
+				void refresh();
+			}),
+		[refresh],
+	);
 
 	useFocusEffect(
 		useCallback(() => {

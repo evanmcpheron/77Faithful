@@ -17,6 +17,9 @@ jest.mock('./community-notification.service', () => ({
 	listCommunityNotifications: jest.fn(),
 	getCommunityNotificationReason: () => null,
 }));
+jest.mock('./community-push.service', () => ({
+	subscribeCommunityPushIncoming: () => () => {},
+}));
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 const item = (eventId: string, seconds: number): ICommunityNotification => ({
 	eventId,

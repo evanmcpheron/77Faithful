@@ -157,6 +157,14 @@ export const activateDueCommunityJourneyEnrollments = onSchedule(
 
 export { listReflections } from './journey/list-reflections';
 
+export {
+	getCommunityNotificationPreferences,
+	listCommunityNotifications,
+	markCommunityNotificationRead,
+	openCommunityNotification,
+	setCommunityNotificationPreferences,
+} from './community/community-notification';
+export { deliverCommunityNotificationEvents } from './community/community-notification-event';
 export { createCommunity } from './community/create-community';
 
 export {

@@ -42,6 +42,7 @@ import type {
 	TPrayerRequestStatus,
 } from '../../generated/types/community/community-post.types';
 import { redactDeletedAuthors } from './community-cleanup';
+import { createNotificationEvent } from './community-notification-event';
 import {
 	consumeSubmissionBudget,
 	isBlockedRelationship,
@@ -602,6 +603,16 @@ export const createCommunityPostForAccount = async (
 			updatedAt: now,
 		};
 		transaction.create(postReference, post);
+		if (input.content.postType === 'OrganizerAnnouncement')
+			createNotificationEvent(transaction, database, {
+				category: 'Announcement',
+				communityId: input.communityId,
+				postId: postReference.id,
+				replyId: null,
+				actorUserId: userId,
+				sourceId: postReference.id,
+				now,
+			});
 		transaction.create(
 			contributionReference(
 				database,

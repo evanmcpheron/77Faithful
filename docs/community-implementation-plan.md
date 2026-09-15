@@ -926,3 +926,36 @@ also succeeded. The CLI exited 1 after resource success because it could not
 establish an Artifact Registry cleanup policy. No retention or billing policy
 was changed. Authenticated production progress behavior still requires manual
 smoke testing.
+
+### Ticket 33 operational notes — private in-app activity events
+
+Ticket 33 adds text-free durable events to confirmed reply, first eligible
+prayer-support, and original organizer-announcement transactions. A scheduled
+five-minute worker processes five pending events and one 20-member page per
+event per run with transactional cursors and recipient-event deduplication.
+Member join epochs, Active lifecycle, blocks, source availability, and current
+authorization are checked during delivery and again for recipient
+list/count/open/mark. Push and category controls are persisted for optional
+future push delivery; they do not remove authorized in-app history and default
+to disabled. No push provider, mobile interface, or deployment migration was
+added.
+
+The canonical contracts and validators are in
+`src/types/community/community-notification.types.ts` and
+`src/features/communities/community-notification.ts`; five account callables and
+one scheduled worker are exported. `firestore.rules` denies direct client access
+to the new records; `firestore.indexes.json` adds the reply-participation
+composite. Firestore rejected a redundant notification-order composite because
+the built-in single-field index covers the inbox query. The reply-participation
+index must be ready before the worker processes reply events. The inbox recount
+has a 1,000-record bound and reports an error instead of an inaccurate count
+above that limit. This requires a later retention or scalable filtered-count
+decision before very large inboxes are supported.
+
+Local Functions build/lint, root lint, scoped Prettier, two parser/event-ID
+tests, and the configured remote Rules test (552/552, including the new deny
+paths) passed. Four Firestore/Auth emulator cases were prepared but skipped
+because Java and emulator hosts are unavailable. The root type check still fails
+on existing protected components and unrelated utilities. Emulator
+authorization, transaction/race, partial-fan-out, and live Security Rules
+behavior remain pending. No production smoke test or push-device check has run.

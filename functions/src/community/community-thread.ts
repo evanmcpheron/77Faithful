@@ -45,6 +45,7 @@ import type {
 } from '../../generated/types/community/community-post.types';
 import type { IPersistedTimestamp } from '../../generated/types/shared/persistence.types';
 import { redactDeletedAuthors } from './community-cleanup';
+import { createNotificationEvent } from './community-notification-event';
 import {
 	dataUnavailable,
 	getCommunityAccess,
@@ -420,6 +421,15 @@ export const createCommunityReplyForAccount = async (
 		if (replyCount >= CommunityPostLimits.maxRevision)
 			throw dataUnavailable();
 		transaction.create(replyReference, reply);
+		createNotificationEvent(transaction, database, {
+			category: 'Reply',
+			communityId: input.communityId,
+			postId: input.postId,
+			replyId: replyReference.id,
+			actorUserId: userId,
+			sourceId: replyReference.id,
+			now,
+		});
 		transaction.update(postReference, { replyCount: replyCount + 1 });
 		transaction.create(
 			contributionReference(
@@ -1048,6 +1058,15 @@ export const setCommunityPrayerAcknowledgmentForAccount = async (
 		let revision: number | null = current?.revision ?? null;
 		if (!current && input.isPraying) {
 			revision = 0;
+			createNotificationEvent(transaction, database, {
+				category: 'PrayerSupport',
+				communityId: input.communityId,
+				postId: input.postId,
+				replyId: null,
+				actorUserId: userId,
+				sourceId: userId,
+				now,
+			});
 			transaction.create(supportReference, {
 				schemaVersion: 1,
 				communityId: input.communityId,

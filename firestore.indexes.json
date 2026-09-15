@@ -1,6 +1,15 @@
 {
 	"indexes": [
 		{
+			"collectionGroup": "replies",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "author.userId", "order": "ASCENDING" },
+				{ "fieldPath": "publication.status", "order": "ASCENDING" },
+				{ "fieldPath": "createdAt", "order": "ASCENDING" }
+			]
+		},
+		{
 			"collectionGroup": "communityMemberships",
 			"queryScope": "COLLECTION",
 			"fields": [

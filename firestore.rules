@@ -82,6 +82,26 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityNotifications/{eventId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotificationReadOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotificationPreferences/{communityId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityNotificationPreferenceOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /communityNotificationEvents/{eventId} {
+      allow read, write: if false;
+    }
+
     match /communityJourneyActivationWorker/{documentId} {
       allow read, write: if false;
     }

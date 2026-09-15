@@ -1036,3 +1036,63 @@ The subsequent Function inventory succeeded. The deploy CLI exited 1 only
 because it could not establish an Artifact Registry cleanup policy in that
 region; no retention or billing policy was changed. Authenticated production
 progress calls and Security Rules behavior have not been smoke-tested.
+
+### Ticket 33 — private in-app activity events and notification preferences
+
+The trusted callable operations are `listCommunityNotifications`,
+`openCommunityNotification`, `markCommunityNotificationRead`,
+`getCommunityNotificationPreferences`, and
+`setCommunityNotificationPreferences`. `deliverCommunityNotificationEvents` is a
+scheduled, server-only bounded fan-out worker. Canonical request, result, event,
+recipient, category, and reason types are in
+`src/types/community/community-notification.types.ts`; the exact-field parsers
+in `src/features/communities/community-notification.ts` are generated for
+Functions by `scripts/prepare-functions.cjs`. No client sender or recipient
+input is accepted.
+
+Identifiers and operation IDs are 1–128 ASCII letters, digits, underscores, or
+hyphens. List page size defaults to 20 and is 1–50; its Base64url cursor is at
+most 512 characters, version 1, bound to the recipient user ID, and ordered by
+event `createdAt` descending then event document ID descending. A full unread
+recount scans at most 1,000 recipient records and fails with
+`NotificationUnavailable` rather than returning a partial count. Empty scanned
+pages may occur when live authorization suppresses records. List returns IDs,
+category, actor ID, source time, and read time only. Open returns `Available`
+with community, post, and optional reply IDs, or `Unavailable` with all IDs
+null. Each operation requires authenticated email-verified identity. Only the
+account owner can list, open, or mark their notifications; each read checks
+current Active membership with the original join epoch, Active community, live
+published source, actor account, and reciprocal blocks. Mark and preference Set
+have actor-scoped operation IDs and reject changed payloads as
+`OperationPayloadMismatch`; retries recheck authorization.
+
+Preference Get/Set requires an existing account and current Active
+membership/community. Set takes exactly `communityId`, `category` (`Reply`,
+`PrayerSupport`, or `Announcement`), `categoryEnabled`, `pushEnabled`, and
+`operationId`. The defaults are false for every category and global push. These
+controls govern future optional push delivery only; relevant authorized in-app
+history remains visible regardless of mute. No OS push consent or push provider
+integration is implied.
+
+Reply creation, first true prayer acknowledgment, and original
+organizer-announcement creation each write a text-free durable event in the same
+source transaction. Events use a SHA-256 source-derived ID. The worker scans at
+most five pending events and 20 members per event invocation, advances a
+member-ID cursor transactionally, and writes one recipient record per event ID.
+It excludes the actor, late joiners, inactive members, reciprocal blocks,
+missing accounts, and members without an eligible target relationship. Post
+edits and support toggles after first eligibility do not create another event. A
+deleted or inaccessible target suppresses list/count and makes Open unavailable.
+Direct client reads and writes for events, inbox, preferences, and retry records
+are denied by Firestore Rules. The reply-participation query requires the
+composite index in `firestore.indexes.json`.
+
+Reason codes are `InvalidInput`, `InvalidCursor`, `AccountUnavailable`,
+`CommunityUnavailable`, `OperationPayloadMismatch`, and
+`NotificationUnavailable`; the shared account guard separately reports
+authentication and email-verification reasons. No notification record contains
+post, reply, reflection, invitation, or profile text. The inbox order uses
+Firestore's built-in single-field index; only reply participation needs the new
+composite in `firestore.indexes.json`. Production requires deployment of revised
+Rules/indexes and six new Functions, with the reply-participation index ready
+before fan-out runs. No backfill or push registration is included.

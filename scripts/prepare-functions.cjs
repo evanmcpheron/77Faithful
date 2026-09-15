@@ -59,3 +59,7 @@ cpSync(
 	path.join(root, 'src/features/communities/community-progress.ts'),
 	path.join(generated, 'features/communities/community-progress.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-notification.ts'),
+	path.join(generated, 'features/communities/community-notification.ts'),
+);

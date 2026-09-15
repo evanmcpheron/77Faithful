@@ -199,6 +199,18 @@ const CommunitiesLayout = () => {
 					}}
 				/>
 				<Stack.Screen
+					name='[communityId]/posts/[postId]'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						header: () => (
+							<CommunityChildHeader title='Community post' />
+						),
+					}}
+				/>
+				<Stack.Screen
 					name='[communityId]/posts/[postId]/edit'
 					options={{
 						headerShown: true,

@@ -127,6 +127,29 @@ it('returns a cold-open members route to its community', () => {
 	act(() => header.unmount());
 });
 
+it('gives a notification-opened post a safe back action when there is no history', () => {
+	const post = renderer.root.findByProps({
+		name: '[communityId]/posts/[postId]',
+	});
+	let header!: ReactTestRenderer;
+	act(() => {
+		header = create(post.props['options'].header());
+	});
+	const topRow = header.root.find(
+		(node) => String(node.type) === 'HeaderTopRow',
+	);
+	expect(topRow.props['title']).toBe('Community post');
+	act(() => topRow.props['onBackPress']());
+	expect(mockReplace).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]',
+		params: { communityId: 'group' },
+	});
+	mockCanGoBack = true;
+	act(() => topRow.props['onBackPress']());
+	expect(mockBack).toHaveBeenCalledTimes(1);
+	act(() => header.unmount());
+});
+
 it('returns a cold-open settings route to its community', () => {
 	const settings = renderer.root.findByProps({
 		name: '[communityId]/settings',

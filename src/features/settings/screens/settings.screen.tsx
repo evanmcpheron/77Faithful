@@ -183,6 +183,23 @@ export const SettingsScreen = () => {
 								size='H1'
 								weight='Semibold'
 							>
+								Community
+							</Typography>
+							<NavigationActionList
+								actions={{
+									id: 'notifications',
+									title: 'Notifications',
+									iconName: IconName.BellNotification,
+									onPress: () =>
+										router.push('/settings/notifications'),
+								}}
+							/>
+						</View>
+						<View style={styles.section}>
+							<Typography
+								size='H1'
+								weight='Semibold'
+							>
 								Your shared words
 							</Typography>
 							<NavigationActionList

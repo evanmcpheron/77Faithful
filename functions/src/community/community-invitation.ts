@@ -1,10 +1,6 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { defineSecret } from 'firebase-functions/params';
-import {
-	HttpsError,
-	onCall,
-	type CallableRequest,
-} from 'firebase-functions/v2/https';
+import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import {
 	normalizeCommunityInvitationCode,
 	parseGetCurrentCommunityInvitationRequest,
@@ -28,6 +24,7 @@ import type {
 	IEncryptedCommunityInvitationCode,
 	IOrganizerCommunityInvitation,
 } from '../../generated/types/community/community-invitation.types';
+import { onCall } from './community-callable';
 import {
 	decryptCommunityInvitationCode,
 	digestCommunityInvitationCode,

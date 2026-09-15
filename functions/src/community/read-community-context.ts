@@ -9,7 +9,7 @@ import {
 	type QueryDocumentSnapshot,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import {
 	CommunityReaderLimits,
 	parseGetCommunityContextRequest,
@@ -31,6 +31,7 @@ import type {
 	ICommunitySummary,
 	TCommunityStatus,
 } from '../../generated/types/community/community.types';
+import { onCall } from './community-callable';
 import {
 	hasActiveCommunityMembership,
 	readCommunitySummary,

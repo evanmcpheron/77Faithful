@@ -4,7 +4,7 @@ import {
 	type Firestore,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	parseCommunityTimeZoneId,
@@ -29,6 +29,7 @@ import {
 	isReadyJourneySetup,
 	requirePublishedCourse,
 } from '../journey/start-journey';
+import { onCall } from './community-callable';
 import { safeCommunityJourneyPreview } from './community-journey';
 import { requireCommunityAccount } from './read-community';
 

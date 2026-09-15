@@ -8,7 +8,6 @@ import {
 	type Query,
 	type QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
-import { onCall } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	CommunityPostLimits,
@@ -44,6 +43,7 @@ import type {
 	ICommunityReplyDocument,
 } from '../../generated/types/community/community-post.types';
 import type { IPersistedTimestamp } from '../../generated/types/shared/persistence.types';
+import { onCall } from './community-callable';
 import { redactDeletedAuthors } from './community-cleanup';
 import { createNotificationEvent } from './community-notification-event';
 import {

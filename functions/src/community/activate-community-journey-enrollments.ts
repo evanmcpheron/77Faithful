@@ -5,7 +5,7 @@ import {
 	Timestamp,
 	type Firestore,
 } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	parseRetryCommunityJourneyActivationRequest as parseCanonicalRetry,
@@ -32,6 +32,7 @@ import {
 	requirePublishedCourse,
 	writePrivateJourneyStart,
 } from '../journey/start-journey';
+import { onCall } from './community-callable';
 import { safeCommunityJourneyPreview } from './community-journey';
 import { requireCommunityAccount } from './read-community';
 

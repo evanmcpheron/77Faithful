@@ -1017,25 +1017,45 @@ callable, or device check ran for Ticket 35.
 
 ### Ticket 39 operational notes — backend audit
 
-The existing callable-only Firestore reader and writer boundary was retained. An
-invalid notification cursor timestamp can now return `InvalidCursor` before
-query construction; the regression covers unsafe seconds and out-of-range
-nanoseconds. The focused local Functions build and 35 non-emulator tests passed.
-Invitation preview now serializes its expiry as the canonical plain timestamp;
-the 42-case backend contract suite passed after regression coverage asserted the
-result validator accepts the returned preview directly. This is a compatible
-backend projection correction, with a frontend method-assumption check for
-prompt 40. The Firestore/Auth/Functions emulator command was attempted, but it
-stopped before executing tests because `java -version` cannot find a runtime.
-Hostile client callable/Rules tests, lifecycle race stress, fan-out/send exit
-races, production Auth-state checks, secret bindings, and device delivery are
-**not run** for this audit.
+The existing callable-only Firestore reader and writer boundary was retained.
+Invalid notification cursor timestamp parts return `InvalidCursor` before query
+construction. Invitation preview expiry is a canonical plain timestamp. Prompt
+40 should check timestamp method assumptions and handle `AccountUnavailable` on
+all community callables. Every community callable now fetches the current Auth
+user and checks account availability, verification, and session revocation
+before running its existing operation guard; Auth lookup outages return
+`unavailable` with `AccountUnavailable` rather than granting access. The real
+callable test first reproduced disabled-account and revoked-session access with
+old tokens, then passed after both corrections. Safety reviewer capability still
+requires its separately provisioned and currently valid Auth claim. The session
+check compares Firebase's `tokensValidAfterTime` to the presented token's
+`auth_time`, following the platform's timestamp granularity.
 
-Current ordinary community callable guards rely on the verified-email claim in
-the presented token plus application records; the platform safety reviewer guard
-separately fetches current Auth state and independently checks reviewer
-capability. Disabled/deleted-account behavior for ordinary callables remains
-open pending a real callable test and a consistent current-Auth guard. Do not
-interpret a mock Admin SDK or local compilation as closure of this finding. No
-data migration, production secret, reviewer grant, deployment, or production
-write was performed in Ticket 39.
+OpenJDK 21 is locally available at `/opt/homebrew/opt/openjdk@21/bin/java`.
+Using the demo project `demo-faithful-ticket39`, the final Auth/Firestore/
+Functions emulator suite passed 88/88. It covers real Auth-token callable access
+for organizer, member, future member, Left, Removed, outsider, unverified,
+disabled, deleted, revoked session, and separate safety reviewer; forged fields;
+private writing isolation; direct Firestore Rules; invitation issue/rotate/
+revoke/accept/close races; journey enrollment/activation/start conflicts;
+operation retry payload mismatch; safety review revisions; progress projection
+revocation; and notification/push suppression after exits and blocks. The real
+HTTP regression additionally sends a disabled token to all 60 current community
+callable names and checks HTTP 403 with `AccountUnavailable`. During that sweep,
+the emulator attempted to resolve `COMMUNITY_INVITATION_ENCRYPTION_KEYS` from
+Secret Manager in the demo project and received 403; successful authorized
+secret-bound calls were **not run**. Five existing emulator cases were corrected
+for project-ID, test isolation, package resolution, or an incorrect
+cancel-after-enroll race expectation. Functions build and lint passed; the
+focused non-emulator backend and personal journey tests passed 77/77. Root lint
+passed with seven existing warnings. Root type check still has unrelated
+protected-component errors. The configured remote Rules API check did not run
+successfully because saved credentials were invalid. The Functions emulator
+required the CLI discovery timeout override after two startup-only failures; the
+final 88-case run used that override and passed.
+
+Production secret binding, live Auth-state behavior, Scheduler execution, push
+provider delivery, device checks, and production Rules/index deployment remain
+**not run**. No data migration, production secret, reviewer grant, deployment,
+or production write was performed in Ticket 39. The local emulator suite does
+not establish release readiness.

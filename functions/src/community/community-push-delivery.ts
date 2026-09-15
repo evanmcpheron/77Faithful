@@ -4,7 +4,7 @@ import {
 	type Firestore,
 } from 'firebase-admin/firestore';
 import { defineSecret } from 'firebase-functions/params';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import type {
 	ICommunityNotificationDocument,
@@ -14,6 +14,7 @@ import type {
 	ICommunityPushDeliveryDocument,
 	ICommunityPushInstallationDocument,
 } from '../../generated/types/community/community-push.types';
+import { onCall } from './community-callable';
 import {
 	communityNotificationAvailable,
 	openCommunityNotificationForAccount,

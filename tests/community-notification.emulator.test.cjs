@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
-const { after, before, test } = require('node:test');
+const { after, before, beforeEach, test } = require('node:test');
 const { deleteApp, initializeApp } = require(
 	require.resolve('firebase-admin/app', {
 		paths: [path.join(__dirname, '../functions')],
@@ -24,6 +24,15 @@ before(() => {
 	if (!process.env.FIRESTORE_EMULATOR_HOST) return;
 	app = initializeApp({ projectId });
 	database = getFirestore(app);
+});
+beforeEach(async () => {
+	if (!database) return;
+	const response = await fetch(
+		`http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/${projectId}/databases/(default)/documents`,
+		{ method: 'DELETE' },
+	);
+	assert.equal(response.ok, true, await response.text());
+	await seed();
 });
 after(async () => {
 	if (app) await deleteApp(app);
@@ -76,7 +85,6 @@ const seed = async () => {
 };
 test('bounded fan-out selects author and prior participant, suppresses actor and late joiner, and retries without duplicates', async (t) => {
 	if (!database) return t.skip('Firestore emulator unavailable');
-	await seed();
 	const eventId = events.notificationEventId(
 		'Reply',
 		'church',

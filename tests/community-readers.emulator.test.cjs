@@ -1,17 +1,21 @@
 const assert = require('node:assert/strict');
+const path = require('node:path');
 const { after, before, beforeEach, test } = require('node:test');
-const {
-	deleteApp,
-	getApps,
-	initializeApp,
-} = require('../functions/node_modules/firebase-admin/app');
-const {
-	getFirestore,
-	Timestamp,
-} = require('../functions/node_modules/firebase-admin/firestore');
-const {
-	getAuth: getAdminAuth,
-} = require('../functions/node_modules/firebase-admin/auth');
+const { deleteApp, getApps, initializeApp } = require(
+	require.resolve('firebase-admin/app', {
+		paths: [path.join(__dirname, '../functions')],
+	}),
+);
+const { getFirestore, Timestamp } = require(
+	require.resolve('firebase-admin/firestore', {
+		paths: [path.join(__dirname, '../functions')],
+	}),
+);
+const { getAuth: getAdminAuth } = require(
+	require.resolve('firebase-admin/auth', {
+		paths: [path.join(__dirname, '../functions')],
+	}),
+);
 const {
 	deleteApp: deleteClientApp,
 	initializeApp: initializeClientApp,
@@ -33,7 +37,8 @@ const {
 	setDoc,
 } = require('firebase/firestore');
 
-const projectId = 'faithful-community-readers-test';
+const projectId =
+	process.env.GCLOUD_PROJECT || 'faithful-community-readers-test';
 let database;
 let readers;
 let clientApp;

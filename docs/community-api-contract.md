@@ -1183,15 +1183,23 @@ production authorization check ran in this ticket.
 ### Ticket 39 — backend security and lifecycle audit
 
 No operation, response shape, canonical type, index, or Rule was added by this
-audit. `listCommunityNotifications` continues to use
+audit. All 60 community callables now check current Firebase Auth account and
+session state before their existing validators and authorization. A disabled,
+deleted, or currently unverified account is denied even when the presented ID
+token remains valid. A revoked session is denied when Firebase's
+`tokensValidAfterTime` is later than the token's `auth_time`; this includes
+retries of previously successful operations. The existing `AccountUnavailable`
+reason is returned with `permission-denied`. If current Auth state cannot be
+fetched, the callable fails closed with `unavailable` and `AccountUnavailable`.
+Prompt 40 should handle this additional reason on all community operations. No
+request or response type changed. `listCommunityNotifications` continues to use
 `IListCommunityNotificationsRequest` and `IListCommunityNotificationsResult`;
 its cursor remains a recipient-bound Base64url traversal position of at most 512
 characters, ordered by `createdAt` descending and event ID descending. The
 backend now rejects non-safe-integer cursor seconds and nanoseconds outside
 0–999,999,999 with the existing `InvalidCursor` reason before constructing a
 Firestore timestamp. All other authorization, audience, retry, and lifecycle
-semantics remain as registered in their owning sections. No frontend-visible
-contract change is required for prompt 40.
+semantics remain as registered in their owning sections.
 
 `previewCommunityInvitation` continues to return
 `IPreviewCommunityInvitationResult`. Its `expiresAt` field is now projected as
@@ -1201,16 +1209,23 @@ meaning are unchanged. Existing callers that used `.seconds` and `.nanoseconds`
 remain compatible; prompt 40 should verify any caller that assumed SDK-specific
 timestamp methods.
 
-The Functions build and the focused notification, creation, owner-contribution,
-and personal journey-start tests passed locally (35 tests). The broader backend
-contract suite passed 42/42 after the preview projection correction. An emulator
-command for existing service-level community tests was attempted but **not run**
-because the workstation has no Java runtime. Actual callable hostile-client
-tests were also **not run**. This is not evidence of callable authorization or
-Rules correctness. A source audit found that ordinary community callable guards
-check the Auth token's `email_verified` claim and a Firestore profile, while the
-separate safety reviewer guard checks current Firebase Auth state. Whether a
-disabled or deleted account with a still-valid token can reach ordinary
-operations remains an open security finding requiring real callable tests and a
-backend-wide correction. No production migration, secret provisioning, privilege
-grant, deployment, or device check was performed for this audit.
+OpenJDK 21 was installed locally to run isolated Firebase emulators. The final
+Auth/Firestore/Functions emulator suite passed 88/88. Its new real callable test
+uses Auth emulator ID tokens to verify organizer/member/outsider/future/Left/
+Removed/unverified access, forged fields, deliberate post versus private
+writing, independent safety capability revocation, and
+disabled/deleted/revoked-session denials. Existing emulator cases exercise
+direct Rules access, invitation and enrollment races, idempotency and payload
+mismatch, projection revocation, notification/push suppression, and safety
+review conflicts. The revoked-session test first reproduced a 200 response after
+token revocation, then passed with the current-session guard. The real callable
+regression also checks all 60 current community operation names with a disabled
+token and requires HTTP 403 plus `AccountUnavailable`. Secret-bound invitation
+endpoints still require the encryption secret for a successful authorized call;
+the demo emulator had no such binding. Functions build and lint passed; focused
+backend and personal journey-start tests passed 77/77. Root lint passed with
+seven existing warnings; root TypeScript remains blocked by unrelated
+protected-component errors. The remote Rules API check could not authenticate
+with saved credentials. No production migration, secret provisioning, privilege
+grant, deployment, Scheduler execution, live push send, or device check ran in
+this audit.

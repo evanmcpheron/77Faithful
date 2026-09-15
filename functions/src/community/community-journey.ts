@@ -6,7 +6,7 @@ import {
 	type Query,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	CommunityJourneyLimits,
@@ -35,6 +35,7 @@ import type {
 	ICommunityJourneyPreview,
 } from '../../generated/types/community/community-journey.types';
 import type { IFormationCourseReference } from '../../generated/types/formation/formation-course.types';
+import { onCall } from './community-callable';
 import { requireCommunityAccount } from './read-community';
 
 interface IDependencies {

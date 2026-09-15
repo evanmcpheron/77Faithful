@@ -1,9 +1,10 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { parseCreateCommunityRequest } from '../../generated/features/communities/community-creation';
 import type { ICreateCommunityResult } from '../../generated/types/community/community-function.types';
 import type { ICommunityMembershipDocument } from '../../generated/types/community/community-membership.types';
 import type { ICommunityDocument } from '../../generated/types/community/community.types';
+import { onCall } from './community-callable';
 import {
 	hasActiveCommunityMembership,
 	readCommunitySummary,

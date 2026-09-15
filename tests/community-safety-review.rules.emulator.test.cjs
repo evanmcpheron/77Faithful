@@ -17,7 +17,7 @@ const { getAuth } = require(
 	}),
 );
 
-const projectId = 'demo-faithful-safety-review';
+const projectId = process.env.GCLOUD_PROJECT || 'demo-faithful-safety-review';
 let database;
 const tokens = [];
 const restrictedPaths = [

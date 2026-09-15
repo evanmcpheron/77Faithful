@@ -9,11 +9,7 @@ import {
 	type QueryDocumentSnapshot,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import {
-	HttpsError,
-	onCall,
-	type CallableRequest,
-} from 'firebase-functions/v2/https';
+import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	CommunityPostLimits,
@@ -41,6 +37,7 @@ import type {
 	TCommunityPostType,
 	TPrayerRequestStatus,
 } from '../../generated/types/community/community-post.types';
+import { onCall } from './community-callable';
 import { redactDeletedAuthors } from './community-cleanup';
 import { createNotificationEvent } from './community-notification-event';
 import {

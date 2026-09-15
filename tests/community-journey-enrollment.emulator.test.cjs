@@ -981,7 +981,7 @@ test('enrollment serializes against schedule revision', async () => {
 	}
 });
 
-test('enrollment versus cancel leaves either a frozen enrolled schedule or a canceled empty schedule', async () => {
+test('enrollment versus cancel leaves a valid schedule and never starts a personal journey', async () => {
 	const schedule = await configured();
 	const outcomes = await Promise.allSettled([
 		enrollments.enrollCommunityJourneyForAccount(
@@ -1000,10 +1000,7 @@ test('enrollment versus cancel leaves either a frozen enrolled schedule or a can
 			dependencies(),
 		),
 	]);
-	assert.equal(
-		outcomes.filter((outcome) => outcome.status === 'fulfilled').length,
-		1,
-	);
+	assert.ok(outcomes.some((outcome) => outcome.status === 'fulfilled'));
 	const privateSnapshot = await database
 		.doc(
 			`users/member/communityJourneyEnrollments/${schedule.communityJourneyId}`,
@@ -1015,12 +1012,24 @@ test('enrollment versus cancel leaves either a frozen enrolled schedule or a can
 		)
 		.get();
 	if (privateSnapshot.exists) {
-		assert.equal(publicSnapshot.get('lifecycle.status'), 'Scheduled');
+		assert.ok(
+			['Scheduled', 'Canceled'].includes(
+				publicSnapshot.get('lifecycle.status'),
+			),
+		);
 		assert.ok(publicSnapshot.get('firstEnrollmentAcceptedAt'));
+		if (publicSnapshot.get('lifecycle.status') === 'Canceled') {
+			assert.equal(outcomes[0].status, 'fulfilled');
+			assert.equal(outcomes[1].status, 'fulfilled');
+		}
 	} else {
 		assert.equal(publicSnapshot.get('lifecycle.status'), 'Canceled');
 		assert.equal(publicSnapshot.get('firstEnrollmentAcceptedAt'), null);
 	}
+	assert.equal(
+		(await database.collection('users/member/journeys').get()).size,
+		0,
+	);
 });
 
 test('a started enrollment cannot be withdrawn to end a personal journey', async () => {

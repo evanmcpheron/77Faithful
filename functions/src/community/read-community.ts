@@ -3,14 +3,11 @@ import {
 	type Firestore,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import {
-	HttpsError,
-	onCall,
-	type CallableRequest,
-} from 'firebase-functions/v2/https';
+import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { parseCreateCommunityResult } from '../../generated/features/communities/community-creation';
 import type { TCommunityReaderReasonCode } from '../../generated/types/community/community-function.types';
 import type { ICommunitySummary } from '../../generated/types/community/community.types';
+import { onCall } from './community-callable';
 
 const readerReason = (reason: TCommunityReaderReasonCode) => ({ reason });
 

@@ -3,7 +3,7 @@ import {
 	Timestamp,
 	type Firestore,
 } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	parseRegisterCommunityPushInstallationRequest,
@@ -14,6 +14,7 @@ import type {
 	ICommunityPushInstallationResult,
 	TCommunityPushReason,
 } from '../../generated/types/community/community-push.types';
+import { onCall } from './community-callable';
 import { requireCommunityAccount } from './read-community';
 
 const digest = (value: string): string =>

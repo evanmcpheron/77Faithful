@@ -4,7 +4,6 @@ import {
 	Timestamp,
 	type Firestore,
 } from 'firebase-admin/firestore';
-import { onCall } from 'firebase-functions/v2/https';
 import {
 	CommunityPostLimits,
 	parseListOwnCommunityContributionsRequest,
@@ -13,6 +12,7 @@ import type {
 	IListOwnCommunityContributionsResult,
 	IOwnCommunityContribution,
 } from '../../generated/types/community/community-post-function.types';
+import { onCall } from './community-callable';
 import {
 	isIdentifier,
 	postError,

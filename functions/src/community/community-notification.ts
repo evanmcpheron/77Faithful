@@ -5,7 +5,7 @@ import {
 	type Firestore,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	CommunityNotificationLimits,
@@ -23,6 +23,7 @@ import type {
 	IListCommunityNotificationsResult,
 	TCommunityNotificationReason,
 } from '../../generated/types/community/community-notification.types';
+import { onCall } from './community-callable';
 import { isBlockedRelationship } from './community-safety';
 import { requireCommunityAccount } from './read-community';
 

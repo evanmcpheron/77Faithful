@@ -8,11 +8,7 @@ import {
 	type QueryDocumentSnapshot,
 	type Transaction,
 } from 'firebase-admin/firestore';
-import {
-	HttpsError,
-	onCall,
-	type CallableRequest,
-} from 'firebase-functions/v2/https';
+import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import {
 	CommunityProgressLimits,
@@ -33,6 +29,7 @@ import type {
 	TCommunityAggregateProgressResult,
 	TCommunityProgressConsent,
 } from '../../generated/types/community/community-progress.types';
+import { onCall } from './community-callable';
 import { resolveCommunityDisplayName } from './read-community';
 
 interface IDependencies {

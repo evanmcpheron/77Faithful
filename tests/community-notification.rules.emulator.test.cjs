@@ -7,7 +7,8 @@ test('client cannot read or write notification event, inbox, preference, or retr
 		!process.env.FIREBASE_AUTH_EMULATOR_HOST
 	)
 		return t.skip('Firestore/Auth emulators unavailable');
-	const projectId = 'demo-faithful-notification-rules';
+	const projectId =
+		process.env.GCLOUD_PROJECT || 'demo-faithful-notification-rules';
 	const signup = await fetch(
 		`http://${process.env.FIREBASE_AUTH_EMULATOR_HOST}/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-key`,
 		{
@@ -20,7 +21,7 @@ test('client cannot read or write notification event, inbox, preference, or retr
 			}),
 		},
 	);
-	assert.equal(signup.ok, true, await signup.text());
+	if (!signup.ok) assert.fail(await signup.text());
 	const { idToken, localId } = await signup.json();
 	const paths = [
 		'communityNotificationEvents/event',

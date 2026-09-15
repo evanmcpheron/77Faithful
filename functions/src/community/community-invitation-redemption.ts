@@ -1,9 +1,5 @@
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
-import {
-	HttpsError,
-	onCall,
-	type CallableRequest,
-} from 'firebase-functions/v2/https';
+import { HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { createHash } from 'node:crypto';
 import { parseCreateCommunityResult } from '../../generated/features/communities/community-creation';
 import {
@@ -20,6 +16,7 @@ import type {
 import type { ICommunityInvitationDocument } from '../../generated/types/community/community-invitation.types';
 import type { ICommunityMembershipDocument } from '../../generated/types/community/community-membership.types';
 import type { ICommunitySummary } from '../../generated/types/community/community.types';
+import { onCall } from './community-callable';
 import {
 	parseStoredInvitation,
 	timestampMilliseconds,

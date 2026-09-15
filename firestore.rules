@@ -74,6 +74,14 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /users/{userId}/communityProgressPreferences/{preferenceId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communityProgressSetOperations/{operationId} {
+      allow read, write: if false;
+    }
+
     match /communityJourneyActivationWorker/{documentId} {
       allow read, write: if false;
     }

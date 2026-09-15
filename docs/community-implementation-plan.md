@@ -897,3 +897,32 @@ interrupted. A subsequent Function inventory listed both triggers with runtime
 fields unavailable during update; a later inventory again showed Node 22 v2 and
 256 MB for each. Verify the exact revised source hash and scheduler health
 before relying on activation; this update is not a confirmed source revision.
+
+### Ticket 31 operational notes
+
+The approved progress backend adds four callable-only operations and private
+owner preferences. It performs bounded live recomputation during reads; no
+progress projection, monitor, analytics dependency, or migration was created.
+The aggregate reader suppresses the entire result if even one roster member has
+not opted in, lacks an authoritative Started link, or a nonzero stage cell has
+fewer than five people. It caps the cohort at 50; larger groups receive the same
+privacy-safe suppressed response. Owner revocation, leave/removal, and group
+closure are enforced on each read without waiting for cleanup.
+
+Deploy revised `firestore.rules` and the four callable exports only after the
+existing production community/enrollment prerequisites are verified. No new
+Firestore index or secret is required; the current Active-member join-time index
+is reused. Local Functions build and lint and two non-emulator tests passed;
+scoped formatting passed. Four Firestore-emulator cases were skipped because
+Java is unavailable. The root TypeScript check has existing protected component
+and utility errors. Root lint passed with seven existing warnings. The
+configured remote Rules test was attempted but stopped on an expired Firebase
+CLI login. Emulator transaction, security-rule, and authenticated production
+behavior are unverified.
+
+The requested Firebase deploy released the revised Rules and reported successful
+creation of the four progress callables in `us-central1`; a Function inventory
+also succeeded. The CLI exited 1 after resource success because it could not
+establish an Artifact Registry cleanup policy. No retention or billing policy
+was changed. Authenticated production progress behavior still requires manual
+smoke testing.

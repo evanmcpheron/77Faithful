@@ -64,6 +64,7 @@ export interface ISetCommunityProgressSharingRequest {
 	communityJourneyId: string;
 	shouldShareIndividualProgress: boolean;
 	shouldContributeToAggregateProgress: boolean;
+	operationId: string;
 }
 
 export interface ISetCommunityProgressSharingResult {
@@ -72,3 +73,36 @@ export interface ISetCommunityProgressSharingResult {
 	individualProgress: TCommunityProgressConsent;
 	aggregateProgress: TCommunityProgressConsent;
 }
+
+export interface IGetCommunityProgressSharingRequest {
+	communityId: string;
+	communityJourneyId: string;
+}
+
+export type IGetCommunityProgressSharingResult =
+	ISetCommunityProgressSharingResult;
+
+export interface IListSharedCommunityProgressRequest {
+	communityId: string;
+	communityJourneyId: string;
+	pageSize?: number;
+	cursor?: string;
+}
+
+export interface IListSharedCommunityProgressResult {
+	progress: ISharedCommunityProgress[];
+	nextCursor: string | null;
+}
+
+export interface IGetCommunityAggregateProgressRequest {
+	communityId: string;
+	communityJourneyId: string;
+}
+
+export type TCommunityAggregateProgressResult =
+	| {
+			status: 'Available';
+			progress: ICommunityAggregateProgress;
+			guidance: string;
+	  }
+	| { status: 'Suppressed'; progress: null; guidance: string };

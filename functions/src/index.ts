@@ -197,6 +197,12 @@ export {
 	listCommunityPosts,
 } from './community/community-post';
 export {
+	getCommunityAggregateProgress,
+	getCommunityProgressSharing,
+	listSharedCommunityProgress,
+	setCommunityProgressSharing,
+} from './community/community-progress';
+export {
 	blockCommunityMember,
 	listBlockedCommunityMembers,
 	reportCommunityContent,

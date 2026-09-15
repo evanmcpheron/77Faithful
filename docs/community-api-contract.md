@@ -970,3 +970,69 @@ Function inventory listed both triggers with runtime fields unavailable during
 update; a later inventory again showed Node 22 v2 and 256 MB for each. The CLI
 did not confirm the exact revised source hash, so treat that revision as pending
 verification.
+
+### Ticket 31 — independently revocable high-level progress
+
+Four Node 22 Firebase callables are exported: `getCommunityProgressSharing`,
+`setCommunityProgressSharing`, `listSharedCommunityProgress`, and
+`getCommunityAggregateProgress`. Canonical requests/results live in
+`src/types/community/community-progress.types.ts`; bounded parsers live in
+`src/features/communities/community-progress.ts` and are copied by
+`scripts/prepare-functions.cjs`. The Set request now requires `operationId`.
+
+Each operation requires authenticated verified identity, an existing profile,
+authoritative Active membership, an Active community, and a matching
+Scheduled/Active/Completed community journey. The owner read returns separate
+`Private` defaults. Set additionally requires the owner's private Enrolled or
+Started record. Shared transitions use server consent timestamps; setting
+Private immediately revokes them. Preferences are keyed by a hash of community
+and community-journey IDs. The actor-scoped Set receipt holds only the payload
+SHA-256 digest, text-free result, and creation time. Same-payload retries
+recheck authorization and return current preference state; changed payloads
+fail. Enrollment and membership never set either flag.
+
+Every identifier is 1–128 ASCII letters, digits, underscores, or hyphens. The
+individual list defaults to 20 scanned members per page (maximum 50). Its
+version-1 Base64url cursor is at most 512 characters, scoped to community and
+journey, ordered by `joinedAt` then member document ID ascending, and never
+grants access. Pages may be empty while passing nonsharers. Only a consenting
+Active member with a valid private Started link and a personal journey owned by
+them is returned. Its projection has public user ID/display name, the canonical
+Active/Completed/EndedEarly state, and calculation time; no private journey ID,
+dates, day/practice data, or writing is exposed.
+
+Aggregate reads recompute from live private records, with no stored projection
+or background monitor. They return `Available` only for a 5–50 member Active
+roster where every member separately consented to aggregate contribution and has
+a valid Started private link, and every nonzero stage cell has at least five
+members. Every other case is typed `Suppressed` with `progress: null`. A true
+zero in an Available stage cell is distinct from suppression. This conservative
+whole-result rule blocks complementary subtraction against the member roster.
+Guidance identifies the counts as voluntary participants' factual stages, not
+spiritual scores. Closure and membership loss immediately deny new reads; stale
+or forged progress documents are ignored.
+
+Reason codes are `AuthenticationRequired`, `EmailVerificationRequired`,
+`InvalidInput`, `InvalidCursor`, `AccountUnavailable`, `CommunityUnavailable`,
+`CommunityClosed`, `JourneyUnavailable`, `OperationPayloadMismatch`, and
+`ProgressDataUnavailable`. Existing member `lifecycle.status`/`joinedAt`
+composite indexing is sufficient; no new index or secret is required. Rules
+explicitly deny direct client access to preference and Set receipt documents.
+Production requires deployment of four Functions and revised Rules. Existing
+private Started enrollments must have their real personal link; no migration was
+run.
+
+Local Functions build/lint, scoped Prettier, and two parser/authorization tests
+passed. Four emulator transaction cases were prepared but skipped because Java
+is unavailable. The root TypeScript check still fails in existing protected
+components and unrelated utilities. Root lint passed with seven existing
+warnings. The configured Rules test was attempted but could not run because the
+local Firebase login is expired. Emulator transaction/race/Rules checks remain
+pending.
+
+The requested `faithful-4325a` deployment released revised Firestore Rules and
+reported successful creation of all four v2 Node 22 callables in `us-central1`.
+The subsequent Function inventory succeeded. The deploy CLI exited 1 only
+because it could not establish an Artifact Registry cleanup policy in that
+region; no retention or billing policy was changed. Authenticated production
+progress calls and Security Rules behavior have not been smoke-tested.

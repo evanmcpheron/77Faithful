@@ -55,3 +55,7 @@ cpSync(
 	path.join(root, 'src/features/communities/community-journey.ts'),
 	path.join(generated, 'features/communities/community-journey.ts'),
 );
+cpSync(
+	path.join(root, 'src/features/communities/community-progress.ts'),
+	path.join(generated, 'features/communities/community-progress.ts'),
+);

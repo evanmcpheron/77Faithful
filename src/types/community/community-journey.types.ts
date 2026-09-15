@@ -1,7 +1,10 @@
 import type { TBibleVersionId } from '../formation/bible-version.types';
 import type { IFormationCourseReference } from '../formation/formation-course.types';
 import type { TOptionalPracticeSelection } from '../formation/practice.types';
-import type { IWritingHead } from '../journey/journey-writing.types';
+import type {
+	IWritingHead,
+	IWritingRevisionDocument,
+} from '../journey/journey-writing.types';
 import type {
 	DomainSchemaVersion,
 	IDocumentTimestamps,
@@ -117,7 +120,11 @@ export interface ICommunityJourneyEnrollmentDocument extends IDocumentTimestamps
 	bibleVersionId: TBibleVersionId;
 	setupDraftId: string;
 	setupRevision: number;
+	scheduleRevision: number;
+	startingTimeZoneId: TIanaTimeZoneId;
+	activationConsentConfirmedAt: IPersistedTimestamp;
 	// Preserve source revisions/conflicts through setup removal and transfer them at actual start.
 	startingMotivation: IWritingHead | null;
+	startingMotivationRevision: IWritingRevisionDocument | null;
 	lifecycle: TCommunityJourneyEnrollmentLifecycle;
 }

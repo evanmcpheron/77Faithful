@@ -7,7 +7,10 @@ import {
 	getJourneyCalendarDate,
 	getJourneyEndTime,
 } from '../../generated/features/journey/journey-calendar';
-import type { IJourneySetupDraftDocument } from '../../generated/types/account/journey-setup.types';
+import type {
+	IJourneySetupDraftDocument,
+	IReadyJourneySetupChoices,
+} from '../../generated/types/account/journey-setup.types';
 import { BibleVersionId } from '../../generated/types/formation/bible-version.types';
 import { FormationThemeOrder } from '../../generated/types/formation/formation-course.types';
 import { OptionalPracticeId } from '../../generated/types/formation/practice.types';
@@ -94,7 +97,7 @@ export const parseStartJourneyRequest = (
 	};
 };
 
-const requirePublishedCourse = async (
+export const requirePublishedCourse = async (
 	transaction: Transaction,
 	database: Firestore,
 	bibleVersionId: string,
@@ -238,6 +241,24 @@ const requirePublishedCourse = async (
 	return { courseId, courseVersionId };
 };
 
+export const isReadyJourneySetup = (
+	draft: IJourneySetupDraftDocument,
+): draft is IJourneySetupDraftDocument & {
+	choices: IReadyJourneySetupChoices;
+} =>
+	draft.currentStep === 'Review' &&
+	Boolean(draft.choices) &&
+	draft.choices.readiness === 'ReadyForReview' &&
+	Array.isArray(draft.choices.optionalPracticeIds) &&
+	draft.choices.optionalPracticeIds.length >= 2 &&
+	draft.choices.optionalPracticeIds.length <= 4 &&
+	new Set(draft.choices.optionalPracticeIds).size ===
+		draft.choices.optionalPracticeIds.length &&
+	draft.choices.optionalPracticeIds.every((practiceId) =>
+		Object.values(OptionalPracticeId).includes(practiceId),
+	) &&
+	Object.values(BibleVersionId).includes(draft.choices.bibleVersionId);
+
 const getDetails = (
 	journeyId: string,
 	journey: IJourneyDocument,
@@ -347,20 +368,7 @@ export const startJourneyForAccount = async (
 				'Your setup changed. Load your saved setup and review it before starting.',
 				{ reason: 'SetupChanged' },
 			);
-		if (
-			draft.currentStep !== 'Review' ||
-			draft.choices.readiness !== 'ReadyForReview' ||
-			draft.choices.optionalPracticeIds.length < 2 ||
-			draft.choices.optionalPracticeIds.length > 4 ||
-			new Set(draft.choices.optionalPracticeIds).size !==
-				draft.choices.optionalPracticeIds.length ||
-			!draft.choices.optionalPracticeIds.every((practiceId) =>
-				Object.values(OptionalPracticeId).includes(practiceId),
-			) ||
-			!Object.values(BibleVersionId).includes(
-				draft.choices.bibleVersionId,
-			)
-		)
+		if (!isReadyJourneySetup(draft))
 			throw new HttpsError(
 				'failed-precondition',
 				'Review your practices and Bible translation before starting.',

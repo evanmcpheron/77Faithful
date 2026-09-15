@@ -13,6 +13,11 @@ import {
 	parsePracticeSettingsRequest,
 } from './journey/practice-settings-request';
 import { refreshTodayVerseSources } from './journey/refresh-today-verses';
+export {
+	enrollCommunityJourney,
+	getCommunityJourneyEnrollment,
+	withdrawCommunityJourneyEnrollment,
+} from './community/community-journey-enrollment';
 
 import { getJourneyDayForAccount } from './journey/journey-day';
 import {

@@ -8,7 +8,10 @@ import type {
 	ICommunityInvitationPreview,
 	IOrganizerCommunityInvitation,
 } from './community-invitation.types';
-import type { ICommunityJourneyPreview } from './community-journey.types';
+import type {
+	ICommunityJourneyPreview,
+	TCommunityJourneyEnrollmentLifecycle,
+} from './community-journey.types';
 import type { ICommunityMemberSummary } from './community-membership.types';
 import type {
 	ICommunityContext,
@@ -297,6 +300,8 @@ export interface IEnrollCommunityJourneyRequest {
 	expectedCommunityJourneyRevision: number;
 	setupDraftId: string;
 	expectedSetupRevision: number;
+	startingTimeZoneId: TIanaTimeZoneId;
+	consentToScheduledActivation: true;
 	operationId: string;
 }
 
@@ -304,6 +309,9 @@ export interface IEnrollCommunityJourneyResult {
 	communityJourneyEnrollmentId: string;
 	communityJourney: ICommunityJourneyPreview;
 	enrolledAt: IPersistedTimestamp;
+	startingTimeZoneId: TIanaTimeZoneId;
+	groupDisplayStartDate: TCalendarDate;
+	personalStartDateBehavior: 'ParticipantCalendarDay1';
 }
 
 export interface IWithdrawCommunityJourneyEnrollmentRequest {
@@ -316,3 +324,54 @@ export interface IWithdrawCommunityJourneyEnrollmentResult {
 	communityJourneyEnrollmentId: string;
 	withdrawnAt: IPersistedTimestamp;
 }
+
+export interface IGetCommunityJourneyEnrollmentRequest {
+	communityId: string;
+	communityJourneyId: string;
+}
+
+export interface IGetCommunityJourneyEnrollmentResult {
+	enrollment: {
+		communityJourneyEnrollmentId: string;
+		communityId: string;
+		communityJourneyId: string;
+		groupDisplayStartDate: TCalendarDate;
+		communityTimeZoneId: TIanaTimeZoneId;
+		startingTimeZoneId: TIanaTimeZoneId;
+		personalStartDateBehavior: 'ParticipantCalendarDay1';
+		activationEligibility:
+			| 'Eligible'
+			| 'Withdrawn'
+			| 'Started'
+			| 'StartBlocked'
+			| 'MembershipEnded'
+			| 'CommunityClosed'
+			| 'ScheduleCanceled'
+			| 'EnrollmentClosed'
+			| 'ActivePersonalJourney';
+		lifecycle: TCommunityJourneyEnrollmentLifecycle;
+		enrolledAt: IPersistedTimestamp;
+	} | null;
+}
+
+export type TCommunityJourneyEnrollmentReasonCode =
+	| 'InvalidInput'
+	| 'AccountUnavailable'
+	| 'CommunityUnavailable'
+	| 'MembershipEnded'
+	| 'CommunityClosed'
+	| 'OrganizerCannotEnroll'
+	| 'ScheduleChanged'
+	| 'ScheduleCanceled'
+	| 'EnrollmentClosed'
+	| 'ContentUnavailable'
+	| 'SetupChanged'
+	| 'SetupInvalid'
+	| 'WritingUnavailable'
+	| 'ActivePersonalJourney'
+	| 'EnrollmentAlreadyExists'
+	| 'EnrollmentWithdrawn'
+	| 'EnrollmentStarted'
+	| 'EnrollmentUnavailable'
+	| 'OperationPayloadMismatch'
+	| 'EnrollmentDataUnavailable';

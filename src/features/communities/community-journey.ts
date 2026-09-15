@@ -1,9 +1,12 @@
 import type {
 	ICancelCommunityJourneyRequest,
 	IConfigureCommunityJourneyRequest,
+	IEnrollCommunityJourneyRequest,
+	IGetCommunityJourneyEnrollmentRequest,
 	IGetCommunityJourneyScheduleRequest,
 	IListCommunityJourneyHistoryRequest,
 	IReviseCommunityJourneyRequest,
+	IWithdrawCommunityJourneyEnrollmentRequest,
 } from '../../types/community/community-function.types';
 import type { ICommunityJourneyPreview } from '../../types/community/community-journey.types';
 import type { IFormationCourseReference } from '../../types/formation/formation-course.types';
@@ -230,5 +233,65 @@ export const parseCommunityJourneyPreview = (
 		status: input['status'] as ICommunityJourneyPreview['status'],
 		canEnroll: input['canEnroll'],
 		canRevise: input['canRevise'],
+	};
+};
+
+export const parseEnrollCommunityJourneyRequest = (
+	value: unknown,
+): IEnrollCommunityJourneyRequest => {
+	const input = record(value);
+	if (
+		!exactKeys(input, [
+			'communityId',
+			'communityJourneyId',
+			'expectedCommunityJourneyRevision',
+			'setupDraftId',
+			'expectedSetupRevision',
+			'startingTimeZoneId',
+			'consentToScheduledActivation',
+			'operationId',
+		]) ||
+		input['setupDraftId'] !== 'current' ||
+		input['consentToScheduledActivation'] !== true
+	)
+		throw new Error('Invalid enrollment.');
+	return {
+		communityId: id(input['communityId']),
+		communityJourneyId: id(input['communityJourneyId']),
+		expectedCommunityJourneyRevision: revision(
+			input['expectedCommunityJourneyRevision'],
+		),
+		setupDraftId: 'current',
+		expectedSetupRevision: revision(input['expectedSetupRevision']),
+		startingTimeZoneId: parseCommunityTimeZoneId(
+			input['startingTimeZoneId'],
+		),
+		consentToScheduledActivation: true,
+		operationId: id(input['operationId']),
+	};
+};
+
+export const parseWithdrawCommunityJourneyEnrollmentRequest = (
+	value: unknown,
+): IWithdrawCommunityJourneyEnrollmentRequest => {
+	const input = record(value);
+	if (!exactKeys(input, ['communityId', 'communityJourneyId', 'operationId']))
+		throw new Error('Invalid withdrawal.');
+	return {
+		communityId: id(input['communityId']),
+		communityJourneyId: id(input['communityJourneyId']),
+		operationId: id(input['operationId']),
+	};
+};
+
+export const parseGetCommunityJourneyEnrollmentRequest = (
+	value: unknown,
+): IGetCommunityJourneyEnrollmentRequest => {
+	const input = record(value);
+	if (!exactKeys(input, ['communityId', 'communityJourneyId']))
+		throw new Error('Invalid enrollment reader.');
+	return {
+		communityId: id(input['communityId']),
+		communityJourneyId: id(input['communityJourneyId']),
 	};
 };

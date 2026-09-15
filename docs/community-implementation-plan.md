@@ -798,3 +798,38 @@ confirmed their presence as v2 Node 22 callables. The CLI exited 1 only on its
 `us-central1` Artifact Registry cleanup-policy setup; no policy was changed.
 Production callables and published-course configuration still need manual
 smoke/configuration checks, and the enrollment integration needs Ticket 26.
+
+### Ticket 26 operational notes — private participant enrollment
+
+The backend now provides a current-user enrollment reader, enrollment
+confirmation, and withdrawal through the trusted callable boundary. The
+participant-private snapshot is stored at
+`users/{userId}/communityJourneyEnrollments/{communityJourneyId}`. It contains
+the confirmed starting zone, consent time, schedule/setup revisions, choices,
+translation, and motivation head/source revision. The first acceptance freezes
+the existing schedule marker in the same transaction. Membership alone never
+enrolls, and this ticket does not create future personal journeys or Day 1
+records. Withdrawal removes unstarted activation eligibility while preserving
+private setup writing and unrelated journeys. Schedule and account records
+created outside these contracts may require a deliberate migration; none is
+performed here. Formation configuration must point to the scheduled published
+course/version and released selected text edition with complete readings.
+Day 1 activation, automatic retry, monitoring, and participant conflict review
+remain separate work. Local Functions build/lint and scoped Prettier checks
+passed. Four focused enrollment/schedule contract tests and 22 existing
+journey-start tests passed. The repository Rules API suite passed 492/492 cases,
+including owner and other-account denials for the new private enrollment and
+receipt paths. Root Expo lint passed with seven existing warnings. The root
+TypeScript check still fails on existing application errors outside this ticket.
+The Firestore emulator transaction suite was written but **not run** because
+this machine has no Java runtime. Firestore indexes are unchanged: the reader
+uses a document lookup and enrollment uses the existing Active-journey
+single-field query. Production callable smoke and formation configuration
+checks remain pending. Compilation and Rules evaluation alone are not
+production behavior evidence.
+The requested Firebase deploy released `firestore.rules` and reported
+successful creation of all three Ticket 26 Node 22 v2 callables in
+`us-central1`. A subsequent inventory showed each Active. The deploy CLI
+exited 1 only because the project has no Artifact Registry cleanup policy in
+`us-central1`; this ticket did not set a billing or retention policy. No
+authenticated production enrollment/withdrawal smoke was performed.

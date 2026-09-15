@@ -820,3 +820,71 @@ callables present as Node 22 v2 callables. The deploy CLI still exited 1 because
 it could not set an Artifact Registry cleanup policy in `us-central1`; this
 ticket did not set a billing or retention policy. No production callable smoke
 test or published-course configuration check was performed.
+
+### Ticket 26 — private enrollment and withdrawal
+
+The callable names are `getCommunityJourneyEnrollment`, `enrollCommunityJourney`,
+and `withdrawCommunityJourneyEnrollment`. Canonical request/result contracts
+are `IGetCommunityJourneyEnrollmentRequest/Result`,
+`IEnrollCommunityJourneyRequest/Result`, and
+`IWithdrawCommunityJourneyEnrollmentRequest/Result` in
+`src/types/community/community-function.types.ts`. The private persisted record
+is `ICommunityJourneyEnrollmentDocument` in
+`src/types/community/community-journey.types.ts`. All request validators live in
+`src/features/communities/community-journey.ts` and are copied by
+`scripts/prepare-functions.cjs` during contract preparation.
+
+The reader accepts exactly communityId and communityJourneyId. Enrollment
+accepts exactly those IDs, expectedCommunityJourneyRevision, setupDraftId
+`current`, expectedSetupRevision, startingTimeZoneId,
+consentToScheduledActivation `true`, and operationId. Withdrawal accepts exactly
+the two IDs and operationId. Unknown fields are rejected. IDs are 1–128 ASCII
+letters, digits, underscore, or hyphen; revisions are safe nonnegative integers
+below 2,147,483,647. The confirmed IANA zone is 1–100 characters, valid through
+`Intl.DateTimeFormat`, and cannot be a UTC offset.
+
+All three callables require authentication and verified email. Enrollment
+rechecks the available profile, Active membership, Active community, non-Organizer
+role, current Scheduled schedule, Open enrollment window, matching revision,
+and community-zone date before the named start date. It uses the existing
+journey-start setup choice and full course/translation readiness validators,
+rejects an Active personal journey, and verifies the motivation head against
+its owned revision. The transaction creates only
+`users/{userId}/communityJourneyEnrollments/{communityJourneyId}` and a bounded
+actor/operation digest receipt; the first accepted enrollment sets the public
+schedule's permanent `firstEnrollmentAcceptedAt` marker. It does not create a
+future personal journey or day record. The private record snapshots choices,
+translation, setup and schedule revisions, confirmed participant zone, consent
+time, motivation head and source revision. Later setup edits do not change it.
+The organizer/member projections contain none of these private fields.
+
+Enrollment confirmation returns the safe schedule preview, community display
+date, confirmed participant zone, and
+`personalStartDateBehavior: ParticipantCalendarDay1`. The participant-only reader
+returns its enrollment lifecycle and derived activationEligibility, including
+membership/closure/cancellation changes and an active personal journey conflict,
+without returning writing text.
+Withdrawal changes Enrolled to Withdrawn only, and never deletes setup writing
+or a personal journey. Started enrollment returns `EnrollmentStarted`; a
+Withdrawn record cannot be enrolled again. Enrollment and withdrawal receipts
+are scoped to actor and operation and store only a request SHA-256 digest and
+creation time. A repeated enrollment receipt rechecks current membership and
+schedule state; changed payload returns `OperationPayloadMismatch`.
+
+Typed reasons are `InvalidInput`, `AccountUnavailable`, `CommunityUnavailable`,
+`MembershipEnded`, `CommunityClosed`, `OrganizerCannotEnroll`,
+`ScheduleChanged`, `ScheduleCanceled`, `EnrollmentClosed`,
+`ContentUnavailable`, `SetupChanged`, `SetupInvalid`, `WritingUnavailable`,
+`ActivePersonalJourney`, `EnrollmentAlreadyExists`, `EnrollmentWithdrawn`,
+`EnrollmentStarted`, `EnrollmentUnavailable`, `OperationPayloadMismatch`, and
+`EnrollmentDataUnavailable`. The reader is a single-record lookup; no cursor or
+composite index is needed. Rules explicitly deny direct client reads and writes
+to enrollment and operation receipts. Existing Active-journey single-field
+query indexing is used. Legacy enrollment records lacking the confirmed zone,
+snapshot revision, or consent timestamp need deliberate migration before this
+reader accepts them. Production formation configuration must map each selected
+Bible version to a released text edition and the scheduled published course.
+Actual Day 1 activation and monitoring belong to the later activation ticket.
+
+Local build, lint, contract, Rules, and emulator results are recorded in the
+Ticket 26 operational notes in `docs/community-implementation-plan.md`.

@@ -240,6 +240,18 @@ const InboxContent = ({ userId }: { userId: string }) => {
 						>
 							Open post
 						</TurndownButton>
+						<TurndownButton
+							variant='Ghost'
+							onPress={() =>
+								router.push({
+									pathname:
+										'/communities/[communityId]/notification-settings',
+									params: { communityId: item.communityId },
+								})
+							}
+						>
+							Notification preferences
+						</TurndownButton>
 						{!item.readAt ? (
 							<TurndownButton
 								variant='Ghost'

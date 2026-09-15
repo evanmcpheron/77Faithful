@@ -2,17 +2,21 @@ import { app } from '@td/services/firebase/firebase.instance';
 import type {
 	ICommunityNotification,
 	ICommunityNotificationOpenResult,
+	ICommunityNotificationPreferenceResult,
 	IListCommunityNotificationsRequest,
 	IListCommunityNotificationsResult,
 	IMarkCommunityNotificationReadRequest,
+	ISetCommunityNotificationPreferenceRequest,
 	TCommunityNotificationReason,
 } from '@td/types/community/community-notification.types';
 import { randomUUID } from 'expo-crypto';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {
 	parseCommunityNotificationIdRequest,
+	parseGetCommunityNotificationPreferencesRequest,
 	parseListCommunityNotificationsRequest,
 	parseMarkCommunityNotificationReadRequest,
+	parseSetCommunityNotificationPreferencesRequest,
 } from './community-notification';
 
 const identifier = /^[A-Za-z0-9_-]{1,128}$/;
@@ -211,3 +215,62 @@ export const markCommunityNotificationRead = async (
 };
 export const createCommunityNotificationOperationId = (): string =>
 	randomUUID();
+
+export const parseCommunityNotificationPreferenceResult = (
+	value: unknown,
+): ICommunityNotificationPreferenceResult => {
+	const data = object(value);
+	fields(data, ['communityId', 'categories', 'pushEnabled']);
+	const choices = object(data['categories']);
+	fields(choices, categories);
+	if (
+		typeof data['communityId'] !== 'string' ||
+		!identifier.test(data['communityId']) ||
+		typeof data['pushEnabled'] !== 'boolean' ||
+		!categories.every((category) => typeof choices[category] === 'boolean')
+	)
+		throw new Error('Invalid notification preference response.');
+	return {
+		communityId: data['communityId'],
+		categories: {
+			Reply: choices['Reply'] as boolean,
+			PrayerSupport: choices['PrayerSupport'] as boolean,
+			Announcement: choices['Announcement'] as boolean,
+		},
+		pushEnabled: data['pushEnabled'],
+	};
+};
+
+export const getCommunityNotificationPreferences = async (
+	communityId: string,
+): Promise<ICommunityNotificationPreferenceResult> => {
+	const request = parseGetCommunityNotificationPreferencesRequest({
+		communityId,
+	});
+	const callable = httpsCallable<typeof request, unknown>(
+		getFunctions(app),
+		'getCommunityNotificationPreferences',
+	);
+	const result = parseCommunityNotificationPreferenceResult(
+		(await callable(request)).data,
+	);
+	if (result.communityId !== communityId)
+		throw new Error('Unexpected community preference response.');
+	return result;
+};
+
+export const setCommunityNotificationPreferences = async (
+	input: ISetCommunityNotificationPreferenceRequest,
+): Promise<ICommunityNotificationPreferenceResult> => {
+	const request = parseSetCommunityNotificationPreferencesRequest(input);
+	const callable = httpsCallable<
+		ISetCommunityNotificationPreferenceRequest,
+		unknown
+	>(getFunctions(app), 'setCommunityNotificationPreferences');
+	const result = parseCommunityNotificationPreferenceResult(
+		(await callable(request)).data,
+	);
+	if (result.communityId !== request.communityId)
+		throw new Error('Unexpected community preference response.');
+	return result;
+};

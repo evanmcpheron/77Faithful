@@ -74,6 +74,7 @@ interface ICommunitySettingsViewProps {
 	onReviewLatest: () => void;
 	onRetry: () => void;
 	onMembers: () => void;
+	onNotifications?: () => void;
 	onInvite: () => void;
 	onSchedule?: () => void;
 	onContributions?: () => void;
@@ -173,6 +174,7 @@ export const CommunitySettingsView = ({
 	onReviewLatest,
 	onRetry,
 	onMembers,
+	onNotifications,
 	onInvite,
 	onSchedule,
 	onContributions,
@@ -350,6 +352,19 @@ export const CommunitySettingsView = ({
 						{membership.role === 'Organizer' && isActive
 							? 'Schedule community journey'
 							: 'View community schedule'}
+					</TurndownButton>
+				</View>
+			) : null}
+
+			{onNotifications ? (
+				<View style={styles.section}>
+					<Typography size='H2'>Notifications</Typography>
+					<TurndownButton
+						variant='Outline'
+						onPress={onNotifications}
+						testID='community-notification-settings-link'
+					>
+						Notification preferences
 					</TurndownButton>
 				</View>
 			) : null}
@@ -754,6 +769,14 @@ export const CommunitySettingsContent = ({
 						communityId &&
 						router.push({
 							pathname: '/communities/[communityId]/members',
+							params: { communityId },
+						})
+					}
+					onNotifications={() =>
+						communityId &&
+						router.push({
+							pathname:
+								'/communities/[communityId]/notification-settings',
 							params: { communityId },
 						})
 					}

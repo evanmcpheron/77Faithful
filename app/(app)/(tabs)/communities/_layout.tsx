@@ -137,6 +137,19 @@ const CommunitiesLayout = () => {
 					}}
 				/>
 				<Stack.Screen
+					name='[communityId]/notification-settings'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => (
+							<CommunityChildHeader title='Notification settings' />
+						),
+					}}
+				/>
+				<Stack.Screen
 					name='[communityId]/schedule'
 					options={{
 						headerShown: true,

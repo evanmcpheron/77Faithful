@@ -6,6 +6,10 @@ import type {
 	IEditCommunityPostResult,
 	IGetCommunityPostRequest,
 	IGetCommunityPostResult,
+	IListCommunityPostsRequest,
+	IListCommunityPostsResult,
+	IListCommunityPrayerSupportRequest,
+	IListCommunityPrayerSupportResult,
 	TCommunityPostReasonCode,
 } from '@td/types/community/community-post-function.types';
 import type {
@@ -19,6 +23,8 @@ import {
 	parseCreateCommunityPostRequest,
 	parseEditCommunityPostRequest,
 	parseGetCommunityPostRequest,
+	parseListCommunityPostsRequest,
+	parseListCommunityPrayerSupportRequest,
 } from './community-post';
 
 const postReasons: readonly TCommunityPostReasonCode[] = [
@@ -177,6 +183,12 @@ const contentType = (value: unknown): TCommunityPostContent['postType'] => {
 	return value;
 };
 
+const boolean = (value: unknown): boolean => {
+	if (typeof value !== 'boolean')
+		throw new Error('Invalid community post response.');
+	return value;
+};
+
 export const createCommunityPostOperationId = (): string => randomUUID();
 
 export const getCommunityPostReason = (
@@ -216,6 +228,72 @@ export const getCommunityPost = async (
 		'getCommunityPost',
 	);
 	return { post: parsePost(record((await callable(request)).data)['post']) };
+};
+
+export const listCommunityPosts = async (
+	input: IListCommunityPostsRequest,
+): Promise<IListCommunityPostsResult> => {
+	const request = parseListCommunityPostsRequest(input);
+	const callable = httpsCallable<IListCommunityPostsRequest, unknown>(
+		getFunctions(app),
+		'listCommunityPosts',
+	);
+	const result = record((await callable(request)).data);
+	if (!Array.isArray(result['posts']))
+		throw new Error('Invalid community post response.');
+	const nextCursor = result['nextCursor'];
+	if (
+		nextCursor !== null &&
+		(typeof nextCursor !== 'string' ||
+			!/^[a-zA-Z0-9_-]{1,512}$/.test(nextCursor))
+	)
+		throw new Error('Invalid community post response.');
+	return {
+		posts: result['posts'].map(parsePost),
+		nextCursor,
+	};
+};
+
+export const listCommunityPrayerSupport = async (
+	input: IListCommunityPrayerSupportRequest,
+): Promise<IListCommunityPrayerSupportResult> => {
+	const request = parseListCommunityPrayerSupportRequest(input);
+	const callable = httpsCallable<IListCommunityPrayerSupportRequest, unknown>(
+		getFunctions(app),
+		'listCommunityPrayerSupport',
+	);
+	const result = record((await callable(request)).data);
+	if (!Array.isArray(result['supporters']))
+		throw new Error('Invalid community post response.');
+	const nextCursor = result['nextCursor'];
+	if (
+		nextCursor !== null &&
+		(typeof nextCursor !== 'string' ||
+			!/^[a-zA-Z0-9_-]{1,512}$/.test(nextCursor))
+	)
+		throw new Error('Invalid community post response.');
+	return {
+		postId: identifier(result['postId']),
+		supporters: result['supporters'].map((value) => {
+			const supporter = record(value);
+			return {
+				userId: identifier(supporter['userId']),
+				displayName:
+					typeof supporter['displayName'] === 'string' &&
+					supporter['displayName'].length <= 80
+						? supporter['displayName']
+						: (() => {
+								throw new Error(
+									'Invalid community post response.',
+								);
+							})(),
+				acknowledgedAt: timestamp(supporter['acknowledgedAt']),
+			};
+		}),
+		supportCount: revision(result['supportCount']),
+		viewerIsPraying: boolean(result['viewerIsPraying']),
+		nextCursor,
+	};
 };
 
 export const editCommunityPost = async (

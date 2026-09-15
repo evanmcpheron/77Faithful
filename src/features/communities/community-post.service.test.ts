@@ -4,6 +4,8 @@ import {
 	editCommunityPost,
 	getCommunityPost,
 	getCommunityPostReason,
+	listCommunityPosts,
+	listCommunityPrayerSupport,
 } from './community-post.service';
 
 const mockCall = jest.fn();
@@ -90,5 +92,76 @@ it('runtime-validates a published post projection', async () => {
 	});
 	await expect(
 		getCommunityPost({ communityId: 'group', postId: 'post-1' }),
+	).rejects.toThrow('Invalid community post response.');
+});
+
+it('runtime-validates feed and prayer support projections', async () => {
+	mockCall
+		.mockResolvedValueOnce({
+			data: { posts: [post], nextCursor: 'cursor_1' },
+		})
+		.mockResolvedValueOnce({
+			data: {
+				postId: 'post-1',
+				supporters: [
+					{
+						userId: 'member',
+						displayName: 'Jordan',
+						acknowledgedAt: timestamp,
+					},
+				],
+				supportCount: 1,
+				viewerIsPraying: true,
+				nextCursor: null,
+			},
+		});
+	await expect(
+		listCommunityPosts({ communityId: 'group', pageSize: 20 }),
+	).resolves.toEqual({ posts: [post], nextCursor: 'cursor_1' });
+	await expect(
+		listCommunityPrayerSupport({
+			communityId: 'group',
+			postId: 'post-1',
+			pageSize: 1,
+		}),
+	).resolves.toEqual({
+		postId: 'post-1',
+		supporters: [
+			{
+				userId: 'member',
+				displayName: 'Jordan',
+				acknowledgedAt: timestamp,
+			},
+		],
+		supportCount: 1,
+		viewerIsPraying: true,
+		nextCursor: null,
+	});
+	expect(mockCallable.mock.calls.map((call) => call[1])).toEqual([
+		'listCommunityPosts',
+		'listCommunityPrayerSupport',
+	]);
+});
+
+it('rejects malformed feed and prayer support results', async () => {
+	mockCall
+		.mockResolvedValueOnce({ data: { posts: {}, nextCursor: null } })
+		.mockResolvedValueOnce({
+			data: {
+				postId: 'post-1',
+				supporters: [],
+				supportCount: -1,
+				viewerIsPraying: false,
+				nextCursor: null,
+			},
+		});
+	await expect(listCommunityPosts({ communityId: 'group' })).rejects.toThrow(
+		'Invalid community post response.',
+	);
+	await expect(
+		listCommunityPrayerSupport({
+			communityId: 'group',
+			postId: 'post-1',
+		}),
 	).rejects.toThrow('Invalid community post response.');
 });

@@ -1,11 +1,12 @@
+import type { ICommunityPost } from '@td/types/community/community-post.types';
 import type { ICommunityContext } from '@td/types/community/community.types';
-import { createElement } from 'react';
+import { createElement, type ReactNode } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import { CommunityHome } from './community.screen';
+import { CommunityHome, CommunityPostCard } from './community.screen';
 
 jest.mock('expo-router', () => ({
 	useLocalSearchParams: () => ({ communityId: 'group' }),
-	useRouter: () => ({ replace: jest.fn() }),
+	useRouter: () => ({ replace: jest.fn(), push: jest.fn() }),
 }));
 jest.mock('expo-router/react-navigation', () => ({
 	useHeaderHeight: () => 80,
@@ -25,9 +26,34 @@ jest.mock('../use-community-context.hook', () => ({
 		retry: jest.fn(),
 	}),
 }));
+jest.mock('../use-community-feed.hook', () => ({
+	useCommunityFeed: () => ({
+		state: { status: 'Loading' },
+		refresh: jest.fn(),
+		loadMore: jest.fn(),
+	}),
+}));
 jest.mock('react-native', () => ({ View: 'View' }));
 jest.mock('@td/components/layout/screen/screen.component', () => ({
-	TurndownScrollScreen: 'Screen',
+	TurndownListScreen: ({
+		ListHeaderComponent,
+		ListFooterComponent,
+		data,
+		renderItem,
+		...props
+	}: {
+		ListHeaderComponent?: ReactNode;
+		ListFooterComponent?: ReactNode;
+		data?: unknown[];
+		renderItem?: (info: { item: unknown; index: number }) => ReactNode;
+	}) =>
+		createElement(
+			'Screen',
+			props,
+			ListHeaderComponent,
+			...(data ?? []).map((item, index) => renderItem?.({ item, index })),
+			ListFooterComponent,
+		),
 }));
 jest.mock('@td/components/ui/button/button.component', () => ({
 	TurndownButton: 'Button',
@@ -42,12 +68,10 @@ const communityContext = ({
 	role,
 	memberCount,
 	status = 'Active',
-	isExact = true,
 }: {
 	role: 'Organizer' | 'Member';
 	memberCount: number;
 	status?: 'Active' | 'Closed';
-	isExact?: boolean;
 }): ICommunityContext => ({
 	community: {
 		communityId: 'group',
@@ -74,38 +98,78 @@ const communityContext = ({
 		canCloseCommunity: role === 'Organizer' && status === 'Active',
 		canLeaveCommunity: true,
 	},
-	activeMemberCount: { value: memberCount, isExact },
+	activeMemberCount: { value: memberCount, isExact: true },
+});
+
+const post = ({
+	postId,
+	seconds,
+	publication,
+	replyCount = 0,
+	edited = false,
+}: {
+	postId: string;
+	seconds: number;
+	publication: ICommunityPost['publication'];
+	replyCount?: number;
+	edited?: boolean;
+}): ICommunityPost => ({
+	schemaVersion: 1,
+	communityId: 'group',
+	postId,
+	author: { userId: 'member', displayName: 'Jordan' },
+	revision: 2,
+	replyCount,
+	createdAt: { seconds, nanoseconds: 0 },
+	updatedAt: { seconds, nanoseconds: 0 },
+	editedAt: edited ? { seconds: seconds + 1, nanoseconds: 0 } : null,
+	publication,
+});
+
+const readyFeed = (
+	posts: ICommunityPost[],
+	overrides: Partial<{
+		nextCursor: string | null;
+		loadMoreError: boolean;
+	}> = {},
+) => ({
+	status: 'Ready' as const,
+	posts,
+	nextCursor: overrides.nextCursor ?? null,
+	prayerSupport: {},
+	isRefreshing: false,
+	refreshError: false,
+	isLoadingMore: false,
+	loadMoreError: overrides.loadMoreError ?? false,
 });
 
 let renderer: ReactTestRenderer;
-const mount = (state: React.ComponentProps<typeof CommunityHome>['state']) => {
-	const onRetry = jest.fn();
-	const onReturn = jest.fn();
-	const onInvite = jest.fn();
-	const onMembers = jest.fn();
-	const onSettings = jest.fn();
-	const onCompose = jest.fn();
+const actions = {
+	onRetry: jest.fn(),
+	onRefresh: jest.fn(),
+	onLoadMore: jest.fn(),
+	onReturn: jest.fn(),
+	onInvite: jest.fn(),
+	onMembers: jest.fn(),
+	onSettings: jest.fn(),
+	onCompose: jest.fn(),
+};
+const mount = (
+	contextState: React.ComponentProps<typeof CommunityHome>['contextState'],
+	feedState: React.ComponentProps<typeof CommunityHome>['feedState'],
+) => {
 	act(() => {
 		renderer = create(
 			createElement(CommunityHome, {
-				state,
-				onRetry,
-				onReturn,
-				onInvite,
-				onMembers,
-				onSettings,
-				onCompose,
+				contextState,
+				feedState,
+				headerHeight: 80,
+				...actions,
+				scrollOffset: { value: 0 } as never,
+				onScrollPositionChange: jest.fn(),
 			}),
 		);
 	});
-	return {
-		onRetry,
-		onReturn,
-		onInvite,
-		onMembers,
-		onSettings,
-		onCompose,
-	};
 };
 const renderedText = () => JSON.stringify(renderer.toJSON());
 const press = (label: string) => {
@@ -115,139 +179,174 @@ const press = (label: string) => {
 	);
 	act(() => button.props['onPress']());
 };
+
+beforeEach(() => jest.clearAllMocks());
 afterEach(() => act(() => renderer.unmount()));
 
-it('renders organizer context with a working, prominent invitation action', () => {
-	const actions = mount({
-		status: 'Ready',
-		context: communityContext({ role: 'Organizer', memberCount: 1 }),
-	});
-	expect(renderedText()).toContain('Your role: ","Organizer');
-	expect(renderedText()).toContain('1 member');
+it('renders a truthful empty feed and prominent organizer invitation', () => {
+	mount(
+		{
+			status: 'Ready',
+			context: communityContext({ role: 'Organizer', memberCount: 1 }),
+		},
+		readyFeed([]),
+	);
+	expect(renderedText()).toContain('No posts have been shared');
 	expect(renderedText()).toContain('Invite people when you’re ready');
-	expect(
-		renderer.root
-			.findAll((node) => String(node.type) === 'Button')
-			.map((node) => node.props['children']),
-	).toEqual([
-		'Invite people',
-		'Write a post',
-		'Members',
-		'Community settings',
-		'Your communities',
-	]);
-	press('Invite people');
-	expect(actions.onInvite).toHaveBeenCalledWith('group');
-});
-
-it('announces a confirmed community save distinctly from a local draft', () => {
-	const actions = mount({
-		status: 'Ready',
-		context: communityContext({ role: 'Member', memberCount: 2 }),
-	});
-	act(() =>
-		renderer.update(
-			createElement(CommunityHome, {
-				state: {
-					status: 'Ready',
-					context: communityContext({
-						role: 'Member',
-						memberCount: 2,
-					}),
-				},
-				successMessage: 'Your post was saved to this community.',
-				...actions,
-			}),
-		),
-	);
-	expect(renderedText()).toContain('saved to this community');
-	expect(
-		renderer.root.findAllByProps({ accessibilityRole: 'alert' }),
-	).toHaveLength(1);
-});
-
-it('renders member context, organizer identity, purpose, privacy, and bounded count', () => {
-	const actions = mount({
-		status: 'Ready',
-		context: communityContext({
-			role: 'Member',
-			memberCount: 500,
-			isExact: false,
-		}),
-	});
-	expect(renderedText()).toContain('Grace Church');
-	expect(renderedText()).toContain('Pray together each week.');
-	expect(renderedText()).toContain('Organized by Anna');
-	expect(renderedText()).toContain('Your role: ","Member');
-	expect(renderedText()).toContain('500+ members');
 	expect(renderedText()).toContain(
-		'Membership does not share your private reflections',
+		'reflection, prayer request, or discussion',
 	);
-	expect(renderedText()).not.toContain('Invite people when you’re ready');
-	expect(renderedText()).not.toContain('Invite people');
 	press('Write a post');
 	expect(actions.onCompose).toHaveBeenCalledWith('group');
+});
+
+it('keeps invite, members, and settings entry points without displacing posts', () => {
+	const discussion = post({
+		postId: 'post-1',
+		seconds: 2,
+		publication: {
+			status: 'Published',
+			content: { postType: 'Discussion', text: 'Welcome.' },
+		},
+	});
+	mount(
+		{
+			status: 'Ready',
+			context: communityContext({ role: 'Organizer', memberCount: 1 }),
+		},
+		readyFeed([discussion]),
+	);
+	expect(renderedText()).not.toContain('Invite people when you’re ready');
+	expect(
+		renderer.root.findByProps({ testID: 'community-post-post-1' }),
+	).toBeTruthy();
+	press('Invite people');
 	press('Members');
-	expect(actions.onMembers).toHaveBeenCalledWith('group');
 	press('Community settings');
+	expect(actions.onInvite).toHaveBeenCalledWith('group');
+	expect(actions.onMembers).toHaveBeenCalledWith('group');
 	expect(actions.onSettings).toHaveBeenCalledWith('group');
 });
 
-it('keeps the organizer invitation action available after others join', () => {
-	const actions = mount({
-		status: 'Ready',
-		context: communityContext({ role: 'Organizer', memberCount: 4 }),
+it('shows real prayer state, reply/support information, and an accessible label', () => {
+	const prayer = post({
+		postId: 'prayer-1',
+		seconds: 3,
+		replyCount: 2,
+		edited: true,
+		publication: {
+			status: 'Published',
+			content: {
+				postType: 'PrayerRequest',
+				text: 'Please pray for wisdom.',
+				prayerRequestStatus: 'Answered',
+			},
+		},
 	});
-	expect(renderedText()).not.toContain('You’re the only member');
-	press('Invite people');
-	expect(actions.onInvite).toHaveBeenCalledWith('group');
-});
-
-it('marks a closed community as a read-only archive without active actions', () => {
-	mount({
-		status: 'Ready',
-		context: communityContext({
-			role: 'Organizer',
-			memberCount: 4,
-			status: 'Closed',
-		}),
-	});
-	expect(renderedText()).toContain('Read-only archive');
-	expect(renderedText()).toContain('no new activity can be added');
-	expect(renderedText()).not.toContain('Invite people when you’re ready');
-});
-
-it('keeps transport retry and unavailable membership states distinct', () => {
-	const actions = mount({ status: 'Error' });
-	expect(renderedText()).toContain('Check your connection and try again.');
-	press('Try again');
-	expect(actions.onRetry).toHaveBeenCalledTimes(1);
-	act(() =>
-		renderer.update(
-			createElement(CommunityHome, {
-				state: { status: 'Unavailable' },
-				onRetry: actions.onRetry,
-				onReturn: actions.onReturn,
-				onInvite: actions.onInvite,
-				onMembers: actions.onMembers,
-				onSettings: actions.onSettings,
-				onCompose: actions.onCompose,
+	act(() => {
+		renderer = create(
+			createElement(CommunityPostCard, {
+				post: prayer,
+				support: { supportCount: 3, viewerIsPraying: true },
 			}),
-		),
+		);
+	});
+	const card = renderer.root.findByProps({
+		testID: 'community-post-prayer-1',
+	});
+	expect(card.props['accessibilityLabel']).toContain('Marked answered');
+	expect(card.props['accessibilityLabel']).toContain('2 replies');
+	expect(card.props['accessibilityLabel']).toContain(
+		'3 people are praying, including you',
 	);
-	expect(renderedText()).toContain('Your membership may have changed');
-	expect(renderedText()).not.toContain('Try again');
-	press('Your communities');
-	expect(actions.onReturn).toHaveBeenCalledTimes(1);
+	expect(renderedText()).toContain('Edited');
 });
 
-it('exposes the community title and state titles as screen-reader headings', () => {
-	mount({
-		status: 'Ready',
-		context: communityContext({ role: 'Member', memberCount: 2 }),
+it('renders long text without a line clamp and preserves text-free tombstones', () => {
+	const longText = 'A long community reflection '.repeat(80);
+	const published = post({
+		postId: 'long',
+		seconds: 4,
+		publication: {
+			status: 'Published',
+			content: { postType: 'SharedReflectionCopy', text: longText },
+		},
 	});
-	const headings = renderer.root.findAllByProps({
-		accessibilityRole: 'header',
+	act(() => {
+		renderer = create(
+			createElement(CommunityPostCard, { post: published }),
+		);
 	});
-	expect(headings.length).toBeGreaterThanOrEqual(2);
+	const text = renderer.root.findByProps({ children: longText });
+	expect(text.props['numberOfLines']).toBeUndefined();
+	act(() => renderer.unmount());
+
+	const tombstone = post({
+		postId: 'deleted',
+		seconds: 3,
+		publication: {
+			status: 'AuthorDeleted',
+			postType: 'Discussion',
+			deletedAt: { seconds: 5, nanoseconds: 0 },
+		},
+	});
+	act(() => {
+		renderer = create(
+			createElement(CommunityPostCard, { post: tombstone }),
+		);
+	});
+	expect(renderedText()).toContain('Post deleted by its author.');
+	expect(renderedText()).not.toContain('A long community reflection');
+});
+
+it('keeps a closed archive readable and suppresses composer controls', () => {
+	const discussion = post({
+		postId: 'post-1',
+		seconds: 2,
+		publication: {
+			status: 'Published',
+			content: { postType: 'Discussion', text: 'Archive conversation.' },
+		},
+	});
+	mount(
+		{
+			status: 'Ready',
+			context: communityContext({
+				role: 'Organizer',
+				memberCount: 3,
+				status: 'Closed',
+			}),
+		},
+		readyFeed([discussion]),
+	);
+	expect(renderedText()).toContain('Read-only archive');
+	expect(renderedText()).toContain('Archive conversation.');
+	expect(renderedText()).not.toContain('Write a post');
+});
+
+it('keeps load-more failure independently retryable', () => {
+	mount(
+		{
+			status: 'Ready',
+			context: communityContext({ role: 'Member', memberCount: 3 }),
+		},
+		readyFeed([], { nextCursor: 'cursor', loadMoreError: true }),
+	);
+	expect(renderedText()).toContain('couldn’t load more posts');
+	press('Load more posts');
+	expect(actions.onLoadMore).toHaveBeenCalledTimes(1);
+});
+
+it('clears feed records when membership becomes unavailable', () => {
+	mount(
+		{
+			status: 'Ready',
+			context: communityContext({ role: 'Member', memberCount: 3 }),
+		},
+		{ status: 'Unavailable' },
+	);
+	expect(renderedText()).toContain('This community is unavailable');
+	expect(
+		renderer.root.findAllByProps({ testID: 'community-post-post-1' }),
+	).toHaveLength(0);
 });

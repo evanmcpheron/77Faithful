@@ -68,3 +68,34 @@ test('withdrawal and private reader reject caller identity and unexpected fields
 				: contract.parseGetCommunityJourneyEnrollmentRequest(invalid),
 		);
 });
+
+test('each enrollment callable requires authenticated, verified account identity', async () => {
+	const callables = require('../functions/lib/src/community/community-journey-enrollment');
+	for (const [callable, data] of [
+		[callables.enrollCommunityJourney, enrollment],
+		[
+			callables.getCommunityJourneyEnrollment,
+			{ communityId: 'alpha', communityJourneyId: 'schedule-1' },
+		],
+		[
+			callables.withdrawCommunityJourneyEnrollment,
+			{
+				communityId: 'alpha',
+				communityJourneyId: 'schedule-1',
+				operationId: 'withdraw-1',
+			},
+		],
+	]) {
+		await assert.rejects(
+			callable.run({ data }),
+			(caught) => caught.code === 'unauthenticated',
+		);
+		await assert.rejects(
+			callable.run({
+				data,
+				auth: { uid: 'member', token: { email_verified: false } },
+			}),
+			(caught) => caught.code === 'permission-denied',
+		);
+	}
+});

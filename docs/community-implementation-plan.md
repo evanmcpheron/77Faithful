@@ -816,7 +816,7 @@ performed here. Formation configuration must point to the scheduled published
 course/version and released selected text edition with complete readings.
 Day 1 activation, automatic retry, monitoring, and participant conflict review
 remain separate work. Local Functions build/lint and scoped Prettier checks
-passed. Four focused enrollment/schedule contract tests and 22 existing
+passed. Five focused enrollment/schedule contract and callable-auth tests, and 22 existing
 journey-start tests passed. The repository Rules API suite passed 492/492 cases,
 including owner and other-account denials for the new private enrollment and
 receipt paths. Root Expo lint passed with seven existing warnings. The root

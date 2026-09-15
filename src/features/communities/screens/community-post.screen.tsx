@@ -37,6 +37,11 @@ import {
 	setCommunityPrayerAcknowledgment,
 	setCommunityPrayerRequestStatus,
 } from '../community-post.service';
+import {
+	blockCommunityMember,
+	createCommunitySafetyOperationId,
+	getCommunitySafetyReason,
+} from '../community-safety.service';
 import { useCommunityContext } from '../use-community-context.hook';
 import { communityPostStyles as styles } from './community-post.styles';
 
@@ -141,6 +146,8 @@ interface ICommunityReplyCardProps {
 	onCancelEdit: () => void;
 	onSaveEdit: () => void;
 	onDelete: (reply: ICommunityReply) => void;
+	onReport: (reply: ICommunityReply) => void;
+	onBlock: (reply: ICommunityReply) => void;
 }
 
 const CommunityReplyCard = ({
@@ -153,6 +160,8 @@ const CommunityReplyCard = ({
 	onCancelEdit,
 	onSaveEdit,
 	onDelete,
+	onReport,
+	onBlock,
 }: ICommunityReplyCardProps) => {
 	const text = publishedReplyText(reply);
 	const isAuthor = reply.author.userId === viewerUserId;
@@ -269,6 +278,26 @@ const CommunityReplyCard = ({
 								</TurndownButton>
 							</View>
 						) : null}
+						{text && !isAuthor ? (
+							<TurndownButton
+								variant='Ghost'
+								size='Small'
+								onPress={() => onReport(reply)}
+								testID={`report-reply-${reply.replyId}`}
+							>
+								Report reply
+							</TurndownButton>
+						) : null}
+						{text && !isAuthor && communityIsActive ? (
+							<TurndownButton
+								variant='Ghost'
+								size='Small'
+								onPress={() => onBlock(reply)}
+								testID={`block-reply-author-${reply.replyId}`}
+							>
+								Block member
+							</TurndownButton>
+						) : null}
 					</>
 				)}
 			</View>
@@ -305,6 +334,13 @@ const CommunityPostContent = ({
 	const [editState, setEditState] = useState<IReplyEditState | null>(null);
 	const [mutationMessage, setMutationMessage] = useState<string | null>(null);
 	const [mutationPending, setMutationPending] = useState(false);
+	const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
+	const blockInFlight = useRef(false);
+	const pendingBlock = useRef<{
+		communityId: string;
+		memberUserId: string;
+		operationId: string;
+	} | null>(null);
 	const requestGeneration = useRef(0);
 	const focused = useRef(false);
 	const mounted = useRef(true);
@@ -420,6 +456,74 @@ const CommunityPostContent = ({
 			pathname: '/communities/[communityId]',
 			params: { communityId },
 		});
+	const openReport = (targetType: 'Post' | 'Reply', replyId?: string) =>
+		router.push({
+			pathname: '/communities/[communityId]/report',
+			params: {
+				communityId,
+				targetType,
+				postId,
+				...(replyId ? { replyId } : {}),
+			},
+		});
+	const blockAuthor = async (memberUserId: string) => {
+		if (
+			blockInFlight.current ||
+			!focused.current ||
+			contextState.status !== 'Ready' ||
+			contextState.context.community.status !== 'Active' ||
+			memberUserId === userId
+		)
+			return;
+		pendingBlock.current =
+			pendingBlock.current?.memberUserId === memberUserId
+				? pendingBlock.current
+				: {
+						communityId,
+						memberUserId,
+						operationId: createCommunitySafetyOperationId(),
+					};
+		blockInFlight.current = true;
+		setBlockingUserId(memberUserId);
+		setMutationMessage(null);
+		try {
+			await blockCommunityMember(pendingBlock.current);
+			if (!mounted.current || !focused.current) return;
+			pendingBlock.current = null;
+			setThreadState({ status: 'Loading' });
+			setEditState(null);
+			setReplyDraft('');
+			setMutationMessage('Member blocked. Shared content is refreshing.');
+			void loadThread();
+		} catch (error: unknown) {
+			if (!mounted.current || !focused.current) return;
+			const reason = getCommunitySafetyReason(error);
+			if (reason) pendingBlock.current = null;
+			setMutationMessage(
+				reason === 'TargetUnavailable'
+					? 'This member is no longer available to block.'
+					: reason
+						? 'We couldn’t block this member. Try again.'
+						: 'We couldn’t confirm the block. Retry to confirm the same request.',
+			);
+		} finally {
+			blockInFlight.current = false;
+			if (mounted.current) setBlockingUserId(null);
+		}
+	};
+	const confirmBlock = (memberUserId: string, displayName: string) =>
+		Alert.alert(
+			`Block ${displayName || 'this member'}?`,
+			'Blocking hides this person’s shared posts, replies, and prayer support from you and prevents direct replies and prayer acknowledgments to their posts. It does not remove either of you from the community. You can unblock them from Settings.',
+			[
+				{ text: 'Cancel', style: 'cancel' },
+				{
+					text: 'Block member',
+					style: 'destructive',
+					onPress: () => void blockAuthor(memberUserId),
+				},
+			],
+		);
 	const retry = () => {
 		if (contextState.status === 'Error') retryContext();
 		setLoadAttempt((value) => value + 1);
@@ -975,6 +1079,35 @@ const CommunityPostContent = ({
 									</TurndownButton>
 								</View>
 							) : null}
+							{postIsPublished && !viewerIsAuthor ? (
+								<TurndownButton
+									variant='Ghost'
+									onPress={() => openReport('Post')}
+									testID='report-post'
+								>
+									Report post
+								</TurndownButton>
+							) : null}
+							{postIsPublished &&
+							!viewerIsAuthor &&
+							communityIsActive ? (
+								<TurndownButton
+									variant='Ghost'
+									disabled={blockingUserId !== null}
+									loading={
+										blockingUserId === post.author.userId
+									}
+									onPress={() =>
+										confirmBlock(
+											post.author.userId,
+											post.author.displayName,
+										)
+									}
+									testID='block-post-author'
+								>
+									Block member
+								</TurndownButton>
+							) : null}
 						</View>
 					</Card>
 					{prayerRequest ? (
@@ -1294,6 +1427,13 @@ const CommunityPostContent = ({
 					}}
 					onSaveEdit={() => void saveEdit()}
 					onDelete={confirmDeleteReply}
+					onReport={(reply) => openReport('Reply', reply.replyId)}
+					onBlock={(reply) =>
+						confirmBlock(
+							reply.author.userId,
+							reply.author.displayName,
+						)
+					}
 				/>
 			)}
 			refreshing={

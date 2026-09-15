@@ -7,9 +7,9 @@ import { useScreenScrollOffset } from '@td/providers/header-scroll/use-screen-sc
 import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
 import type { ICommunityMemberSummary } from '@td/types/community/community-membership.types';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useHeaderHeight } from 'expo-router/react-navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, View } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import {
@@ -19,6 +19,10 @@ import {
 	removeCommunityMember,
 	transferCommunityOrganizer,
 } from '../community-administration.service';
+import {
+	blockCommunityMember,
+	getCommunitySafetyReason,
+} from '../community-safety.service';
 import {
 	type TCommunityContextState,
 	useCommunityContext,
@@ -45,6 +49,8 @@ interface ICommunityMembersViewProps {
 	onLeave: () => void;
 	onRemove: (member: ICommunityMemberSummary) => void;
 	onTransfer: (member: ICommunityMemberSummary) => void;
+	onReport?: (member: ICommunityMemberSummary) => void;
+	onBlock?: (member: ICommunityMemberSummary) => void;
 	scrollOffset: SharedValue<number>;
 	onScrollPositionChange: (y: number) => void;
 }
@@ -186,6 +192,8 @@ export const CommunityMembersView = ({
 	onLeave,
 	onRemove,
 	onTransfer,
+	onReport,
+	onBlock,
 	scrollOffset,
 	onScrollPositionChange,
 }: ICommunityMembersViewProps) => {
@@ -373,6 +381,52 @@ export const CommunityMembersView = ({
 									</TurndownButton>
 								</View>
 							) : null}
+							{!isCurrentUser && (onReport || onBlock) ? (
+								<View style={styles.actions}>
+									{onReport ? (
+										<TurndownButton
+											variant='Outline'
+											disabled={actionKey !== null}
+											onPress={() => onReport(member)}
+											testID={`report-member-${member.userId}`}
+										>
+											Report member
+										</TurndownButton>
+									) : null}
+									{onBlock &&
+									context?.community.status === 'Active' ? (
+										<TurndownButton
+											variant='Outline'
+											disabled={actionKey !== null}
+											loading={
+												actionKey ===
+												`Block:${member.userId}`
+											}
+											onPress={() =>
+												Alert.alert(
+													`Block ${confirmationName(member)}?`,
+													'Blocking hides this person’s shared posts, replies, and prayer support from you and prevents direct replies and prayer acknowledgments to their posts. It does not remove either of you from the community. You can unblock them from Settings.',
+													[
+														{
+															text: 'Cancel',
+															style: 'cancel',
+														},
+														{
+															text: 'Block member',
+															style: 'destructive',
+															onPress: () =>
+																onBlock(member),
+														},
+													],
+												)
+											}
+											testID={`block-member-${member.userId}`}
+										>
+											Block member
+										</TurndownButton>
+									) : null}
+								</View>
+							) : null}
 						</View>
 					</Card>
 				);
@@ -440,6 +494,17 @@ export const CommunityMembersContent = ({
 	const operationIds = useRef(new Map<string, string>());
 	const actionGeneration = useRef(0);
 	const actionInFlight = useRef(false);
+	const focused = useRef(false);
+	useFocusEffect(
+		useCallback(() => {
+			focused.current = true;
+			return () => {
+				focused.current = false;
+				actionGeneration.current += 1;
+				actionInFlight.current = false;
+			};
+		}, []),
+	);
 
 	useEffect(() => {
 		return () => {
@@ -461,11 +526,17 @@ export const CommunityMembersContent = ({
 	};
 	const runAction = async (
 		key: string,
-		action: 'Leave' | 'Remove' | 'Transfer',
+		action: 'Leave' | 'Remove' | 'Transfer' | 'Block',
 		request: (id: string) => Promise<unknown>,
 		onSuccess: () => void,
 	) => {
-		if (actionInFlight.current || !userId || !communityId) return;
+		if (
+			actionInFlight.current ||
+			!focused.current ||
+			!userId ||
+			!communityId
+		)
+			return;
 		actionInFlight.current = true;
 		const generation = actionGeneration.current;
 		setActionKey(key);
@@ -477,7 +548,11 @@ export const CommunityMembersContent = ({
 			onSuccess();
 		} catch (error: unknown) {
 			if (generation !== actionGeneration.current) return;
-			const reason = getCommunityAdministrationReason(error);
+			const reason =
+				action === 'Block'
+					? getCommunitySafetyReason(error)
+					: getCommunityAdministrationReason(error);
+			if (action === 'Block' && reason) operationIds.current.delete(key);
 			if (reason && permissionChangeReasons.has(reason)) {
 				operationIds.current.delete(key);
 				setActionMessage(
@@ -541,6 +616,49 @@ export const CommunityMembersContent = ({
 			},
 		);
 	};
+	const report = (member: ICommunityMemberSummary) => {
+		if (
+			!communityId ||
+			!userId ||
+			member.userId === userId ||
+			context.state.status !== 'Ready'
+		)
+			return;
+		router.push({
+			pathname: '/communities/[communityId]/report',
+			params: {
+				communityId,
+				targetType: 'Member',
+				memberUserId: member.userId,
+			},
+		});
+	};
+	const block = (member: ICommunityMemberSummary) => {
+		if (
+			!communityId ||
+			!userId ||
+			member.userId === userId ||
+			currentContext?.community.status !== 'Active'
+		)
+			return;
+		const key = `Block:${member.userId}`;
+		void runAction(
+			key,
+			'Block',
+			(id) =>
+				blockCommunityMember({
+					communityId,
+					memberUserId: member.userId,
+					operationId: id,
+				}),
+			() => {
+				setActionMessage(
+					`${confirmationName(member)} is blocked. Their shared content will be hidden after refresh.`,
+				);
+				refresh();
+			},
+		);
+	};
 	const leave = () => {
 		if (!communityId || !currentContext?.capabilities.canLeaveCommunity)
 			return;
@@ -589,6 +707,8 @@ export const CommunityMembersContent = ({
 			onLeave={leave}
 			onRemove={remove}
 			onTransfer={transfer}
+			onReport={report}
+			onBlock={block}
 			scrollOffset={scrollOffset}
 			onScrollPositionChange={handleScrollPositionChange}
 		/>

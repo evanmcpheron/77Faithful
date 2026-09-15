@@ -185,6 +185,17 @@ export const SettingsScreen = () => {
 							</Typography>
 							<NavigationActionList
 								actions={{
+									id: 'blocked-members',
+									title: 'Blocked members',
+									iconName: IconName.Lock,
+									onPress: () =>
+										router.push(
+											'/settings/blocked-members',
+										),
+								}}
+							/>
+							<NavigationActionList
+								actions={{
 									id: 'shared-contributions',
 									title: 'Shared Contributions',
 									iconName: IconName.Note,

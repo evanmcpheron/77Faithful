@@ -76,6 +76,7 @@ interface ICommunitySettingsViewProps {
 	onMembers: () => void;
 	onInvite: () => void;
 	onContributions?: () => void;
+	onReport?: () => void;
 	onClose: () => void;
 	onLeave: () => void;
 	onReturn: () => void;
@@ -173,6 +174,7 @@ export const CommunitySettingsView = ({
 	onMembers,
 	onInvite,
 	onContributions,
+	onReport,
 	onClose,
 	onLeave,
 	onReturn,
@@ -222,6 +224,15 @@ export const CommunitySettingsView = ({
 						</Typography>
 					</View>
 				</Card>
+			) : null}
+			{onReport ? (
+				<TurndownButton
+					variant='Outline'
+					onPress={onReport}
+					testID='report-community'
+				>
+					Report community
+				</TurndownButton>
 			) : null}
 
 			{canEdit ? (
@@ -738,6 +749,13 @@ export const CommunitySettingsContent = ({
 					}
 					onContributions={() =>
 						router.push('/settings/shared-contributions')
+					}
+					onReport={() =>
+						communityId &&
+						router.push({
+							pathname: '/communities/[communityId]/report',
+							params: { communityId, targetType: 'Community' },
+						})
 					}
 					onClose={() =>
 						confirmClosure(() => void runExitAction('Close'))

@@ -12,6 +12,26 @@ const SettingsLayout = () => {
 		>
 			<Stack.Screen name='index' />
 			<Stack.Screen
+				name='blocked-members'
+				options={{
+					headerShown: true,
+					headerTransparent: true,
+					headerShadowVisible: false,
+					header: () => (
+						<HeaderTopRow
+							canGoBack
+							showNotifications={false}
+							title='Blocked members'
+							onBackPress={() =>
+								router.canGoBack()
+									? router.back()
+									: router.replace('/settings')
+							}
+						/>
+					),
+				}}
+			/>
+			<Stack.Screen
 				name='shared-contributions'
 				options={{
 					headerShown: true,

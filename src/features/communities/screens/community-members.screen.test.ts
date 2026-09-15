@@ -24,6 +24,10 @@ let mockMembersState: Record<string, unknown>;
 jest.mock('expo-router', () => ({
 	useLocalSearchParams: () => ({ communityId: 'group' }),
 	useRouter: () => ({ push: mockPush, replace: mockReplace }),
+	useFocusEffect: (effect: () => void | (() => void)) => {
+		const React = jest.requireActual('react') as typeof import('react');
+		React.useEffect(effect, [effect]);
+	},
 }));
 jest.mock('expo-router/react-navigation', () => ({
 	useHeaderHeight: () => 80,
@@ -61,6 +65,11 @@ jest.mock('../community-administration.service', () => ({
 	leaveCommunity: (...args: unknown[]) => mockLeave(...args),
 	removeCommunityMember: (...args: unknown[]) => mockRemove(...args),
 	transferCommunityOrganizer: (...args: unknown[]) => mockTransfer(...args),
+}));
+jest.mock('../community-safety.service', () => ({
+	createCommunitySafetyOperationId: () => 'safety-operation-id',
+	getCommunitySafetyReason: () => null,
+	blockCommunityMember: jest.fn(),
 }));
 jest.mock('@td/components/layout/screen/screen.component', () => {
 	const { createElement: element } = jest.requireActual('react');
@@ -149,6 +158,8 @@ const viewActions = {
 	onLeave: jest.fn(),
 	onRemove: jest.fn(),
 	onTransfer: jest.fn(),
+	onReport: jest.fn(),
+	onBlock: jest.fn(),
 	onScrollPositionChange: jest.fn(),
 };
 let renderer: ReactTestRenderer;
@@ -224,6 +235,20 @@ it('requires explicit removal and transfer confirmation and supports cancellatio
 	);
 	act(() => mockAlert.mock.calls[1]?.[2]?.[1]?.onPress());
 	expect(viewActions.onTransfer).toHaveBeenCalledWith(members[1]);
+});
+
+it('reports organizer members and requires block confirmation without changing membership', () => {
+	mountView(context('Member'));
+	act(() => buttons('Report member')[0]?.props['onPress']());
+	expect(viewActions.onReport).toHaveBeenCalledWith(members[0]);
+	act(() => buttons('Block member')[0]?.props['onPress']());
+	expect(mockAlert.mock.calls[0]?.[1]).toContain(
+		'does not remove either of you',
+	);
+	act(() => mockAlert.mock.calls[0]?.[2]?.[0]?.onPress?.());
+	expect(viewActions.onBlock).not.toHaveBeenCalled();
+	act(() => mockAlert.mock.calls[0]?.[2]?.[1]?.onPress());
+	expect(viewActions.onBlock).toHaveBeenCalledWith(members[0]);
 });
 
 it('lets an ordinary member confirm leaving and explains retained contributions', () => {

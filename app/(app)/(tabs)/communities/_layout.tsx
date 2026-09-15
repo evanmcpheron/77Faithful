@@ -137,6 +137,19 @@ const CommunitiesLayout = () => {
 					}}
 				/>
 				<Stack.Screen
+					name='[communityId]/report'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => (
+							<CommunityChildHeader title='Report concern' />
+						),
+					}}
+				/>
+				<Stack.Screen
 					name='[communityId]/posts/compose'
 					options={{
 						headerShown: true,

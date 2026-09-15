@@ -159,6 +159,11 @@ jest.mock('../community-post.service', () => ({
 	getCommunityPostReason: (...args: unknown[]) => mockGetReason(...args),
 	createCommunityPostOperationId: () => mockOperationId(),
 }));
+jest.mock('../community-safety.service', () => ({
+	createCommunitySafetyOperationId: () => 'safety-operation-id',
+	getCommunitySafetyReason: () => null,
+	blockCommunityMember: jest.fn(),
+}));
 jest.mock('react-native', () => ({
 	View: 'View',
 	Pressable: 'Pressable',

@@ -8,6 +8,7 @@ import {
 import type { IJourneyDaySession } from '../journey-day-session.types';
 import { saveJourneyReflection } from '../journey-reflection.service';
 import { useJourneyPractice } from '../use-journey-practice.hook';
+import { ReflectionSharePreviewScreen } from './reflection-share-preview.screen';
 import { ReflectionScreen } from './reflection.screen';
 import { ReflectionInput } from './reflection.styles';
 
@@ -15,6 +16,12 @@ jest.mock('../use-journey-practice.hook', () => ({
 	useJourneyPractice: jest.fn(),
 }));
 jest.mock('../journey-reflection.service');
+jest.mock('@td/providers/auth/auth.hook', () => ({
+	useAuth: () => ({ account: { userId: 'owner' } }),
+}));
+jest.mock('./reflection-share-preview.screen', () => ({
+	ReflectionSharePreviewScreen: 'sharePreview',
+}));
 jest.mock('@td/assets/icons/prayer/leaf.svg', () => 'svg');
 jest.mock('@td/assets/icons/reading/book-open.svg', () => 'svg');
 jest.mock('@td/assets/icons/regular/lock.svg', () => 'svg');
@@ -176,4 +183,19 @@ it('allows quiet reflection without requiring written words', async () => {
 	expect(saveJourneyReflection).not.toHaveBeenCalled();
 	expect(complete).toHaveBeenCalledTimes(1);
 	expect(textOf(renderer.root)).not.toContain('Continue');
+});
+it('opens a separate copy without saving or completing, and cancel leaves private writing alone', async () => {
+	await write('Private words');
+	await press('Share with a community');
+	const preview = renderer.root.findByType(ReflectionSharePreviewScreen);
+	expect(preview.props['initialText']).toBe('Private words');
+	expect(saveJourneyReflection).not.toHaveBeenCalled();
+	expect(complete).not.toHaveBeenCalled();
+	await act(async () => preview.props['onClose']());
+	expect(renderer.root.findByType(ReflectionInput).props['value']).toBe(
+		'Private words',
+	);
+	expect(
+		renderer.root.findAllByType(ReflectionSharePreviewScreen),
+	).toHaveLength(0);
 });

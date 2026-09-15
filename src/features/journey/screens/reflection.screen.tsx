@@ -5,6 +5,7 @@ import { TurndownScrollScreen } from '@td/components/layout/screen/screen.compon
 import { TurndownButton } from '@td/components/ui/button/button.component';
 import { Card } from '@td/components/ui/card/card.component';
 import { Typography } from '@td/components/ui/typography/typography.component';
+import { useAuth } from '@td/providers/auth/auth.hook';
 import { SurfaceColors, TextColors } from '@td/theme/colors';
 import { IconSizes } from '@td/theme/icon-sizes';
 import { Spacing } from '@td/theme/spacing';
@@ -19,6 +20,7 @@ import { parsePracticeRoute } from '../journey-practice-route';
 import { saveJourneyReflection } from '../journey-reflection.service';
 import { useJourneyPractice } from '../use-journey-practice.hook';
 import { prayerTitleStyle } from './prayer.styles';
+import { ReflectionSharePreviewScreen } from './reflection-share-preview.screen';
 import {
 	ReflectionAction,
 	ReflectionActions,
@@ -56,6 +58,8 @@ const ReflectionEditor = ({
 	const [focused, setFocused] = useState(false);
 	const [message, setMessage] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	const [shareCopy, setShareCopy] = useState<string | null>(null);
+	const { account } = useAuth();
 	const busy = useRef(false);
 	const active = useRef(true);
 	useFocusEffect(
@@ -160,11 +164,30 @@ const ReflectionEditor = ({
 					</TurndownButton>
 				</ReflectionAction>
 			</ReflectionActions>
+			{text.trim().length > 0 &&
+				account?.userId === session.day.userId && (
+					<TurndownButton
+						variant='Outline'
+						disabled={disabled || saving}
+						onPress={() => setShareCopy(text)}
+					>
+						Share with a community
+					</TurndownButton>
+				)}
+			{shareCopy !== null && account?.userId === session.day.userId && (
+				<ReflectionSharePreviewScreen
+					key={`${session.day.userId}-${shareCopy}`}
+					userId={session.day.userId}
+					initialText={shareCopy}
+					onClose={() => setShareCopy(null)}
+				/>
+			)}
 		</>
 	);
 };
 
 export const ReflectionScreen = () => {
+	const { account } = useAuth();
 	const headerHeight = useHeaderHeight();
 	const params = useLocalSearchParams();
 	const route = parsePracticeRoute(
@@ -274,7 +297,7 @@ export const ReflectionScreen = () => {
 							</Card>
 						)}
 						<ReflectionEditor
-							key={`${session.day.userId}-${session.day.journeyId}-${session.day.dayNumber}`}
+							key={`${account?.userId ?? 'signed-out'}-${session.day.userId}-${session.day.journeyId}-${session.day.dayNumber}`}
 							session={session}
 							disabled={loading || isSaving || !!error}
 							isComplete={isComplete}

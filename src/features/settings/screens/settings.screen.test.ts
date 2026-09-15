@@ -3,6 +3,7 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { SettingsScreen } from './settings.screen';
 
 const mockPush = jest.fn();
+let safetyAccessStatus: 'Allowed' | 'Denied' = 'Denied';
 let renderer: ReactTestRenderer;
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
@@ -39,6 +40,12 @@ jest.mock('@td/features/auth/screens/auth.styles', () => ({
 	StyledAuthHeaderContent: 'HeaderContent',
 	StyledAuthHeaderSafeArea: 'HeaderSafeArea',
 }));
+jest.mock(
+	'@td/features/communities/use-community-safety-review-access.hook',
+	() => ({
+		useCommunitySafetyReviewAccess: () => ({ status: safetyAccessStatus }),
+	}),
+);
 jest.mock('@td/providers/auth/auth.hook', () => ({
 	useAuth: () => ({
 		account: { userId: 'owner', contactEmail: 'owner@example.com' },
@@ -47,6 +54,7 @@ jest.mock('@td/providers/auth/auth.hook', () => ({
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
 it('offers Shared Contributions from signed-in Settings without community state', () => {
+	safetyAccessStatus = 'Denied';
 	act(() => {
 		renderer = create(createElement(SettingsScreen));
 	});
@@ -61,4 +69,22 @@ it('offers Shared Contributions from signed-in Settings without community state'
 		entry?.props['actions'].onPress();
 	});
 	expect(mockPush).toHaveBeenCalledWith('/settings/shared-contributions');
+	expect(
+		actions.some((node) => node.props['actions']?.id === 'safety-reports'),
+	).toBe(false);
+});
+
+it('shows the restricted queue entry only after reviewer access is verified', () => {
+	safetyAccessStatus = 'Allowed';
+	act(() => {
+		renderer = create(createElement(SettingsScreen));
+	});
+	const entry = renderer.root
+		.findAll((node) => String(node.type) === 'Actions')
+		.find((node) => node.props['actions']?.id === 'safety-reports');
+	expect(entry).toBeDefined();
+	act(() => {
+		entry?.props['actions'].onPress();
+	});
+	expect(mockPush).toHaveBeenCalledWith('/safety-reports');
 });

@@ -19,6 +19,7 @@ import {
 	StyledAuthHeaderContent,
 	StyledAuthHeaderSafeArea,
 } from '@td/features/auth/screens/auth.styles';
+import { useCommunitySafetyReviewAccess } from '@td/features/communities/use-community-safety-review-access.hook';
 import { useAuth } from '@td/providers/auth/auth.hook';
 import { SurfaceColors } from '@td/theme/colors';
 import { Spacing } from '@td/theme/spacing';
@@ -28,6 +29,7 @@ import { SETTINGS_PHOTO_HEIGHT, styles } from './settings.styles';
 export const SettingsScreen = () => {
 	const router = useRouter();
 	const { account } = useAuth();
+	const safetyReviewAccess = useCommunitySafetyReviewAccess();
 	const [viewportHeight, setViewportHeight] = useState(0);
 	const [headerHeight, setHeaderHeight] = useState(styles.header.minHeight);
 	const scrollOffset = useSharedValue(0);
@@ -206,6 +208,25 @@ export const SettingsScreen = () => {
 								}}
 							/>
 						</View>
+						{safetyReviewAccess.status === 'Allowed' ? (
+							<View style={styles.section}>
+								<Typography
+									size='H1'
+									weight='Semibold'
+								>
+									Platform safety
+								</Typography>
+								<NavigationActionList
+									actions={{
+										id: 'safety-reports',
+										title: 'Safety reports',
+										iconName: IconName.Lock,
+										onPress: () =>
+											router.push('/safety-reports'),
+									}}
+								/>
+							</View>
+						) : null}
 						<View style={styles.section}>
 							<Typography
 								size='H1'

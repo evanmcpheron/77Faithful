@@ -792,8 +792,10 @@ Stable reason codes are `InvalidInput`, `InvalidCursor`, `AccountUnavailable`,
 `OperationPayloadMismatch`, and `ScheduleDataUnavailable`. Existing community
 account authentication/verification codes remain in use. No catalog query is
 opened to clients. Direct client read/write access remains denied by Rules for
-community records and schedule operation receipts. A collection composite
-index orders communityJourneys by createdAt DESC and `__name__` DESC.
+community records and schedule operation receipts. The history query uses the
+existing single-field createdAt DESC index with document-ID ordering. Firebase
+rejected a proposed composite createdAt/document-ID index as unnecessary;
+no communityJourneys composite index is required.
 
 Operational prerequisites: `formationConfiguration/current` must identify a
 real current published course/version with its 77 days and 11 introductions.
@@ -809,3 +811,12 @@ against a real enrollment callable until Ticket 26 supplies it.
 The root `npx tsc --noEmit` check fails on pre-existing application errors
 outside this ticket; it reports no errors in the new community journey parser
 or the narrowly changed community types.
+The first Firebase deployment attempt compiled the Rules but exited before
+publishing Functions when Firestore rejected the unnecessary composite index.
+The retry released `firestore.rules` and reported successful creation of all six
+new callables plus successful update of `previewCommunityInvitation` in
+`us-central1`. A subsequent `firebase functions:list` showed the seven selected
+callables present as Node 22 v2 callables. The deploy CLI still exited 1 because
+it could not set an Artifact Registry cleanup policy in `us-central1`; this
+ticket did not set a billing or retention policy. No production callable smoke
+test or published-course configuration check was performed.

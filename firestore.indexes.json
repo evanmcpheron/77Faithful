@@ -1,14 +1,6 @@
 {
 	"indexes": [
 		{
-			"collectionGroup": "communityJourneys",
-			"queryScope": "COLLECTION",
-			"fields": [
-				{ "fieldPath": "createdAt", "order": "DESCENDING" },
-				{ "fieldPath": "__name__", "order": "DESCENDING" }
-			]
-		},
-		{
 			"collectionGroup": "communityMemberships",
 			"queryScope": "COLLECTION",
 			"fields": [

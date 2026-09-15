@@ -780,8 +780,10 @@ commits, and never clear it after withdrawal. A cancellation clears the pointer
 without ending any started personal journey; a new schedule uses a new ID.
 The public closure/display boundary is the named start date in the community
 IANA zone. Participant activation date and zone remain separate future work.
-The current published-course configuration and the communityJourneys history
-index must be present in the deployed environment; no community backfill is
+The current published-course configuration must be present in the deployed
+environment. The existing single-field createdAt index supports history;
+Firestore rejected an unnecessary composite during the first deploy attempt.
+No community backfill is
 needed for records without a schedule pointer. An older out-of-band schedule
 without the first-enrollment marker needs deliberate migration. Local pure
 calendar/contract tests and Functions build/lint passed on 2026-09-15. Emulator
@@ -790,3 +792,9 @@ not run without refreshed Firebase credentials. No enrollment callable exists
 in this checkout, so enrollment races remain a Ticket 26 integration check.
 The root application type check still fails on unrelated baseline errors;
 the new parser and changed community types report no errors.
+The second Firebase attempt released the Rules and reported success for all six
+new schedule callables and the invitation-preview update. The Function inventory
+confirmed their presence as v2 Node 22 callables. The CLI exited 1 only on its
+`us-central1` Artifact Registry cleanup-policy setup; no policy was changed.
+Production callables and published-course configuration still need manual
+smoke/configuration checks, and the enrollment integration needs Ticket 26.

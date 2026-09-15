@@ -136,6 +136,32 @@ const CommunitiesLayout = () => {
 						),
 					}}
 				/>
+				<Stack.Screen
+					name='[communityId]/posts/compose'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => (
+							<CommunityChildHeader title='Write a post' />
+						),
+					}}
+				/>
+				<Stack.Screen
+					name='[communityId]/posts/[postId]/edit'
+					options={{
+						headerShown: true,
+						headerBackVisible: false,
+						headerTransparent: true,
+						headerShadowVisible: false,
+						headerStyle: { backgroundColor: 'transparent' },
+						header: () => (
+							<CommunityChildHeader title='Edit post' />
+						),
+					}}
+				/>
 			</Stack>
 		</HeaderScrollProvider>
 	);

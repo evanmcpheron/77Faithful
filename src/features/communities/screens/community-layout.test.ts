@@ -146,3 +146,16 @@ it('returns a cold-open settings route to its community', () => {
 	});
 	act(() => header.unmount());
 });
+
+it('registers one composer screen for create and edit route modes', () => {
+	expect(
+		renderer.root.findByProps({
+			name: '[communityId]/posts/compose',
+		}),
+	).toBeTruthy();
+	expect(
+		renderer.root.findByProps({
+			name: '[communityId]/posts/[postId]/edit',
+		}),
+	).toBeTruthy();
+});

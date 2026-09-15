@@ -24,20 +24,24 @@ const memberCountLabel = ({ activeMemberCount }: ICommunityContext): string => {
 
 interface ICommunityHomeProps {
 	state: TCommunityContextState;
+	successMessage?: string | null;
 	onRetry: () => void;
 	onReturn: () => void;
 	onInvite: (communityId: string) => void;
 	onMembers: (communityId: string) => void;
 	onSettings: (communityId: string) => void;
+	onCompose: (communityId: string) => void;
 }
 
 export const CommunityHome = ({
 	state,
+	successMessage,
 	onRetry,
 	onReturn,
 	onInvite,
 	onMembers,
 	onSettings,
+	onCompose,
 }: ICommunityHomeProps) => {
 	if (state.status === 'Loading') {
 		return (
@@ -124,6 +128,14 @@ export const CommunityHome = ({
 
 	return (
 		<View style={styles.content}>
+			{successMessage ? (
+				<View
+					accessibilityRole='alert'
+					accessibilityLiveRegion='polite'
+				>
+					<Typography weight='Semibold'>{successMessage}</Typography>
+				</View>
+			) : null}
 			<View style={styles.section}>
 				<View accessibilityRole='header'>
 					<Typography size='Display'>{community.name}</Typography>
@@ -217,6 +229,15 @@ export const CommunityHome = ({
 				</TurndownButton>
 			) : null}
 
+			{community.status === 'Active' &&
+			context.capabilities.canCreatePost ? (
+				<TurndownButton
+					onPress={() => onCompose(community.communityId)}
+				>
+					Write a post
+				</TurndownButton>
+			) : null}
+
 			<TurndownButton
 				variant='Outline'
 				onPress={() => onMembers(community.communityId)}
@@ -251,9 +272,11 @@ export const CommunityHome = ({
 const CommunityDetails = ({
 	userId,
 	communityId,
+	postSaved,
 }: {
 	userId: string | null;
 	communityId: string | undefined;
+	postSaved?: string;
 }) => {
 	const router = useRouter();
 	const headerHeight = useHeaderHeight();
@@ -276,6 +299,17 @@ const CommunityDetails = ({
 			pathname: '/communities/[communityId]/settings',
 			params: { communityId: selectedCommunityId },
 		});
+	const openComposer = (selectedCommunityId: string) =>
+		router.push({
+			pathname: '/communities/[communityId]/posts/compose',
+			params: { communityId: selectedCommunityId },
+		});
+	const successMessage =
+		postSaved === 'created'
+			? 'Your post was saved to this community.'
+			: postSaved === 'edited'
+				? 'Your changes were saved to this community.'
+				: null;
 
 	return (
 		<TurndownScrollScreen
@@ -292,11 +326,13 @@ const CommunityDetails = ({
 			<View style={{ paddingTop: headerHeight }}>
 				<CommunityHome
 					state={state}
+					successMessage={successMessage}
 					onRetry={retry}
 					onReturn={returnToCommunities}
 					onInvite={openInvitations}
 					onMembers={openMembers}
 					onSettings={openSettings}
+					onCompose={openComposer}
 				/>
 			</View>
 		</TurndownScrollScreen>
@@ -304,7 +340,10 @@ const CommunityDetails = ({
 };
 
 export const CommunityScreen = () => {
-	const { communityId } = useLocalSearchParams<{ communityId?: string }>();
+	const { communityId, postSaved } = useLocalSearchParams<{
+		communityId?: string;
+		postSaved?: string;
+	}>();
 	const { account } = useAuth();
 	const userId = account?.userId ?? null;
 	return (
@@ -312,6 +351,7 @@ export const CommunityScreen = () => {
 			key={`${userId ?? 'signed-out'}:${communityId ?? 'missing'}`}
 			userId={userId}
 			communityId={communityId}
+			{...(postSaved ? { postSaved } : {})}
 		/>
 	);
 };

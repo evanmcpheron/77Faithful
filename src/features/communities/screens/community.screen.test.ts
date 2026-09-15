@@ -84,6 +84,7 @@ const mount = (state: React.ComponentProps<typeof CommunityHome>['state']) => {
 	const onInvite = jest.fn();
 	const onMembers = jest.fn();
 	const onSettings = jest.fn();
+	const onCompose = jest.fn();
 	act(() => {
 		renderer = create(
 			createElement(CommunityHome, {
@@ -93,10 +94,18 @@ const mount = (state: React.ComponentProps<typeof CommunityHome>['state']) => {
 				onInvite,
 				onMembers,
 				onSettings,
+				onCompose,
 			}),
 		);
 	});
-	return { onRetry, onReturn, onInvite, onMembers, onSettings };
+	return {
+		onRetry,
+		onReturn,
+		onInvite,
+		onMembers,
+		onSettings,
+		onCompose,
+	};
 };
 const renderedText = () => JSON.stringify(renderer.toJSON());
 const press = (label: string) => {
@@ -122,12 +131,39 @@ it('renders organizer context with a working, prominent invitation action', () =
 			.map((node) => node.props['children']),
 	).toEqual([
 		'Invite people',
+		'Write a post',
 		'Members',
 		'Community settings',
 		'Your communities',
 	]);
 	press('Invite people');
 	expect(actions.onInvite).toHaveBeenCalledWith('group');
+});
+
+it('announces a confirmed community save distinctly from a local draft', () => {
+	const actions = mount({
+		status: 'Ready',
+		context: communityContext({ role: 'Member', memberCount: 2 }),
+	});
+	act(() =>
+		renderer.update(
+			createElement(CommunityHome, {
+				state: {
+					status: 'Ready',
+					context: communityContext({
+						role: 'Member',
+						memberCount: 2,
+					}),
+				},
+				successMessage: 'Your post was saved to this community.',
+				...actions,
+			}),
+		),
+	);
+	expect(renderedText()).toContain('saved to this community');
+	expect(
+		renderer.root.findAllByProps({ accessibilityRole: 'alert' }),
+	).toHaveLength(1);
 });
 
 it('renders member context, organizer identity, purpose, privacy, and bounded count', () => {
@@ -149,6 +185,8 @@ it('renders member context, organizer identity, purpose, privacy, and bounded co
 	);
 	expect(renderedText()).not.toContain('Invite people when you’re ready');
 	expect(renderedText()).not.toContain('Invite people');
+	press('Write a post');
+	expect(actions.onCompose).toHaveBeenCalledWith('group');
 	press('Members');
 	expect(actions.onMembers).toHaveBeenCalledWith('group');
 	press('Community settings');
@@ -193,6 +231,7 @@ it('keeps transport retry and unavailable membership states distinct', () => {
 				onInvite: actions.onInvite,
 				onMembers: actions.onMembers,
 				onSettings: actions.onSettings,
+				onCompose: actions.onCompose,
 			}),
 		),
 	);

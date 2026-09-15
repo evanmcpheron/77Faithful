@@ -241,3 +241,12 @@ it('clears rows when an author-only deletion is denied', async () => {
 	expect(shown()).not.toContain('My shared copy.');
 	expect(shown()).toContain('unavailable');
 });
+
+it('shows unavailable account access without calling the owner list', async () => {
+	currentUserId = null;
+	await act(async () => {
+		renderer = create(createElement(SharedContributionsScreen));
+	});
+	expect(mockList).not.toHaveBeenCalled();
+	expect(shown()).toContain('unavailable');
+});

@@ -122,7 +122,13 @@ const SharedContributionsContent = ({ userId }: { userId: string | null }) => {
 		useCallback(() => {
 			generation.current += 1;
 			busy.current = false;
-			void load('Initial');
+			if (userId) void load('Initial');
+			else {
+				setRows([]);
+				setCursor(null);
+				pendingDelete.current = null;
+				setStatus('Unavailable');
+			}
 			return () => {
 				generation.current += 1;
 				busy.current = false;

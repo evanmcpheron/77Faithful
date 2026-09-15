@@ -181,6 +181,25 @@ export const SettingsScreen = () => {
 								size='H1'
 								weight='Semibold'
 							>
+								Your shared words
+							</Typography>
+							<NavigationActionList
+								actions={{
+									id: 'shared-contributions',
+									title: 'Shared Contributions',
+									iconName: IconName.Note,
+									onPress: () =>
+										router.push(
+											'/settings/shared-contributions',
+										),
+								}}
+							/>
+						</View>
+						<View style={styles.section}>
+							<Typography
+								size='H1'
+								weight='Semibold'
+							>
 								About 77Faithful
 							</Typography>
 							<NavigationActionList

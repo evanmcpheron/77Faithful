@@ -11,6 +11,7 @@ import {
 	listCommunityPosts,
 	listCommunityPrayerSupport,
 	listCommunityReplies,
+	listOwnCommunityContributions,
 	setCommunityPrayerAcknowledgment,
 	setCommunityPrayerRequestStatus,
 } from './community-post.service';
@@ -66,6 +67,64 @@ it('creates operation IDs and exposes only canonical reason codes', () => {
 	expect(
 		getCommunityPostReason({ details: { reason: 'PrivateServerDetail' } }),
 	).toBeNull();
+});
+
+it('reads only the canonical own-contribution projection without membership', async () => {
+	mockCall.mockResolvedValue({
+		data: {
+			contributions: [
+				{
+					communityId: 'left-group',
+					postId: 'post-1',
+					kind: 'Post',
+					publicationStatus: 'Published',
+					revision: 2,
+					createdAt: timestamp,
+					text: 'My shared copy.',
+				},
+				{
+					communityId: 'removed-group',
+					postId: 'post-2',
+					replyId: 'reply-1',
+					kind: 'Reply',
+					publicationStatus: 'AuthorDeleted',
+					revision: 3,
+					createdAt: timestamp,
+				},
+			],
+			nextCursor: null,
+		},
+	});
+	const result = await listOwnCommunityContributions({ pageSize: 20 });
+	expect(mockCallable).toHaveBeenCalledWith(
+		'functions',
+		'listOwnCommunityContributions',
+	);
+	expect(result.contributions).toHaveLength(2);
+	expect(result.contributions[1]).not.toHaveProperty('text');
+	await expect(
+		listOwnCommunityContributions({ pageSize: 0 }),
+	).rejects.toThrow();
+	mockCall.mockResolvedValue({
+		data: {
+			contributions: [
+				{
+					communityId: 'group',
+					postId: 'post-1',
+					kind: 'Post',
+					publicationStatus: 'Published',
+					revision: 1,
+					createdAt: timestamp,
+					text: 'Mine',
+					otherReplyText: 'Another member',
+				},
+			],
+			nextCursor: null,
+		},
+	});
+	await expect(listOwnCommunityContributions({})).rejects.toThrow(
+		'Invalid own contribution response.',
+	);
 });
 
 it('validates and calls create and edit contracts', async () => {

@@ -12,6 +12,26 @@ const SettingsLayout = () => {
 		>
 			<Stack.Screen name='index' />
 			<Stack.Screen
+				name='shared-contributions'
+				options={{
+					headerShown: true,
+					headerTransparent: true,
+					headerShadowVisible: false,
+					header: () => (
+						<HeaderTopRow
+							canGoBack
+							showNotifications={false}
+							title='Shared Contributions'
+							onBackPress={() =>
+								router.canGoBack()
+									? router.back()
+									: router.replace('/settings')
+							}
+						/>
+					),
+				}}
+			/>
+			<Stack.Screen
 				name='practices'
 				options={{
 					headerShown: true,

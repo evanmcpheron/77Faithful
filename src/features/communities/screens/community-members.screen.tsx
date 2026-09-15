@@ -41,6 +41,7 @@ interface ICommunityMembersViewProps {
 	onReturn: () => void;
 	onInvite: () => void;
 	onSettings: () => void;
+	onContributions?: () => void;
 	onLeave: () => void;
 	onRemove: (member: ICommunityMemberSummary) => void;
 	onTransfer: (member: ICommunityMemberSummary) => void;
@@ -57,7 +58,7 @@ const confirmRemoval = (
 ) => {
 	Alert.alert(
 		`Remove ${confirmationName(member)}?`,
-		'Removal ends this person’s community access. It does not erase their private journey, reflections, practice choices, or completion.',
+		'Removal ends this person’s community access. Their deliberately shared posts remain unless they separately delete them in Shared Contributions from Settings. It does not erase their private journey, reflections, practice choices, or completion.',
 		[
 			{ text: 'Keep member', style: 'cancel' },
 			{
@@ -181,6 +182,7 @@ export const CommunityMembersView = ({
 	onReturn,
 	onInvite,
 	onSettings,
+	onContributions,
 	onLeave,
 	onRemove,
 	onTransfer,
@@ -273,6 +275,14 @@ export const CommunityMembersView = ({
 							onPress={() => confirmLeave(onLeave)}
 						>
 							Leave community
+						</TurndownButton>
+					) : null}
+					{onContributions ? (
+						<TurndownButton
+							variant='Outline'
+							onPress={onContributions}
+						>
+							Shared Contributions
 						</TurndownButton>
 					) : null}
 					{actionMessage ? (
@@ -572,6 +582,9 @@ export const CommunityMembersContent = ({
 					pathname: '/communities/[communityId]/settings',
 					params: { communityId },
 				})
+			}
+			onContributions={() =>
+				router.push('/settings/shared-contributions')
 			}
 			onLeave={leave}
 			onRemove={remove}

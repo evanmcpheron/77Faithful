@@ -75,6 +75,7 @@ interface ICommunitySettingsViewProps {
 	onRetry: () => void;
 	onMembers: () => void;
 	onInvite: () => void;
+	onContributions?: () => void;
 	onClose: () => void;
 	onLeave: () => void;
 	onReturn: () => void;
@@ -171,6 +172,7 @@ export const CommunitySettingsView = ({
 	onRetry,
 	onMembers,
 	onInvite,
+	onContributions,
 	onClose,
 	onLeave,
 	onReturn,
@@ -326,6 +328,22 @@ export const CommunitySettingsView = ({
 
 			<View style={styles.section}>
 				<Typography size='H2'>People</Typography>
+				<Typography
+					tone='Secondary'
+					weight='Regular'
+				>
+					Shared posts and replies remain after leaving or closing
+					unless you separately delete them. Material already viewed
+					or copied cannot be recalled.
+				</Typography>
+				{onContributions ? (
+					<TurndownButton
+						variant='Outline'
+						onPress={onContributions}
+					>
+						Shared Contributions
+					</TurndownButton>
+				) : null}
 				<TurndownButton
 					variant='Outline'
 					onPress={onMembers}
@@ -393,7 +411,7 @@ export const CommunitySettingsView = ({
 const confirmClosure = (onClose: () => void) =>
 	Alert.alert(
 		'Close this community?',
-		'Closing makes this community a read-only archive. Invitations and new group activity will stop. Personal journeys remain untouched. This cannot be undone.',
+		'Closing makes this community a read-only archive. Invitations and new group activity will stop. Shared posts remain unless separately deleted in Shared Contributions. Personal journeys remain untouched. This cannot be undone.',
 		[
 			{ text: 'Keep community open', style: 'cancel' },
 			{ text: 'Close community', style: 'destructive', onPress: onClose },
@@ -717,6 +735,9 @@ export const CommunitySettingsContent = ({
 							pathname: '/communities/[communityId]/invite',
 							params: { communityId },
 						})
+					}
+					onContributions={() =>
+						router.push('/settings/shared-contributions')
 					}
 					onClose={() =>
 						confirmClosure(() => void runExitAction('Close'))

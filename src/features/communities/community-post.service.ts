@@ -20,6 +20,9 @@ import type {
 	IListCommunityPrayerSupportResult,
 	IListCommunityRepliesRequest,
 	IListCommunityRepliesResult,
+	IListOwnCommunityContributionsRequest,
+	IListOwnCommunityContributionsResult,
+	IOwnCommunityContribution,
 	ISetCommunityPrayerAcknowledgmentRequest,
 	ISetCommunityPrayerAcknowledgmentResult,
 	ISetCommunityPrayerRequestStatusRequest,
@@ -45,6 +48,7 @@ import {
 	parseListCommunityPostsRequest,
 	parseListCommunityPrayerSupportRequest,
 	parseListCommunityRepliesRequest,
+	parseListOwnCommunityContributionsRequest,
 	parseSetCommunityPrayerAcknowledgmentRequest,
 	parseSetCommunityPrayerRequestStatusRequest,
 } from './community-post';
@@ -405,6 +409,74 @@ export const deleteCommunityPost = async (
 	return {
 		postId: identifier(result['postId']),
 		deletedAt: timestamp(result['deletedAt']),
+	};
+};
+
+const ownContribution = (value: unknown): IOwnCommunityContribution => {
+	const input = record(value);
+	const kind = input['kind'];
+	const status = input['publicationStatus'];
+	if (
+		(kind !== 'Post' && kind !== 'Reply') ||
+		!['Published', 'AuthorDeleted', 'ModeratorRemoved'].includes(
+			status as string,
+		) ||
+		(kind === 'Post' && input['replyId'] !== undefined) ||
+		(kind === 'Reply' && input['replyId'] === undefined) ||
+		(status === 'Published' &&
+			(typeof input['text'] !== 'string' ||
+				!input['text'].trim() ||
+				input['text'].length > 10_000)) ||
+		(status !== 'Published' && input['text'] !== undefined) ||
+		Object.keys(input).some(
+			(key) =>
+				![
+					'communityId',
+					'postId',
+					'replyId',
+					'kind',
+					'publicationStatus',
+					'revision',
+					'createdAt',
+					'text',
+				].includes(key),
+		)
+	)
+		throw new Error('Invalid own contribution response.');
+	return {
+		communityId: identifier(input['communityId']),
+		postId: identifier(input['postId']),
+		...(kind === 'Reply' ? { replyId: identifier(input['replyId']) } : {}),
+		kind,
+		publicationStatus:
+			status as IOwnCommunityContribution['publicationStatus'],
+		revision: revision(input['revision']),
+		createdAt: timestamp(input['createdAt']),
+		...(status === 'Published' ? { text: input['text'] as string } : {}),
+	};
+};
+
+export const listOwnCommunityContributions = async (
+	input: IListOwnCommunityContributionsRequest,
+): Promise<IListOwnCommunityContributionsResult> => {
+	const request = parseListOwnCommunityContributionsRequest(input);
+	const callable = httpsCallable<
+		IListOwnCommunityContributionsRequest,
+		unknown
+	>(getFunctions(app), 'listOwnCommunityContributions');
+	const result = record((await callable(request)).data);
+	if (!Array.isArray(result['contributions']))
+		throw new Error('Invalid own contribution response.');
+	const nextCursor = result['nextCursor'];
+	if (
+		nextCursor !== null &&
+		(typeof nextCursor !== 'string' ||
+			!/^[a-zA-Z0-9_-]{1,512}$/.test(nextCursor))
+	)
+		throw new Error('Invalid own contribution response.');
+	return {
+		contributions: result['contributions'].map(ownContribution),
+		nextCursor,
 	};
 };
 

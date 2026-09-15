@@ -667,6 +667,9 @@ addWrite(
 );
 for (const restrictedPath of [
 	'communitySafetyReports/report1',
+	'communityModerationActions/action1',
+	'users/owner/communitySafetyReviewOperations/review1',
+	'users/owner/communitySafetyClaimOperations/claim1',
 	'users/owner/communityBlocks/member-a',
 	'users/owner/communityBlockOperations/block1',
 	'users/owner/communityUnblockOperations/unblock1',

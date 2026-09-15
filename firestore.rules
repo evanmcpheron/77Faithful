@@ -146,6 +146,18 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /communityModerationActions/{actionId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communitySafetyReviewOperations/{operationId} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/communitySafetyClaimOperations/{operationId} {
+      allow read, write: if false;
+    }
+
     match /communityInvitationDigests/{digest} {
       allow read, write: if false;
     }

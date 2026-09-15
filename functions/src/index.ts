@@ -175,6 +175,12 @@ export {
 	unblockCommunityMember,
 } from './community/community-safety';
 export {
+	claimCommunitySafetyReport,
+	getCommunitySafetyReport,
+	listCommunitySafetyReports,
+	reviewCommunityReport,
+} from './community/community-safety-review';
+export {
 	createCommunityReply,
 	deleteCommunityReply,
 	editCommunityReply,

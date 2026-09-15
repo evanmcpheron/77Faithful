@@ -659,3 +659,69 @@ owns independent reviewer decisions. Production launch still requires reviewer
 provisioning, timely response operations, published contact information,
 user-facing Terms/community standards, an operational response process, and
 in-app report/block surfaces.
+
+### Ticket 22 — restricted platform safety review
+
+`listCommunitySafetyReports`, `claimCommunitySafetyReport`,
+`getCommunitySafetyReport`, and
+`reviewCommunityReport` are Firebase callables. Canonical request, result, report,
+and action types are in `src/types/community/community-moderation.types.ts`;
+validators are sourced from `src/features/communities/community-safety.ts` and
+copied by `scripts/prepare-functions.cjs`. Every request requires a current,
+enabled, email-verified Auth user with the separate Boolean custom claim
+`communitySafetyReviewer: true`, read from Auth on each attempt. Organizer and
+ordinary membership roles grant no access. A caller cannot supply a reviewer ID.
+There is no user-facing role-grant callable. Reports filed by or about the
+reviewer are inaccessible for detail/decision; an independent reviewer or an
+operator escalation is required.
+
+Queue input is `{pageSize?, cursor?}`; default page size is 20, limit is 1–50,
+and a cursor is a document ID limited to 512 ASCII identifier characters. It
+returns Submitted and UnderReview cases, ordered by report document ID, with a next cursor
+from the last returned record. Queue entries contain IDs, target, reason,
+status, revision, and creation time, but no explanation or evidence. The index
+on `review.status` and `__name__` must be deployed. Detail input is exactly
+`{reportId}`; detail returns the restricted report (including submitted
+revision/evidence) and the current target state/text and SHA-256 text digest.
+Parent post/reply and community IDs are validated in current-state reads.
+Claim input is exactly `{reportId, expectedRevision, operationId}` and changes
+Submitted to UnderReview with reviewer ID, trusted time, and incremented report
+revision in one transaction. A claimed case can be decided only by its claimant;
+concurrent claims conflict. After one hour from the trusted claim timestamp,
+another reviewer may reclaim with the latest report revision; an old claimant
+cannot decide after reassignment. Actor/Claim receipts contain only a request digest,
+report ID, revision, and creation time. A claim retry recovers the same result
+while it remains claimed; its operation ID cannot be reused with another payload.
+
+Decision input is exactly `{reportId, expectedRevision,
+expectedTargetRevision, requestedAction, explanation, operationId,
+reviewedCurrentTextDigest?}`. IDs are 1–128 ASCII letters/digits/underscore/hyphen;
+revisions are integers 0–2,147,483,646; explanation trims to 1–1000 characters
+without control characters; optional digest is 64 lowercase hex characters.
+Actions are `RemoveContent` for Post/Reply, `RemoveMember` for Member,
+`CloseCommunity` for Community, or `NoAction` for any supported target. A changed
+reported target must match the current revision; any decision after a text edit
+also requires the digest of the current text returned by detail. Stale
+report/target revisions fail `RevisionConflict`, and missing current-content
+acknowledgement fails `CurrentContentReviewRequired`. Decisions resolve a
+Submitted or claimant-owned UnderReview report transactionally, advance its revision, and create a restricted
+action with reviewer, trusted time, target/report revisions, and reason. Actor
+and Review scoped operation receipts store only a request digest, IDs, and
+creation time; retries detect `OperationPayloadMismatch` and never replay an
+action. Other reasons are `AuthenticationRequired`,
+`EmailVerificationRequired`, `ReviewerRequired`, `ReviewerConflict`,
+`InvalidInput`, `ReportUnavailable`, `CommunityUnavailable`,
+`TargetUnavailable`, `UnsupportedTarget`, `ActionTargetMismatch`,
+`CommunityClosed`, and `OrganizerEscalationRequired`.
+
+Member removal writes the existing Removed membership/index and private
+removal tombstone and queues exit cleanup. Closure revokes the active invitation
+and digest pointer. Content removal creates a text-free ModeratorRemoved
+tombstone. No decision writes a personal journey or private writing. Direct
+client access to reports, moderation actions, claim receipts, and review
+receipts is denied by Rules. Auth claim provisioning, the queue index, Rules,
+and Functions require operator configuration/deployment. Local Functions
+build/lint, three Ticket 22 non-emulator tests, six Firestore emulator cases,
+one Auth/Firestore emulator Rules case, and the repository's 422-case remote
+Rules evaluator passed. Firebase project access was verified, but deployment
+state is not yet established by these checks.

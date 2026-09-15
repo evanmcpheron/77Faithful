@@ -1,6 +1,14 @@
 {
 	"indexes": [
 		{
+			"collectionGroup": "communitySafetyReports",
+			"queryScope": "COLLECTION",
+			"fields": [
+				{ "fieldPath": "review.status", "order": "ASCENDING" },
+				{ "fieldPath": "__name__", "order": "ASCENDING" }
+			]
+		},
+		{
 			"collectionGroup": "communityMemberships",
 			"queryScope": "COLLECTION",
 			"fields": [

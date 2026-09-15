@@ -724,3 +724,43 @@ but could not start without Java. Restricted Rules execution and deployment
 evidence are still pending. The configured Rules evaluator could not reach
 Google's API; root `tsc --noEmit` still fails in existing protected
 components/utilities and reported no Ticket 20 file error.
+
+## Ticket 22 operational notes
+
+An authorized Firebase operator must provision and revoke reviewer access out
+of band through Firebase Auth user custom claims. Preserve unrelated claims,
+set only `communitySafetyReviewer: true` for a separately selected, trained
+reviewer, and remove that property or set it false to revoke. Verify the user
+is email-verified and enabled; do not grant a real account a claim merely to
+exercise this checkout. Each review callable reads the current Auth user record,
+so a stale client token or Organizer role does not retain access after revocation.
+The reviewer has no community administration or personal-account authority by
+virtue of this claim.
+
+Operators need a staffed queue, published response/escalation process, and a
+second independent reviewer for cases filed by or about a reviewer. Reports
+about Organizers remain in the restricted platform queue rather than settings.
+The workflow offers an expected-revision claim and resolves a Submitted or
+claimant-owned UnderReview report through an expected-revision decision. Two
+concurrent reviewers cannot silently replace one another. An UnderReview claim
+expires for reassignment after one hour; takeover requires
+the latest report revision and a currently authorized independent reviewer.
+Operators must watch stalled claims and provision a second reviewer. A reported
+member who has become Organizer requires escalation before removal; reviewers
+may choose NoAction or CloseCommunity on a suitable report, but cannot use
+ordinary member removal to break the organizer invariant. The role claim must
+not be granted via any callable or client route.
+
+Before production use, an operator must approve exact retention periods and a
+restricted deletion procedure for submitted evidence, explanations, actions,
+and review receipts, plus backup/access practices. No retention schedule or
+staffed review service is established by this code. Restricted evidence must
+never be exported into member readers or a private journal lookup. Deploy the
+`communitySafetyReports` status/document-ID index and Rules denials with the
+Functions; no existing report migration is needed for Submitted prompt 20
+records. Six Firestore emulator transaction cases and one Auth/Firestore
+emulator Rules case passed using an existing bundled Java runtime. The
+repository's separate 422-case remote Rules evaluator also passed. Firebase
+project access was verified, but deployment state remains separate from local
+test evidence. Local Functions build/lint and three Ticket 22 non-emulator
+tests passed.

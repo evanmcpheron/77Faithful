@@ -4,7 +4,11 @@ import type {
 	IUnblockCommunityMemberRequest,
 } from '../../types/community/community-block.types';
 import type {
+	IClaimCommunitySafetyReportRequest,
+	IGetCommunitySafetyReportRequest,
+	IListCommunitySafetyReportsRequest,
 	IReportCommunityContentRequest,
+	IReviewCommunityReportRequest,
 	TCommunityReportTarget,
 } from '../../types/community/community-moderation.types';
 
@@ -55,6 +59,131 @@ const explanation = (value: unknown): string => {
 	)
 		throw new Error('Invalid explanation.');
 	return trimmed;
+};
+
+export const parseGetCommunitySafetyReportRequest = (
+	value: unknown,
+): IGetCommunitySafetyReportRequest => {
+	const input = record(value);
+	keys(input, ['reportId'], ['reportId']);
+	return { reportId: id(input['reportId']) };
+};
+
+export const parseClaimCommunitySafetyReportRequest = (
+	value: unknown,
+): IClaimCommunitySafetyReportRequest => {
+	const input = record(value);
+	keys(
+		input,
+		['reportId', 'expectedRevision', 'operationId'],
+		['reportId', 'expectedRevision', 'operationId'],
+	);
+	const revision = input['expectedRevision'];
+	if (
+		typeof revision !== 'number' ||
+		!Number.isInteger(revision) ||
+		revision < 0 ||
+		revision >= 2_147_483_647
+	)
+		throw new Error('Invalid revision.');
+	return {
+		reportId: id(input['reportId']),
+		expectedRevision: revision,
+		operationId: id(input['operationId']),
+	};
+};
+
+export const parseListCommunitySafetyReportsRequest = (
+	value: unknown,
+): IListCommunitySafetyReportsRequest => {
+	const input = record(value ?? {});
+	keys(input, ['pageSize', 'cursor'], []);
+	const pageSize = input['pageSize'];
+	const cursor = input['cursor'];
+	if (
+		pageSize !== undefined &&
+		(typeof pageSize !== 'number' ||
+			!Number.isInteger(pageSize) ||
+			pageSize < 1 ||
+			pageSize > CommunitySafetyLimits.pageSize)
+	)
+		throw new Error('Invalid page size.');
+	if (
+		cursor !== undefined &&
+		(typeof cursor !== 'string' ||
+			cursor.length > CommunitySafetyLimits.cursor ||
+			!/^[a-zA-Z0-9_-]+$/.test(cursor))
+	)
+		throw new Error('Invalid cursor.');
+	return {
+		...(pageSize === undefined ? {} : { pageSize }),
+		...(cursor === undefined ? {} : { cursor }),
+	};
+};
+
+export const parseReviewCommunityReportRequest = (
+	value: unknown,
+): IReviewCommunityReportRequest => {
+	const input = record(value);
+	keys(
+		input,
+		[
+			'reportId',
+			'expectedRevision',
+			'expectedTargetRevision',
+			'reviewedCurrentTextDigest',
+			'requestedAction',
+			'explanation',
+			'operationId',
+		],
+		[
+			'reportId',
+			'expectedRevision',
+			'expectedTargetRevision',
+			'requestedAction',
+			'explanation',
+			'operationId',
+		],
+	);
+	for (const field of ['expectedRevision', 'expectedTargetRevision']) {
+		const revision = input[field];
+		if (
+			typeof revision !== 'number' ||
+			!Number.isInteger(revision) ||
+			revision < 0 ||
+			revision >= 2_147_483_647
+		)
+			throw new Error('Invalid revision.');
+	}
+	if (
+		![
+			'RemoveContent',
+			'RemoveMember',
+			'CloseCommunity',
+			'NoAction',
+		].includes(input['requestedAction'] as string)
+	)
+		throw new Error('Invalid decision.');
+	const reviewedCurrentTextDigest = input['reviewedCurrentTextDigest'];
+	if (
+		reviewedCurrentTextDigest !== undefined &&
+		(typeof reviewedCurrentTextDigest !== 'string' ||
+			!/^[a-f0-9]{64}$/.test(reviewedCurrentTextDigest))
+	)
+		throw new Error('Invalid current content acknowledgement.');
+	return {
+		reportId: id(input['reportId']),
+		expectedRevision: input['expectedRevision'] as number,
+		expectedTargetRevision: input['expectedTargetRevision'] as number,
+		requestedAction: input[
+			'requestedAction'
+		] as IReviewCommunityReportRequest['requestedAction'],
+		explanation: explanation(input['explanation']),
+		operationId: id(input['operationId']),
+		...(reviewedCurrentTextDigest === undefined
+			? {}
+			: { reviewedCurrentTextDigest }),
+	};
 };
 
 const target = (value: unknown): TCommunityReportTarget => {

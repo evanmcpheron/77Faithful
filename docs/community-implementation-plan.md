@@ -761,6 +761,9 @@ the queue without a new composite index. No existing report migration is needed 
 records. Six Firestore emulator transaction cases and one Auth/Firestore
 emulator Rules case passed using an existing bundled Java runtime. The
 repository's separate 422-case remote Rules evaluator also passed. Firebase
-project access was verified, but deployment state remains separate from local
-test evidence. Local Functions build/lint and three Ticket 22 non-emulator
-tests passed.
+project access was verified. The corrected deploy released Rules and indexes,
+reported successful creation/update of all Functions, and a follow-up inventory
+showed all four Ticket 22 callables Active under one deployed hash. The Firebase
+CLI still exited 1 because the project has no `us-central1` Artifact Registry
+cleanup policy; no policy was set by this ticket. Local Functions build/lint
+and three Ticket 22 non-emulator tests passed.

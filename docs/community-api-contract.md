@@ -724,5 +724,8 @@ receipts is denied by Rules. Auth claim provisioning and Rules,
 and Functions require operator configuration/deployment. Local Functions
 build/lint, three Ticket 22 non-emulator tests, six Firestore emulator cases,
 one Auth/Firestore emulator Rules case, and the repository's 422-case remote
-Rules evaluator passed. Firebase project access was verified, but deployment
-state is not yet established by these checks.
+Rules evaluator passed. Firebase deploy released the local Rules and indexes,
+reported successful creation/update of every Function, and a subsequent
+inventory check found all four Ticket 22 callables Active with the same deployed
+hash. The CLI nevertheless exited 1 because no Artifact Registry cleanup policy
+is set in `us-central1`; this ticket did not set a billing/retention policy.

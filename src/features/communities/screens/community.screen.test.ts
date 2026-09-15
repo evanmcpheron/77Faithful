@@ -2,11 +2,19 @@ import type { ICommunityPost } from '@td/types/community/community-post.types';
 import type { ICommunityContext } from '@td/types/community/community.types';
 import { createElement, type ReactNode } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import { CommunityHome, CommunityPostCard } from './community.screen';
+import {
+	CommunityHome,
+	CommunityPostCard,
+	CommunityScreen,
+} from './community.screen';
+
+const mockRouterPush = jest.fn();
+let mockScreenContextState: unknown = { status: 'Loading' };
+let mockScreenFeedState: unknown = { status: 'Loading' };
 
 jest.mock('expo-router', () => ({
 	useLocalSearchParams: () => ({ communityId: 'group' }),
-	useRouter: () => ({ replace: jest.fn(), push: jest.fn() }),
+	useRouter: () => ({ replace: jest.fn(), push: mockRouterPush }),
 }));
 jest.mock('expo-router/react-navigation', () => ({
 	useHeaderHeight: () => 80,
@@ -22,13 +30,13 @@ jest.mock('@td/providers/header-scroll/use-screen-scroll-offset.hook', () => ({
 }));
 jest.mock('../use-community-context.hook', () => ({
 	useCommunityContext: () => ({
-		state: { status: 'Loading' },
+		state: mockScreenContextState,
 		retry: jest.fn(),
 	}),
 }));
 jest.mock('../use-community-feed.hook', () => ({
 	useCommunityFeed: () => ({
-		state: { status: 'Loading' },
+		state: mockScreenFeedState,
 		refresh: jest.fn(),
 		loadMore: jest.fn(),
 	}),
@@ -153,6 +161,7 @@ const actions = {
 	onMembers: jest.fn(),
 	onSettings: jest.fn(),
 	onCompose: jest.fn(),
+	onPost: jest.fn(),
 };
 const mount = (
 	contextState: React.ComponentProps<typeof CommunityHome>['contextState'],
@@ -180,7 +189,11 @@ const press = (label: string) => {
 	act(() => button.props['onPress']());
 };
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+	jest.clearAllMocks();
+	mockScreenContextState = { status: 'Loading' };
+	mockScreenFeedState = { status: 'Loading' };
+});
 afterEach(() => act(() => renderer.unmount()));
 
 it('renders a truthful empty feed and prominent organizer invitation', () => {
@@ -226,6 +239,17 @@ it('keeps invite, members, and settings entry points without displacing posts', 
 	expect(actions.onInvite).toHaveBeenCalledWith('group');
 	expect(actions.onMembers).toHaveBeenCalledWith('group');
 	expect(actions.onSettings).toHaveBeenCalledWith('group');
+	act(() =>
+		renderer.root
+			.findByProps({ testID: 'community-post-post-1' })
+			.find(
+				(node) =>
+					String(node.type) === 'Card' &&
+					Boolean(node.props['onPress']),
+			)
+			.props['onPress'](),
+	);
+	expect(actions.onPost).toHaveBeenCalledWith('group', 'post-1');
 });
 
 it('shows real prayer state, reply/support information, and an accessible label', () => {
@@ -349,4 +373,37 @@ it('clears feed records when membership becomes unavailable', () => {
 	expect(
 		renderer.root.findAllByProps({ testID: 'community-post-post-1' }),
 	).toHaveLength(0);
+});
+
+it('navigates from a real home feed card to the post conversation route', () => {
+	const discussion = post({
+		postId: 'post-1',
+		seconds: 2,
+		publication: {
+			status: 'Published',
+			content: { postType: 'Discussion', text: 'Open this post.' },
+		},
+	});
+	mockScreenContextState = {
+		status: 'Ready',
+		context: communityContext({ role: 'Organizer', memberCount: 2 }),
+	};
+	mockScreenFeedState = readyFeed([discussion]);
+	act(() => {
+		renderer = create(createElement(CommunityScreen));
+	});
+	act(() =>
+		renderer.root
+			.findByProps({ testID: 'community-post-post-1' })
+			.find(
+				(node) =>
+					String(node.type) === 'Card' &&
+					Boolean(node.props['onPress']),
+			)
+			.props['onPress'](),
+	);
+	expect(mockRouterPush).toHaveBeenCalledWith({
+		pathname: '/communities/[communityId]/posts/[postId]',
+		params: { communityId: 'group', postId: 'post-1' },
+	});
 });

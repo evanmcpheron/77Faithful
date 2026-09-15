@@ -2,18 +2,33 @@ import { app } from '@td/services/firebase/firebase.instance';
 import type {
 	ICreateCommunityPostRequest,
 	ICreateCommunityPostResult,
+	ICreateCommunityReplyRequest,
+	ICreateCommunityReplyResult,
+	IDeleteCommunityPostRequest,
+	IDeleteCommunityPostResult,
+	IDeleteCommunityReplyRequest,
+	IDeleteCommunityReplyResult,
 	IEditCommunityPostRequest,
 	IEditCommunityPostResult,
+	IEditCommunityReplyRequest,
+	IEditCommunityReplyResult,
 	IGetCommunityPostRequest,
 	IGetCommunityPostResult,
 	IListCommunityPostsRequest,
 	IListCommunityPostsResult,
 	IListCommunityPrayerSupportRequest,
 	IListCommunityPrayerSupportResult,
+	IListCommunityRepliesRequest,
+	IListCommunityRepliesResult,
+	ISetCommunityPrayerAcknowledgmentRequest,
+	ISetCommunityPrayerAcknowledgmentResult,
+	ISetCommunityPrayerRequestStatusRequest,
+	ISetCommunityPrayerRequestStatusResult,
 	TCommunityPostReasonCode,
 } from '@td/types/community/community-post-function.types';
 import type {
 	ICommunityPost,
+	ICommunityReply,
 	TCommunityPostContent,
 } from '@td/types/community/community-post.types';
 import type { IPersistedTimestamp } from '@td/types/shared/persistence.types';
@@ -21,10 +36,17 @@ import { randomUUID } from 'expo-crypto';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {
 	parseCreateCommunityPostRequest,
+	parseCreateCommunityReplyRequest,
+	parseDeleteCommunityPostRequest,
+	parseDeleteCommunityReplyRequest,
 	parseEditCommunityPostRequest,
+	parseEditCommunityReplyRequest,
 	parseGetCommunityPostRequest,
 	parseListCommunityPostsRequest,
 	parseListCommunityPrayerSupportRequest,
+	parseListCommunityRepliesRequest,
+	parseSetCommunityPrayerAcknowledgmentRequest,
+	parseSetCommunityPrayerRequestStatusRequest,
 } from './community-post';
 
 const postReasons: readonly TCommunityPostReasonCode[] = [
@@ -172,6 +194,65 @@ const parsePost = (value: unknown): ICommunityPost => {
 	throw new Error('Invalid community post response.');
 };
 
+const parseReply = (value: unknown): ICommunityReply => {
+	const input = record(value);
+	const author = record(input['author']);
+	const publication = record(input['publication']);
+	const status = publication['status'];
+	if (input['schemaVersion'] !== 1)
+		throw new Error('Invalid community post response.');
+	const base = {
+		schemaVersion: 1 as const,
+		communityId: identifier(input['communityId']),
+		postId: identifier(input['postId']),
+		replyId: identifier(input['replyId']),
+		author: {
+			userId: identifier(author['userId']),
+			displayName:
+				typeof author['displayName'] === 'string' &&
+				author['displayName'].length <= 80
+					? author['displayName']
+					: (() => {
+							throw new Error('Invalid community post response.');
+						})(),
+		},
+		revision: revision(input['revision']),
+		createdAt: timestamp(input['createdAt']),
+		updatedAt: timestamp(input['updatedAt']),
+		editedAt:
+			input['editedAt'] === null ? null : timestamp(input['editedAt']),
+	};
+	if (status === 'Published') {
+		if (
+			typeof publication['text'] !== 'string' ||
+			!publication['text'].trim() ||
+			publication['text'].length > 10_000
+		)
+			throw new Error('Invalid community post response.');
+		return {
+			...base,
+			publication: { status, text: publication['text'] },
+		};
+	}
+	if (status === 'AuthorDeleted')
+		return {
+			...base,
+			publication: {
+				status,
+				deletedAt: timestamp(publication['deletedAt']),
+			},
+		};
+	if (status === 'ModeratorRemoved')
+		return {
+			...base,
+			publication: {
+				status,
+				removedAt: timestamp(publication['removedAt']),
+			},
+		};
+	throw new Error('Invalid community post response.');
+};
+
 const contentType = (value: unknown): TCommunityPostContent['postType'] => {
 	if (
 		value !== 'PrayerRequest' &&
@@ -309,5 +390,134 @@ export const editCommunityPost = async (
 		postId: identifier(result['postId']),
 		revision: revision(result['revision']),
 		editedAt: timestamp(result['editedAt']),
+	};
+};
+
+export const deleteCommunityPost = async (
+	input: IDeleteCommunityPostRequest,
+): Promise<IDeleteCommunityPostResult> => {
+	const request = parseDeleteCommunityPostRequest(input);
+	const callable = httpsCallable<IDeleteCommunityPostRequest, unknown>(
+		getFunctions(app),
+		'deleteCommunityPost',
+	);
+	const result = record((await callable(request)).data);
+	return {
+		postId: identifier(result['postId']),
+		deletedAt: timestamp(result['deletedAt']),
+	};
+};
+
+export const listCommunityReplies = async (
+	input: IListCommunityRepliesRequest,
+): Promise<IListCommunityRepliesResult> => {
+	const request = parseListCommunityRepliesRequest(input);
+	const callable = httpsCallable<IListCommunityRepliesRequest, unknown>(
+		getFunctions(app),
+		'listCommunityReplies',
+	);
+	const result = record((await callable(request)).data);
+	if (!Array.isArray(result['replies']))
+		throw new Error('Invalid community post response.');
+	const nextCursor = result['nextCursor'];
+	if (
+		nextCursor !== null &&
+		(typeof nextCursor !== 'string' ||
+			!/^[a-zA-Z0-9_-]{1,512}$/.test(nextCursor))
+	)
+		throw new Error('Invalid community post response.');
+	return {
+		replies: result['replies'].map(parseReply),
+		replyCount: revision(result['replyCount']),
+		nextCursor,
+	};
+};
+
+export const createCommunityReply = async (
+	input: ICreateCommunityReplyRequest,
+): Promise<ICreateCommunityReplyResult> => {
+	const request = parseCreateCommunityReplyRequest(input);
+	const callable = httpsCallable<ICreateCommunityReplyRequest, unknown>(
+		getFunctions(app),
+		'createCommunityReply',
+	);
+	const result = record((await callable(request)).data);
+	return {
+		postId: identifier(result['postId']),
+		replyId: identifier(result['replyId']),
+		revision: revision(result['revision']),
+		createdAt: timestamp(result['createdAt']),
+	};
+};
+
+export const editCommunityReply = async (
+	input: IEditCommunityReplyRequest,
+): Promise<IEditCommunityReplyResult> => {
+	const request = parseEditCommunityReplyRequest(input);
+	const callable = httpsCallable<IEditCommunityReplyRequest, unknown>(
+		getFunctions(app),
+		'editCommunityReply',
+	);
+	const result = record((await callable(request)).data);
+	return {
+		replyId: identifier(result['replyId']),
+		revision: revision(result['revision']),
+		editedAt: timestamp(result['editedAt']),
+	};
+};
+
+export const deleteCommunityReply = async (
+	input: IDeleteCommunityReplyRequest,
+): Promise<IDeleteCommunityReplyResult> => {
+	const request = parseDeleteCommunityReplyRequest(input);
+	const callable = httpsCallable<IDeleteCommunityReplyRequest, unknown>(
+		getFunctions(app),
+		'deleteCommunityReply',
+	);
+	const result = record((await callable(request)).data);
+	return {
+		replyId: identifier(result['replyId']),
+		deletedAt: timestamp(result['deletedAt']),
+	};
+};
+
+export const setCommunityPrayerRequestStatus = async (
+	input: ISetCommunityPrayerRequestStatusRequest,
+): Promise<ISetCommunityPrayerRequestStatusResult> => {
+	const request = parseSetCommunityPrayerRequestStatusRequest(input);
+	const callable = httpsCallable<
+		ISetCommunityPrayerRequestStatusRequest,
+		unknown
+	>(getFunctions(app), 'setCommunityPrayerRequestStatus');
+	const result = record((await callable(request)).data);
+	const prayerRequestStatus = result['prayerRequestStatus'];
+	if (
+		prayerRequestStatus !== 'Current' &&
+		prayerRequestStatus !== 'NoLongerCurrent' &&
+		prayerRequestStatus !== 'Answered'
+	)
+		throw new Error('Invalid community post response.');
+	return {
+		postId: identifier(result['postId']),
+		prayerRequestStatus,
+		revision: revision(result['revision']),
+	};
+};
+
+export const setCommunityPrayerAcknowledgment = async (
+	input: ISetCommunityPrayerAcknowledgmentRequest,
+): Promise<ISetCommunityPrayerAcknowledgmentResult> => {
+	const request = parseSetCommunityPrayerAcknowledgmentRequest(input);
+	const callable = httpsCallable<
+		ISetCommunityPrayerAcknowledgmentRequest,
+		unknown
+	>(getFunctions(app), 'setCommunityPrayerAcknowledgment');
+	const result = record((await callable(request)).data);
+	return {
+		postId: identifier(result['postId']),
+		isPraying: boolean(result['isPraying']),
+		revision:
+			result['revision'] === null ? null : revision(result['revision']),
+		updatedAt: timestamp(result['updatedAt']),
 	};
 };

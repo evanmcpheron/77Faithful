@@ -228,8 +228,8 @@ it.each([
 			: { postType, text: '  Shared words  ' },
 	);
 	expect(mockReplace).toHaveBeenCalledWith({
-		pathname: '/communities/[communityId]',
-		params: { communityId: 'group', postSaved: 'created' },
+		pathname: '/communities/[communityId]/posts/[postId]',
+		params: { communityId: 'group', postId: 'created' },
 	});
 });
 

@@ -365,24 +365,27 @@ const ComposePostContent = ({
 				}
 			}
 			const activeRequest = pending.current;
+			let savedPostId = postId;
 			if (activeRequest.mode === 'Edit') {
 				const result = await editCommunityPost(activeRequest.request);
 				if (result.postId !== postId)
 					throw new Error('Unexpected community post response.');
+				savedPostId = result.postId;
 			} else {
 				const result = await createCommunityPost(activeRequest.request);
 				if (result.communityId !== communityId)
 					throw new Error('Unexpected community post response.');
+				savedPostId = result.postId;
 			}
 			if (!mounted.current || !focused.current) return;
 			completedRef.current = true;
 			setCompleted(true);
 			removeCommunityPostDraft(userId, communityId, postId);
 			router.replace({
-				pathname: '/communities/[communityId]',
+				pathname: '/communities/[communityId]/posts/[postId]',
 				params: {
 					communityId,
-					postSaved: isEdit ? 'edited' : 'created',
+					postId: savedPostId,
 				},
 			});
 		} catch (error) {

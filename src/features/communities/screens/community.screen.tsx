@@ -72,11 +72,13 @@ const supportLabel = (
 interface ICommunityPostCardProps {
 	post: ICommunityPost;
 	support?: ICommunityPrayerSupportSummary | undefined;
+	onPress?: (() => void) | undefined;
 }
 
 export const CommunityPostCard = ({
 	post,
 	support,
+	onPress,
 }: ICommunityPostCardProps) => {
 	const publication = post.publication;
 	const type =
@@ -121,7 +123,7 @@ export const CommunityPostCard = ({
 			accessibilityLabel={accessibleSummary}
 			testID={`community-post-${post.postId}`}
 		>
-			<Card>
+			<Card {...(onPress ? { onPress } : {})}>
 				<View style={styles.cardContent}>
 					<View style={styles.cardHeading}>
 						<Typography
@@ -204,6 +206,7 @@ interface ICommunityHomeProps {
 	onMembers: (communityId: string) => void;
 	onSettings: (communityId: string) => void;
 	onCompose: (communityId: string) => void;
+	onPost: (communityId: string, postId: string) => void;
 	scrollOffset: SharedValue<number>;
 	onScrollPositionChange: (y: number) => void;
 }
@@ -245,6 +248,7 @@ export const CommunityHome = ({
 	onMembers,
 	onSettings,
 	onCompose,
+	onPost,
 	scrollOffset,
 	onScrollPositionChange,
 }: ICommunityHomeProps) => {
@@ -519,6 +523,7 @@ export const CommunityHome = ({
 			renderItem={({ item }) => (
 				<CommunityPostCard
 					post={item}
+					onPress={() => onPost(item.communityId, item.postId)}
 					support={
 						feedState.status === 'Ready'
 							? feedState.prayerSupport[item.postId]
@@ -609,6 +614,14 @@ const CommunityDetails = ({
 			pathname: '/communities/[communityId]/posts/compose',
 			params: { communityId: selectedCommunityId },
 		});
+	const openPost = (selectedCommunityId: string, selectedPostId: string) =>
+		router.push({
+			pathname: '/communities/[communityId]/posts/[postId]',
+			params: {
+				communityId: selectedCommunityId,
+				postId: selectedPostId,
+			},
+		});
 	const retry = () => {
 		if (contextState.status === 'Error') retryContext();
 		else void refreshFeed();
@@ -634,6 +647,7 @@ const CommunityDetails = ({
 			onMembers={openMembers}
 			onSettings={openSettings}
 			onCompose={openComposer}
+			onPost={openPost}
 			scrollOffset={scrollOffset}
 			onScrollPositionChange={handleScrollPositionChange}
 		/>
